@@ -51,10 +51,7 @@ export function computeConfidence(input: Readonly<{
     0.4 * bounded(input.evaluatorCoverage) +
     0.3 * bounded(input.configurationParity) +
     0.3 * bounded(input.measurementCoverage);
-  const sampleAdequacy = Math.min(
-    1,
-    input.pairedValidCases / input.targetCases,
-  );
+  const sampleAdequacy = Math.min(1, input.pairedValidCases / input.targetCases);
   const repeatability =
     input.repetitions < 2
       ? 0
