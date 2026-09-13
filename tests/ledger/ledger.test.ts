@@ -8,11 +8,12 @@ import {
 function stateEvent(
   id: string,
   state: 'OPPORTUNITY' | 'TESTED' | 'VERIFIED',
+  organizationId = 'org-1',
 ): LedgerEvent {
   return {
     id,
     recommendationId: 'rec-1',
-    organizationId: 'org-1',
+    organizationId,
     type: 'STATE_RECORDED',
     state,
     occurredAt: `2026-09-13T00:00:0${String(id.length)}Z`,
@@ -30,13 +31,27 @@ describe('savings-state ledger', () => {
     });
     history = appendState({ history, event: stateEvent('bb', 'TESTED') });
     history = appendState({ history, event: stateEvent('ccc', 'VERIFIED') });
-    expect(currentValidState(history, 'rec-1')).toBe('VERIFIED');
+    expect(currentValidState(history, 'org-1', 'rec-1')).toBe('VERIFIED');
     expect(() =>
       appendState({ history: [], event: stateEvent('x', 'TESTED') }),
     ).toThrow('INVALID_INITIAL_SAVINGS_STATE');
     expect(() =>
       appendState({ history, event: stateEvent('dddd', 'TESTED') }),
     ).toThrow('INVALID_SAVINGS_STATE_TRANSITION');
+  });
+
+  it('isolates identical recommendation IDs by organization', () => {
+    const orgOne = appendState({
+      history: [],
+      event: stateEvent('a', 'OPPORTUNITY', 'org-1'),
+    });
+    const history = appendState({
+      history: orgOne,
+      event: stateEvent('bb', 'OPPORTUNITY', 'org-2'),
+    });
+
+    expect(currentValidState(history, 'org-1', 'rec-1')).toBe('OPPORTUNITY');
+    expect(currentValidState(history, 'org-2', 'rec-1')).toBe('OPPORTUNITY');
   });
 
   it('rejects duplicate event IDs', () => {
@@ -69,7 +84,7 @@ describe('savings-state ledger', () => {
     const next = appendState({ history, event: invalidation });
     expect(next).toHaveLength(3);
     expect(next[1]?.type).toBe('STATE_RECORDED');
-    expect(currentValidState(next, 'rec-1')).toBe('OPPORTUNITY');
+    expect(currentValidState(next, 'org-1', 'rec-1')).toBe('OPPORTUNITY');
   });
 
   it('rejects invalidation across recommendations', () => {
