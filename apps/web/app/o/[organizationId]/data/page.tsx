@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { requireOrganizationContext } from '../../../lib/organization-context';
-import { resolveRuntimeSession } from '../../../lib/runtime-session';
+import { requireOrganizationContext } from '../../../../lib/organization-context';
+import { resolveRuntimeSession } from '../../../../lib/runtime-session';
 import { purgeEvidence } from './action';
 
 export const dynamic = 'force-dynamic';
