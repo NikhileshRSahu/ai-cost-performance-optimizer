@@ -150,7 +150,7 @@ export default async function ImportPage({
             ) : null}
           </div>
 
-          <div className="summary-grid">
+          <div className="summary-grid" aria-label="Import evidence summary">
             <div>
               <span>Accepted</span>
               <strong>{imported.acceptedRows}</strong>
