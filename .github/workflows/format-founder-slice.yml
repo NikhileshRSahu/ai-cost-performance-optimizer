@@ -1,0 +1,29 @@
+name: Format founder workbench slice
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: codex/founder-workbench-ui
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx prettier --write apps/web src/workbench tests/web tests/workbench tests/reports
+      - name: Commit formatting
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/web src/workbench tests/web tests/workbench tests/reports
+          git commit -m "style: format founder workbench slice [skip ci]"
+          git push origin HEAD:codex/founder-workbench-ui
