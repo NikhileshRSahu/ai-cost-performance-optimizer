@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createDatabase } from '../../../../src/persistence/database';
+import { createDatabase } from '../../../../../src/persistence/database';
 
 export const dynamic = 'force-dynamic';
 
