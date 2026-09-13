@@ -35,7 +35,9 @@ const implementationSchema = z
   .strict();
 
 export type ImplementationGuide = Readonly<z.infer<typeof guideSchema>>;
-export type ImplementationRecord = Readonly<z.infer<typeof implementationSchema>>;
+export type ImplementationRecord = Readonly<
+  z.infer<typeof implementationSchema>
+>;
 
 function freezeList(values: readonly string[]): readonly string[] {
   return Object.freeze([...values]);
@@ -52,12 +54,14 @@ function requireOperatorAuthorization(
   }
 }
 
-export function markGuideReviewed(input: Readonly<{
-  guide: ImplementationGuide;
-  authorization: AuthorizationResult;
-  userId: string;
-  reviewedAt: string;
-}>): ImplementationGuide {
+export function markGuideReviewed(
+  input: Readonly<{
+    guide: ImplementationGuide;
+    authorization: AuthorizationResult;
+    userId: string;
+    reviewedAt: string;
+  }>,
+): ImplementationGuide {
   requireOperatorAuthorization(input.authorization);
   const data = guideSchema.parse({
     ...input.guide,

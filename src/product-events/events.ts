@@ -69,7 +69,8 @@ function safeKey(key: string): boolean {
 function validateScalar(value: unknown): ProductEventScalar {
   if (value === null || typeof value === 'boolean') return value;
   if (typeof value === 'number') {
-    if (!Number.isFinite(value)) throw new Error('UNSAFE_PRODUCT_EVENT_PROPERTY');
+    if (!Number.isFinite(value))
+      throw new Error('UNSAFE_PRODUCT_EVENT_PROPERTY');
     return value;
   }
   if (typeof value === 'string') {
