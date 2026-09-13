@@ -66,12 +66,16 @@ function freezeList(values: readonly string[]): readonly string[] {
 
 function requireOperatorAuthorization(
   authorization: AuthorizationResult,
+  organizationId: string,
 ): void {
   if (
     !authorization.allowed ||
     (authorization.role !== 'OWNER' && authorization.role !== 'OPERATOR')
   ) {
     throw new Error('AUTHORIZED_OPERATOR_REQUIRED');
+  }
+  if (authorization.organizationId !== organizationId) {
+    throw new Error('AUTHORIZED_ORGANIZATION_MISMATCH');
   }
 }
 
@@ -83,7 +87,7 @@ export function markGuideReviewed(
     reviewedAt: string;
   }>,
 ): ImplementationGuide {
-  requireOperatorAuthorization(input.authorization);
+  requireOperatorAuthorization(input.authorization, input.guide.organizationId);
   const data = guideSchema.parse({
     ...input.guide,
     reviewedByOperatorUserId: input.userId,
@@ -105,7 +109,7 @@ export function createImplementationRecord(
       authorization: AuthorizationResult;
     }>,
 ): ImplementationRecord {
-  requireOperatorAuthorization(input.authorization);
+  requireOperatorAuthorization(input.authorization, input.organizationId);
   const candidate = {
     recommendationId: input.recommendationId,
     organizationId: input.organizationId,
