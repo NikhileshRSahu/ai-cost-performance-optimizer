@@ -1,47 +1,104 @@
-# AI Cost & Performance Optimizer
+# AI Efficiency Intelligence
 
-The project is building an evidence-first AI cost optimizer around one promise:
+AI Efficiency Intelligence is an evidence-first system for improving how a team uses AI across cost, model choice, retries, tokens, prompts, workflows, knowledge, implementation, and verified outcomes.
 
-> Find and test ways to reduce AI spend without dropping below the customer's required performance.
+The product is designed around one operating loop:
 
-The implemented core now covers exact financial arithmetic, canonical CSV usage ingestion, lineage and coverage, deterministic optimization findings, benchmark decisions, confidence/ranking, session-derived workbench authorization, implementation tracking, an append-only savings-state ledger, post-change verification, and a safe product-event boundary.
+`INGEST → UNDERSTAND → DIAGNOSE → TEST → IMPLEMENT → VERIFY → LEARN`
 
-The trust path is explicit:
+A customer can start with a usage CSV. Deeper access is optional and must unlock deeper analysis without becoming a prerequisite for proving initial value.
+
+## Core trust model
+
+The product keeps three financial states separate:
 
 `OPPORTUNITY → TESTED → VERIFIED`
 
-A cheaper candidate does not become VERIFIED from a benchmark alone. Verification requires an implementation record, comparable baseline and post-change windows, at least seven complete days in each window, post-change performance evidence, stable attribution/unit definitions, and exact net-impact calculation. Negative verified impact remains visible as a cost increase.
+A cheaper candidate is not called safe merely because it costs less. A tested candidate is not called verified merely because it passed a benchmark. Verified impact requires implementation evidence plus comparable post-change data.
+
+Missing data is unknown, not zero. Mixed currencies are not silently converted. Synthetic demo evidence is always labeled.
+
+## AI Work MRI
+
+The Work MRI turns supported evidence into an executive diagnosis rather than a wall of observability charts.
+
+The current CSV-first MRI can measure, when the required evidence exists:
+
+- observed spend
+- exact cost per request
+- exact cost per successful outcome
+- model cost concentration
+- repeated-attempt cost
+- output tokens per request
+- cache-hit coverage
+- strongest persisted optimization action
+- verified net savings
+
+Unsupported conclusions are explicitly withheld. For example, a billing CSV cannot prove prompt-quality problems or repeated semantic context.
+
+## Progressive privacy
+
+### Level 1 — Usage CSV
+
+Supports cost/model/retry/token/cache/outcome economics without provider credentials.
+
+### Level 2 — Sanitized AI history
+
+Planned support for prompt structure, repeated context, and recurring-workflow diagnosis.
+
+### Level 3 — Authorized workspace
+
+Planned support for cross-tool duplication, buried decisions, and knowledge waste using explicitly authorized sources.
+
+### Level 4 — Production telemetry
+
+Supports the path toward continuous verification, drift detection, and cost per successful outcome.
+
+Provider administrative credentials remain gated until encrypted secret storage, rotation, deletion, tenant isolation, redaction tests, and security review pass.
+
+## Existing optimization loop
+
+The repository already includes:
+
+- exact rational financial arithmetic
+- canonical CSV usage ingestion with provenance and duplicate handling
+- evidence coverage rules
+- deterministic optimization detectors
+- benchmark constraints and decisions
+- confidence and recommendation ranking
+- authenticated tenant-scoped founder workbench
+- AI Work MRI
+- implementation records and rollback instructions
+- append-only savings-state ledger
+- post-change verification
+- print-optimized reports
+- product-event privacy boundary
+- PostgreSQL persistence and tenant isolation tests
+- responsive Next.js application
+- Playwright end-to-end and accessibility checks
+- dependency audit and secret scanning in CI
+- production container definition
 
 ## Run locally
 
-Node.js 24 or newer is required.
+Node.js 24 or newer and PostgreSQL are required.
 
 ```sh
+cp .env.example .env
 npm ci
 npm run check
-npm run demo
+npm run web:build
+npm run test:db
+npm run web:dev
 ```
 
-The arithmetic demo is synthetic and shows the exact counterfactual result `7/20` plus its rounded display value, `0.35 USD`. It is not a customer result.
+For database tests, provide `DATABASE_URL`.
 
-## Evidence and precision rules
+The repository also contains synthetic fixtures and demos. They must never be represented as customer proof.
 
-- Money and counts cross external boundaries as strings rather than JavaScript floating-point values.
-- Source money is validated canonical decimal text with at most 26 integer digits and 12 fractional digits.
-- Derived financial values remain reduced exact numerator/denominator pairs. Rounding is a display operation only and uses round-half-to-even.
-- Missing supported values remain `null`; they are never silently converted to zero.
-- Canonical imports preserve checksums, row fingerprints, source capability metadata, validation issues, duplicate handling, and partial-import state.
-- Coverage is based on explicitly complete intervals in the organization's timezone. Missing time is unknown, not zero usage.
-- Thirty-day projection requires at least seven complete calendar days.
-- Deterministic findings separate measured facts, inference, recommendation, and what is not yet claimed.
-- Benchmark decisions can be `OPTIMIZE`, `DO_NOT_CHANGE`, or `INSUFFICIENT_EVIDENCE`; configured performance constraints use unrounded measurements.
-- Savings-state history is append-only. Evidence corrections create invalidation events instead of rewriting history.
-- OWNER, OPERATOR, and VIEWER authorization is derived from authenticated-session membership. VIEWER is read-only; OWNER alone may manage membership and credential references.
-- Product events accept only allowlisted scalar metadata and reject prompt, response, credential, secret, header/body, uploaded-row, and unrestricted error-message fields.
+## Package surfaces
 
-## Current package surfaces
-
-The package root and focused exports expose:
+The root package exposes:
 
 - `./economics`
 - `./usage`
@@ -57,11 +114,30 @@ The package root and focused exports expose:
 - `./product-events`
 - `./auth`
 - `./persistence`
+- `./efficiency`
 
-The locked tools include Zod 4.6.4 and Vitest 5.0.0; see the authoritative [Zod API](https://zod.dev/api) and [Vitest guide](https://vitest.dev/guide/).
+## Evidence and precision rules
 
-## Remaining V0 work
+- Money and counts cross external boundaries as strings instead of JavaScript floating point values.
+- Derived financial values remain exact reduced numerator/denominator pairs until display.
+- Display rounding uses round-half-to-even.
+- Missing supported values remain `null`.
+- Coverage is based on explicit complete intervals in the organization timezone.
+- Thirty-day projections require at least seven complete calendar days.
+- Findings separate measured facts, inference, recommendation, and what is not claimed.
+- Benchmark decisions can be `OPTIMIZE`, `DO_NOT_CHANGE`, or `INSUFFICIENT_EVIDENCE`.
+- Negative verified impact remains visible as a cost increase.
+- Product events reject prompt, response, credential, secret, uploaded-row, and unrestricted error-message fields.
 
-This repository is **not yet the finished sellable V0**. The persistence foundation now includes PostgreSQL/Drizzle storage, tenant-scoped repositories, a trusted passwordless identity-to-session adapter, append-only evidence persistence, import idempotency, and resumable job state. The next bounded milestone is the authenticated founder dashboard, Optimization Lab, print-optimized report, and end-to-end/accessibility/security validation.
+## Release status
 
-Provider connectors remain deliberately gated. OpenAI and Anthropic administrative credentials must not be enabled until encrypted secret storage, redaction, tenant-isolation tests, credential deletion/rotation, security review, and explicit product-owner approval all pass. Commercial validation with real prospects also remains a separate gate; synthetic fixtures must never be presented as customer proof.
+This is not yet being represented as a generally available finished product.
+
+The authoritative ship checklist is:
+
+- `docs/product/v0-release-readiness.md`
+- `docs/security/privacy-model.md`
+
+The highest-value remaining V0 work includes sanitized AI-history analysis, automatic hypothesis generation, counterfactual replay for supported workloads, user-facing evidence drill-down, deletion/retention controls, deployment operations, and real design-partner proof.
+
+A CSV-only pilot may ship before connected-source support if its narrower release gates are satisfied and the release commit is fully green.
