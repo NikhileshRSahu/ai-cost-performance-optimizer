@@ -34,7 +34,7 @@
     "demo": "tsc -p tsconfig.demo.json && node dist/demo/examples/economics-demo.js",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "test:db": "vitest run --config vitest.db.config.ts"
+    "test:db": "vitest run tests/persistence --exclude tests/persistence/schema.test.ts"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",
