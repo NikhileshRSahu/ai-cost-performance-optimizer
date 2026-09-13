@@ -1,16 +1,29 @@
-import type { ImportIssue, ImportRun, UsageRecord } from '../usage/contracts.js';
+import type {
+  ImportIssue,
+  ImportRun,
+  UsageRecord,
+} from '../usage/contracts.js';
 import { sha256Bytes } from '../usage/fingerprint.js';
 import { parseUsageCsv } from './csv.js';
 
-export type ImportResult = Readonly<{ run: ImportRun; records: readonly UsageRecord[] }>;
+export type ImportResult = Readonly<{
+  run: ImportRun;
+  records: readonly UsageRecord[];
+}>;
 
-export function importUsageCsv(input: Readonly<{
-  bytes: Uint8Array;
-  organizationId: string;
-  receivedAt: string;
-  isDemo?: boolean;
-}>): ImportResult {
-  const parsed = parseUsageCsv(input.bytes, input.organizationId, input.isDemo ?? false);
+export function importUsageCsv(
+  input: Readonly<{
+    bytes: Uint8Array;
+    organizationId: string;
+    receivedAt: string;
+    isDemo?: boolean;
+  }>,
+): ImportResult {
+  const parsed = parseUsageCsv(
+    input.bytes,
+    input.organizationId,
+    input.isDemo ?? false,
+  );
   const accepted: UsageRecord[] = [];
   const issues: ImportIssue[] = [...parsed.issues];
   let skippedDuplicates = 0;
@@ -18,8 +31,11 @@ export function importUsageCsv(input: Readonly<{
   const seen = new Map<string, string>();
 
   for (const record of parsed.records) {
-    const key = record.sourceEventId ? `event:${record.organizationId}:${record.source}:${record.sourceEventId}` : `fingerprint:${record.fingerprint}`;
+    const key = record.sourceEventId
+      ? `event:${record.organizationId}:${record.source}:${record.sourceEventId}`
+      : `fingerprint:${record.fingerprint}`;
     const existing = seen.get(key);
+
     if (existing === undefined) {
       seen.set(key, record.fingerprint);
       accepted.push(record);
@@ -27,14 +43,18 @@ export function importUsageCsv(input: Readonly<{
       skippedDuplicates++;
     } else {
       rejectedConflicts++;
-      issues.push({ line: record.sourceLine, code: 'CONFLICTING_DUPLICATE', message: 'Duplicate key has different canonical content' });
+      issues.push({
+        line: record.sourceLine,
+        code: 'CONFLICTING_DUPLICATE',
+        message: 'Duplicate key has different canonical content',
+      });
     }
   }
 
   const rejected = parsed.issues.length + rejectedConflicts;
   const run: ImportRun = Object.freeze({
     checksum: sha256Bytes(input.bytes),
-    source:'CSV',
+    source: 'CSV',
     receivedAt: input.receivedAt,
     accepted: accepted.length,
     skippedDuplicates,
@@ -42,7 +62,11 @@ export function importUsageCsv(input: Readonly<{
     warnings: 0,
     blocked: accepted.length === 0,
     partial: accepted.length > 0 && rejected > 0,
-    issues: Object.freeze(issues.map(Object.freeze))
+    issues: Object.freeze(issues.map(Object.freeze)),
   });
-  return Object.freeze({ run, records: Object.freeze(accepted.map(Object.freeze)) });
+
+  return Object.freeze({
+    run,
+    records: Object.freeze(accepted.map(Object.freeze)),
+  });
 }
