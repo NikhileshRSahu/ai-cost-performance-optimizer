@@ -18,13 +18,14 @@ function benchmark(
       netSaving: { numerator: '30', denominator: '1' },
     },
     confidence: {
+      version: 'confidence-v1',
       score: 0.9,
       band: 'HIGH',
-      reasons: [],
       components: {
-        dataQuality: 1,
-        sampleSize: 1,
-        stability: 1,
+        dataCompleteness: 1,
+        benchmarkStrength: 1,
+        sampleAdequacy: 1,
+        repeatability: 0.5,
       },
     },
     ...overrides,
