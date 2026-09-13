@@ -131,34 +131,40 @@ export async function loadFounderDashboardEvidence(
 ): Promise<DashboardEvidence> {
   requireOrganizationAccess({ session, organizationId, action: 'READ' });
 
-  const [organization] = await db
-    .select()
-    .from(organizations)
-    .where(eq(organizations.id, organizationId))
-    .limit(1);
+  const organization = (
+    await db
+      .select()
+      .from(organizations)
+      .where(eq(organizations.id, organizationId))
+      .limit(1)
+  ).at(0);
   if (organization === undefined) throw new Error('ORGANIZATION_NOT_FOUND');
 
-  const [latestAttempt] = await db
-    .select()
-    .from(importRuns)
-    .where(eq(importRuns.organizationId, organizationId))
-    .orderBy(desc(importRuns.receivedAt))
-    .limit(1);
+  const latestAttempt = (
+    await db
+      .select()
+      .from(importRuns)
+      .where(eq(importRuns.organizationId, organizationId))
+      .orderBy(desc(importRuns.receivedAt))
+      .limit(1)
+  ).at(0);
 
-  const [latestUsable] = await db
-    .select()
-    .from(importRuns)
-    .where(
-      and(
-        eq(importRuns.organizationId, organizationId),
-        or(
-          eq(importRuns.status, 'COMPLETED'),
-          eq(importRuns.status, 'PARTIAL'),
+  const latestUsable = (
+    await db
+      .select()
+      .from(importRuns)
+      .where(
+        and(
+          eq(importRuns.organizationId, organizationId),
+          or(
+            eq(importRuns.status, 'COMPLETED'),
+            eq(importRuns.status, 'PARTIAL'),
+          ),
         ),
-      ),
-    )
-    .orderBy(desc(importRuns.receivedAt))
-    .limit(1);
+      )
+      .orderBy(desc(importRuns.receivedAt))
+      .limit(1)
+  ).at(0);
 
   const limitations: string[] = [];
   if (
@@ -259,18 +265,20 @@ export async function loadFounderDashboardEvidence(
 
   let verifiedNetSavings: DashboardEvidence['verifiedNetSavings'] = null;
   if (rankOne !== undefined) {
-    const [verification] = await db
-      .select()
-      .from(verificationWindows)
-      .where(
-        and(
-          eq(verificationWindows.organizationId, organizationId),
-          eq(verificationWindows.recommendationId, rankOne.id),
-          eq(verificationWindows.status, 'VERIFIED'),
-        ),
-      )
-      .orderBy(desc(verificationWindows.createdAt))
-      .limit(1);
+    const verification = (
+      await db
+        .select()
+        .from(verificationWindows)
+        .where(
+          and(
+            eq(verificationWindows.organizationId, organizationId),
+            eq(verificationWindows.recommendationId, rankOne.id),
+            eq(verificationWindows.status, 'VERIFIED'),
+          ),
+        )
+        .orderBy(desc(verificationWindows.createdAt))
+        .limit(1)
+    ).at(0);
 
     if (
       verification !== undefined &&
