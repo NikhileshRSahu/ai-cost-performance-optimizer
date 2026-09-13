@@ -1,12 +1,20 @@
 import type { NextConfig } from 'next';
 
+type WebpackConfig = {
+  resolve?: {
+    extensionAlias?: Record<string, string[]>;
+  };
+};
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  webpack(config) {
-    config.resolve.extensionAlias = {
-      ...config.resolve.extensionAlias,
+  webpack(config: WebpackConfig) {
+    const resolve = config.resolve ?? {};
+    resolve.extensionAlias = {
+      ...resolve.extensionAlias,
       '.js': ['.ts', '.js'],
     };
+    config.resolve = resolve;
     return config;
   },
 };
