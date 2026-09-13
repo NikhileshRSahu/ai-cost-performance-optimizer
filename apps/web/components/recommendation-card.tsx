@@ -42,11 +42,27 @@ export function RecommendationCard({
         <strong>Next action:</strong> {recommendation.nextAction}
       </p>
       <div className="action-row">
+        {recommendation.state === 'TESTED' &&
+        recommendation.decision === 'OPTIMIZE' ? (
+          <Link
+            className="primary-action"
+            href={`/o/${organizationId}/implement/${recommendation.recommendationId}`}
+          >
+            Implement tested change
+          </Link>
+        ) : (
+          <Link
+            className="primary-action"
+            href={`/o/${organizationId}/lab/${recommendation.recommendationId}`}
+          >
+            Inspect evidence
+          </Link>
+        )}
         <Link
-          className="primary-action"
+          className="secondary-action"
           href={`/o/${organizationId}/lab/${recommendation.recommendationId}`}
         >
-          Inspect evidence
+          Optimization Lab
         </Link>
         <Link
           className="secondary-action"
