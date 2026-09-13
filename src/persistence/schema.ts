@@ -190,14 +190,11 @@ export const usageRecords = pgTable(
       table.organizationId,
       table.fingerprint,
     ),
-    uniqueIndex('usage_records_org_source_event_uq')
-      .on(table.organizationId, table.source, table.sourceEventId)
-      .where(
-        // Drizzle serializes this SQL fragment without introducing runtime data.
-        // The migration is also committed for direct review.
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (table.sourceEventId as any).isNotNull?.() ?? undefined,
-      ),
+    uniqueIndex('usage_records_org_source_event_uq').on(
+      table.organizationId,
+      table.source,
+      table.sourceEventId,
+    ),
     index('usage_records_org_window_idx').on(
       table.organizationId,
       table.intervalStart,
