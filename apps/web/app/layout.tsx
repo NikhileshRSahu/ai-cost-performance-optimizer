@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import type { ReactNode } from 'react';
 import './globals.css';
 
@@ -19,8 +20,13 @@ export default function RootLayout({
         </a>
         <header className="site-header">
           <div className="shell">
-            <div className="brand">AI Efficiency Intelligence</div>
-            <div className="environment-badge">Work MRI · Test · Verify</div>
+            <Link className="brand" href="/">
+              AI Efficiency Intelligence
+            </Link>
+            <nav className="public-nav" aria-label="Public">
+              <Link href="/pricing">Pricing</Link>
+              <span className="environment-badge">Work MRI · Test · Verify</span>
+            </nav>
           </div>
         </header>
         <main id="main-content" className="shell">
