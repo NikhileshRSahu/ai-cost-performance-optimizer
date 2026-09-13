@@ -233,4 +233,23 @@ describe('post-change verification', () => {
     });
     expect(result.reasons).toContain('PERFORMANCE_CONSTRAINT_FAILED');
   });
+
+  it('requires an explicit unchanged success definition for successful-outcome normalization', () => {
+    const input = validInput();
+    const result = verifyPostChange({
+      ...input,
+      baseline: {
+        ...input.baseline,
+        denominator: 'SUCCESSFUL_OUTCOMES',
+        successDefinition: null,
+      },
+      post: {
+        ...input.post,
+        denominator: 'SUCCESSFUL_OUTCOMES',
+        successDefinition: null,
+      },
+    });
+    expect(result.status).toBe('BLOCKED');
+    expect(result.reasons).toContain('UNIT_DEFINITION_CHANGED');
+  });
 });
