@@ -11,7 +11,12 @@
     "./coverage": "./dist/coverage/index.js",
     "./detectors": "./dist/detectors/index.js",
     "./benchmarks": "./dist/benchmarks/index.js",
-    "./ranking": "./dist/ranking/index.js"
+    "./ranking": "./dist/ranking/index.js",
+    "./workbench": "./dist/workbench/index.js",
+    "./ledger": "./dist/ledger/index.js",
+    "./implementation": "./dist/implementation/index.js",
+    "./verification": "./dist/verification/index.js",
+    "./product-events": "./dist/product-events/index.js"
   },
   "engines": {
     "node": ">=24"
