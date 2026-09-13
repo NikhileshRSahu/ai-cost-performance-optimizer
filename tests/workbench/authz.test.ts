@@ -41,10 +41,11 @@ describe('session-derived authorization', () => {
     ).toBe(false);
   });
 
-  it('lets owners perform every action', () => {
+  it('binds every authorization result to the requested organization', () => {
     expect(authorize(session, 'org-owner', 'MANAGE_MEMBERSHIP')).toEqual({
       allowed: true,
       role: 'OWNER',
+      organizationId: 'org-owner',
       reason: null,
     });
     expect(
@@ -56,6 +57,7 @@ describe('session-derived authorization', () => {
     expect(authorize(session, 'org-other', 'READ')).toEqual({
       allowed: false,
       role: null,
+      organizationId: 'org-other',
       reason: 'ORGANIZATION_MEMBERSHIP_REQUIRED',
     });
   });
