@@ -5,9 +5,18 @@ import { createDatabase } from '../../../../../../src/persistence/database';
 import { evaluateAndPersistBenchmark } from '../../../../../../src/workbench/benchmark-service';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
 
+function textEntry(
+  formData: FormData,
+  key: string,
+  fallback = '',
+): string {
+  const value = formData.get(key);
+  return typeof value === 'string' ? value : fallback;
+}
+
 export async function submitBenchmark(formData: FormData): Promise<never> {
-  const organizationId = String(formData.get('organizationId') ?? '');
-  const workloadId = String(formData.get('workloadId') ?? '');
+  const organizationId = textEntry(formData, 'organizationId');
+  const workloadId = textEntry(formData, 'workloadId');
   const upload = formData.get('benchmarkCsv');
   if (
     organizationId.length === 0 ||
@@ -30,14 +39,10 @@ export async function submitBenchmark(formData: FormData): Promise<never> {
       organizationId,
       workloadId,
       bytes: new Uint8Array(await upload.arrayBuffer()),
-      currentConfigurationId: String(
-        formData.get('currentConfigurationId') ?? '',
-      ),
-      candidateConfigurationId: String(
-        formData.get('candidateConfigurationId') ?? '',
-      ),
-      evaluatorVersion: String(formData.get('evaluatorVersion') ?? ''),
-      currency: String(formData.get('currency') ?? 'USD'),
+      currentConfigurationId: textEntry(formData, 'currentConfigurationId'),
+      candidateConfigurationId: textEntry(formData, 'candidateConfigurationId'),
+      evaluatorVersion: textEntry(formData, 'evaluatorVersion'),
+      currency: textEntry(formData, 'currency', 'USD'),
       isDemo: formData.get('isDemo') === 'true',
     });
     recommendationId = result.recommendationId;
@@ -45,5 +50,7 @@ export async function submitBenchmark(formData: FormData): Promise<never> {
     await database.close();
   }
 
-  redirect(`/o/${organizationId}/lab/${encodeURIComponent(recommendationId)}`);
+  redirect(
+    `/o/${organizationId}/lab/${encodeURIComponent(recommendationId)}`,
+  );
 }
