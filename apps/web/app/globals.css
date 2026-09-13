@@ -1019,3 +1019,50 @@ h1 {
     flex-direction: column;
   }
 }
+
+
+.mri-panel {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid #c8d2df;
+  border-radius: 1.25rem;
+  background: #eef4fb;
+}
+
+.mri-panel .metrics-grid {
+  margin-top: 0.25rem;
+}
+
+.mri-panel .metric-value {
+  display: block;
+}
+
+.mri-action {
+  padding: 1.25rem;
+  border: 1px solid #b8c5d4;
+  border-radius: 1rem;
+  background: #ffffff;
+}
+
+.mri-action h3,
+.mri-panel .limitations h3 {
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.025em;
+}
+
+.mri-panel .limitations {
+  padding: 1.25rem;
+  box-shadow: none;
+}
+
+@media (max-width: 720px) {
+  .mri-panel .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mri-panel .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
