@@ -34,9 +34,30 @@ const implementationSchema = z
   })
   .strict();
 
-export type ImplementationGuide = Readonly<z.infer<typeof guideSchema>>;
+type GuideData = z.infer<typeof guideSchema>;
+type ImplementationData = z.infer<typeof implementationSchema>;
+
+export type ImplementationGuide = Readonly<
+  Omit<
+    GuideData,
+    | 'prerequisites'
+    | 'rolloutSteps'
+    | 'metricsToWatch'
+    | 'stopConditions'
+    | 'rollbackInstructions'
+  > & {
+    prerequisites: readonly string[];
+    rolloutSteps: readonly string[];
+    metricsToWatch: readonly string[];
+    stopConditions: readonly string[];
+    rollbackInstructions: readonly string[];
+  }
+>;
+
 export type ImplementationRecord = Readonly<
-  z.infer<typeof implementationSchema>
+  Omit<ImplementationData, 'rollbackInstructions'> & {
+    rollbackInstructions: readonly string[];
+  }
 >;
 
 function freezeList(values: readonly string[]): readonly string[] {
@@ -85,7 +106,7 @@ export function createImplementationRecord(
     }>,
 ): ImplementationRecord {
   requireOperatorAuthorization(input.authorization);
-  const candidate: ImplementationRecord = {
+  const candidate = {
     recommendationId: input.recommendationId,
     organizationId: input.organizationId,
     implementedAt: input.implementedAt,
