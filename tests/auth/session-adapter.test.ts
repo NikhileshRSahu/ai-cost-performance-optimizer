@@ -54,10 +54,10 @@ describe('passwordless session adapter', () => {
 
   it('resolves roles only through persisted identity membership lookup', async () => {
     const adapter = createPasswordlessSessionAdapter({
-      async sessionForIdentity(identity) {
+      sessionForIdentity(identity) {
         expect(identity.provider).toBe('magic-link');
         expect(identity.subject).toBe('subject-1');
-        return persistedSession;
+        return Promise.resolve(persistedSession);
       },
     });
 
@@ -73,8 +73,8 @@ describe('passwordless session adapter', () => {
 
   it('returns null for an unknown trusted identity', async () => {
     const adapter = createPasswordlessSessionAdapter({
-      async sessionForIdentity() {
-        return null;
+      sessionForIdentity() {
+        return Promise.resolve(null);
       },
     });
 
