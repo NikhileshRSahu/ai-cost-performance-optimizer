@@ -14,7 +14,7 @@ export const sanitizedAiMessageSchema = z
     source: sanitizedAiSourceSchema,
     conversationId: z.string().min(1).max(256),
     messageId: z.string().min(1).max(256),
-    createdAt: z.string().datetime({ offset: true }),
+    createdAt: z.iso.datetime({ offset: true }),
     role: sanitizedAiRoleSchema,
     content: z.string().min(1).max(100_000),
     model: z.string().min(1).max(256).nullable(),
@@ -26,7 +26,7 @@ export type SanitizedAiMessage = z.infer<typeof sanitizedAiMessageSchema>;
 export const sanitizedAiExportSchema = z
   .object({
     schemaVersion: z.literal('sanitized-ai-export-v1'),
-    exportedAt: z.string().datetime({ offset: true }),
+    exportedAt: z.iso.datetime({ offset: true }),
     messages: z.array(sanitizedAiMessageSchema).min(1).max(100_000),
   })
   .strict();
