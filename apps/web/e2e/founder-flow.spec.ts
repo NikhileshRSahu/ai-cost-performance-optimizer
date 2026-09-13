@@ -1,9 +1,9 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 const demoDisclaimer = 'Synthetic demo data — not a customer result.';
 
-async function expectAccessible(page: Parameters<typeof test>[0] extends never ? never : any) {
+async function expectAccessible(page: Page) {
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
     .analyze();
