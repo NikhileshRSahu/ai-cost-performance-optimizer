@@ -46,9 +46,10 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Implementation record and rollback instructions.
 - [x] Comparable baseline/post-change verification.
 - [x] Negative verified impact remains visible.
-- [ ] Counterfactual replay for supported workload types.
+- [x] Cost-only historical counterfactual replay core for comparable workloads.
+- [ ] Customer-facing historical replay input and result surface.
 - [x] Policy-bounded automatic hypothesis generation from MRI findings.
-- [ ] Generated implementation package for supported fixes.
+- [x] Generated guarded implementation package for supported optimization hypotheses.
 
 ### 4. Security and privacy
 
