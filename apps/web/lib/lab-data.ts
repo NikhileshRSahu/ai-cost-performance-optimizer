@@ -35,16 +35,18 @@ export async function loadOptimizationLabEvidence(
 ): Promise<OptimizationLabEvidence> {
   requireOrganizationAccess({ session, organizationId, action: 'READ' });
 
-  const [row] = await db
-    .select()
-    .from(recommendations)
-    .where(
-      and(
-        eq(recommendations.organizationId, organizationId),
-        eq(recommendations.id, recommendationId),
-      ),
-    )
-    .limit(1);
+  const row = (
+    await db
+      .select()
+      .from(recommendations)
+      .where(
+        and(
+          eq(recommendations.organizationId, organizationId),
+          eq(recommendations.id, recommendationId),
+        ),
+      )
+      .limit(1)
+  ).at(0);
   if (row === undefined) throw new Error('RECOMMENDATION_NOT_FOUND');
 
   const lab = asRecord(row.evidence.lab);
