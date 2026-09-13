@@ -5,16 +5,22 @@ import type {
   EvidenceSourceKind,
 } from './contracts.js';
 
+function capabilityList(
+  ...values: AnalysisCapability[]
+): readonly AnalysisCapability[] {
+  return Object.freeze(values);
+}
+
 const LEVEL_CAPABILITIES: Readonly<
   Record<AnalysisDepthLevel, readonly AnalysisCapability[]>
 > = Object.freeze({
-  1: Object.freeze([
+  1: capabilityList(
     'COST_EFFICIENCY',
     'MODEL_RIGHT_SIZING',
     'RETRY_WASTE',
     'TOKEN_OUTPUT_WASTE',
-  ]),
-  2: Object.freeze([
+  ),
+  2: capabilityList(
     'COST_EFFICIENCY',
     'MODEL_RIGHT_SIZING',
     'RETRY_WASTE',
@@ -22,8 +28,8 @@ const LEVEL_CAPABILITIES: Readonly<
     'PROMPT_STRUCTURE',
     'REPEATED_CONTEXT',
     'WORKFLOW_AUTOMATION',
-  ]),
-  3: Object.freeze([
+  ),
+  3: capabilityList(
     'COST_EFFICIENCY',
     'MODEL_RIGHT_SIZING',
     'RETRY_WASTE',
@@ -32,8 +38,8 @@ const LEVEL_CAPABILITIES: Readonly<
     'REPEATED_CONTEXT',
     'WORKFLOW_AUTOMATION',
     'KNOWLEDGE_RETRIEVAL',
-  ]),
-  4: Object.freeze([
+  ),
+  4: capabilityList(
     'COST_EFFICIENCY',
     'MODEL_RIGHT_SIZING',
     'RETRY_WASTE',
@@ -44,7 +50,7 @@ const LEVEL_CAPABILITIES: Readonly<
     'KNOWLEDGE_RETRIEVAL',
     'COST_PER_SUCCESSFUL_OUTCOME',
     'CONTINUOUS_VERIFICATION',
-  ]),
+  ),
 });
 
 function deriveLevel(
@@ -74,13 +80,13 @@ function missingForNextLevel(
 ): readonly EvidenceSourceKind[] {
   switch (level) {
     case 1:
-      return Object.freeze(['SANITIZED_AI_EXPORT']);
+      return capabilityList('SANITIZED_AI_EXPORT']);
     case 2:
-      return Object.freeze(['AUTHORIZED_WORKSPACE']);
+      return capabilityList('AUTHORIZED_WORKSPACE']);
     case 3:
-      return Object.freeze(['PRODUCTION_TELEMETRY']);
+      return capabilityList('PRODUCTION_TELEMETRY']);
     case 4:
-      return Object.freeze([]);
+      return capabilityList(]);
   }
 }
 
