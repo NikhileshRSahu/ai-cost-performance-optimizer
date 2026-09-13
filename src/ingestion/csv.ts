@@ -94,11 +94,7 @@ function parseCsvText(text: string): string[][] {
   return rows;
 }
 
-function value(
-  row: string[],
-  headers: string[],
-  key: string,
-): string | null {
+function value(row: string[], headers: string[], key: string): string | null {
   const index = headers.indexOf(key);
   if (index < 0) return null;
   const v = row[index] ?? '';
