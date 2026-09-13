@@ -33,6 +33,7 @@ function evidence(
       nextAction: 'Run the representative workload benchmark.',
     },
     verifiedNetSavings: null,
+    diagnosticFacts: [],
     isDemo: false,
     limitations: [],
     ...overrides,
