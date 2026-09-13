@@ -11,6 +11,7 @@ We will compete on one narrow outcome:
 ## Target customer
 
 Primary ICP:
+
 - AI-native startup or small product team
 - roughly 10–100 people, with an initial beachhead around teams small enough not to employ a dedicated FinOps specialist
 - meaningful OpenAI / Anthropic / other model spend
@@ -23,19 +24,24 @@ The product must work **with** existing observability/cost data instead of requi
 ## Competitive reality
 
 ### Vantage
+
 Strength:
+
 - broad multi-cloud cost platform
 - OpenAI and Anthropic cost/usage ingestion
 - budgets, anomaly detection, allocation, reporting
 - FinOps Agent and automated remediation capabilities
 
 Important boundary from current public documentation:
+
 - OpenAI/Anthropic integrations are cost/usage ingestion surfaces.
 - FinOps Agent automated remediation is presently documented for AWS resource optimizations.
 - We have not found public evidence of an AI-model optimization loop that requires paired performance benchmarking and post-change verified savings before promoting a saving as VERIFIED.
 
 ### CloudZero
+
 Strength:
+
 - cloud + AI unit economics and allocation
 - OpenAI/Anthropic integrations
 - cost per customer / product / feature
@@ -44,7 +50,9 @@ Strength:
 Our wedge is not better allocation. It is the guarded optimization-and-verification workflow.
 
 ### Langfuse
+
 Strength:
+
 - excellent LLM observability
 - token/cost tracking
 - evaluations, experiments, prompt management
@@ -53,7 +61,9 @@ Strength:
 We should treat Langfuse as a potential **data source / complement**, not something to out-observe.
 
 ### Bifrost and similar gateways/observability platforms
+
 Strength:
+
 - broad provider support
 - request-level tokens, cost, latency, routing and governance
 
@@ -62,11 +72,13 @@ Again, our differentiator is the decision discipline after the measurements exis
 ## Product moat we can actually pursue
 
 ### 1. Verified-state discipline
+
 No saving is marketed as verified until:
 
 OPPORTUNITY → TESTED → IMPLEMENTED → VERIFIED
 
 The VERIFIED transition requires:
+
 - an explicit workload quality requirement
 - paired benchmark evidence
 - every configured performance constraint measured and passed
@@ -79,7 +91,9 @@ The VERIFIED transition requires:
 This must remain a hard architectural invariant, not marketing copy.
 
 ### 2. Radical time-to-value
+
 A founder should be able to reach the first defensible recommendation from a CSV without:
+
 - changing application code
 - giving us provider admin credentials
 - configuring a cloud cost platform
@@ -88,7 +102,9 @@ A founder should be able to reach the first defensible recommendation from a CSV
 Future integrations must reduce friction, never make CSV-first onboarding second-class.
 
 ### 3. Psychological trust
+
 Default UX language:
+
 - “Evidence”
 - “Measured”
 - “Tested”
@@ -96,15 +112,18 @@ Default UX language:
 - “Verified”
 
 Avoid:
+
 - “guaranteed savings”
 - “AI magic”
 - “automatic savings” where production evidence is absent
 - large unqualified percentage claims
 
-The product should visibly explain *why it refuses* to verify a saving.
+The product should visibly explain _why it refuses_ to verify a saving.
 
 ### 4. Comfortable self-service
+
 Every important screen should answer:
+
 1. Where am I?
 2. What do I need to provide?
 3. Why is it needed?
@@ -112,9 +131,11 @@ Every important screen should answer:
 5. What will the product **not** do without my approval/evidence?
 
 ### 5. Accessible pricing strategy
+
 Do not attempt to monetize basic cost visibility against free observability tools.
 
 Charge for the outcome workflow:
+
 - recommendation generation
 - benchmark/evidence workflow
 - implementation guidance
@@ -145,6 +166,7 @@ When a competitor ships a new feature, ask:
 If no, do not chase it.
 
 If yes, compete by improving one of:
+
 - verification rigor
 - onboarding speed
 - quality of recommendations
@@ -157,12 +179,15 @@ Do not compete by blindly adding breadth.
 ## Positioning candidates to validate with customers
 
 Primary:
+
 > **Cut AI spend without guessing what it will break.**
 
 Supporting:
+
 > We benchmark the cheaper option against your own quality and performance requirements, then only call the saving VERIFIED after the production result proves it.
 
 Alternative:
+
 > **Not another AI-cost dashboard. A proof loop for AI savings.**
 
 ## Validation question
@@ -173,6 +198,7 @@ The key customer interview question is now:
 
 A strong signal is not “this sounds useful.”
 A strong signal is willingness to:
+
 - provide a real usage sample,
 - run a benchmark,
 - allocate engineering time to the recommendation,
@@ -181,6 +207,7 @@ A strong signal is willingness to:
 ## Kill / pivot criteria
 
 Reconsider the wedge if target users repeatedly say one of the following:
+
 - their existing tool already performs the same benchmark + post-change verification workflow satisfactorily;
 - the savings available are too small to justify implementation effort;
 - they will not provide even minimally required benchmark/quality evidence;
