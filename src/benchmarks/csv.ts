@@ -78,11 +78,20 @@ export function parseBenchmarkCsv(bytes: Uint8Array): readonly BenchmarkCase[] {
           `BENCHMARK_COLUMN_COUNT_MISMATCH:${String(offset + 2)}`,
         );
       }
-      const record = Object.fromEntries(
+      const raw = Object.fromEntries(
         header.map((key, index) => [key, cells[index] ?? '']),
       );
-      if (record.quality_score === '') record.quality_score = null;
-      if (record.latency_ms === '') record.latency_ms = null;
+      const record = {
+        ...raw,
+        quality_score:
+          typeof raw.quality_score === 'string' && raw.quality_score.length > 0
+            ? raw.quality_score
+            : null,
+        latency_ms:
+          typeof raw.latency_ms === 'string' && raw.latency_ms.length > 0
+            ? raw.latency_ms
+            : null,
+      };
       const parsed = rowSchema.parse(record);
       return Object.freeze({
         caseId: parsed.case_id,
