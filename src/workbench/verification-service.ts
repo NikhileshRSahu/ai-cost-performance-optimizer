@@ -122,22 +122,24 @@ function aggregateWindow(
   });
 }
 
-function verificationId(input: Readonly<{
-  organizationId: string;
-  recommendationId: string;
-  postImportId: string;
-  measuredQuality: string;
-  postP95LatencyMs: string | null;
-  postFailureRate: string | null;
-  qualitySourceRef: string;
-  implementationCost: string;
-  incrementalOperatingCost: string;
-  attestations: Readonly<{
-    unitDefinitionUnchanged: boolean;
-    workloadMixComparable: boolean;
-    concurrentDeploymentsResolved: boolean;
-  }>;
-}>): string {
+function verificationId(
+  input: Readonly<{
+    organizationId: string;
+    recommendationId: string;
+    postImportId: string;
+    measuredQuality: string;
+    postP95LatencyMs: string | null;
+    postFailureRate: string | null;
+    qualitySourceRef: string;
+    implementationCost: string;
+    incrementalOperatingCost: string;
+    attestations: Readonly<{
+      unitDefinitionUnchanged: boolean;
+      workloadMixComparable: boolean;
+      concurrentDeploymentsResolved: boolean;
+    }>;
+  }>,
+): string {
   const payload = [
     input.organizationId,
     input.recommendationId,
