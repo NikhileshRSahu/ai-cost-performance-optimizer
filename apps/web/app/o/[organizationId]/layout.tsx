@@ -25,12 +25,26 @@ export default async function OrganizationLayout({
   }
 
   return (
-    <>
-      <nav aria-label="Organization workbench">
-        <Link href={`/o/${organizationId}`}>Overview</Link>{' '}
-        <span aria-label="Current role">{context.role}</span>
-      </nav>
-      {children}
-    </>
+    <div className="org-workbench">
+      <aside className="workbench-sidebar">
+        <div>
+          <p className="sidebar-kicker">Optimization workbench</p>
+          <p className="sidebar-org">{organizationId}</p>
+          <span className="role-chip" aria-label="Current role">
+            {context.role}
+          </span>
+        </div>
+        <nav aria-label="Organization workbench">
+          <Link href={`/o/${organizationId}`}>Overview</Link>
+          <Link href={`/o/${organizationId}/import`}>Import</Link>
+          <Link href={`/o/${organizationId}/workloads`}>Workloads</Link>
+          <Link href={`/o/${organizationId}/benchmark`}>Benchmark</Link>
+        </nav>
+        <p className="sidebar-note">
+          Savings stay separate as potential, tested, and verified evidence.
+        </p>
+      </aside>
+      <div className="workbench-content">{children}</div>
+    </div>
   );
 }
