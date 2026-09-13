@@ -121,7 +121,9 @@ describe('coverage', () => {
 
 describe('overlap safety', () => {
   it('excludes unreconciled request/aggregate overlaps', () => {
-    const a = parseUsageCsv(enc.encode(header + row), 'org').records[0]!;
+    const a = parseUsageCsv(enc.encode(header + row), 'org').records[0];
+    expect(a).toBeDefined();
+    if (a === undefined) throw new Error('expected parsed record');
     const b = {
       ...a,
       granularity: 'REQUEST' as const,
