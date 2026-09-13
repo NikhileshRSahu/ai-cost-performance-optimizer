@@ -72,6 +72,68 @@ describe('sanitized AI history diagnosis', () => {
     expect(result.repeatedPromptPatterns[0]?.automationCandidate).toBe(false);
   });
 
+  it('detects high-overlap rewordings without exposing raw prompt text', () => {
+    const first =
+      'Analyze the weekly support metrics and return a table with the top three root causes, evidence, and recommended actions.';
+    const second =
+      'Analyze our weekly support metrics and return a table containing the top three root causes, supporting evidence, and recommended actions.';
+
+    const result = diagnoseSanitizedHistory({
+      nearDuplicateThreshold: 0.7,
+      export: parsed([
+        message('m1', first),
+        message('m2', second, 'conversation-2'),
+      ]),
+    });
+
+    expect(result.repeatedPromptPatterns).toHaveLength(0);
+    expect(result.nearDuplicatePromptPatterns).toHaveLength(1);
+    expect(result.nearDuplicatePromptPatterns[0]?.similarityNumerator).toBeGreaterThan(
+      0,
+    );
+    expect(JSON.stringify(result.nearDuplicatePromptPatterns)).not.toContain(
+      'weekly support metrics',
+    );
+  });
+
+  it('keeps exact repeats out of the near-duplicate bucket', () => {
+    const content =
+      'Prepare the weekly AI cost review with model spend, retry cost, latency, and the top recommended action.';
+
+    const result = diagnoseSanitizedHistory({
+      export: parsed([message('m1', content), message('m2', content)]),
+    });
+
+    expect(result.repeatedPromptPatterns).toHaveLength(1);
+    expect(result.nearDuplicatePromptPatterns).toHaveLength(0);
+  });
+
+  it('surfaces when bounded near-duplicate analysis is capped', () => {
+    const result = diagnoseSanitizedHistory({
+      maximumSimilarityPrompts: 2,
+      export: parsed([
+        message(
+          'm1',
+          'Analyze support metrics for the current week and provide a table with root causes and actions.',
+        ),
+        message(
+          'm2',
+          'Analyze product metrics for the current week and provide a table with root causes and actions.',
+          'conversation-2',
+        ),
+        message(
+          'm3',
+          'Analyze sales metrics for the current week and provide a table with root causes and actions.',
+          'conversation-3',
+        ),
+      ]),
+    });
+
+    expect(result.similarityPromptsConsidered).toBe(2);
+    expect(result.similarityComparisonCapped).toBe(true);
+    expect(result.limitations.join(' ')).toContain('capped for bounded runtime');
+  });
+
   it('rejects unbounded or malformed content at the import contract', () => {
     expect(() =>
       parsed([
