@@ -3,4 +3,5 @@ dist
 coverage
 .superpowers
 docs/superpowers
+drizzle/meta
 *.log
