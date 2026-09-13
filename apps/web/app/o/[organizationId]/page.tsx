@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation';
 import { buildFounderDashboardView } from '../../../../../src/workbench/dashboard-view';
+import { buildAnalysisDepth } from '../../../../../src/efficiency/analysis-depth';
+import { buildWorkMriSnapshot } from '../../../../../src/efficiency/work-mri';
 import { createDatabase } from '../../../../../src/persistence/database';
 import { MetricCard } from '../../../components/metric-card';
 import {
@@ -7,6 +9,7 @@ import {
   type WorkflowStep,
 } from '../../../components/workflow-progress';
 import { RecommendationCard } from '../../../components/recommendation-card';
+import { WorkMri } from '../../../components/work-mri';
 import { DASHBOARD_COPY } from '../../../lib/dashboard-copy';
 import { loadFounderDashboardEvidence } from '../../../lib/dashboard-data';
 import { resolveRuntimeSession } from '../../../lib/runtime-session';
@@ -56,6 +59,34 @@ export default async function FounderDashboardPage({
       ? 'Not verified yet'
       : `${view.verifiedNetSavings.currency} ${view.verifiedNetSavings.exactNumerator}/${view.verifiedNetSavings.exactDenominator} · ${view.verifiedNetSavings.direction}`;
 
+  const analysisDepth = buildAnalysisDepth(
+    view.dataQuality === 'NO_DATA' ? [] : ['USAGE_CSV'],
+  );
+  const mri = buildWorkMriSnapshot({
+    depth: analysisDepth,
+    observedSpend: view.observedSpend,
+    strongestAction:
+      view.strongestAction === null
+        ? null
+        : {
+            title: view.strongestAction.title,
+            state: view.strongestAction.state,
+            confidenceBand: view.strongestAction.confidenceBand,
+            saving: view.strongestAction.saving,
+            principalLimitation: view.strongestAction.principalLimitation,
+            nextAction: view.strongestAction.nextAction,
+          },
+    verifiedNetSavings:
+      view.verifiedNetSavings === null
+        ? null
+        : {
+            numerator: view.verifiedNetSavings.exactNumerator,
+            denominator: view.verifiedNetSavings.exactDenominator,
+            currency: view.verifiedNetSavings.currency,
+            evidenceRef: view.verifiedNetSavings.evidenceRef,
+          },
+  });
+
   return (
     <div className="dashboard-stack">
       <WorkflowProgress organizationId={organizationId} current={currentStep} />
@@ -99,6 +130,8 @@ export default async function FounderDashboardPage({
           }
         />
       </div>
+
+      <WorkMri snapshot={mri} />
 
       <section aria-labelledby="strongest-action-title">
         <div className="section-heading">
