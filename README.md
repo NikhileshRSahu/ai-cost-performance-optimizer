@@ -55,11 +55,13 @@ The package root and focused exports expose:
 - `./implementation`
 - `./verification`
 - `./product-events`
+- `./auth`
+- `./persistence`
 
 The locked tools include Zod 4.6.4 and Vitest 5.0.0; see the authoritative [Zod API](https://zod.dev/api) and [Vitest guide](https://vitest.dev/guide/).
 
 ## Remaining V0 work
 
-This repository is **not yet the finished sellable V0**. The next bounded milestone is the persistent authenticated workbench: PostgreSQL/Drizzle storage, a passwordless-authentication adapter, founder dashboard, Optimization Lab, print-optimized report, and end-to-end/accessibility/security validation.
+This repository is **not yet the finished sellable V0**. The persistence foundation now includes PostgreSQL/Drizzle storage, tenant-scoped repositories, a trusted passwordless identity-to-session adapter, append-only evidence persistence, import idempotency, and resumable job state. The next bounded milestone is the authenticated founder dashboard, Optimization Lab, print-optimized report, and end-to-end/accessibility/security validation.
 
 Provider connectors remain deliberately gated. OpenAI and Anthropic administrative credentials must not be enabled until encrypted secret storage, redaction, tenant-isolation tests, credential deletion/rotation, security review, and explicit product-owner approval all pass. Commercial validation with real prospects also remains a separate gate; synthetic fixtures must never be presented as customer proof.
