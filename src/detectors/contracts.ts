@@ -1,7 +1,4 @@
-export type DetectorStatus =
-  | 'FINDING'
-  | 'NO_FINDING'
-  | 'INSUFFICIENT_EVIDENCE';
+export type DetectorStatus = 'FINDING' | 'NO_FINDING' | 'INSUFFICIENT_EVIDENCE';
 
 export type FindingType =
   | 'EXCESSIVE_OUTPUT'
