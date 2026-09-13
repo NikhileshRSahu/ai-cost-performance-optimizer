@@ -5,3 +5,8 @@ export * from './coverage/index.js';
 export * from './detectors/index.js';
 export * from './benchmarks/index.js';
 export * from './ranking/index.js';
+export * from './workbench/index.js';
+export * from './ledger/index.js';
+export * from './implementation/index.js';
+export * from './verification/index.js';
+export * from './product-events/index.js';
