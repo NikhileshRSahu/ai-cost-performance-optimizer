@@ -12,14 +12,22 @@ function textEntry(formData: FormData, key: string): string {
 
 export async function purgeEvidence(formData: FormData): Promise<never> {
   const organizationId = textEntry(formData, 'organizationId');
-  const confirmationOrganizationId = textEntry(formData, 'confirmationOrganizationId');
+  const confirmationOrganizationId = textEntry(
+    formData,
+    'confirmationOrganizationId',
+  );
   const session = await resolveRuntimeSession();
   const databaseUrl = process.env.DATABASE_URL;
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
 
   const database = createDatabase(databaseUrl);
   try {
-    await purgeOrganizationEvidence({ db: database.db, session, organizationId, confirmationOrganizationId });
+    await purgeOrganizationEvidence({
+      db: database.db,
+      session,
+      organizationId,
+      confirmationOrganizationId,
+    });
   } finally {
     await database.close();
   }
