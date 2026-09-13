@@ -14,7 +14,6 @@ await migrate(database, {
 const client = await pool.connect();
 
 try {
-
   await client.query(`
     TRUNCATE TABLE
       verification_windows,
@@ -127,10 +126,13 @@ try {
     priorityRank: 1,
     title: 'Move the ranked workload to model-b',
     evidenceRef: 'recommendation:rec-1',
-    principalLimitation: 'Production impact still requires post-change verification.',
-    nextAction: 'Review the implementation guide and staged rollout conditions.',
+    principalLimitation:
+      'Production impact still requires post-change verification.',
+    nextAction:
+      'Review the implementation guide and staged rollout conditions.',
     measuredFact: 'Model A served the measured workload at USD 120.50.',
-    inference: 'Model B may lower comparable cost while meeting configured constraints.',
+    inference:
+      'Model B may lower comparable cost while meeting configured constraints.',
     hypothesis: 'Canary model-b on the same workload before wider rollout.',
     proposedChange: 'Canary model-b for 10% of workload traffic.',
     rollbackInstructions: ['Restore model-a configuration.'],
