@@ -5,14 +5,23 @@ import { createDatabase } from '../../../../../../../src/persistence/database';
 import { verifyCustomerChange } from '../../../../../../../src/workbench/verification-service';
 import { resolveRuntimeSession } from '../../../../../lib/runtime-session';
 
+function textEntry(
+  formData: FormData,
+  key: string,
+  fallback = '',
+): string {
+  const value = formData.get(key);
+  return typeof value === 'string' ? value : fallback;
+}
+
 function optional(formData: FormData, key: string): string | null {
-  const value = String(formData.get(key) ?? '').trim();
+  const value = textEntry(formData, key).trim();
   return value.length === 0 ? null : value;
 }
 
 export async function submitVerification(formData: FormData): Promise<never> {
-  const organizationId = String(formData.get('organizationId') ?? '');
-  const recommendationId = String(formData.get('recommendationId') ?? '');
+  const organizationId = textEntry(formData, 'organizationId');
+  const recommendationId = textEntry(formData, 'recommendationId');
   const upload = formData.get('postCsv');
   if (!(upload instanceof File)) throw new Error('POST_CHANGE_CSV_REQUIRED');
 
@@ -31,18 +40,21 @@ export async function submitVerification(formData: FormData): Promise<never> {
       postFileName: upload.name,
       postBytes: new Uint8Array(await upload.arrayBuffer()),
       receivedAt: new Date().toISOString(),
-      measuredQuality: String(formData.get('measuredQuality') ?? ''),
+      measuredQuality: textEntry(formData, 'measuredQuality'),
       postP95LatencyMs: optional(formData, 'postP95LatencyMs'),
       postFailureRate: optional(formData, 'postFailureRate'),
-      qualitySourceRef: String(formData.get('qualitySourceRef') ?? ''),
-      implementationCost: String(formData.get('implementationCost') ?? '0'),
-      incrementalOperatingCost: String(
-        formData.get('incrementalOperatingCost') ?? '0',
+      qualitySourceRef: textEntry(formData, 'qualitySourceRef'),
+      implementationCost: textEntry(formData, 'implementationCost', '0'),
+      incrementalOperatingCost: textEntry(
+        formData,
+        'incrementalOperatingCost',
+        '0',
       ),
       attestations: {
         unitDefinitionUnchanged:
           formData.get('unitDefinitionUnchanged') === 'true',
-        workloadMixComparable: formData.get('workloadMixComparable') === 'true',
+        workloadMixComparable:
+          formData.get('workloadMixComparable') === 'true',
         concurrentDeploymentsResolved:
           formData.get('concurrentDeploymentsResolved') === 'true',
       },
