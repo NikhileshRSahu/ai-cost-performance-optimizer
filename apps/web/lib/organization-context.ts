@@ -1,7 +1,7 @@
 import type {
   AuthenticatedSession,
   Role,
-} from '../../../src/workbench/authz.js';
+} from '../../../src/workbench/authz';
 
 export type OrganizationContext = Readonly<{
   organizationId: string;

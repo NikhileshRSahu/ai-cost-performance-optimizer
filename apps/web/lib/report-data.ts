@@ -1,19 +1,19 @@
 import { and, desc, eq } from 'drizzle-orm';
-import { formatDecimal, rational } from '../../../src/economics/exact.js';
-import type { PersistenceDatabase } from '../../../src/persistence/database.js';
+import { formatDecimal, rational } from '../../../src/economics/exact';
+import type { PersistenceDatabase } from '../../../src/persistence/database';
 import {
   implementationRecords,
   recommendations,
   verificationWindows,
-} from '../../../src/persistence/schema.js';
-import { requireOrganizationAccess } from '../../../src/persistence/tenant.js';
+} from '../../../src/persistence/schema';
+import { requireOrganizationAccess } from '../../../src/persistence/tenant';
 import type {
   OptimizationReportEvidence,
   ReportFinancialClaim,
-} from '../../../src/reports/report-view.js';
-import type { AuthenticatedSession } from '../../../src/workbench/authz.js';
-import { loadFounderDashboardEvidence } from './dashboard-data.js';
-import { loadOptimizationLabEvidence } from './lab-data.js';
+} from '../../../src/reports/report-view';
+import type { AuthenticatedSession } from '../../../src/workbench/authz';
+import { loadFounderDashboardEvidence } from './dashboard-data';
+import { loadOptimizationLabEvidence } from './lab-data';
 
 function stringField(
   record: Record<string, unknown>,

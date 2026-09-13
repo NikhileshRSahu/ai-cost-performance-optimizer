@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
-import { requireOrganizationContext } from '../../../lib/organization-context.js';
-import { resolveRuntimeSession } from '../../../lib/runtime-session.js';
+import { requireOrganizationContext } from '../../../lib/organization-context';
+import { resolveRuntimeSession } from '../../../lib/runtime-session';
 
 export const dynamic = 'force-dynamic';
 

@@ -1,11 +1,11 @@
 import { redirect } from 'next/navigation';
-import { buildFounderDashboardView } from '../../../../../src/workbench/dashboard-view.js';
-import { createDatabase } from '../../../../../src/persistence/database.js';
-import { MetricCard } from '../../../components/metric-card.js';
-import { RecommendationCard } from '../../../components/recommendation-card.js';
-import { DASHBOARD_COPY } from '../../../lib/dashboard-copy.js';
-import { loadFounderDashboardEvidence } from '../../../lib/dashboard-data.js';
-import { resolveRuntimeSession } from '../../../lib/runtime-session.js';
+import { buildFounderDashboardView } from '../../../../../src/workbench/dashboard-view';
+import { createDatabase } from '../../../../../src/persistence/database';
+import { MetricCard } from '../../../components/metric-card';
+import { RecommendationCard } from '../../../components/recommendation-card';
+import { DASHBOARD_COPY } from '../../../lib/dashboard-copy';
+import { loadFounderDashboardEvidence } from '../../../lib/dashboard-data';
+import { resolveRuntimeSession } from '../../../lib/runtime-session';
 
 export const dynamic = 'force-dynamic';
 

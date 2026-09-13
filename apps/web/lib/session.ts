@@ -1,5 +1,5 @@
-import type { PasswordlessSessionAdapter } from '../../../src/auth/session-adapter.js';
-import type { AuthenticatedSession } from '../../../src/workbench/authz.js';
+import type { PasswordlessSessionAdapter } from '../../../src/auth/session-adapter';
+import type { AuthenticatedSession } from '../../../src/workbench/authz';
 
 export type WebIdentityProvider = () => Promise<unknown>;
 

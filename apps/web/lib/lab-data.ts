@@ -1,13 +1,13 @@
 import { and, eq } from 'drizzle-orm';
-import type { PersistenceDatabase } from '../../../src/persistence/database.js';
-import { recommendations } from '../../../src/persistence/schema.js';
-import { requireOrganizationAccess } from '../../../src/persistence/tenant.js';
-import type { AuthenticatedSession } from '../../../src/workbench/authz.js';
+import type { PersistenceDatabase } from '../../../src/persistence/database';
+import { recommendations } from '../../../src/persistence/schema';
+import { requireOrganizationAccess } from '../../../src/persistence/tenant';
+import type { AuthenticatedSession } from '../../../src/workbench/authz';
 import {
   parseOptimizationLabEvidence,
   type LabDecision,
   type OptimizationLabEvidence,
-} from '../../../src/workbench/lab-view.js';
+} from '../../../src/workbench/lab-view';
 
 function asRecord(value: unknown): Record<string, unknown> {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) {

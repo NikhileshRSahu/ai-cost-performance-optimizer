@@ -1,11 +1,11 @@
 import { redirect } from 'next/navigation';
-import { createDatabase } from '../../../../../../../src/persistence/database.js';
-import { buildOptimizationLabView } from '../../../../../../../src/workbench/lab-view.js';
-import { ConstraintRow } from '../../../../../components/constraint-row.js';
-import { EvidenceDetails } from '../../../../../components/evidence-details.js';
-import { LAB_COPY } from '../../../../../lib/lab-copy.js';
-import { loadOptimizationLabEvidence } from '../../../../../lib/lab-data.js';
-import { resolveRuntimeSession } from '../../../../../lib/runtime-session.js';
+import { createDatabase } from '../../../../../../../src/persistence/database';
+import { buildOptimizationLabView } from '../../../../../../../src/workbench/lab-view';
+import { ConstraintRow } from '../../../../../components/constraint-row';
+import { EvidenceDetails } from '../../../../../components/evidence-details';
+import { LAB_COPY } from '../../../../../lib/lab-copy';
+import { loadOptimizationLabEvidence } from '../../../../../lib/lab-data';
+import { resolveRuntimeSession } from '../../../../../lib/runtime-session';
 
 export const dynamic = 'force-dynamic';
 

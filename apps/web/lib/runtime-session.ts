@@ -1,8 +1,8 @@
-import { createPasswordlessSessionAdapter } from '../../../src/auth/session-adapter.js';
-import { createDatabase } from '../../../src/persistence/database.js';
-import { createMembershipRepository } from '../../../src/persistence/repositories/memberships.js';
-import type { AuthenticatedSession } from '../../../src/workbench/authz.js';
-import { resolveWebSession } from './session.js';
+import { createPasswordlessSessionAdapter } from '../../../src/auth/session-adapter';
+import { createDatabase } from '../../../src/persistence/database';
+import { createMembershipRepository } from '../../../src/persistence/repositories/memberships';
+import type { AuthenticatedSession } from '../../../src/workbench/authz';
+import { resolveWebSession } from './session';
 
 function readTrustedIdentityFromEnvironment(): unknown {
   const provider = process.env.AUTH_PROVIDER;

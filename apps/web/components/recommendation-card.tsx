@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import type { DashboardRecommendationView } from '../../../src/workbench/dashboard-view.js';
-import { EvidenceStateBadge } from './evidence-state-badge.js';
+import type { DashboardRecommendationView } from '../../../src/workbench/dashboard-view';
+import { EvidenceStateBadge } from './evidence-state-badge';
 
 export function RecommendationCard({
   organizationId,

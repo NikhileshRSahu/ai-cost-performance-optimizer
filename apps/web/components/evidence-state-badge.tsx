@@ -1,4 +1,4 @@
-import type { DashboardSavingsState } from '../../../src/workbench/dashboard-view.js';
+import type { DashboardSavingsState } from '../../../src/workbench/dashboard-view';
 
 export function EvidenceStateBadge({
   state,

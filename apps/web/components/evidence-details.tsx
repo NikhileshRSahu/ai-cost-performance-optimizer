@@ -1,4 +1,4 @@
-import type { OptimizationLabView } from '../../../src/workbench/lab-view.js';
+import type { OptimizationLabView } from '../../../src/workbench/lab-view';
 
 export function EvidenceDetails({
   view,

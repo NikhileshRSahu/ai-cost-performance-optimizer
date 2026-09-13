@@ -1,27 +1,27 @@
 import { and, desc, eq, or } from 'drizzle-orm';
-import { summarizeCoverage } from '../../../src/coverage/coverage.js';
+import { summarizeCoverage } from '../../../src/coverage/coverage';
 import {
   add,
   formatDecimal,
   parseDecimal,
   rational,
-} from '../../../src/economics/exact.js';
-import type { PersistenceDatabase } from '../../../src/persistence/database.js';
+} from '../../../src/economics/exact';
+import type { PersistenceDatabase } from '../../../src/persistence/database';
 import {
   importRuns,
   organizations,
   recommendations,
   usageRecords,
   verificationWindows,
-} from '../../../src/persistence/schema.js';
-import { requireOrganizationAccess } from '../../../src/persistence/tenant.js';
-import type { AuthenticatedSession } from '../../../src/workbench/authz.js';
+} from '../../../src/persistence/schema';
+import { requireOrganizationAccess } from '../../../src/persistence/tenant';
+import type { AuthenticatedSession } from '../../../src/workbench/authz';
 import type {
   DashboardDecision,
   DashboardEvidence,
   DashboardRecommendationEvidence,
   DashboardSavingsState,
-} from '../../../src/workbench/dashboard-view.js';
+} from '../../../src/workbench/dashboard-view';
 
 function evidenceString(
   evidence: Record<string, unknown>,

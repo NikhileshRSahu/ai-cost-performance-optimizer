@@ -1,4 +1,4 @@
-import type { ConstraintDisplayRow as Constraint } from '../../../src/workbench/lab-view.js';
+import type { ConstraintDisplayRow as Constraint } from '../../../src/workbench/lab-view';
 
 export function ConstraintRow({
   constraint,
