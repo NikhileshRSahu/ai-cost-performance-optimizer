@@ -1,5 +1,6 @@
 import type {
   ImportIssue,
+  ImportInterval,
   ImportRun,
   UsageRecord,
 } from '../usage/contracts.js';
@@ -16,6 +17,7 @@ export function importUsageCsv(
     bytes: Uint8Array;
     organizationId: string;
     receivedAt: string;
+    requestedInterval?: ImportInterval | null;
     isDemo?: boolean;
   }>,
 ): ImportResult {
@@ -52,10 +54,32 @@ export function importUsageCsv(
   }
 
   const rejected = parsed.issues.length + rejectedConflicts;
+  const effectiveInterval =
+    accepted.length === 0
+      ? null
+      : Object.freeze({
+          start: accepted.reduce(
+            (earliest, record) =>
+              Date.parse(record.intervalStart) < Date.parse(earliest)
+                ? record.intervalStart
+                : earliest,
+            accepted[0]?.intervalStart ?? '',
+          ),
+          end: accepted.reduce(
+            (latest, record) =>
+              Date.parse(record.intervalEnd) > Date.parse(latest)
+                ? record.intervalEnd
+                : latest,
+            accepted[0]?.intervalEnd ?? '',
+          ),
+        });
   const run: ImportRun = Object.freeze({
     checksum: sha256Bytes(input.bytes),
     source: 'CSV',
     receivedAt: input.receivedAt,
+    requestedInterval: input.requestedInterval ?? null,
+    effectiveInterval,
+    capabilities: parsed.capabilities,
     accepted: accepted.length,
     skippedDuplicates,
     rejected,
