@@ -732,3 +732,61 @@ V0 is sellable when a founder can use synthetic demo data or a conforming saniti
 - Anthropic Usage & Cost Admin API: <https://platform.claude.com/docs/en/manage-claude/usage-cost-api>
 
 Provider capabilities must be rechecked against these official sources immediately before adapter implementation. Sanitized recorded fixtures must include the documentation retrieval date and adapter schema version.
+
+
+## 29. Specification Review Clarifications — 2026-09-13
+
+This section resolves implementation ambiguities found during self-review. Where an earlier section is less specific, these rules govern. Product-owner review of the written specification remains pending.
+
+### 29.1 Exact arithmetic and evidence
+
+Source money is stored as signed integer units at scale 12 (negative source costs remain invalid; calculated impacts may be negative). Division can produce repeating decimals, so derived ratios are retained as exact rational numerator/denominator pairs of integers, with positive denominators. Financial comparisons and chained calculations use those pairs, never rounded decimal intermediates or JavaScript Number. Decimal output is a presentation projection using half-even rounding; evidence retains the exact fraction and formula version. Database fields must reject overflow rather than truncate. Example: baseline cost 1 divided by 3 units, multiplied by 3 post units, produces exactly 1.
+
+Confidence percentages are deterministic evidence scores, not calibrated probabilities or statistical guarantees. Benchmark results describe the tested dataset; the report must not imply guaranteed future production quality.
+
+### 29.2 Coverage and verification
+
+Coverage is the union of explicitly complete source intervals within the selected scope, measured in the organization's timezone. Missing intervals are unknown, not zero-use days. Complete zero-use days count only with explicit source coverage evidence. Overlapping intervals count once. Monthly projections require at least seven complete calendar days and use only costs attributable to those complete days. Aggregate buckets crossing a selected boundary are excluded with a reason unless exact subdivision is supplied; their cost is not prorated by time.
+
+Both verification windows require at least seven complete days, must not overlap, and must exclude a recorded rollout/stabilization interval. The operator records attribution scope, unchanged unit definitions, workload/configuration versions, and workload-mix comparability. Material changes in task mix or concurrent deployments block verification unless separately attributed comparable strata exist. Missing comparability attestations or required post-window performance evidence block VERIFIED.
+
+Quality evidence for the post window is imported separately when usage CSV cannot supply it; an old benchmark alone does not establish post-change quality. Success definitions must match across windows; zero or unknown baseline units block verification.
+
+### 29.3 Ingestion capabilities
+
+The base CSV remains valid without detector-specific fields. Extend the optional contract and canonical record with:
+- granularity: REQUEST or AGGREGATE_BUCKET; default AGGREGATE_BUCKET, never inferred from requests = 1;
+- configuration_id and optional output_cost;
+- operation_id and attempt_number (integer at least 1), or retry_count (non-negative integer);
+- stable_prefix_hash, stable_prefix_tokens, and cache_eligible_input_tokens.
+
+REQUEST records represent exactly one attempt. Explicit retry_count may support a retry finding, but retry savings require attributable retry cost evidence; multiplying total cost by a guessed retry fraction is forbidden. Repeated attempts are not deduplicated by operation_id. Cached-token quantities alone never establish cache eligibility. Prefix identifiers are customer-supplied opaque values; raw prompts remain excluded.
+
+Token normalization records whether provider input totals include cached/cache-write tokens before deriving disjoint cost dimensions; unknown semantics block token-based cost projections. Import-provided total_cost alone is customer-reported actual cost, not independently reconciled provider-billed cost.
+
+CSV limits are 10 MiB and 50,000 data rows per import, with UTF-8 encoding and 64 KiB maximum decoded cell length. Reject duplicate header names and unsupported columns with an actionable schema error. Tenant IDs and demo flags are assigned server-side, not trusted from uploaded rows. Request/aggregate overlap or overlapping exports that cannot be reconciled are flagged and excluded from combined financial totals until resolved.
+
+### 29.4 Benchmark decisions and metric aggregation
+
+A paired valid case is a distinct case ID with both current and candidate records under the same dataset/evaluator version. Repetitions do not increase the distinct-case count. Sample adequacy passes only when pairedValidCases >= targetCases; default 30, minimum allowed target 10. A high weighted confidence score cannot bypass this gate.
+
+Decision precedence:
+1. Any valid measured configured constraint failure or calculable non-positive net saving yields DO_NOT_CHANGE, even if other evidence is missing.
+2. Otherwise, missing mandatory quality requirements, missing measurements, unmatched configurations/cases, inadequate samples, or Low confidence yields INSUFFICIENT_EVIDENCE.
+3. Only complete passing evidence and positive comparable net saving yield OPTIMIZE.
+
+For request-level latency samples, use nearest-rank percentiles with sorted sample rank ceil(p * n). Never average bucket p95 values to claim a combined p95; require underlying samples or a directly measured percentile for the exact evaluated scope. Benchmark records include case ID, repetition ID, configuration ID, outcome, measured cost/currency, latency, normalized quality score in [0,1], and evaluator provenance. Timeout/error treatment is fixed by the suite before results are imported; failures cannot be silently dropped from denominators. Performance thresholds use unrounded values.
+
+### 29.5 Ranking and detector boundaries
+
+organizationMaterialityTarget must be positive. For less than seven covered days, rank within an explicitly labeled observed-period cohort using positive observed-period net saving and a materiality target for that same period; never mix this ranking with monthly projections.
+
+For a positive minimum-quality threshold q, normalized safety margin is (measured - q) / q. For a positive maximum threshold t, it is (t - measured) / t. A passing zero threshold receives margin 0 conservatively; a failed threshold receives safety 0. Passing safety is 0.5 + 0.5 * min(1, margin / 0.10), taking the minimum across required constraints.
+
+Cost-anomaly history means at least 14 complete comparable days strictly before the assessed day; the assessed day is excluded from median, MAD, and historical maximum. Opportunity amounts from overlapping recommendations are never added together without a joint benchmark and attribution model.
+
+### 29.6 Authorization and delivery gates
+
+OWNER inherits OPERATOR capabilities; OPERATOR may mark implementation and submit verification evidence; VIEWER is read-only. Only OWNER manages membership and credential references. Every service authorizes membership from the authenticated session rather than accepting an organization ID as authority. Imported results never execute customer-supplied grader code on the server.
+
+Implementation planning follows the delivery sequence in section 26, with separate executable milestones for the core evidence engine, authenticated workbench, and security/commercial validation. Provider adapters remain a later gated milestone. This specification does not authorize prospect outreach, paid API use, or enabling provider credentials.
