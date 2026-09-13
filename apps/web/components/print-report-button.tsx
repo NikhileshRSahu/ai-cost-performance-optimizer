@@ -5,7 +5,7 @@ export function PrintReportButton() {
     <button
       className="print-button"
       type="button"
-      onClick={() => window.print()}
+      onClick={() => {\n        window.print();\n      }}
     >
       Print / Save as PDF
     </button>
