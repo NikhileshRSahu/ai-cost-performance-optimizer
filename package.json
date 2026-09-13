@@ -16,7 +16,9 @@
     "./ledger": "./dist/ledger/index.js",
     "./implementation": "./dist/implementation/index.js",
     "./verification": "./dist/verification/index.js",
-    "./product-events": "./dist/product-events/index.js"
+    "./product-events": "./dist/product-events/index.js",
+    "./auth": "./dist/auth/index.js",
+    "./persistence": "./dist/persistence/index.js"
   },
   "engines": {
     "node": ">=24"
