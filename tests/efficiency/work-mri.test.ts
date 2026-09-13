@@ -5,6 +5,7 @@ import { buildWorkMriSnapshot } from '../../src/efficiency/work-mri.js';
 describe('buildWorkMriSnapshot', () => {
   it('shows evidence-backed spend while explicitly withholding unsupported intelligence', () => {
     const snapshot = buildWorkMriSnapshot({
+      additionalFacts: [],
       depth: buildAnalysisDepth(['USAGE_CSV']),
       observedSpend: {
         amount: '1200.00',
@@ -31,6 +32,7 @@ describe('buildWorkMriSnapshot', () => {
 
   it('surfaces the strongest action without upgrading opportunity into tested or verified savings', () => {
     const snapshot = buildWorkMriSnapshot({
+      additionalFacts: [],
       depth: buildAnalysisDepth(['USAGE_CSV']),
       observedSpend: null,
       strongestAction: {
@@ -57,6 +59,7 @@ describe('buildWorkMriSnapshot', () => {
 
   it('removes withheld claims as the evidence boundary expands', () => {
     const snapshot = buildWorkMriSnapshot({
+      additionalFacts: [],
       depth: buildAnalysisDepth([
         'USAGE_CSV',
         'SANITIZED_AI_EXPORT',
