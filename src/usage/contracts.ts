@@ -69,10 +69,31 @@ export type ImportIssue = Readonly<{
   message: string;
 }>;
 
+export type SourceCapability = Readonly<{
+  requestGranularity: boolean;
+  model: boolean;
+  projectOrWorkspace: boolean;
+  apiKeyIdentifier: boolean;
+  tokenClasses: boolean;
+  cost: boolean;
+  latency: boolean;
+  success: boolean;
+  toolUsage: boolean;
+  stableEventIdentifier: boolean;
+}>;
+
+export type ImportInterval = Readonly<{
+  start: string;
+  end: string;
+}>;
+
 export type ImportRun = Readonly<{
   checksum: string;
   source: DataSource;
   receivedAt: string;
+  requestedInterval: ImportInterval | null;
+  effectiveInterval: ImportInterval | null;
+  capabilities: SourceCapability;
   accepted: number;
   skippedDuplicates: number;
   rejected: number;
