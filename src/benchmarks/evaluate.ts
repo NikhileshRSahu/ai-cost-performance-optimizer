@@ -12,9 +12,7 @@ import { computeConfidence, type ConfidenceResult } from './confidence.js';
 
 export type BenchmarkOutcome = 'SUCCESS' | 'FAILURE' | 'TIMEOUT';
 export type BenchmarkDecision =
-  | 'OPTIMIZE'
-  | 'DO_NOT_CHANGE'
-  | 'INSUFFICIENT_EVIDENCE';
+  'OPTIMIZE' | 'DO_NOT_CHANGE' | 'INSUFFICIENT_EVIDENCE';
 
 export type BenchmarkCase = Readonly<{
   caseId: string;
@@ -39,7 +37,10 @@ export type BenchmarkEvaluation = Readonly<{
   reasons: readonly string[];
   pairedValidCases: number;
   metrics: Readonly<{
-    candidateQuality: Readonly<{ numerator: string; denominator: string }> | null;
+    candidateQuality: Readonly<{
+      numerator: string;
+      denominator: string;
+    }> | null;
     candidateP95LatencyMs: Readonly<{
       numerator: string;
       denominator: string;
@@ -103,21 +104,20 @@ function rationalNumber(value: Rational): number {
 }
 
 function validateScore(value: Rational): void {
-  if (
-    compare(value, rational(0n)) < 0 ||
-    compare(value, rational(1n)) > 0
-  ) {
+  if (compare(value, rational(0n)) < 0 || compare(value, rational(1n)) > 0) {
     throw new Error('QUALITY_SCORE_OUT_OF_RANGE');
   }
 }
 
-export function evaluateBenchmark(input: Readonly<{
-  cases: readonly BenchmarkCase[];
-  currentConfigurationId: string;
-  candidateConfigurationId: string;
-  evaluatorVersion: string;
-  constraints: BenchmarkConstraints;
-}>): BenchmarkEvaluation {
+export function evaluateBenchmark(
+  input: Readonly<{
+    cases: readonly BenchmarkCase[];
+    currentConfigurationId: string;
+    candidateConfigurationId: string;
+    evaluatorVersion: string;
+    constraints: BenchmarkConstraints;
+  }>,
+): BenchmarkEvaluation {
   const targetCases = input.constraints.targetCases ?? 30;
   if (!Number.isInteger(targetCases) || targetCases < 10) {
     throw new Error('TARGET_CASES_MIN_10');
@@ -214,8 +214,7 @@ export function evaluateBenchmark(input: Readonly<{
   const availableMeasurements =
     1 +
     (candidateQuality === null ? 0 : 1) +
-    (input.constraints.maxP95LatencyMs === null ||
-    candidateP95Latency !== null
+    (input.constraints.maxP95LatencyMs === null || candidateP95Latency !== null
       ? 1
       : 0);
   const measurementCoverage = availableMeasurements / configuredMeasurements;
@@ -268,10 +267,8 @@ export function evaluateBenchmark(input: Readonly<{
 
   if (
     candidateQuality !== null &&
-    compare(
-      candidateQuality,
-      parseDecimal(input.constraints.requiredQuality),
-    ) < 0
+    compare(candidateQuality, parseDecimal(input.constraints.requiredQuality)) <
+      0
   ) {
     reasons.push('QUALITY_BELOW_REQUIREMENT');
     measuredFailure = true;
@@ -289,10 +286,7 @@ export function evaluateBenchmark(input: Readonly<{
   }
   if (
     input.constraints.maxFailureRate !== null &&
-    compare(
-      failureRate,
-      parseDecimal(input.constraints.maxFailureRate),
-    ) > 0
+    compare(failureRate, parseDecimal(input.constraints.maxFailureRate)) > 0
   ) {
     reasons.push('FAILURE_RATE_ABOVE_MAXIMUM');
     measuredFailure = true;

@@ -10,7 +10,11 @@ import {
   type Rational,
 } from '../economics/exact.js';
 import type { UsageRecord } from '../usage/contracts.js';
-import type { DetectorFinding, DetectorResult, FindingType } from './contracts.js';
+import type {
+  DetectorFinding,
+  DetectorResult,
+  FindingType,
+} from './contracts.js';
 
 function result(
   status: DetectorResult['status'],
@@ -94,13 +98,15 @@ function scoped(
   return records.filter((record) => record.workload === workload);
 }
 
-export function detectExcessiveOutput(input: Readonly<{
-  records: readonly UsageRecord[];
-  workload: string;
-  findingId: string;
-  maxOutputTokensPerRequest: string;
-  maxOutputCostShare: string;
-}>): DetectorResult {
+export function detectExcessiveOutput(
+  input: Readonly<{
+    records: readonly UsageRecord[];
+    workload: string;
+    findingId: string;
+    maxOutputTokensPerRequest: string;
+    maxOutputCostShare: string;
+  }>,
+): DetectorResult {
   const records = scoped(input.records, input.workload);
   if (records.length === 0) {
     return result('INSUFFICIENT_EVIDENCE', null, ['WORKLOAD_DATA_MISSING']);
@@ -154,11 +160,13 @@ export function detectExcessiveOutput(input: Readonly<{
   );
 }
 
-export function detectRetryRepeatedCall(input: Readonly<{
-  records: readonly UsageRecord[];
-  workload: string;
-  findingId: string;
-}>): DetectorResult {
+export function detectRetryRepeatedCall(
+  input: Readonly<{
+    records: readonly UsageRecord[];
+    workload: string;
+    findingId: string;
+  }>,
+): DetectorResult {
   const records = scoped(input.records, input.workload);
   if (records.length === 0) {
     return result('INSUFFICIENT_EVIDENCE', null, ['WORKLOAD_DATA_MISSING']);
@@ -195,12 +203,14 @@ export function detectRetryRepeatedCall(input: Readonly<{
   );
 }
 
-export function detectPromptCaching(input: Readonly<{
-  records: readonly UsageRecord[];
-  workload: string;
-  findingId: string;
-  minimumCacheHitRatio: string;
-}>): DetectorResult {
+export function detectPromptCaching(
+  input: Readonly<{
+    records: readonly UsageRecord[];
+    workload: string;
+    findingId: string;
+    minimumCacheHitRatio: string;
+  }>,
+): DetectorResult {
   const records = scoped(input.records, input.workload);
   if (records.length === 0) {
     return result('INSUFFICIENT_EVIDENCE', null, ['WORKLOAD_DATA_MISSING']);
@@ -233,13 +243,15 @@ export function detectPromptCaching(input: Readonly<{
   );
 }
 
-export function detectModelRightSizing(input: Readonly<{
-  records: readonly UsageRecord[];
-  workload: string;
-  findingId: string;
-  candidateConfigurationId: string;
-  candidateComparableCost: string;
-}>): DetectorResult {
+export function detectModelRightSizing(
+  input: Readonly<{
+    records: readonly UsageRecord[];
+    workload: string;
+    findingId: string;
+    candidateConfigurationId: string;
+    candidateComparableCost: string;
+  }>,
+): DetectorResult {
   const records = scoped(input.records, input.workload);
   if (
     records.length === 0 ||
@@ -296,13 +308,15 @@ function absolute(value: Rational): Rational {
     : value;
 }
 
-export function detectCostAnomaly(input: Readonly<{
-  history: readonly Readonly<{ date: string; cost: string }>[];
-  current: Readonly<{ date: string; cost: string }>;
-  findingId: string;
-  materialityThreshold: string;
-  stableScope: boolean;
-}>): DetectorResult {
+export function detectCostAnomaly(
+  input: Readonly<{
+    history: readonly Readonly<{ date: string; cost: string }>[];
+    current: Readonly<{ date: string; cost: string }>;
+    findingId: string;
+    materialityThreshold: string;
+    stableScope: boolean;
+  }>,
+): DetectorResult {
   if (!input.stableScope) {
     return result('INSUFFICIENT_EVIDENCE', null, ['STABLE_SCOPE_REQUIRED']);
   }
@@ -349,10 +363,7 @@ export function detectCostAnomaly(input: Readonly<{
     );
   }
 
-  const robustZ = divide(
-    multiply(rational(6745n, 10000n), increase),
-    mad,
-  );
+  const robustZ = divide(multiply(rational(6745n, 10000n), increase), mad);
   if (compare(robustZ, rational(7n, 2n)) < 0) {
     return result('NO_FINDING', null);
   }
