@@ -39,8 +39,7 @@ export function excludeUnreconciledOverlaps(
       if (a.granularity !== b.granularity || a.fingerprint !== b.fingerprint) {
         excluded.add(a);
         excluded.add(b);
-        const reason =
-          `UNRECONCILED_OVERLAP:${a.sourceLine}:${b.sourceLine}`;
+        const reason = `UNRECONCILED_OVERLAP:${a.sourceLine}:${b.sourceLine}`;
         reasons.push(reason);
       }
     }
