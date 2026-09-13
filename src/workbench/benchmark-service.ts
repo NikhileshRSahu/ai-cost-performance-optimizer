@@ -174,7 +174,7 @@ export async function evaluateAndPersistBenchmark(
   const evidence = {
     priorityRank: 1,
     title: `Evaluate ${input.candidateConfigurationId} for ${workload.name}`,
-    measuredFact: `${evaluation.pairedValidCases} paired benchmark cases were evaluated.`,
+    measuredFact: `${String(evaluation.pairedValidCases)} paired benchmark cases were evaluated.`,
     inference:
       evaluation.decision === 'OPTIMIZE'
         ? 'The candidate is cheaper on the paired benchmark while meeting configured constraints.'
@@ -219,7 +219,7 @@ export async function evaluateAndPersistBenchmark(
       confidence: {
         band: evaluation.confidence.band,
         reasons: [
-          `${evaluation.pairedValidCases} paired cases`,
+          `${String(evaluation.pairedValidCases)} paired cases`,
           `Confidence score ${evaluation.confidence.score.toFixed(3)}`,
           ...(evaluation.reasons.length > 0
             ? evaluation.reasons
