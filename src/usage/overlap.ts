@@ -13,9 +13,7 @@ function overlaps(a: UsageRecord, b: UsageRecord): boolean {
   );
 }
 
-export function excludeUnreconciledOverlaps(
-  records: readonly UsageRecord[],
-): OverlapResult {
+export function excludeUnreconciledOverlaps(records: readonly UsageRecord[]): OverlapResult {
   const excluded = new Set<UsageRecord>();
   const reasons: string[] = [];
 
