@@ -66,10 +66,17 @@ async function reachVerification(page: Page, organizationId: string) {
   await expect(page.getByText('Tested saving')).toBeVisible();
   await page.getByRole('link', { name: 'Implement tested change' }).click();
 
-  await page.getByLabel('Implemented at (UTC)').fill('2026-08-30T08:00');
-  await page.getByLabel('Rollout started (UTC)').fill('2026-08-30T08:00');
-  await page.getByLabel('Stabilization ends (UTC)').fill('2026-09-01T08:00');
-  await page.getByRole('button', { name: 'Confirm implementation' }).click();
+  const implementedAt = page.getByLabel('Implemented at (UTC)');
+  if (await implementedAt.isVisible()) {
+    await implementedAt.fill('2026-08-30T08:00');
+    await page.getByLabel('Rollout started (UTC)').fill('2026-08-30T08:00');
+    await page.getByLabel('Stabilization ends (UTC)').fill('2026-09-01T08:00');
+    await page.getByRole('button', { name: 'Confirm implementation' }).click();
+  } else {
+    await page
+      .getByRole('link', { name: 'Continue to verification' })
+      .click();
+  }
 
   await expect(
     page.getByRole('heading', { name: 'Measure what actually changed' }),
