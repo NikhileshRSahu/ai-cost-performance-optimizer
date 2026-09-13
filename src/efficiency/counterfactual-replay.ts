@@ -10,9 +10,7 @@ import {
 import type { BenchmarkEvaluation } from '../benchmarks/evaluate.js';
 
 export type CounterfactualReplayStatus =
-  | 'PROJECTED'
-  | 'INELIGIBLE_BENCHMARK'
-  | 'INELIGIBLE_BASELINE';
+  'PROJECTED' | 'INELIGIBLE_BENCHMARK' | 'INELIGIBLE_BASELINE';
 
 export type CounterfactualReplay = Readonly<{
   status: CounterfactualReplayStatus;
@@ -40,10 +38,12 @@ export type CounterfactualReplay = Readonly<{
   claimBoundary: string;
 }>;
 
-function fromSerialized(value: Readonly<{
-  numerator: string;
-  denominator: string;
-}>) {
+function fromSerialized(
+  value: Readonly<{
+    numerator: string;
+    denominator: string;
+  }>,
+) {
   return rational(BigInt(value.numerator), BigInt(value.denominator));
 }
 
