@@ -23,7 +23,9 @@ describe('buildWorkMriSnapshot', () => {
       },
     ]);
     expect(snapshot.withheldClaims.join(' ')).toContain('Prompt-quality claims');
-    expect(snapshot.withheldClaims.join(' ')).toContain('Cost-per-successful-outcome');
+    expect(snapshot.withheldClaims.join(' ')).toContain(
+      'Cost-per-successful-outcome',
+    );
     expect(snapshot.nextUnlock).toContain('sanitized AI-history export');
   });
 
