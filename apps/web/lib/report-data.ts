@@ -78,16 +78,18 @@ export async function loadOptimizationReportEvidence(
 ): Promise<OptimizationReportEvidence> {
   requireOrganizationAccess({ session, organizationId, action: 'READ' });
 
-  const [row] = await db
-    .select()
-    .from(recommendations)
-    .where(
-      and(
-        eq(recommendations.organizationId, organizationId),
-        eq(recommendations.id, recommendationId),
-      ),
-    )
-    .limit(1);
+  const row = (
+    await db
+      .select()
+      .from(recommendations)
+      .where(
+        and(
+          eq(recommendations.organizationId, organizationId),
+          eq(recommendations.id, recommendationId),
+        ),
+      )
+      .limit(1)
+  ).at(0);
   if (row === undefined) throw new Error('RECOMMENDATION_NOT_FOUND');
 
   const [dashboard, lab] = await Promise.all([
@@ -123,28 +125,32 @@ export async function loadOptimizationReportEvidence(
     );
   }
 
-  const [implementation] = await db
-    .select()
-    .from(implementationRecords)
-    .where(
-      and(
-        eq(implementationRecords.organizationId, organizationId),
-        eq(implementationRecords.recommendationId, recommendationId),
-      ),
-    )
-    .limit(1);
+  const implementation = (
+    await db
+      .select()
+      .from(implementationRecords)
+      .where(
+        and(
+          eq(implementationRecords.organizationId, organizationId),
+          eq(implementationRecords.recommendationId, recommendationId),
+        ),
+      )
+      .limit(1)
+  ).at(0);
 
-  const [verification] = await db
-    .select()
-    .from(verificationWindows)
-    .where(
-      and(
-        eq(verificationWindows.organizationId, organizationId),
-        eq(verificationWindows.recommendationId, recommendationId),
-      ),
-    )
-    .orderBy(desc(verificationWindows.createdAt))
-    .limit(1);
+  const verification = (
+    await db
+      .select()
+      .from(verificationWindows)
+      .where(
+        and(
+          eq(verificationWindows.organizationId, organizationId),
+          eq(verificationWindows.recommendationId, recommendationId),
+        ),
+      )
+      .orderBy(desc(verificationWindows.createdAt))
+      .limit(1)
+  ).at(0);
 
   let verificationClaim: ReportFinancialClaim | null = null;
   if (
