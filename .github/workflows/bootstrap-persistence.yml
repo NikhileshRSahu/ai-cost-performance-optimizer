@@ -1,0 +1,34 @@
+name: Bootstrap persistence dependencies
+
+on:
+  push:
+    branches:
+      - codex/persistent-workbench-foundation
+
+permissions:
+  contents: write
+
+jobs:
+  bootstrap:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Pin persistence dependencies
+        run: |
+          npm install --save-exact drizzle-orm@0.45.2 pg@8.23.0
+          npm install --save-dev --save-exact drizzle-kit@0.31.10 @types/pg@8.23.1
+          npm pkg set scripts.db:generate="drizzle-kit generate"
+          npm pkg set scripts.db:migrate="drizzle-kit migrate"
+          npm pkg set scripts.test:db="vitest run --config vitest.db.config.ts"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore: pin persistence dependencies [skip ci]"
+          git push
