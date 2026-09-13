@@ -24,17 +24,18 @@ export default async function BenchmarkPage({
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
 
   const database = createDatabase(databaseUrl);
-  let available: (typeof workloads.$inferSelect)[] = [];
-  try {
-    requireOrganizationAccess({ session, organizationId, action: 'READ' });
-    available = await database.db
-      .select()
-      .from(workloads)
-      .where(eq(workloads.organizationId, organizationId))
-      .orderBy(asc(workloads.name));
-  } finally {
-    await database.close();
-  }
+  const available = await (async () => {
+    try {
+      requireOrganizationAccess({ session, organizationId, action: 'READ' });
+      return await database.db
+        .select()
+        .from(workloads)
+        .where(eq(workloads.organizationId, organizationId))
+        .orderBy(asc(workloads.name));
+    } finally {
+      await database.close();
+    }
+  })();
 
   const selected =
     available.find((workload) => workload.id === selectedId) ?? available.at(0);
