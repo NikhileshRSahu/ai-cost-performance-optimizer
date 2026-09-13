@@ -122,13 +122,38 @@ function aggregateWindow(
   });
 }
 
-function verificationId(
-  organizationId: string,
-  recommendationId: string,
-  postImportId: string,
-): string {
+function verificationId(input: Readonly<{
+  organizationId: string;
+  recommendationId: string;
+  postImportId: string;
+  measuredQuality: string;
+  postP95LatencyMs: string | null;
+  postFailureRate: string | null;
+  qualitySourceRef: string;
+  implementationCost: string;
+  incrementalOperatingCost: string;
+  attestations: Readonly<{
+    unitDefinitionUnchanged: boolean;
+    workloadMixComparable: boolean;
+    concurrentDeploymentsResolved: boolean;
+  }>;
+}>): string {
+  const payload = [
+    input.organizationId,
+    input.recommendationId,
+    input.postImportId,
+    input.measuredQuality,
+    input.postP95LatencyMs ?? '',
+    input.postFailureRate ?? '',
+    input.qualitySourceRef,
+    input.implementationCost,
+    input.incrementalOperatingCost,
+    String(input.attestations.unitDefinitionUnchanged),
+    String(input.attestations.workloadMixComparable),
+    String(input.attestations.concurrentDeploymentsResolved),
+  ].join('\0');
   const digest = createHash('sha256')
-    .update(`${organizationId}\0${recommendationId}\0${postImportId}`)
+    .update(payload)
     .digest('hex')
     .slice(0, 24);
   return `verify-${digest}`;
@@ -341,11 +366,18 @@ export async function verifyCustomerChange(
     attestations: input.attestations,
   });
 
-  const id = verificationId(
-    input.organizationId,
-    input.recommendationId,
-    postImport.importId,
-  );
+  const id = verificationId({
+    organizationId: input.organizationId,
+    recommendationId: input.recommendationId,
+    postImportId: postImport.importId,
+    measuredQuality: input.measuredQuality,
+    postP95LatencyMs: input.postP95LatencyMs,
+    postFailureRate: input.postFailureRate,
+    qualitySourceRef: input.qualitySourceRef,
+    implementationCost: input.implementationCost,
+    incrementalOperatingCost: input.incrementalOperatingCost,
+    attestations: input.attestations,
+  });
   const existing = (
     await input.db
       .select()
@@ -385,7 +417,7 @@ export async function verifyCustomerChange(
   if (result.status === 'VERIFIED') {
     const evidenceRepository = createEvidenceRepository(input.db);
     await evidenceRepository.appendLedgerEvent(input.session, {
-      id: `${input.recommendationId}:verified:${postImport.importId}`,
+      id: `${input.recommendationId}:verified:${id}`,
       recommendationId: input.recommendationId,
       organizationId: input.organizationId,
       type: 'STATE_RECORDED',
