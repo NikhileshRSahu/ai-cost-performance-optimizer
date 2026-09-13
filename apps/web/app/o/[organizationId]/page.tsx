@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { buildFounderDashboardView } from '../../../../../src/workbench/dashboard-view';
 import { createDatabase } from '../../../../../src/persistence/database';
 import { MetricCard } from '../../../components/metric-card';
+import { WorkflowProgress, type WorkflowStep } from '../../../components/workflow-progress';
 import { RecommendationCard } from '../../../components/recommendation-card';
 import { DASHBOARD_COPY } from '../../../lib/dashboard-copy';
 import { loadFounderDashboardEvidence } from '../../../lib/dashboard-data';
@@ -36,6 +37,17 @@ export default async function FounderDashboardPage({
     await database.close();
   }
 
+  const currentStep: WorkflowStep =
+    view.verifiedNetSavings !== null
+      ? 'verify'
+      : view.strongestAction?.state === 'TESTED'
+        ? 'implement'
+        : view.strongestAction !== null
+          ? 'benchmark'
+          : view.observedSpend !== null
+            ? 'workloads'
+            : 'import';
+
   const verified =
     view.verifiedNetSavings === null
       ? 'Not verified yet'
@@ -43,6 +55,7 @@ export default async function FounderDashboardPage({
 
   return (
     <div className="dashboard-stack">
+      <WorkflowProgress organizationId={organizationId} current={currentStep} />
       {view.demoDisclaimer !== null ? (
         <div className="demo-banner" role="note">
           {view.demoDisclaimer}
