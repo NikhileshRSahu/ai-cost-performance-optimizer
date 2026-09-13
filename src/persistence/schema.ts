@@ -102,7 +102,10 @@ export const workloads = pgTable(
       .references(() => organizations.id, { onDelete: 'cascade' }),
     name: text('name').notNull(),
     environment: text('environment').notNull(),
-    constraintSet: jsonb('constraint_set').$type<Record<string, unknown> | null>(),
+    constraintSet: jsonb('constraint_set').$type<Record<
+      string,
+      unknown
+    > | null>(),
     createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
       .notNull()
       .defaultNow(),
@@ -125,7 +128,10 @@ export const importRuns = pgTable(
     source: text('source').notNull(),
     checksum: text('checksum').notNull(),
     status: importStatusEnum('status').notNull(),
-    rangeStart: timestamp('range_start', { withTimezone: true, mode: 'string' }),
+    rangeStart: timestamp('range_start', {
+      withTimezone: true,
+      mode: 'string',
+    }),
     rangeEnd: timestamp('range_end', { withTimezone: true, mode: 'string' }),
     receivedAt: timestamp('received_at', {
       withTimezone: true,

@@ -5,6 +5,8 @@ export default defineConfig({
   schema: './src/persistence/schema.ts',
   out: './drizzle',
   dbCredentials: {
-    url: process.env.DATABASE_URL ?? 'postgresql://postgres:postgres@localhost:5432/optimizer_dev',
+    url:
+      process.env.DATABASE_URL ??
+      'postgresql://postgres:postgres@localhost:5432/optimizer_dev',
   },
 });
