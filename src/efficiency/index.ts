@@ -5,3 +5,4 @@ export * from './usage-diagnosis.js';
 export * from './hypotheses.js';
 export * from './history-contracts.js';
 export * from './history-diagnosis.js';
+export * from './counterfactual-replay.js';
