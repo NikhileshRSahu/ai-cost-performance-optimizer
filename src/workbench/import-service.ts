@@ -35,6 +35,15 @@ function statusFor(input: {
   return input.partial ? 'PARTIAL' : 'COMPLETED';
 }
 
+function persistedStatus(
+  status: typeof importRuns.$inferSelect.status,
+): ImportCustomerUsageStatus {
+  if (status === 'RECEIVED') {
+    throw new Error('IMPORT_STILL_PROCESSING');
+  }
+  return status;
+}
+
 export async function importCustomerUsage(
   input: Readonly<{
     db: PersistenceDatabase;
@@ -77,7 +86,7 @@ export async function importCustomerUsage(
     return Object.freeze({
       importId: existing.id,
       fileName: input.fileName,
-      status: existing.status,
+      status: persistedStatus(existing.status),
       accepted: existing.acceptedRows,
       skippedDuplicates: existing.skippedRows,
       rejected: existing.rejectedRows,
