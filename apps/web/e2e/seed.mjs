@@ -1,19 +1,19 @@
-import { readFile } from 'node:fs/promises';
 import pg from 'pg';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { migrate } from 'drizzle-orm/node-postgres/migrator';
 
 const databaseUrl =
   process.env.DATABASE_URL ??
   'postgresql://postgres:postgres@127.0.0.1:5432/optimizer_test';
 
-const client = new pg.Client({ connectionString: databaseUrl });
-await client.connect();
+const pool = new pg.Pool({ connectionString: databaseUrl });
+const database = drizzle(pool);
+await migrate(database, {
+  migrationsFolder: new URL('../../../drizzle', import.meta.url).pathname,
+});
+const client = await pool.connect();
 
 try {
-  const migration = await readFile(
-    new URL('../../../drizzle/0000_dazzling_mister_fear.sql', import.meta.url),
-    'utf8',
-  );
-  await client.query(migration);
 
   await client.query(`
     TRUNCATE TABLE
@@ -161,5 +161,6 @@ try {
        '["Restore model-a configuration."]'::jsonb, 'founder-user')`,
   );
 } finally {
-  await client.end();
+  client.release();
+  await pool.end();
 }
