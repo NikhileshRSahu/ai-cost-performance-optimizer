@@ -310,6 +310,12 @@ export function evaluateBenchmark(input: Readonly<{
   if (measuredFailure) {
     decision = 'DO_NOT_CHANGE';
   } else {
+    if (
+      matchedKeys.length !== current.size ||
+      matchedKeys.length !== candidate.size
+    ) {
+      reasons.push('UNMATCHED_CASES_OR_CONFIGURATIONS');
+    }
     if (candidateQuality === null) reasons.push('QUALITY_MEASUREMENT_MISSING');
     if (
       input.constraints.maxP95LatencyMs !== null &&
