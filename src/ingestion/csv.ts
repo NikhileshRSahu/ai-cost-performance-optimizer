@@ -56,7 +56,8 @@ function parseCsvText(text: string): string[][] {
   let quoted = false;
 
   for (let i = 0; i < text.length; i++) {
-    const c = text[i]!;
+    const c = text[i];
+    if (c === undefined) break;
 
     if (quoted) {
       if (c === '"') {
@@ -131,7 +132,8 @@ export function parseUsageCsv(
 
   if (rows.length === 0) throw new Error('EMPTY_CSV');
 
-  const headers = rows[0]!;
+  const headers = rows[0];
+  if (headers === undefined) throw new Error('EMPTY_CSV');
   if (new Set(headers).size !== headers.length) {
     throw new Error('DUPLICATE_HEADER');
   }
@@ -155,7 +157,8 @@ export function parseUsageCsv(
 
   for (let i = 1; i < rows.length; i++) {
     const line = i + 1;
-    const row = rows[i]!;
+    const row = rows[i];
+    if (row === undefined) continue;
 
     try {
       if (row.length !== headers.length) {
@@ -166,8 +169,8 @@ export function parseUsageCsv(
         throw new Error('CELL_TOO_LARGE');
       }
 
-      const start = value(row, headers, 'timestamp_start')!;
-      const end = value(row, headers, 'timestamp_end')!;
+      const start = value(row, headers, 'timestamp_start');
+      const end = value(row, headers, 'timestamp_end');
 
       if (
         !start ||
@@ -189,16 +192,16 @@ export function parseUsageCsv(
         throw new Error('INVALID_INTERVAL');
       }
 
-      const requests = value(row, headers, 'requests')!;
+      const requests = value(row, headers, 'requests');
       if (!requests || !integer.test(requests)) {
         throw new Error('INVALID_REQUESTS');
       }
 
-      const totalCost = value(row, headers, 'total_cost')!;
+      const totalCost = value(row, headers, 'total_cost');
       if (!totalCost) throw new Error('MISSING_TOTAL_COST');
       ensureMoney(totalCost);
 
-      const currency = value(row, headers, 'currency')!;
+      const currency = value(row, headers, 'currency');
       if (!currency || !/^[A-Z]{3}$/.test(currency)) {
         throw new Error('INVALID_CURRENCY');
       }
