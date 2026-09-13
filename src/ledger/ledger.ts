@@ -30,6 +30,7 @@ function invalidatedIds(history: readonly LedgerEvent[]): ReadonlySet<string> {
 
 export function currentValidState(
   history: readonly LedgerEvent[],
+  organizationId: string,
   recommendationId: string,
 ): SavingsState | null {
   const invalidated = invalidatedIds(history);
@@ -37,6 +38,7 @@ export function currentValidState(
     .reverse()
     .find(
       (event) =>
+        event.organizationId === organizationId &&
         event.recommendationId === recommendationId &&
         event.type === 'STATE_RECORDED' &&
         !invalidated.has(event.id),
@@ -83,6 +85,7 @@ export function appendState(
     }
     const current = currentValidState(
       input.history,
+      input.event.organizationId,
       input.event.recommendationId,
     );
     if (current === null) {
