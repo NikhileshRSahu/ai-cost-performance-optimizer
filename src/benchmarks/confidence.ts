@@ -25,17 +25,19 @@ export function confidenceBand(score: number): ConfidenceBand {
   return 'LOW';
 }
 
-export function computeConfidence(input: Readonly<{
-  dataCompleteness: number;
-  evaluatorCoverage: number;
-  configurationParity: number;
-  measurementCoverage: number;
-  pairedValidCases: number;
-  targetCases: number;
-  decisionAgreement: number;
-  metricStability: number;
-  repetitions: number;
-}>): ConfidenceResult {
+export function computeConfidence(
+  input: Readonly<{
+    dataCompleteness: number;
+    evaluatorCoverage: number;
+    configurationParity: number;
+    measurementCoverage: number;
+    pairedValidCases: number;
+    targetCases: number;
+    decisionAgreement: number;
+    metricStability: number;
+    repetitions: number;
+  }>,
+): ConfidenceResult {
   if (!Number.isInteger(input.pairedValidCases) || input.pairedValidCases < 0) {
     throw new Error('INVALID_PAIRED_CASE_COUNT');
   }
@@ -51,7 +53,10 @@ export function computeConfidence(input: Readonly<{
     0.4 * bounded(input.evaluatorCoverage) +
     0.3 * bounded(input.configurationParity) +
     0.3 * bounded(input.measurementCoverage);
-  const sampleAdequacy = Math.min(1, input.pairedValidCases / input.targetCases);
+  const sampleAdequacy = Math.min(
+    1,
+    input.pairedValidCases / input.targetCases,
+  );
   const repeatability =
     input.repetitions < 2
       ? 0
