@@ -1,10 +1,6 @@
 import { z } from 'zod';
 import { counterfactualImpact } from '../economics/calculations.js';
-import {
-  compare,
-  parseDecimal,
-  rational,
-} from '../economics/exact.js';
+import { compare, parseDecimal, rational } from '../economics/exact.js';
 import type {
   VerificationBlockReason,
   VerificationResult,
@@ -164,10 +160,17 @@ export function verifyPostChange(input: unknown): VerificationResult {
   if (data.baseline.attributionScope !== data.post.attributionScope) {
     reasons.push('ATTRIBUTION_SCOPE_MISMATCH');
   }
+
+  const successfulOutcomeDefinitionMissing =
+    data.baseline.denominator === 'SUCCESSFUL_OUTCOMES' &&
+    (data.baseline.successDefinition === null ||
+      data.post.successDefinition === null);
+
   if (
     !data.attestations.unitDefinitionUnchanged ||
     data.baseline.unitDefinition !== data.post.unitDefinition ||
-    data.baseline.successDefinition !== data.post.successDefinition
+    data.baseline.successDefinition !== data.post.successDefinition ||
+    successfulOutcomeDefinitionMissing
   ) {
     reasons.push('UNIT_DEFINITION_CHANGED');
   }
