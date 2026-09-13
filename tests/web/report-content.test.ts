@@ -26,7 +26,10 @@ describe('professional report content', () => {
 
   it('keeps print output user initiated', async () => {
     const button = await readFile(
-      new URL('../../apps/web/components/print-report-button.tsx', import.meta.url),
+      new URL(
+        '../../apps/web/components/print-report-button.tsx',
+        import.meta.url,
+      ),
       'utf8',
     );
     expect(button).toContain('window.print()');

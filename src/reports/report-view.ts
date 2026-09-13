@@ -1,8 +1,5 @@
 export type ReportFinancialState =
-  | 'OBSERVED'
-  | 'OPPORTUNITY'
-  | 'TESTED'
-  | 'VERIFIED';
+  'OBSERVED' | 'OPPORTUNITY' | 'TESTED' | 'VERIFIED';
 
 export type ReportFinancialClaim = Readonly<{
   label: string;

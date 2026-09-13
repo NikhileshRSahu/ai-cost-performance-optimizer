@@ -11,17 +11,36 @@ export const dynamic = 'force-dynamic';
 function FinancialClaim({
   claim,
 }: Readonly<{
-  claim: ReturnType<typeof buildOptimizationReportView>['financialClaims'][number];
+  claim: ReturnType<
+    typeof buildOptimizationReportView
+  >['financialClaims'][number];
 }>) {
   return (
     <article className="report-claim">
       <h3>{claim.label}</h3>
       <dl>
-        <div><dt>Amount</dt><dd>{claim.currency} {claim.amount}</dd></div>
-        <div><dt>State</dt><dd>{claim.state}</dd></div>
-        <div><dt>Horizon</dt><dd>{claim.horizon}</dd></div>
-        <div><dt>Evidence</dt><dd>{claim.evidenceRef}</dd></div>
-        <div><dt>Formula</dt><dd>{claim.formulaVersion}</dd></div>
+        <div>
+          <dt>Amount</dt>
+          <dd>
+            {claim.currency} {claim.amount}
+          </dd>
+        </div>
+        <div>
+          <dt>State</dt>
+          <dd>{claim.state}</dd>
+        </div>
+        <div>
+          <dt>Horizon</dt>
+          <dd>{claim.horizon}</dd>
+        </div>
+        <div>
+          <dt>Evidence</dt>
+          <dd>{claim.evidenceRef}</dd>
+        </div>
+        <div>
+          <dt>Formula</dt>
+          <dd>{claim.formulaVersion}</dd>
+        </div>
       </dl>
     </article>
   );
@@ -69,8 +88,14 @@ export default async function OptimizationReportPage({
         <h1>{view.organizationName}</h1>
         <p className="lede">{view.reportPeriod}</p>
         <dl className="report-meta">
-          <div><dt>Data quality</dt><dd>{view.dataQuality}</dd></div>
-          <div><dt>Methodology</dt><dd>{view.methodologyVersion}</dd></div>
+          <div>
+            <dt>Data quality</dt>
+            <dd>{view.dataQuality}</dd>
+          </div>
+          <div>
+            <dt>Methodology</dt>
+            <dd>{view.methodologyVersion}</dd>
+          </div>
         </dl>
       </header>
 
@@ -100,17 +125,30 @@ export default async function OptimizationReportPage({
       <section id="opportunity" className="report-section">
         <h2>Opportunity</h2>
         <dl>
-          <div><dt>Measured fact</dt><dd>{view.opportunity.measuredFact}</dd></div>
-          <div><dt>Inference</dt><dd>{view.opportunity.inference}</dd></div>
-          <div><dt>Hypothesis</dt><dd>{view.opportunity.hypothesis}</dd></div>
-          <div><dt>Savings state</dt><dd>{view.opportunity.savingState}</dd></div>
+          <div>
+            <dt>Measured fact</dt>
+            <dd>{view.opportunity.measuredFact}</dd>
+          </div>
+          <div>
+            <dt>Inference</dt>
+            <dd>{view.opportunity.inference}</dd>
+          </div>
+          <div>
+            <dt>Hypothesis</dt>
+            <dd>{view.opportunity.hypothesis}</dd>
+          </div>
+          <div>
+            <dt>Savings state</dt>
+            <dd>{view.opportunity.savingState}</dd>
+          </div>
         </dl>
       </section>
 
       <section id="benchmark" className="report-section">
         <h2>Benchmark</h2>
         <p>
-          {view.benchmark.currentConfiguration} → {view.benchmark.candidateConfiguration}
+          {view.benchmark.currentConfiguration} →{' '}
+          {view.benchmark.candidateConfiguration}
         </p>
         <ul>
           {view.benchmark.constraintSummary.map((item) => (

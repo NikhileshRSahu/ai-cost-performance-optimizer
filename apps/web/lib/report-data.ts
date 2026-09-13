@@ -57,7 +57,10 @@ function economicsClaim(
   );
 
   return Object.freeze({
-    label: row.savingState === 'OPPORTUNITY' ? 'Potential net saving' : 'Tested net saving',
+    label:
+      row.savingState === 'OPPORTUNITY'
+        ? 'Potential net saving'
+        : 'Tested net saving',
     amount,
     currency: lab.economics.currency,
     state: row.savingState === 'OPPORTUNITY' ? 'OPPORTUNITY' : 'TESTED',
@@ -89,12 +92,7 @@ export async function loadOptimizationReportEvidence(
 
   const [dashboard, lab] = await Promise.all([
     loadFounderDashboardEvidence(db, session, organizationId),
-    loadOptimizationLabEvidence(
-      db,
-      session,
-      organizationId,
-      recommendationId,
-    ),
+    loadOptimizationLabEvidence(db, session, organizationId, recommendationId),
   ]);
 
   const limitations = [...dashboard.limitations];
@@ -110,13 +108,19 @@ export async function loadOptimizationReportEvidence(
     'Optimization hypothesis was not recorded in the persisted recommendation evidence.';
 
   if (stringField(row.evidence, 'measuredFact') === null) {
-    limitations.push('Measured-fact narrative is missing from recommendation evidence.');
+    limitations.push(
+      'Measured-fact narrative is missing from recommendation evidence.',
+    );
   }
   if (stringField(row.evidence, 'inference') === null) {
-    limitations.push('Inference narrative is missing from recommendation evidence.');
+    limitations.push(
+      'Inference narrative is missing from recommendation evidence.',
+    );
   }
   if (stringField(row.evidence, 'hypothesis') === null) {
-    limitations.push('Optimization hypothesis narrative is missing from recommendation evidence.');
+    limitations.push(
+      'Optimization hypothesis narrative is missing from recommendation evidence.',
+    );
   }
 
   const [implementation] = await db
@@ -193,7 +197,9 @@ export async function loadOptimizationReportEvidence(
           rollbackInstructions:
             fallbackRollback.length > 0
               ? fallbackRollback
-              : Object.freeze(['No persisted rollback instruction is available yet.']),
+              : Object.freeze([
+                  'No persisted rollback instruction is available yet.',
+                ]),
         })
       : Object.freeze({
           proposedChange: implementation.deploymentNote,
@@ -203,7 +209,9 @@ export async function loadOptimizationReportEvidence(
         });
 
   if (implementation === undefined) {
-    limitations.push('Implementation has not been confirmed in the evidence ledger.');
+    limitations.push(
+      'Implementation has not been confirmed in the evidence ledger.',
+    );
   }
 
   const verificationStatus =
@@ -252,7 +260,9 @@ export async function loadOptimizationReportEvidence(
       financialClaim: verificationClaim,
     }),
     methodologyVersion:
-      row.detectorVersion ?? stringField(row.evidence, 'methodologyVersion') ?? 'optimizer-v0',
+      row.detectorVersion ??
+      stringField(row.evidence, 'methodologyVersion') ??
+      'optimizer-v0',
     limitations: Object.freeze(limitations),
     isDemo: dashboard.isDemo || row.isDemo || lab.isDemo,
   });
