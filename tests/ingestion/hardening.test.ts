@@ -48,9 +48,9 @@ describe('ingestion hardening', () => {
   });
 
   it('enforces byte and decoded cell limits', () => {
-    expect(() =>
-      parseUsageCsv(new Uint8Array(MAX_BYTES + 1), 'org'),
-    ).toThrow('FILE_TOO_LARGE');
+    expect(() => parseUsageCsv(new Uint8Array(MAX_BYTES + 1), 'org')).toThrow(
+      'FILE_TOO_LARGE',
+    );
 
     const hugeModel = 'x'.repeat(MAX_CELL + 1);
     const csv =
