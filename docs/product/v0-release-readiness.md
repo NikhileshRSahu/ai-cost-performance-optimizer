@@ -17,7 +17,7 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Exact decimal money handling.
 - [x] Same-currency financial aggregation without silent FX conversion.
 - [x] Progressive evidence-depth contract.
-- [ ] Sanitized AI-history import format and parser.
+- [x] Sanitized AI-history normalized import contract and parser.
 - [ ] Authorized workspace connector storage and revocation model.
 - [ ] Production telemetry ingestion contract.
 
@@ -31,9 +31,10 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Output-token intensity.
 - [x] Cache-hit coverage.
 - [x] Explicit withheld-claim explanations.
-- [ ] Prompt-structure diagnosis from sanitized content.
-- [ ] Repeated-context clustering.
-- [ ] Recurring-workflow detection.
+- [x] Deterministic prompt-structure diagnosis from sanitized content.
+- [x] Exact repeated-context detection without echoing raw prompt text.
+- [ ] Semantic repeated-context clustering.
+- [x] Exact-repeat recurring-workflow candidates with explicit heuristic limitations.
 - [ ] Cross-tool knowledge duplication.
 
 ### 3. Optimization loop
@@ -45,7 +46,7 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Comparable baseline/post-change verification.
 - [x] Negative verified impact remains visible.
 - [ ] Counterfactual replay for supported workload types.
-- [ ] Automatic hypothesis generation from MRI findings.
+- [x] Policy-bounded automatic hypothesis generation from MRI findings.
 - [ ] Generated implementation package for supported fixes.
 
 ### 4. Security and privacy
@@ -57,7 +58,8 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Secret scanning in CI.
 - [ ] Encrypted connector-secret storage.
 - [ ] Connector token rotation/revocation.
-- [ ] Data deletion/export workflow.
+- [x] Owner-only organization evidence purge service with explicit confirmation.
+- [ ] Customer-facing data export and deletion UI.
 - [ ] Retention-policy controls.
 - [ ] Threat-model review before provider admin connectors are enabled.
 
@@ -77,12 +79,13 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 
 ### 6. Operations
 
-- [x] Build, unit, database, E2E, audit, and secret-scan CI gate.
-- [ ] Production deployment runbook.
+- [x] Build, unit, database, E2E, audit, secret-scan, and production-container CI gate.
+- [x] Production deployment and rollback runbook.
 - [ ] Database backup/restore drill.
 - [ ] Observability and safe-error taxonomy for production.
 - [ ] Rate limiting and abuse controls.
-- [ ] Incident-response contact and process.
+- [x] Incident severity and response process.
+- [ ] Named production incident contact/escalation rotation.
 
 ### 7. Commercial readiness
 
