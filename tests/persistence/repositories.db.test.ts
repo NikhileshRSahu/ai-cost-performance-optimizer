@@ -1,4 +1,11 @@
-import { beforeAll, afterAll, beforeEach, describe, expect, it } from 'vitest';
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+} from 'vitest';
 import { createDatabase } from '../../src/persistence/database.js';
 import {
   createMembershipRepository,
@@ -80,13 +87,15 @@ describe('organization-scoped repositories', () => {
   });
 
   it('returns only the organization authorized by the session', async () => {
-    await expect(organizationRepository.get(sessionA, 'org-a')).resolves.toMatchObject({
+    await expect(
+      organizationRepository.get(sessionA, 'org-a'),
+    ).resolves.toMatchObject({
       id: 'org-a',
       name: 'Org A',
     });
-    await expect(organizationRepository.get(sessionA, 'org-b')).rejects.toThrow(
-      'ORGANIZATION_MEMBERSHIP_REQUIRED',
-    );
+    await expect(
+      organizationRepository.get(sessionA, 'org-b'),
+    ).rejects.toThrow('ORGANIZATION_MEMBERSHIP_REQUIRED');
   });
 
   it('cannot list another tenant membership rows', async () => {
