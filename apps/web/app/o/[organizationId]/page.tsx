@@ -131,7 +131,7 @@ export default async function FounderDashboardPage({
         />
       </div>
 
-      <WorkMri snapshot={mri} />
+      {view.dataQuality === 'NO_DATA' ? null : <WorkMri snapshot={mri} />}
 
       <section aria-labelledby="strongest-action-title">
         <div className="section-heading">
