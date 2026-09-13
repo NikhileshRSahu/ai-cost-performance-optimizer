@@ -358,3 +358,157 @@ h1 {
     width: 100%;
   }
 }
+
+
+.lab-stack {
+  display: grid;
+  gap: 2rem;
+}
+
+.lab-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.lab-header h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+.lab-decision {
+  min-width: 220px;
+  padding: 1rem;
+  border: 1px solid #b8c2ce;
+  border-radius: 0.9rem;
+  background: #ffffff;
+}
+
+.lab-decision span,
+.lab-decision strong {
+  display: block;
+}
+
+.lab-decision span {
+  margin-bottom: 0.35rem;
+  color: #596675;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.decision-optimize {
+  border-color: #28734d;
+  background: #edf8f2;
+}
+
+.decision-do-not-change {
+  border-color: #a63b32;
+  background: #fff0ef;
+}
+
+.decision-insufficient-evidence {
+  border-color: #c48a1e;
+  background: #fff8e6;
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.configuration-card,
+.lab-section,
+.evidence-details {
+  border: 1px solid #d5dce5;
+  border-radius: 1rem;
+  background: #ffffff;
+}
+
+.configuration-card,
+.lab-section {
+  padding: 1.25rem;
+}
+
+.configuration-card h2,
+.lab-section h2 {
+  margin-top: 0;
+}
+
+.configuration-card dl {
+  margin-bottom: 0;
+}
+
+.configuration-card dl div,
+.evidence-details dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.7rem;
+  border-top: 1px solid #e5e9ef;
+}
+
+.configuration-card dd,
+.evidence-details dd {
+  margin: 0;
+  text-align: right;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.constraint-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.constraint-table th,
+.constraint-table td {
+  padding: 0.8rem;
+  border-bottom: 1px solid #e1e6ec;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.constraint-status {
+  display: inline-flex;
+  gap: 0.35rem;
+  font-weight: 750;
+}
+
+.constraint-pass {
+  color: #155235;
+}
+
+.constraint-fail {
+  color: #8b2720;
+}
+
+.constraint-missing {
+  color: #725011;
+}
+
+.evidence-details {
+  padding: 1rem;
+}
+
+.evidence-details summary {
+  cursor: pointer;
+  font-weight: 750;
+}
+
+@media (max-width: 720px) {
+  .lab-header {
+    flex-direction: column;
+  }
+
+  .lab-decision {
+    width: 100%;
+  }
+
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+}

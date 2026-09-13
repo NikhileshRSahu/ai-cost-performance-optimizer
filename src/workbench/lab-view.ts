@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { compare, parseDecimal } from '../economics/exact.js';
 
 export type LabDecision =
@@ -61,6 +62,100 @@ export type OptimizationLabView = Readonly<{
   evidenceLinks: OptimizationLabEvidence['evidenceLinks'];
   demoDisclaimer: 'Synthetic demo data — not a customer result.' | null;
 }>;
+
+const decimalSchema = z.string().regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/);
+const nullableDecimalSchema = decimalSchema.nullable();
+
+const configurationSchema = z
+  .object({
+    configurationId: z.string().trim().min(1),
+    cost: nullableDecimalSchema,
+    quality: nullableDecimalSchema,
+    p95LatencyMs: nullableDecimalSchema,
+    failureRate: nullableDecimalSchema,
+  })
+  .strict();
+
+const constraintSchema = z
+  .object({
+    name: z.string().trim().min(1),
+    kind: z.enum(['MINIMUM', 'MAXIMUM']),
+    required: decimalSchema,
+    currentMeasured: nullableDecimalSchema,
+    candidateMeasured: nullableDecimalSchema,
+  })
+  .strict();
+
+const optimizationLabEvidenceSchema = z
+  .object({
+    recommendationId: z.string().trim().min(1),
+    persistedDecision: z.enum([
+      'OPTIMIZE',
+      'DO_NOT_CHANGE',
+      'INSUFFICIENT_EVIDENCE',
+    ]),
+    current: configurationSchema,
+    candidate: configurationSchema,
+    constraints: z.array(constraintSchema).min(1),
+    economics: z
+      .object({
+        currency: z.string().regex(/^[A-Z]{3}$/),
+        baselineCost: nullableDecimalSchema,
+        candidateCost: nullableDecimalSchema,
+        netSavingNumerator: z.string().regex(/^-?(?:0|[1-9]\d*)$/).nullable(),
+        netSavingDenominator: z
+          .string()
+          .regex(/^(?:[1-9]\d*)$/)
+          .nullable(),
+        horizon: z.enum(['OBSERVED_PERIOD', 'THIRTY_DAY_PROJECTION']),
+        evidenceRef: z.string().trim().min(1),
+        formulaVersion: z.string().trim().min(1),
+      })
+      .strict(),
+    confidence: z
+      .object({
+        band: z.enum(['LOW', 'MEDIUM', 'HIGH']),
+        reasons: z.array(z.string().trim().min(1)),
+      })
+      .strict(),
+    evidenceLinks: z.array(
+      z
+        .object({
+          label: z.string().trim().min(1),
+          ref: z.string().trim().min(1),
+        })
+        .strict(),
+    ),
+    isDemo: z.boolean(),
+  })
+  .strict();
+
+function freezeEvidence(
+  input: z.infer<typeof optimizationLabEvidenceSchema>,
+): OptimizationLabEvidence {
+  return Object.freeze({
+    ...input,
+    current: Object.freeze({ ...input.current }),
+    candidate: Object.freeze({ ...input.candidate }),
+    constraints: Object.freeze(
+      input.constraints.map((constraint) => Object.freeze({ ...constraint })),
+    ),
+    economics: Object.freeze({ ...input.economics }),
+    confidence: Object.freeze({
+      band: input.confidence.band,
+      reasons: Object.freeze([...input.confidence.reasons]),
+    }),
+    evidenceLinks: Object.freeze(
+      input.evidenceLinks.map((link) => Object.freeze({ ...link })),
+    ),
+  });
+}
+
+export function parseOptimizationLabEvidence(
+  input: unknown,
+): OptimizationLabEvidence {
+  return freezeEvidence(optimizationLabEvidenceSchema.parse(input));
+}
 
 function constraintStatus(
   constraint: ConstraintEvidence,
