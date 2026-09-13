@@ -1,6 +1,6 @@
 # Financial Foundation Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Deliver a tested TypeScript economics library that preserves exact financial evidence and rejects misleading savings calculations.
 
@@ -56,7 +56,7 @@ export function serialize(value: Rational): Readonly<{ numerator: string; denomi
 
 `parseDecimal` accepts signed canonical decimal strings with 1–26 integer digits and up to 12 fractional digits (storage target NUMERIC(38,12)); rejects exponent notation, whitespace, plus signs, leading zeros except zero, negative zero, empty fractions, numbers, and overflow. Source-cost non-negativity is enforced in Task 2. Derived fractions are not constrained to source scale/size. `formatDecimal` uses half-even rounding, defaults to 2 places, allows integer places 0 through 12, pads zeros, and never emits negative zero. Converting a bounded presentation-place count to bigint is permitted; financial values never go through Number.
 
-- [ ] **Step 1: Establish the reproducible test toolchain.** Resolve stable package versions from the registry once and pin the installed versions exactly. Set private true, type module, engines.node >=24, and the scripts below; commit the generated lockfile. Use strict ES2022/NodeNext TypeScript with declaration output in dist. Build excludes tests; typecheck includes tests. Exclude build/dependency/scratch output from formatting and linting.
+- [x] **Step 1: Establish the reproducible test toolchain.** Resolve stable package versions from the registry once and pin the installed versions exactly. Set private true, type module, engines.node >=24, and the scripts below; commit the generated lockfile. Use strict ES2022/NodeNext TypeScript with declaration output in dist. Build excludes tests; typecheck includes tests. Exclude build/dependency/scratch output from formatting and linting.
 
 ```json
 {
@@ -72,7 +72,7 @@ export function serialize(value: Rational): Readonly<{ numerator: string; denomi
 
 Install Zod as the sole runtime dependency. Dev dependencies: TypeScript, Vitest, ESLint, @eslint/js, typescript-eslint, Prettier, @types/node. Ignore node_modules, dist, coverage, .superpowers, .env files (allow .env.example), and local logs. Do not reformat the approved specification as a tooling side effect; ignore it for Prettier.
 
-- [ ] **Step 2: Write the failing behavior tests.** Create a minimal throwing export surface if necessary so failures describe unimplemented behavior rather than resolution errors. The tests below are required; expand table-driven rejection and rounding cases to cover the interface rules.
+- [x] **Step 2: Write the failing behavior tests.** Create a minimal throwing export surface if necessary so failures describe unimplemented behavior rather than resolution errors. The tests below are required; expand table-driven rejection and rounding cases to cover the interface rules.
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -97,9 +97,9 @@ describe('exact financial evidence', () => {
 
 Also test scale-12 input, values above Number.MAX_SAFE_INTEGER, source overflow, signed denominator normalization, zero denominator/divisor rejection, signed comparison, immutable output, zero serialization, 0/12 places, and invalid decimal/places inputs.
 
-- [ ] **Step 3: Verify RED.** Run `npm test -- tests/economics/exact.test.ts`; record the expected assertion failures in the task report.
+- [x] **Step 3: Verify RED.** Run `npm test -- tests/economics/exact.test.ts`; record the expected assertion failures in the task report.
 
-- [ ] **Step 4: Implement and refactor the exact module.** Use Euclidean gcd and bigint cross-products. The load-bearing algorithms are:
+- [x] **Step 4: Implement and refactor the exact module.** Use Euclidean gcd and bigint cross-products. The load-bearing algorithms are:
 
 ```ts
 function gcd(a: bigint, b: bigint): bigint {
@@ -125,7 +125,7 @@ if (2n * remainder > denominator ||
 
 Do not use parseFloat, Number, Math rounding, or a decimal library with finite-precision intermediate division. Decimal parsing removes the decimal separator and uses a power-of-ten denominator. Return only canonical values.
 
-- [ ] **Step 5: Verify GREEN and commit.** Run focused tests, then `npm run check`. Commit as `feat: add exact rational financial arithmetic` and report commands plus test counts.
+- [x] **Step 5: Verify GREEN and commit.** Run focused tests, then `npm run check`. Commit as `feat: add exact rational financial arithmetic` and report commands plus test counts.
 
 ## Task 2: Validated Economics, Formula Evidence, Demo, and CI
 
@@ -169,7 +169,7 @@ All money uses the source decimal format from Task 1; signed values allowed only
 
 Evidence records are deeply frozen at their three record levels (Calculation, inputs, fraction). Preserve the original validated decimal strings, currency, and horizon in inputs. A Calculation deliberately has no savings-state property: callers cannot treat arithmetic as proof of verified savings. formula is a stable descriptive expression naming its exact inputs; formulaVersion is versioned. The demo must explicitly say 'Synthetic demo data — not a customer result' and 'Arithmetic only — verification gates are not implemented'.
 
-- [ ] **Step 1: Write failing behavior tests against a throwing public export surface.** Include these independent golden calculations and all contract rejection cases:
+- [x] **Step 1: Write failing behavior tests against a throwing public export surface.** Include these independent golden calculations and all contract rejection cases:
 
 ```ts
 import { expect, it } from 'vitest';
@@ -190,9 +190,9 @@ it('does not invent a monthly projection from six days', () => {
 
 Add: costPerUnit 1/3 exact, zero/null denominators, huge counts, projection 70/7*30 = 300, zero baseline percentage, -35/100*100 = -35%, payback 100/25 = 4 and nonpositive recurring returns unavailable, null post units, zero post units yielding negative incurred cost, rejected negative source costs/precision overflow/NaN/numeric money/malformed currency/extra fields/empty horizon, stable formula version, JSON-safe evidence and immutability. No mocks.
 
-- [ ] **Step 2: Verify RED.** `npm test -- tests/economics/calculations.test.ts`; capture expected unimplemented-function failures before implementation.
+- [x] **Step 2: Verify RED.** `npm test -- tests/economics/calculations.test.ts`; capture expected unimplemented-function failures before implementation.
 
-- [ ] **Step 3: Implement contracts and formulas.** Zod parse occurs before every formula. Use schema composition and private helpers for denominator-unavailable records and fraction serialization without duplicating formula bodies. Example algorithm:
+- [x] **Step 3: Implement contracts and formulas.** Zod parse occurs before every formula. Use schema composition and private helpers for denominator-unavailable records and fraction serialization without duplicating formula bodies. Example algorithm:
 
 ```ts
 const counterfactual = multiply(
@@ -206,15 +206,27 @@ const net = subtract(subtract(subtract(counterfactual,
 
 Every unavailable branch returns value null and a precise reason. All other branches return unavailableReason null and serialize the exact result. Keep calculations pure: no database, credentials, provider calls, or VERIFIED assignment. Document coverage inputs as supplied by a future coverage service; this function does not certify days as complete.
 
-- [ ] **Step 4: Add the runnable demo and honest README.** `npm run demo` uses Node 24 TypeScript stripping (`node --experimental-strip-types examples/economics-demo.ts`) or compiled JS with an explicit script; use a compatible import path and typecheck it. Show the example counterfactual calculation and its exact 7/20 result, readable 0.35 USD, formula/inputs, and both mandatory labels. Document `npm ci`, `npm run check`, `npm run demo`, input limits, exact rounding policy, source-vs-derived precision, and remaining V0 milestones. Include authoritative tool references https://vitest.dev/guide/ and https://zod.dev/api and resolved tool versions in the lockfile; never claim broader product delivery.
+- [x] **Step 4: Add the runnable demo and honest README.** `npm run demo` uses Node 24 TypeScript stripping (`node --experimental-strip-types examples/economics-demo.ts`) or compiled JS with an explicit script; use a compatible import path and typecheck it. Show the example counterfactual calculation and its exact 7/20 result, readable 0.35 USD, formula/inputs, and both mandatory labels. Document `npm ci`, `npm run check`, `npm run demo`, input limits, exact rounding policy, source-vs-derived precision, and remaining V0 milestones. Include authoritative tool references https://vitest.dev/guide/ and https://zod.dev/api and resolved tool versions in the lockfile; never claim broader product delivery.
 
-- [ ] **Step 5: Wire CI.** On push/pull_request run checkout, setup-node 24 with npm cache, npm ci, npm run check, npm audit --audit-level=high, and a secret scan. Prefer the standalone gitleaks CLI (pinned release with checksum verification) or the maintained gitleaks action pinned by commit; use public-repo-compatible execution with read-only contents permissions. Do not publish the package. The production build for this milestone is the TypeScript library build, not a Next.js deployment.
+- [x] **Step 5: Wire CI.** On push/pull_request run checkout, setup-node 24 with npm cache, npm ci, npm run check, npm audit --audit-level=high, and a secret scan. Prefer the standalone gitleaks CLI (pinned release with checksum verification) or the maintained gitleaks action pinned by commit; use public-repo-compatible execution with read-only contents permissions. Do not publish the package. The production build for this milestone is the TypeScript library build, not a Next.js deployment.
 
-- [ ] **Step 6: Verify GREEN and commit.** Run focused tests, then `npm run check`, `npm run demo`, and `npm audit --audit-level=high`. Capture any remote-only gate explicitly. Commit as `feat: add validated cost and savings calculations`.
+- [x] **Step 6: Verify GREEN and commit.** Run focused tests, then `npm run check`, `npm run demo`, and `npm audit --audit-level=high`. Capture any remote-only gate explicitly. Commit as `feat: add validated cost and savings calculations`.
 
 ## Final Review and Publication
 
-- [ ] Run one whole-branch review after the task reviews; resolve material findings with focused regression tests.
-- [ ] Publish the exact tracked file tree to codex/financial-foundation through the connected GitHub API, preserving remote ancestry.
-- [ ] Verify the remote tree's blob hashes against the local tracked files and fetch the resulting commit.
-- [ ] Open a PR with the scope, verification evidence, and remaining V0 work. Check GitHub Actions results; do not call a queued or blocked workflow passing.
+- [x] Run one whole-branch review after the task reviews; resolve material findings with focused regression tests.
+- [x] Publish the exact tracked file tree to codex/financial-foundation through the connected GitHub API, preserving remote ancestry.
+- [x] Verify the remote tree's blob hashes against the local tracked files and fetch the resulting commit.
+- [x] Open a PR with the scope, verification evidence, and remaining V0 work. Check GitHub Actions results; do not call a queued or blocked workflow passing.
+
+## Completion Record — 2026-09-13
+
+Both implementation tasks and the final code review are complete. Published code commit: `e0dfcff3c34d197f7ef474407e0f57adbbb0835b`; its tree `5531f948602eedc955681ba9cd777765b604df59` matches the tested local source exactly.
+
+- Full local verification: formatting, lint, strict typecheck, 45 tests, library build, and synthetic demo passed.
+- Dependency audit: zero vulnerabilities at the committed lockfile.
+- [GitHub CI run 34760146964](https://github.com/NikhileshRSahu/ai-cost-performance-optimizer/actions/runs/34760146964) passed installation, all checks, dependency audit, and Gitleaks secret scan for that code commit.
+- [Pull request 1](https://github.com/NikhileshRSahu/ai-cost-performance-optimizer/pull/1) contains the milestone; merge and deployment are not performed by this plan.
+- Two optional review observations remain: improve the defensive rational-validation error text; add a permanent acceptance assertion for the exact 26-integer/12-fraction digit maximum. A narrow final-review probe confirmed that boundary works.
+
+The next build milestone is canonical usage records, CSV import, lineage, and coverage. Its implementation plan must retain rational pairs when consuming derived results; display-rounded decimal strings must never become intermediate financial inputs. The remaining V0 scope and provider/security/commercial gates above still apply.
