@@ -26,6 +26,7 @@ export type WorkMriSnapshot = Readonly<{
 
 export type WorkMriInput = Readonly<{
   depth: AnalysisDepth;
+  additionalFacts: readonly MriEvidenceFact[];
   observedSpend: Readonly<{
     amount: string;
     currency: string;
@@ -102,7 +103,9 @@ function nextUnlockLabel(depth: AnalysisDepth): string | null {
 }
 
 export function buildWorkMriSnapshot(input: WorkMriInput): WorkMriSnapshot {
-  const facts: MriEvidenceFact[] = [];
+  const facts: MriEvidenceFact[] = input.additionalFacts.map((fact) =>
+    Object.freeze({ ...fact }),
+  );
 
   if (input.observedSpend !== null) {
     facts.push(
