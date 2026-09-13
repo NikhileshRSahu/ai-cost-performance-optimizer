@@ -17,7 +17,7 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Exact decimal money handling.
 - [x] Same-currency financial aggregation without silent FX conversion.
 - [x] Progressive evidence-depth contract.
-- [x] Sanitized AI-history normalized import contract and parser.
+- [x] Sanitized AI-history normalized import contract, parser, and non-persistent upload/analyze UI.
 - [ ] Authorized workspace connector storage and revocation model.
 - [ ] Production telemetry ingestion contract.
 
@@ -33,7 +33,8 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Explicit withheld-claim explanations.
 - [x] Deterministic prompt-structure diagnosis from sanitized content.
 - [x] Exact repeated-context detection without echoing raw prompt text.
-- [ ] Semantic repeated-context clustering.
+- [x] Privacy-safe bounded lexical near-duplicate context detection.
+- [ ] Embedding/semantic repeated-context clustering, if required for a later release.
 - [x] Exact-repeat recurring-workflow candidates with explicit heuristic limitations.
 - [ ] Cross-tool knowledge duplication.
 
@@ -59,7 +60,7 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [ ] Encrypted connector-secret storage.
 - [ ] Connector token rotation/revocation.
 - [x] Owner-only organization evidence purge service with explicit confirmation.
-- [ ] Customer-facing data export and deletion UI.
+- [x] Customer-facing owner-only data export and evidence-purge UI.
 - [ ] Retention-policy controls.
 - [ ] Threat-model review before provider admin connectors are enabled.
 
@@ -93,9 +94,10 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Free/low-friction CSV-first value path.
 - [ ] One sanitized prospect dataset producing a credible end-to-end MRI.
 - [ ] One design-partner benchmark with written permission to use results.
-- [ ] Pricing page and checkout/invoice flow.
+- [x] Founding-pilot pricing page.
+- [ ] Checkout/invoice flow.
 - [ ] Terms, privacy notice, and data-processing language reviewed for the launch jurisdiction.
-- [ ] Support/onboarding playbook.
+- [x] Founding-pilot support and onboarding playbook.
 
 ## V0 release rule
 
