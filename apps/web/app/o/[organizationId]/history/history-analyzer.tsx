@@ -13,6 +13,17 @@ type HistoryDiagnosis = Readonly<{
     avoidableRepeatedCharactersAfterFirst: number;
     automationCandidate: boolean;
   }>[];
+  nearDuplicatePromptPatterns: readonly Readonly<{
+    leftFingerprint: string;
+    rightFingerprint: string;
+    similarityNumerator: number;
+    similarityDenominator: number;
+    sharedTokenCount: number;
+    unionTokenCount: number;
+    automationCandidate: boolean;
+  }>[];
+  similarityPromptsConsidered: number;
+  similarityComparisonCapped: boolean;
   promptStructureFindings: readonly Readonly<{
     signal: string;
     affectedPrompts: number;
@@ -127,7 +138,10 @@ export function HistoryAnalyzer({
               </div>
               <div>
                 <span>Repeat patterns</span>
-                <strong>{diagnosis.repeatedPromptPatterns.length}</strong>
+                <strong>
+                  {diagnosis.repeatedPromptPatterns.length +
+                    diagnosis.nearDuplicatePromptPatterns.length}
+                </strong>
               </div>
             </div>
           </section>
@@ -163,6 +177,65 @@ export function HistoryAnalyzer({
                     </p>
                   </article>
                 ))}
+              </div>
+            )}
+          </section>
+
+          <section className="workflow-card">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">Near-duplicate context</p>
+                <h2>Similar recurring prompts</h2>
+              </div>
+              <span className="trust-chip">Lexical overlap heuristic</span>
+            </div>
+            <p className="projection-note">
+              Compared {diagnosis.similarityPromptsConsidered} eligible prompts.
+              {diagnosis.similarityComparisonCapped
+                ? ' Analysis was capped for bounded runtime.'
+                : ' All eligible prompts were compared.'}
+            </p>
+            {diagnosis.nearDuplicatePromptPatterns.length === 0 ? (
+              <p>No near-duplicate prompt pair crossed the overlap threshold.</p>
+            ) : (
+              <div className="recommendation-list">
+                {diagnosis.nearDuplicatePromptPatterns.map((pattern) => {
+                  const similarity =
+                    pattern.similarityDenominator === 0
+                      ? '0.0'
+                      : (
+                          (pattern.similarityNumerator /
+                            pattern.similarityDenominator) *
+                          100
+                        ).toFixed(1);
+
+                  return (
+                    <article
+                      className="recommendation-card"
+                      key={
+                        pattern.leftFingerprint +
+                        ':' +
+                        pattern.rightFingerprint
+                      }
+                    >
+                      <h3>
+                        {similarity}% lexical overlap ·{' '}
+                        {pattern.automationCandidate
+                          ? 'automation candidate'
+                          : 'similarity detected'}
+                      </h3>
+                      <p>
+                        Shared {pattern.sharedTokenCount} of{' '}
+                        {pattern.unionTokenCount} distinct normalized tokens.
+                      </p>
+                      <p className="projection-note">
+                        Pair:{' '}
+                        {pattern.leftFingerprint.slice(0, 12)}… ↔{' '}
+                        {pattern.rightFingerprint.slice(0, 12)}…
+                      </p>
+                    </article>
+                  );
+                })}
               </div>
             )}
           </section>
