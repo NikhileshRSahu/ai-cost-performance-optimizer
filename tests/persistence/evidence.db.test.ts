@@ -37,7 +37,7 @@ function event(
     organizationId: 'org-a',
     type: 'STATE_RECORDED',
     state,
-    occurredAt: `2026-09-13T00:00:0${id.length}Z`,
+    occurredAt: `2026-09-13T00:00:0${String(id.length)}Z`,
     evidenceRef: `evidence-${id}`,
     reason: null,
     invalidatesEventId: null,
