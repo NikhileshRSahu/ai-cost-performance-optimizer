@@ -5,8 +5,9 @@ import type {
   EvidenceSourceKind,
 } from './contracts.js';
 
-const LEVEL_CAPABILITIES: Readonly<Record<AnalysisDepthLevel, readonly AnalysisCapability[]>> =
-  Object.freeze({
+const LEVEL_CAPABILITIES: Readonly<
+  Record<AnalysisDepthLevel, readonly AnalysisCapability[]>
+> = Object.freeze({
     1: Object.freeze([
       'COST_EFFICIENCY',
       'MODEL_RIGHT_SIZING',
@@ -44,7 +45,7 @@ const LEVEL_CAPABILITIES: Readonly<Record<AnalysisDepthLevel, readonly AnalysisC
       'COST_PER_SUCCESSFUL_OUTCOME',
       'CONTINUOUS_VERIFICATION',
     ]),
-  });
+});
 
 function deriveLevel(sources: ReadonlySet<EvidenceSourceKind>): AnalysisDepthLevel {
   if (sources.has('PRODUCTION_TELEMETRY')) return 4;
