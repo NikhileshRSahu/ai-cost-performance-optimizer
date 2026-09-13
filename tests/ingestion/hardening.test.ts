@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { summarizeCoverage } from '../../src/coverage/coverage.js';
-import {
-  MAX_BYTES,
-  MAX_CELL,
-  parseUsageCsv,
-} from '../../src/ingestion/csv.js';
+import { MAX_BYTES, MAX_CELL, parseUsageCsv } from '../../src/ingestion/csv.js';
 import { importUsageCsv } from '../../src/ingestion/import.js';
 
 const enc = new TextEncoder();
