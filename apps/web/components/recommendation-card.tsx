@@ -58,12 +58,15 @@ export function RecommendationCard({
             Inspect evidence
           </Link>
         )}
-        <Link
-          className="secondary-action"
-          href={`/o/${organizationId}/lab/${recommendation.recommendationId}`}
-        >
-          Optimization Lab
-        </Link>
+        {recommendation.state === 'TESTED' &&
+        recommendation.decision === 'OPTIMIZE' ? (
+          <Link
+            className="secondary-action"
+            href={`/o/${organizationId}/lab/${recommendation.recommendationId}`}
+          >
+            Inspect evidence
+          </Link>
+        ) : null}
         <Link
           className="secondary-action"
           href={`/o/${organizationId}/report/${recommendation.recommendationId}`}
