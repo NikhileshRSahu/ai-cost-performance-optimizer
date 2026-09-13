@@ -102,15 +102,20 @@ describe('Optimization Lab view model', () => {
 
   it('passes exact equality at minimum and maximum boundaries', () => {
     const input = evidence();
+    const minimumConstraint = input.constraints.at(0);
+    const maximumConstraint = input.constraints.at(1);
+    if (minimumConstraint === undefined || maximumConstraint === undefined) {
+      throw new Error('TEST_CONSTRAINT_FIXTURE_INCOMPLETE');
+    }
     const view = buildOptimizationLabView({
       ...input,
       constraints: [
         {
-          ...input.constraints[0]!,
+          ...minimumConstraint,
           candidateMeasured: '0.9',
         },
         {
-          ...input.constraints[1]!,
+          ...maximumConstraint,
           candidateMeasured: '100',
         },
       ],
