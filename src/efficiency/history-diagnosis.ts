@@ -181,7 +181,8 @@ function nearDuplicatePatterns(
           unionTokenCount: similarity.union,
           automationCandidate:
             similarity.shared >= 6 &&
-            similarity.shared / similarity.union >= Math.max(0.8, input.threshold),
+            similarity.shared / similarity.union >=
+              Math.max(0.8, input.threshold),
         }),
       );
     }

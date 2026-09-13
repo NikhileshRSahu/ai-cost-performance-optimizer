@@ -196,7 +196,9 @@ export function HistoryAnalyzer({
                 : ' All eligible prompts were compared.'}
             </p>
             {diagnosis.nearDuplicatePromptPatterns.length === 0 ? (
-              <p>No near-duplicate prompt pair crossed the overlap threshold.</p>
+              <p>
+                No near-duplicate prompt pair crossed the overlap threshold.
+              </p>
             ) : (
               <div className="recommendation-list">
                 {diagnosis.nearDuplicatePromptPatterns.map((pattern) => {
@@ -213,9 +215,7 @@ export function HistoryAnalyzer({
                     <article
                       className="recommendation-card"
                       key={
-                        pattern.leftFingerprint +
-                        ':' +
-                        pattern.rightFingerprint
+                        pattern.leftFingerprint + ':' + pattern.rightFingerprint
                       }
                     >
                       <h3>
@@ -229,8 +229,7 @@ export function HistoryAnalyzer({
                         {pattern.unionTokenCount} distinct normalized tokens.
                       </p>
                       <p className="projection-note">
-                        Pair:{' '}
-                        {pattern.leftFingerprint.slice(0, 12)}… ↔{' '}
+                        Pair: {pattern.leftFingerprint.slice(0, 12)}… ↔{' '}
                         {pattern.rightFingerprint.slice(0, 12)}…
                       </p>
                     </article>

@@ -88,9 +88,9 @@ describe('sanitized AI history diagnosis', () => {
 
     expect(result.repeatedPromptPatterns).toHaveLength(0);
     expect(result.nearDuplicatePromptPatterns).toHaveLength(1);
-    expect(result.nearDuplicatePromptPatterns[0]?.similarityNumerator).toBeGreaterThan(
-      0,
-    );
+    expect(
+      result.nearDuplicatePromptPatterns[0]?.similarityNumerator,
+    ).toBeGreaterThan(0);
     expect(JSON.stringify(result.nearDuplicatePromptPatterns)).not.toContain(
       'weekly support metrics',
     );
@@ -131,7 +131,9 @@ describe('sanitized AI history diagnosis', () => {
 
     expect(result.similarityPromptsConsidered).toBe(2);
     expect(result.similarityComparisonCapped).toBe(true);
-    expect(result.limitations.join(' ')).toContain('capped for bounded runtime');
+    expect(result.limitations.join(' ')).toContain(
+      'capped for bounded runtime',
+    );
   });
 
   it('rejects unbounded or malformed content at the import contract', () => {
