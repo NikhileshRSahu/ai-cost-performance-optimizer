@@ -73,9 +73,7 @@ async function reachVerification(page: Page, organizationId: string) {
     await page.getByLabel('Stabilization ends (UTC)').fill('2026-09-01T08:00');
     await page.getByRole('button', { name: 'Confirm implementation' }).click();
   } else {
-    await page
-      .getByRole('link', { name: 'Continue to verification' })
-      .click();
+    await page.getByRole('link', { name: 'Continue to verification' }).click();
   }
 
   await expect(
