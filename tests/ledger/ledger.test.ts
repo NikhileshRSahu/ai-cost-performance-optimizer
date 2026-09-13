@@ -24,7 +24,10 @@ function stateEvent(
 
 describe('savings-state ledger', () => {
   it('allows only the forward OPPORTUNITY to TESTED to VERIFIED path', () => {
-    let history = appendState({ history: [], event: stateEvent('a', 'OPPORTUNITY') });
+    let history = appendState({
+      history: [],
+      event: stateEvent('a', 'OPPORTUNITY'),
+    });
     history = appendState({ history, event: stateEvent('bb', 'TESTED') });
     history = appendState({ history, event: stateEvent('ccc', 'VERIFIED') });
     expect(currentValidState(history, 'rec-1')).toBe('VERIFIED');
@@ -37,14 +40,20 @@ describe('savings-state ledger', () => {
   });
 
   it('rejects duplicate event IDs', () => {
-    const history = appendState({ history: [], event: stateEvent('a', 'OPPORTUNITY') });
-    expect(() => appendState({ history, event: stateEvent('a', 'TESTED') })).toThrow(
-      'DUPLICATE_LEDGER_EVENT_ID',
-    );
+    const history = appendState({
+      history: [],
+      event: stateEvent('a', 'OPPORTUNITY'),
+    });
+    expect(() =>
+      appendState({ history, event: stateEvent('a', 'TESTED') }),
+    ).toThrow('DUPLICATE_LEDGER_EVENT_ID');
   });
 
   it('invalidates evidence append-only and recomputes the current valid state', () => {
-    let history = appendState({ history: [], event: stateEvent('a', 'OPPORTUNITY') });
+    let history = appendState({
+      history: [],
+      event: stateEvent('a', 'OPPORTUNITY'),
+    });
     history = appendState({ history, event: stateEvent('bb', 'TESTED') });
     const invalidation: LedgerEvent = {
       id: 'invalidate-b',
@@ -64,7 +73,10 @@ describe('savings-state ledger', () => {
   });
 
   it('rejects invalidation across recommendations', () => {
-    const history = appendState({ history: [], event: stateEvent('a', 'OPPORTUNITY') });
+    const history = appendState({
+      history: [],
+      event: stateEvent('a', 'OPPORTUNITY'),
+    });
     const invalidation: LedgerEvent = {
       id: 'inv',
       recommendationId: 'rec-other',

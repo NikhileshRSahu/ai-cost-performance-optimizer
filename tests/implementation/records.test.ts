@@ -37,7 +37,11 @@ describe('implementation evidence records', () => {
     expect(() =>
       markGuideReviewed({
         guide,
-        authorization: { allowed: false, role: 'VIEWER', reason: 'ACTION_NOT_ALLOWED' },
+        authorization: {
+          allowed: false,
+          role: 'VIEWER',
+          reason: 'ACTION_NOT_ALLOWED',
+        },
         userId: 'viewer',
         reviewedAt: '2026-09-13T10:00:00Z',
       }),
@@ -66,7 +70,9 @@ describe('implementation evidence records', () => {
       authorization: { allowed: true, role: 'OPERATOR', reason: null },
     });
     expect(record.stabilizationEnd).toBe('2026-09-14T11:00:00Z');
-    expect(record.rollbackInstructions).toEqual(['Restore model A configuration']);
+    expect(record.rollbackInstructions).toEqual([
+      'Restore model A configuration',
+    ]);
   });
 
   it('rejects invalid stabilization ordering', () => {

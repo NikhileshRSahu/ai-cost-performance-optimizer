@@ -103,19 +103,103 @@ describe('post-change verification', () => {
   });
 
   it.each([
-    ['BASELINE_COVERAGE_INSUFFICIENT', (input: ReturnType<typeof validInput>) => ({ ...input, baseline: { ...input.baseline, completeDays: completeDaysA.slice(0, 6) } })],
-    ['POST_COVERAGE_INSUFFICIENT', (input: ReturnType<typeof validInput>) => ({ ...input, post: { ...input.post, completeDays: completeDaysB.slice(0, 6) } })],
-    ['WINDOWS_OVERLAP', (input: ReturnType<typeof validInput>) => ({ ...input, post: { ...input.post, start: '2026-09-07T00:00:00Z' } })],
-    ['WORKLOAD_MISMATCH', (input: ReturnType<typeof validInput>) => ({ ...input, post: { ...input.post, workload: 'support' } })],
-    ['CURRENCY_MISMATCH', (input: ReturnType<typeof validInput>) => ({ ...input, post: { ...input.post, currency: 'EUR' } })],
-    ['DENOMINATOR_MISMATCH', (input: ReturnType<typeof validInput>) => ({ ...input, post: { ...input.post, denominator: 'SUCCESSFUL_OUTCOMES' } })],
-    ['ATTRIBUTION_SCOPE_MISMATCH', (input: ReturnType<typeof validInput>) => ({ ...input, post: { ...input.post, attributionScope: 'project:other' } })],
-    ['UNIT_DEFINITION_CHANGED', (input: ReturnType<typeof validInput>) => ({ ...input, attestations: { ...input.attestations, unitDefinitionUnchanged: false } })],
-    ['WORKLOAD_MIX_NOT_COMPARABLE', (input: ReturnType<typeof validInput>) => ({ ...input, attestations: { ...input.attestations, workloadMixComparable: false } })],
-    ['CONCURRENT_DEPLOYMENT_UNRESOLVED', (input: ReturnType<typeof validInput>) => ({ ...input, attestations: { ...input.attestations, concurrentDeploymentsResolved: false } })],
-    ['POST_QUALITY_EVIDENCE_REQUIRED', (input: ReturnType<typeof validInput>) => ({ ...input, post: { ...input.post, qualityEvidence: null } })],
-    ['BASELINE_UNITS_MISSING_OR_ZERO', (input: ReturnType<typeof validInput>) => ({ ...input, baseline: { ...input.baseline, units: '0' } })],
-    ['POST_UNITS_MISSING', (input: ReturnType<typeof validInput>) => ({ ...input, post: { ...input.post, units: null } })],
+    [
+      'BASELINE_COVERAGE_INSUFFICIENT',
+      (input: ReturnType<typeof validInput>) => ({
+        ...input,
+        baseline: {
+          ...input.baseline,
+          completeDays: completeDaysA.slice(0, 6),
+        },
+      }),
+    ],
+    [
+      'POST_COVERAGE_INSUFFICIENT',
+      (input: ReturnType<typeof validInput>) => ({
+        ...input,
+        post: { ...input.post, completeDays: completeDaysB.slice(0, 6) },
+      }),
+    ],
+    [
+      'WINDOWS_OVERLAP',
+      (input: ReturnType<typeof validInput>) => ({
+        ...input,
+        post: { ...input.post, start: '2026-09-07T00:00:00Z' },
+      }),
+    ],
+    [
+      'WORKLOAD_MISMATCH',
+      (input: ReturnType<typeof validInput>) => ({
+        ...input,
+        post: { ...input.post, workload: 'support' },
+      }),
+    ],
+    [
+      'CURRENCY_MISMATCH',
+      (input: ReturnType<typeof validInput>) => ({
+        ...input,
+        post: { ...input.post, currency: 'EUR' },
+      }),
+    ],
+    [
+      'DENOMINATOR_MISMATCH',
+      (input: ReturnType<typeof validInput>) => ({
+        ...input,
+        post: { ...input.post, denominator: 'SUCCESSFUL_OUTCOMES' },
+      }),
+    ],
+    [
+      'ATTRIBUTION_SCOPE_MISMATCH',
+      (input: ReturnType<typeof validInput>) => ({
+        ...input,
+        post: { ...input.post, attributionScope: 'project:other' },
+      }),
+    ],
+    [
+      'UNIT_DEFINITION_CHANGED',
+      (input: ReturnType<typeof validInput>) => ({
+        ...input,
+        attestations: { ...input.attestations, unitDefinitionUnchanged: false },
+      }),
+    ],
+    [
+      'WORKLOAD_MIX_NOT_COMPARABLE',
+      (input: ReturnType<typeof validInput>) => ({
+        ...input,
+        attestations: { ...input.attestations, workloadMixComparable: false },
+      }),
+    ],
+    [
+      'CONCURRENT_DEPLOYMENT_UNRESOLVED',
+      (input: ReturnType<typeof validInput>) => ({
+        ...input,
+        attestations: {
+          ...input.attestations,
+          concurrentDeploymentsResolved: false,
+        },
+      }),
+    ],
+    [
+      'POST_QUALITY_EVIDENCE_REQUIRED',
+      (input: ReturnType<typeof validInput>) => ({
+        ...input,
+        post: { ...input.post, qualityEvidence: null },
+      }),
+    ],
+    [
+      'BASELINE_UNITS_MISSING_OR_ZERO',
+      (input: ReturnType<typeof validInput>) => ({
+        ...input,
+        baseline: { ...input.baseline, units: '0' },
+      }),
+    ],
+    [
+      'POST_UNITS_MISSING',
+      (input: ReturnType<typeof validInput>) => ({
+        ...input,
+        post: { ...input.post, units: null },
+      }),
+    ],
   ])('blocks verification for %s', (reason, mutate) => {
     const result = verifyPostChange(mutate(validInput()));
     expect(result.status).toBe('BLOCKED');
