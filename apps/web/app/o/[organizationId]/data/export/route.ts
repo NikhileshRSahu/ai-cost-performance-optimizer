@@ -29,9 +29,7 @@ export async function GET(
       headers: {
         'content-type': 'application/json; charset=utf-8',
         'content-disposition':
-          'attachment; filename="' +
-          organizationId +
-          '-evidence-export.json"',
+          'attachment; filename="' + organizationId + '-evidence-export.json"',
         'cache-control': 'no-store',
       },
     });

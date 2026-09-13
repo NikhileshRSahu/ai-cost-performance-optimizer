@@ -25,7 +25,9 @@ export default function RootLayout({
             </Link>
             <nav className="public-nav" aria-label="Public">
               <Link href="/pricing">Pricing</Link>
-              <span className="environment-badge">Work MRI · Test · Verify</span>
+              <span className="environment-badge">
+                Work MRI · Test · Verify
+              </span>
             </nav>
           </div>
         </header>

@@ -65,7 +65,9 @@ export function HistoryAnalyzer({
         <div className="section-heading">
           <div>
             <p className="eyebrow">Level 2 · Sanitized AI history</p>
-            <h2>Analyze prompt and workflow patterns without storing raw chats</h2>
+            <h2>
+              Analyze prompt and workflow patterns without storing raw chats
+            </h2>
           </div>
         </div>
         <p>
@@ -142,7 +144,10 @@ export function HistoryAnalyzer({
             ) : (
               <div className="recommendation-list">
                 {diagnosis.repeatedPromptPatterns.map((pattern) => (
-                  <article className="recommendation-card" key={pattern.fingerprint}>
+                  <article
+                    className="recommendation-card"
+                    key={pattern.fingerprint}
+                  >
                     <h3>
                       {pattern.occurrences} exact uses ·{' '}
                       {pattern.automationCandidate

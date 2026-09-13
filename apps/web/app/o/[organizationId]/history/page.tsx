@@ -30,7 +30,9 @@ export default async function HistoryPage({
             history.
           </p>
         </div>
-        <span className="trust-chip">Request-scoped · no raw chat persistence</span>
+        <span className="trust-chip">
+          Request-scoped · no raw chat persistence
+        </span>
       </header>
       <HistoryAnalyzer organizationId={organizationId} />
     </div>

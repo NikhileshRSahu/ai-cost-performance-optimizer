@@ -25,24 +25,34 @@ export async function POST(
       action: 'IMPORT',
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'ACTION_NOT_ALLOWED';
+    const message =
+      error instanceof Error ? error.message : 'ACTION_NOT_ALLOWED';
     return NextResponse.json({ error: message }, { status: 403 });
   }
 
   const formData = await request.formData();
   const upload = formData.get('historyJson');
   if (!(upload instanceof File)) {
-    return NextResponse.json({ error: 'HISTORY_JSON_REQUIRED' }, { status: 400 });
+    return NextResponse.json(
+      { error: 'HISTORY_JSON_REQUIRED' },
+      { status: 400 },
+    );
   }
   if (upload.size > MAX_HISTORY_BYTES) {
-    return NextResponse.json({ error: 'HISTORY_JSON_TOO_LARGE' }, { status: 413 });
+    return NextResponse.json(
+      { error: 'HISTORY_JSON_TOO_LARGE' },
+      { status: 413 },
+    );
   }
 
   let parsedJson: unknown;
   try {
     parsedJson = JSON.parse(await upload.text());
   } catch {
-    return NextResponse.json({ error: 'INVALID_HISTORY_JSON' }, { status: 400 });
+    return NextResponse.json(
+      { error: 'INVALID_HISTORY_JSON' },
+      { status: 400 },
+    );
   }
 
   const parsed = sanitizedAiExportSchema.safeParse(parsedJson);

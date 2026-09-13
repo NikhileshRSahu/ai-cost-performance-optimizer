@@ -22,7 +22,9 @@ export default function PricingPage() {
             cost, request, retry, model concentration, token, cache, and outcome
             diagnostics where the data supports them.
           </p>
-          <p><strong>$0</strong></p>
+          <p>
+            <strong>$0</strong>
+          </p>
         </article>
 
         <article>
@@ -33,7 +35,9 @@ export default function PricingPage() {
             constraints, controlled benchmark, implementation plan, and a
             decision-ready report.
           </p>
-          <p><strong>$299 one-time</strong></p>
+          <p>
+            <strong>$299 one-time</strong>
+          </p>
         </article>
 
         <article>
@@ -43,7 +47,9 @@ export default function PricingPage() {
             Includes the audit plus rollout guidance, rollback criteria,
             post-change evidence collection, and verified net-impact reporting.
           </p>
-          <p><strong>From $999</strong></p>
+          <p>
+            <strong>From $999</strong>
+          </p>
         </article>
 
         <article>
@@ -54,7 +60,9 @@ export default function PricingPage() {
             continuous production optimization remain gated until their security
             and connector lifecycle controls pass release review.
           </p>
-          <p><strong>Waitlist</strong></p>
+          <p>
+            <strong>Waitlist</strong>
+          </p>
         </article>
       </section>
 
