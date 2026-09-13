@@ -4,7 +4,11 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./dist/economics/index.js"
+    ".": "./dist/index.js",
+    "./economics": "./dist/economics/index.js",
+    "./usage": "./dist/usage/index.js",
+    "./ingestion": "./dist/ingestion/index.js",
+    "./coverage": "./dist/coverage/index.js"
   },
   "engines": {
     "node": ">=24"
