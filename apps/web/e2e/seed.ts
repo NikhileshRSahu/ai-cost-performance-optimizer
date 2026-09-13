@@ -35,6 +35,8 @@ try {
       (id, name, reporting_currency, timezone, materiality_target, is_demo)
      VALUES
       ('demo-org', 'Demo Optimizer Co', 'USD', 'UTC', '10', true),
+      ('journey-org', 'Journey Demo Co', 'USD', 'UTC', '10', true),
+      ('journey-bad-org', 'Journey Guardrail Co', 'USD', 'UTC', '10', true),
       ('other-org', 'Other Org Secret', 'USD', 'UTC', '10', false)`,
   );
 
@@ -46,7 +48,10 @@ try {
 
   await client.query(
     `INSERT INTO memberships (organization_id, user_id, role)
-     VALUES ('demo-org', 'founder-user', 'OWNER')`,
+     VALUES
+       ('demo-org', 'founder-user', 'OWNER'),
+       ('journey-org', 'founder-user', 'OWNER'),
+       ('journey-bad-org', 'founder-user', 'OWNER')`,
   );
 
   await client.query(
