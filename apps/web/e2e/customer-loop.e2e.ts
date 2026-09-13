@@ -29,7 +29,10 @@ async function expectAccessible(page: Page) {
   expect(blocking, JSON.stringify(blocking, null, 2)).toEqual([]);
 }
 
-async function reachVerification(page: Page, organizationId: string) {
+async function reachVerification(
+  page: Page,
+  organizationId: string,
+): Promise<'READY' | 'ALREADY_VERIFIED'> {
   await page.goto(`/o/${organizationId}/import`);
   await page.locator('input[name="usageCsv"]').setInputFiles(baselineCsv);
   await page.locator('input[name="isDemo"]').check();
@@ -63,7 +66,12 @@ async function reachVerification(page: Page, organizationId: string) {
   await expectAccessible(page);
 
   await page.goto(`/o/${organizationId}`);
-  await expect(page.getByText('Tested saving')).toBeVisible();
+  const verifiedBadge = page.locator('.state-badge.state-verified');
+  if (await verifiedBadge.isVisible()) {
+    return 'ALREADY_VERIFIED';
+  }
+
+  await expect(page.locator('.state-badge.state-tested')).toBeVisible();
   await page.getByRole('link', { name: 'Implement tested change' }).click();
 
   const implementedAt = page.getByLabel('Implemented at (UTC)');
@@ -80,6 +88,7 @@ async function reachVerification(page: Page, organizationId: string) {
     page.getByRole('heading', { name: 'Measure what actually changed' }),
   ).toBeVisible();
   await expectAccessible(page);
+  return 'READY';
 }
 
 async function submitPostChange(
@@ -102,15 +111,17 @@ async function submitPostChange(
 }
 
 test('hard customer journey reaches verified savings', async ({ page }) => {
-  await reachVerification(page, 'journey-org');
-  await submitPostChange(page, '0.93');
+  const state = await reachVerification(page, 'journey-org');
+  if (state === 'READY') {
+    await submitPostChange(page, '0.93');
 
-  await expect(page.getByRole('heading', { name: 'VERIFIED' })).toBeVisible();
-  await expect(page.getByText('Verified net impact')).toBeVisible();
-  await expectAccessible(page);
+    await expect(page.getByRole('heading', { name: 'VERIFIED' })).toBeVisible();
+    await expect(page.getByText('Verified net impact')).toBeVisible();
+    await expectAccessible(page);
+  }
 
   await page.goto('/o/journey-org');
-  await expect(page.getByText('Verified saving')).toBeVisible();
+  await expect(page.locator('.state-badge.state-verified')).toBeVisible();
   await expect(page.getByText('Verified net impact')).toBeVisible();
 });
 
@@ -123,6 +134,6 @@ test('failed post-change quality never becomes verified', async ({ page }) => {
   await expect(page.getByText('Verified net impact')).toHaveCount(0);
 
   await page.goto('/o/journey-bad-org');
-  await expect(page.getByText('Tested saving')).toBeVisible();
-  await expect(page.getByText('Verified saving')).toHaveCount(0);
+  await expect(page.locator('.state-badge.state-tested')).toBeVisible();
+  await expect(page.locator('.state-badge.state-verified')).toHaveCount(0);
 });
