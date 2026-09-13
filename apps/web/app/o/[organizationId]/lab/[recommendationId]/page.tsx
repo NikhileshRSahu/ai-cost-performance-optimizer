@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
-import { createDatabase } from '../../../../../../src/persistence/database.js';
-import { buildOptimizationLabView } from '../../../../../../src/workbench/lab-view.js';
+import { createDatabase } from '../../../../../../../src/persistence/database.js';
+import { buildOptimizationLabView } from '../../../../../../../src/workbench/lab-view.js';
 import { ConstraintRow } from '../../../../components/constraint-row.js';
 import { EvidenceDetails } from '../../../../components/evidence-details.js';
 import { LAB_COPY } from '../../../../lib/lab-copy.js';
