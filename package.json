@@ -37,7 +37,8 @@
     "test:db": "vitest run tests/persistence --exclude tests/persistence/schema.test.ts",
     "web:dev": "npm run dev --workspace @optimizer/web",
     "web:build": "npm run build --workspace @optimizer/web",
-    "web:test": "vitest run tests/web"
+    "web:test": "vitest run tests/web",
+    "web:e2e": "npm run e2e --workspace @optimizer/web"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",
