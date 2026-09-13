@@ -7,13 +7,25 @@ export type OverlapResult = Readonly<{
 }>;
 
 function overlaps(a: UsageRecord, b: UsageRecord): boolean {
+  const aStart = Date.parse(a.intervalStart);
+  const aEnd = Date.parse(a.intervalEnd);
+  const bStart = Date.parse(b.intervalStart);
+  const bEnd = Date.parse(b.intervalEnd);
+  return aStart < bEnd && bStart < aEnd;
+}
+
+function sameScope(a: UsageRecord, b: UsageRecord): boolean {
   return (
-    Date.parse(a.intervalStart) < Date.parse(b.intervalEnd) &&
-    Date.parse(b.intervalStart) < Date.parse(a.intervalEnd)
+    a.organizationId === b.organizationId &&
+    a.provider === b.provider &&
+    a.model === b.model &&
+    a.workload === b.workload
   );
 }
 
-export function excludeUnreconciledOverlaps(records: readonly UsageRecord[]): OverlapResult {
+export function excludeUnreconciledOverlaps(
+  records: readonly UsageRecord[],
+): OverlapResult {
   const excluded = new Set<UsageRecord>();
   const reasons: string[] = [];
 
@@ -21,31 +33,25 @@ export function excludeUnreconciledOverlaps(records: readonly UsageRecord[]): Ov
     for (let j = i + 1; j < records.length; j++) {
       const a = records[i]!;
       const b = records[j]!;
-      const sameScope =
-        a.organizationId === b.organizationId &&
-        a.provider === b.provider &&
-        a.model === b.model &&
-        a.workload === b.workload;
 
-      if (!sameScope || !overlaps(a, b)) continue;
+      if (!sameScope(a, b) || !overlaps(a, b)) continue;
 
       if (a.granularity !== b.granularity || a.fingerprint !== b.fingerprint) {
         excluded.add(a);
         excluded.add(b);
-        reasons.push(
-          `UNRECONCILED_OVERLAP:${a.sourceLine}:${b.sourceLine}`,
-        );
+        const reason =
+          `UNRECONCILED_OVERLAP:${a.sourceLine}:${b.sourceLine}`;
+        reasons.push(reason);
       }
     }
   }
 
+  const included = records.filter((record) => !excluded.has(record));
+  const excludedRecords = records.filter((record) => excluded.has(record));
+
   return Object.freeze({
-    included: Object.freeze(
-      records.filter((record) => !excluded.has(record)),
-    ),
-    excluded: Object.freeze(
-      records.filter((record) => excluded.has(record)),
-    ),
+    included: Object.freeze(included),
+    excluded: Object.freeze(excludedRecords),
     reasons: Object.freeze(reasons),
   });
 }
