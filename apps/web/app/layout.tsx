@@ -3,9 +3,9 @@ import type { ReactNode } from 'react';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'AI Cost & Performance Optimizer',
+  title: 'AI Efficiency Intelligence',
   description:
-    'Evidence-backed AI cost optimization without weakening required performance.',
+    'Evidence-backed AI efficiency diagnosis, safe optimization testing, and verified outcomes.',
 };
 
 export default function RootLayout({
@@ -19,8 +19,8 @@ export default function RootLayout({
         </a>
         <header className="site-header">
           <div className="shell">
-            <div className="brand">AI Cost &amp; Performance Optimizer</div>
-            <div className="environment-badge">Evidence-first workbench</div>
+            <div className="brand">AI Efficiency Intelligence</div>
+            <div className="environment-badge">Work MRI · Test · Verify</div>
           </div>
         </header>
         <main id="main-content" className="shell">
