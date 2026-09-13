@@ -31,15 +31,20 @@ export function excludeUnreconciledOverlaps(
 
   for (let i = 0; i < records.length; i++) {
     for (let j = i + 1; j < records.length; j++) {
-      const a = records[i]!;
-      const b = records[j]!;
+      const a = records[i];
+      const b = records[j];
+      if (a === undefined || b === undefined) continue;
 
       if (!sameScope(a, b) || !overlaps(a, b)) continue;
 
       if (a.granularity !== b.granularity || a.fingerprint !== b.fingerprint) {
         excluded.add(a);
         excluded.add(b);
-        const reason = `UNRECONCILED_OVERLAP:${a.sourceLine}:${b.sourceLine}`;
+        const reason =
+          'UNRECONCILED_OVERLAP:' +
+          String(a.sourceLine) +
+          ':' +
+          String(b.sourceLine);
         reasons.push(reason);
       }
     }
