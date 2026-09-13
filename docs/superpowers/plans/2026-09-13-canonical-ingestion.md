@@ -237,3 +237,16 @@ Acceptance for this milestone:
 ## Next Milestone
 
 After this milestone passes, implement deterministic opportunity detectors plus benchmark ingestion, constraint evaluation, confidence, and recommendation ranking. Persistence/authentication/UI/reporting remain a later workbench milestone. Provider adapters remain gated until the credential security gate and owner approval pass.
+
+
+## Completion Record — 2026-09-13
+
+This milestone is complete and merged to `main`.
+
+- PR #2 implemented the canonical CSV ingestion core, deterministic fingerprints, duplicate/conflict handling, immutable import evidence, overlap exclusion, coverage gating, module exports, and integration tests.
+- PR #3 closed the review gaps with source-capability metadata, requested/effective import intervals, ISO currency validation, union-based timezone-aware complete-day coverage including DST boundaries, deterministic synthetic fixtures, and additional hardening tests.
+- GitHub Actions passed formatting, lint, strict typecheck, the full test suite, build, high-severity dependency audit, and Gitleaks on the final PR #3 head.
+- Final hardening merge commit: `2b26d3dfc8f6c07d6592eb41f798922db8716b23`.
+- Ingestion alone still cannot assign `OPPORTUNITY`, `TESTED`, or `VERIFIED`; those evidence states remain gated by later detector, benchmark, implementation, and verification milestones.
+
+The next implementation milestone is deterministic opportunity detectors plus benchmark ingestion, constraint evaluation, confidence scoring, and recommendation ranking.
