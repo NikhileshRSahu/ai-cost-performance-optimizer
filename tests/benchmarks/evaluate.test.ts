@@ -24,8 +24,8 @@ function cases(
   for (let caseIndex = 0; caseIndex < count; caseIndex++) {
     for (let repetition = 0; repetition < repetitions; repetition++) {
       const common = {
-        caseId: `case-${caseIndex}`,
-        repetitionId: `rep-${repetition}`,
+        caseId: `case-${String(caseIndex)}`,
+        repetitionId: `rep-${String(repetition)}`,
         evaluatorVersion: 'eval-v1',
       };
       result.push({
