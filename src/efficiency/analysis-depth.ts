@@ -80,13 +80,13 @@ function missingForNextLevel(
 ): readonly EvidenceSourceKind[] {
   switch (level) {
     case 1:
-      return capabilityList('SANITIZED_AI_EXPORT']);
+      return Object.freeze(['SANITIZED_AI_EXPORT']);
     case 2:
-      return capabilityList('AUTHORIZED_WORKSPACE']);
+      return Object.freeze(['AUTHORIZED_WORKSPACE']);
     case 3:
-      return capabilityList('PRODUCTION_TELEMETRY']);
+      return Object.freeze(['PRODUCTION_TELEMETRY']);
     case 4:
-      return capabilityList(]);
+      return Object.freeze([]);
   }
 }
 
