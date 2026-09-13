@@ -10,3 +10,5 @@ export * from './ledger/index.js';
 export * from './implementation/index.js';
 export * from './verification/index.js';
 export * from './product-events/index.js';
+export * from './auth/index.js';
+export * from './persistence/index.js';
