@@ -39,6 +39,7 @@ export default async function OrganizationLayout({
           <Link href={`/o/${organizationId}/import`}>Import</Link>
           <Link href={`/o/${organizationId}/workloads`}>Workloads</Link>
           <Link href={`/o/${organizationId}/benchmark`}>Benchmark</Link>
+          <Link href={`/o/${organizationId}/data`}>Data &amp; privacy</Link>
         </nav>
         <p className="sidebar-note">
           Savings stay separate as potential, tested, and verified evidence.
