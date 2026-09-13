@@ -12,10 +12,7 @@ describe('buildAnalysisDepth', () => {
   });
 
   it('unlocks prompt/workflow analysis only with content evidence', () => {
-    const depth = buildAnalysisDepth([
-      'USAGE_CSV',
-      'SANITIZED_AI_EXPORT',
-    ]);
+    const depth = buildAnalysisDepth(['USAGE_CSV', 'SANITIZED_AI_EXPORT']);
 
     expect(depth.level).toBe(2);
     expect(depth.capabilities).toContain('PROMPT_STRUCTURE');
@@ -24,10 +21,7 @@ describe('buildAnalysisDepth', () => {
   });
 
   it('unlocks cross-workspace knowledge analysis only with authorized workspace evidence', () => {
-    const depth = buildAnalysisDepth([
-      'USAGE_CSV',
-      'AUTHORIZED_WORKSPACE',
-    ]);
+    const depth = buildAnalysisDepth(['USAGE_CSV', 'AUTHORIZED_WORKSPACE']);
 
     expect(depth.level).toBe(3);
     expect(depth.capabilities).toContain('KNOWLEDGE_RETRIEVAL');
@@ -35,10 +29,7 @@ describe('buildAnalysisDepth', () => {
   });
 
   it('reserves continuous verification for production telemetry', () => {
-    const depth = buildAnalysisDepth([
-      'USAGE_CSV',
-      'PRODUCTION_TELEMETRY',
-    ]);
+    const depth = buildAnalysisDepth(['USAGE_CSV', 'PRODUCTION_TELEMETRY']);
 
     expect(depth.level).toBe(4);
     expect(depth.capabilities).toContain('COST_PER_SUCCESSFUL_OUTCOME');
