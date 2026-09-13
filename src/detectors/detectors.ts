@@ -305,7 +305,16 @@ export function detectCostAnomaly(input: Readonly<{
   current: Readonly<{ date: string; cost: string }>;
   findingId: string;
   materialityThreshold: string;
+  stableScope: boolean;
 }>): DetectorResult {
+  if (!input.stableScope) {
+    return result('INSUFFICIENT_EVIDENCE', null, ['STABLE_SCOPE_REQUIRED']);
+  }
+  if (input.history.some((entry) => entry.date === input.current.date)) {
+    return result('INSUFFICIENT_EVIDENCE', null, [
+      'ASSESSED_DAY_MUST_BE_EXCLUDED_FROM_HISTORY',
+    ]);
+  }
   if (input.history.length < 14) {
     return result('INSUFFICIENT_EVIDENCE', null, [
       'FOURTEEN_PRIOR_DAYS_REQUIRED',
