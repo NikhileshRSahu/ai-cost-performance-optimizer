@@ -2,6 +2,7 @@ import { parseDecimal } from '../economics/exact.js';
 import type {
   Granularity,
   ImportIssue,
+  SourceCapability,
   UsageRecord,
 } from '../usage/contracts.js';
 import { fingerprintRow } from '../usage/fingerprint.js';
@@ -118,7 +119,29 @@ function ensureInteger(v: string | null, key: string): void {
 export type ParsedCsv = Readonly<{
   records: UsageRecord[];
   issues: ImportIssue[];
+  capabilities: SourceCapability;
 }>;
+
+function sourceCapabilities(headers: readonly string[]): SourceCapability {
+  return Object.freeze({
+    requestGranularity: headers.includes('granularity'),
+    model: true,
+    projectOrWorkspace:
+      headers.includes('project') || headers.includes('workspace'),
+    apiKeyIdentifier: false,
+    tokenClasses:
+      headers.includes('input_tokens') ||
+      headers.includes('cached_input_tokens') ||
+      headers.includes('cache_write_tokens') ||
+      headers.includes('output_tokens'),
+    cost: true,
+    latency:
+      headers.includes('latency_p50_ms') || headers.includes('latency_p95_ms'),
+    success: headers.includes('successes') || headers.includes('failures'),
+    toolUsage: headers.includes('tool_calls') || headers.includes('tool_cost'),
+    stableEventIdentifier: headers.includes('source_event_id'),
+  });
+}
 
 export function parseUsageCsv(
   bytes: Uint8Array,
@@ -204,6 +227,10 @@ export function parseUsageCsv(
       const currency = value(row, headers, 'currency');
       if (!currency || !/^[A-Z]{3}$/.test(currency)) {
         throw new Error('INVALID_CURRENCY');
+      }
+      const supportedCurrencies = Intl.supportedValuesOf('currency');
+      if (!supportedCurrencies.includes(currency)) {
+        throw new Error('UNSUPPORTED_CURRENCY');
       }
 
       const countKeys = [
@@ -343,5 +370,5 @@ export function parseUsageCsv(
     }
   }
 
-  return { records, issues };
+  return { records, issues, capabilities: sourceCapabilities(headers) };
 }
