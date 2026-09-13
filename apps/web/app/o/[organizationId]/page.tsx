@@ -64,6 +64,7 @@ export default async function FounderDashboardPage({
   );
   const mri = buildWorkMriSnapshot({
     depth: analysisDepth,
+    additionalFacts: view.diagnosticFacts,
     observedSpend: view.observedSpend,
     strongestAction:
       view.strongestAction === null
