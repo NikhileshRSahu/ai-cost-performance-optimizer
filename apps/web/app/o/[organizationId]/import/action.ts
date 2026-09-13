@@ -5,8 +5,13 @@ import { createDatabase } from '../../../../../../src/persistence/database';
 import { importCustomerUsage } from '../../../../../../src/workbench/import-service';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
 
+function textEntry(formData: FormData, key: string): string {
+  const value = formData.get(key);
+  return typeof value === 'string' ? value : '';
+}
+
 export async function uploadUsageCsv(formData: FormData): Promise<never> {
-  const organizationId = String(formData.get('organizationId') ?? '');
+  const organizationId = textEntry(formData, 'organizationId');
   const upload = formData.get('usageCsv');
   const isDemo = formData.get('isDemo') === 'true';
 
