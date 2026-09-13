@@ -74,7 +74,7 @@ export function parseBenchmarkCsv(bytes: Uint8Array): readonly BenchmarkCase[] {
     lines.slice(1).map((line, offset) => {
       const cells = parseLine(line);
       if (cells.length !== header.length) {
-        throw new Error(`BENCHMARK_COLUMN_COUNT_MISMATCH:${offset + 2}`);
+        throw new Error(`BENCHMARK_COLUMN_COUNT_MISMATCH:${String(offset + 2)}`);
       }
       const record = Object.fromEntries(
         header.map((key, index) => [key, cells[index] ?? '']),
