@@ -38,8 +38,9 @@ async function reachVerification(
   await page.locator('input[name="isDemo"]').check();
   await page.getByRole('button', { name: 'Validate and import' }).click();
   await expect(page.getByRole('heading', { name: 'PARTIAL' })).toBeVisible();
-  await expect(page.locator('.summary-grid')).toContainText('28');
-  await expect(page.locator('.summary-grid')).toContainText('5');
+  const importSummary = page.getByLabel('Import evidence summary');
+  await expect(importSummary).toContainText('28');
+  await expect(importSummary).toContainText('5');
   await expectAccessible(page);
 
   await page.getByRole('link', { name: 'Define workload constraints' }).click();
