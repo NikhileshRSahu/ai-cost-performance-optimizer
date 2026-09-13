@@ -1065,3 +1065,89 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+
+
+.landing-stack {
+  display: grid;
+  gap: 3rem;
+}
+
+.hero-wide {
+  max-width: 900px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.5rem;
+}
+
+.landing-grid,
+.privacy-ladder {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.landing-grid h2,
+.privacy-ladder h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  letter-spacing: -0.04em;
+}
+
+.landing-steps {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.landing-steps li,
+.privacy-levels article {
+  display: grid;
+  gap: 0.4rem;
+  padding: 1.1rem;
+  border: 1px solid #d5dce5;
+  border-radius: 1rem;
+  background: #ffffff;
+}
+
+.landing-steps strong,
+.privacy-levels strong {
+  font-size: 1.05rem;
+}
+
+.landing-steps span,
+.privacy-levels p {
+  color: #596675;
+  line-height: 1.55;
+}
+
+.privacy-levels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.privacy-levels article > span {
+  color: #315f8d;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.privacy-levels p {
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .landing-grid,
+  .privacy-ladder,
+  .privacy-levels {
+    grid-template-columns: 1fr;
+  }
+}
