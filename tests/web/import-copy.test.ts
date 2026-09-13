@@ -10,10 +10,12 @@ describe('customer import workflow copy', () => {
       ),
       'utf8',
     );
-    const normalizedPage = page.replace(/\\s+/g, ' ');
+    const normalizedPage = page.replace(/\s+/g, ' ');
     expect(normalizedPage).toContain('CSV-first · no provider key required');
     expect(normalizedPage).toContain('never turn missing values into zero');
-    expect(normalizedPage).toContain('Synthetic demo data — not a customer result.');
+    expect(normalizedPage).toContain(
+      'Synthetic demo data — not a customer result.',
+    );
     expect(page).not.toMatch(/guaranteed|risk-free/i);
   });
 });
