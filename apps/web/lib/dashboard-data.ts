@@ -61,10 +61,7 @@ function normalizedConfidence(
   return 'LOW';
 }
 
-function periodLabel(
-  start: string | null,
-  end: string | null,
-): string {
+function periodLabel(start: string | null, end: string | null): string {
   if (start === null || end === null) return 'Period unavailable';
   return `${start.slice(0, 10)} to ${end.slice(0, 10)}`;
 }
@@ -123,8 +120,7 @@ function recommendationView(
     saving,
     confidenceBand: normalizedConfidence(row.confidenceBand),
     principalLimitation: evidenceString(row.evidence, 'principalLimitation'),
-    nextAction:
-      evidenceString(row.evidence, 'nextAction') ?? defaultNextAction,
+    nextAction: evidenceString(row.evidence, 'nextAction') ?? defaultNextAction,
   });
 }
 
@@ -209,7 +205,9 @@ export async function loadFounderDashboardEvidence(
   if (coverage === null) {
     limitations.push('Import coverage boundaries are unavailable.');
   } else if (latestUsable.status === 'PARTIAL') {
-    limitations.push('The selected import is partial; missing intervals are unknown.');
+    limitations.push(
+      'The selected import is partial; missing intervals are unknown.',
+    );
   }
 
   const rows = await db
@@ -253,8 +251,7 @@ export async function loadFounderDashboardEvidence(
     );
   }
 
-  const projectionEligible =
-    coverage?.eligibleForThirtyDayProjection === true;
+  const projectionEligible = coverage?.eligibleForThirtyDayProjection === true;
   const strongestAction =
     rankOne === undefined
       ? null
@@ -317,9 +314,7 @@ export async function loadFounderDashboardEvidence(
     strongestAction,
     verifiedNetSavings,
     isDemo:
-      organization.isDemo ||
-      latestUsable.isDemo ||
-      rankOne?.isDemo === true,
+      organization.isDemo || latestUsable.isDemo || rankOne?.isDemo === true,
     limitations: Object.freeze(limitations),
   });
 }

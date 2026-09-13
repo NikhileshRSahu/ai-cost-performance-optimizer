@@ -89,12 +89,10 @@ describe('optimization report view model', () => {
   });
 
   it('does not turn unavailable spend into zero', () => {
-    const view = buildOptimizationReportView(
-      evidence({ observedSpend: null }),
-    );
-    expect(view.financialClaims.some((claim) => claim.label === 'Observed spend')).toBe(
-      false,
-    );
+    const view = buildOptimizationReportView(evidence({ observedSpend: null }));
+    expect(
+      view.financialClaims.some((claim) => claim.label === 'Observed spend'),
+    ).toBe(false);
     expect(view.limitations).toContain(
       'Observed spend is unavailable for the selected report scope.',
     );

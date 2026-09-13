@@ -148,7 +148,6 @@ h1 {
   }
 }
 
-
 .dashboard-stack {
   display: grid;
   gap: 2rem;
@@ -358,7 +357,6 @@ h1 {
     width: 100%;
   }
 }
-
 
 .lab-stack {
   display: grid;

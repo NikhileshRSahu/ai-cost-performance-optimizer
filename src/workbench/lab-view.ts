@@ -2,9 +2,7 @@ import { z } from 'zod';
 import { compare, parseDecimal } from '../economics/exact.js';
 
 export type LabDecision =
-  | 'OPTIMIZE'
-  | 'DO_NOT_CHANGE'
-  | 'INSUFFICIENT_EVIDENCE';
+  'OPTIMIZE' | 'DO_NOT_CHANGE' | 'INSUFFICIENT_EVIDENCE';
 
 export type ConfigurationEvidence = Readonly<{
   configurationId: string;
@@ -102,7 +100,10 @@ const optimizationLabEvidenceSchema = z
         currency: z.string().regex(/^[A-Z]{3}$/),
         baselineCost: nullableDecimalSchema,
         candidateCost: nullableDecimalSchema,
-        netSavingNumerator: z.string().regex(/^-?(?:0|[1-9]\d*)$/).nullable(),
+        netSavingNumerator: z
+          .string()
+          .regex(/^-?(?:0|[1-9]\d*)$/)
+          .nullable(),
         netSavingDenominator: z
           .string()
           .regex(/^(?:[1-9]\d*)$/)

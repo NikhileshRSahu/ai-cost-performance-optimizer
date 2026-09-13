@@ -40,12 +40,15 @@ export default async function OptimizationLabPage({
         error.message === 'RECOMMENDATION_NOT_FOUND')
     ) {
       return (
-        <section className="empty-state" aria-labelledby="lab-unavailable-title">
+        <section
+          className="empty-state"
+          aria-labelledby="lab-unavailable-title"
+        >
           <p className="eyebrow">{LAB_COPY.heading}</p>
           <h1 id="lab-unavailable-title">Insufficient benchmark evidence</h1>
           <p>
-            This recommendation does not have the complete current-versus-candidate
-            evidence required for the Optimization Lab.
+            This recommendation does not have the complete
+            current-versus-candidate evidence required for the Optimization Lab.
           </p>
         </section>
       );
@@ -78,31 +81,60 @@ export default async function OptimizationLabPage({
             configuration is safe enough to adopt.
           </p>
         </div>
-        <div className={`lab-decision decision-${view.decision.toLowerCase().replaceAll('_', '-')}`}>
+        <div
+          className={`lab-decision decision-${view.decision.toLowerCase().replaceAll('_', '-')}`}
+        >
           <span>Decision</span>
           <strong>{view.decision}</strong>
         </div>
       </header>
 
-      <section className="comparison-grid" aria-label="Configuration comparison">
+      <section
+        className="comparison-grid"
+        aria-label="Configuration comparison"
+      >
         <article className="configuration-card">
           <p className="eyebrow">{LAB_COPY.currentLabel}</p>
           <h2>{view.current.configurationId}</h2>
           <dl>
-            <div><dt>Cost</dt><dd>{metric(view.current.cost)}</dd></div>
-            <div><dt>Quality</dt><dd>{metric(view.current.quality)}</dd></div>
-            <div><dt>p95 latency</dt><dd>{metric(view.current.p95LatencyMs)}</dd></div>
-            <div><dt>Failure rate</dt><dd>{metric(view.current.failureRate)}</dd></div>
+            <div>
+              <dt>Cost</dt>
+              <dd>{metric(view.current.cost)}</dd>
+            </div>
+            <div>
+              <dt>Quality</dt>
+              <dd>{metric(view.current.quality)}</dd>
+            </div>
+            <div>
+              <dt>p95 latency</dt>
+              <dd>{metric(view.current.p95LatencyMs)}</dd>
+            </div>
+            <div>
+              <dt>Failure rate</dt>
+              <dd>{metric(view.current.failureRate)}</dd>
+            </div>
           </dl>
         </article>
         <article className="configuration-card">
           <p className="eyebrow">{LAB_COPY.candidateLabel}</p>
           <h2>{view.candidate.configurationId}</h2>
           <dl>
-            <div><dt>Cost</dt><dd>{metric(view.candidate.cost)}</dd></div>
-            <div><dt>Quality</dt><dd>{metric(view.candidate.quality)}</dd></div>
-            <div><dt>p95 latency</dt><dd>{metric(view.candidate.p95LatencyMs)}</dd></div>
-            <div><dt>Failure rate</dt><dd>{metric(view.candidate.failureRate)}</dd></div>
+            <div>
+              <dt>Cost</dt>
+              <dd>{metric(view.candidate.cost)}</dd>
+            </div>
+            <div>
+              <dt>Quality</dt>
+              <dd>{metric(view.candidate.quality)}</dd>
+            </div>
+            <div>
+              <dt>p95 latency</dt>
+              <dd>{metric(view.candidate.p95LatencyMs)}</dd>
+            </div>
+            <div>
+              <dt>Failure rate</dt>
+              <dd>{metric(view.candidate.failureRate)}</dd>
+            </div>
           </dl>
         </article>
       </section>
@@ -140,11 +172,15 @@ export default async function OptimizationLabPage({
         <div className="metrics-grid">
           <div className="metric-card">
             <p className="metric-label">Baseline cost</p>
-            <p className="metric-value">{metric(view.economics.baselineCost)}</p>
+            <p className="metric-value">
+              {metric(view.economics.baselineCost)}
+            </p>
           </div>
           <div className="metric-card">
             <p className="metric-label">Candidate cost</p>
-            <p className="metric-value">{metric(view.economics.candidateCost)}</p>
+            <p className="metric-value">
+              {metric(view.economics.candidateCost)}
+            </p>
           </div>
           <div className="metric-card">
             <p className="metric-label">Exact net saving</p>

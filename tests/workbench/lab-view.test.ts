@@ -67,9 +67,9 @@ describe('Optimization Lab view model', () => {
   it('keeps OPTIMIZE only when every measured constraint passes', () => {
     const view = buildOptimizationLabView(evidence());
     expect(view.decision).toBe('OPTIMIZE');
-    expect(view.constraints.every((constraint) => constraint.status === 'PASS')).toBe(
-      true,
-    );
+    expect(
+      view.constraints.every((constraint) => constraint.status === 'PASS'),
+    ).toBe(true);
   });
 
   it('makes a measured constraint failure dominate positive saving', () => {
@@ -123,8 +123,8 @@ describe('Optimization Lab view model', () => {
   });
 
   it('keeps the synthetic disclaimer explicit', () => {
-    expect(buildOptimizationLabView(evidence({ isDemo: true })).demoDisclaimer).toBe(
-      'Synthetic demo data — not a customer result.',
-    );
+    expect(
+      buildOptimizationLabView(evidence({ isDemo: true })).demoDisclaimer,
+    ).toBe('Synthetic demo data — not a customer result.');
   });
 });
