@@ -143,7 +143,7 @@ describe('implemented recommendation verification journey', () => {
       history,
       event: stateEvent('state-verified', 'VERIFIED', 'verification-1'),
     });
-    expect(currentValidState(history, 'rec-1')).toBe('VERIFIED');
+    expect(currentValidState(history, 'org-1', 'rec-1')).toBe('VERIFIED');
   });
 
   it('keeps viewers unable to implement or submit verification evidence', () => {
