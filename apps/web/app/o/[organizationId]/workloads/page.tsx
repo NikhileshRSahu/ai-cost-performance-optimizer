@@ -18,17 +18,18 @@ export default async function WorkloadsPage({
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
 
   const database = createDatabase(databaseUrl);
-  let existing: (typeof workloads.$inferSelect)[] = [];
-  try {
-    requireOrganizationAccess({ session, organizationId, action: 'READ' });
-    existing = await database.db
-      .select()
-      .from(workloads)
-      .where(eq(workloads.organizationId, organizationId))
-      .orderBy(asc(workloads.name));
-  } finally {
-    await database.close();
-  }
+  const existing = await (async () => {
+    try {
+      requireOrganizationAccess({ session, organizationId, action: 'READ' });
+      return await database.db
+        .select()
+        .from(workloads)
+        .where(eq(workloads.organizationId, organizationId))
+        .orderBy(asc(workloads.name));
+    } finally {
+      await database.close();
+    }
+  })();
 
   return (
     <div className="workflow-page">
