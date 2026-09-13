@@ -1,9 +1,9 @@
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../../src/persistence/database.js';
 import { buildOptimizationReportView } from '../../../../../../../src/reports/report-view.js';
-import { PrintReportButton } from '../../../../components/print-report-button.js';
-import { loadOptimizationReportEvidence } from '../../../../lib/report-data.js';
-import { resolveRuntimeSession } from '../../../../lib/runtime-session.js';
+import { PrintReportButton } from '../../../../../components/print-report-button.js';
+import { loadOptimizationReportEvidence } from '../../../../../lib/report-data.js';
+import { resolveRuntimeSession } from '../../../../../lib/runtime-session.js';
 import './print.css';
 
 export const dynamic = 'force-dynamic';
