@@ -1,10 +1,6 @@
 import { z } from 'zod';
 
-export const sanitizedAiSourceSchema = z.enum([
-  'CHATGPT',
-  'CLAUDE',
-  'OTHER',
-]);
+export const sanitizedAiSourceSchema = z.enum(['CHATGPT', 'CLAUDE', 'OTHER']);
 
 export const sanitizedAiRoleSchema = z.enum([
   'USER',

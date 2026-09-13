@@ -1,5 +1,8 @@
 import { createHash } from 'node:crypto';
-import type { SanitizedAiExport, SanitizedAiMessage } from './history-contracts.js';
+import type {
+  SanitizedAiExport,
+  SanitizedAiMessage,
+} from './history-contracts.js';
 
 export type PromptStructureSignal =
   | 'LOW_CONTEXT'
@@ -40,7 +43,9 @@ function fingerprint(value: string): string {
   return createHash('sha256').update(value).digest('hex');
 }
 
-function userPrompts(messages: readonly SanitizedAiMessage[]): SanitizedAiMessage[] {
+function userPrompts(
+  messages: readonly SanitizedAiMessage[],
+): SanitizedAiMessage[] {
   return messages.filter((message) => message.role === 'USER');
 }
 
@@ -82,11 +87,9 @@ export function diagnoseSanitizedHistory(
 ): SanitizedHistoryDiagnosis {
   const prompts = userPrompts(input.export.messages);
   const minimumRepeatCharacters = input.minimumRepeatCharacters ?? 80;
-  const automationOccurrenceThreshold = input.automationOccurrenceThreshold ?? 3;
-  const groups = new Map<
-    string,
-    { occurrences: number; characters: number }
-  >();
+  const automationOccurrenceThreshold =
+    input.automationOccurrenceThreshold ?? 3;
+  const groups = new Map<string, { occurrences: number; characters: number }>();
 
   for (const prompt of prompts) {
     const normalized = normalizedText(prompt.content);
@@ -108,8 +111,7 @@ export function diagnoseSanitizedHistory(
         charactersPerOccurrence: value.characters,
         avoidableRepeatedCharactersAfterFirst:
           value.characters * (value.occurrences - 1),
-        automationCandidate:
-          value.occurrences >= automationOccurrenceThreshold,
+        automationCandidate: value.occurrences >= automationOccurrenceThreshold,
       }),
     )
     .sort(

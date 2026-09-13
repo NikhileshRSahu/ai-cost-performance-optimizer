@@ -41,9 +41,9 @@ describe('sanitized AI history diagnosis', () => {
     expect(result.repeatedPromptPatterns).toHaveLength(1);
     expect(result.repeatedPromptPatterns[0]?.occurrences).toBe(3);
     expect(result.repeatedPromptPatterns[0]?.automationCandidate).toBe(true);
-    expect(
-      JSON.stringify(result.repeatedPromptPatterns),
-    ).not.toContain('Analyze the attached');
+    expect(JSON.stringify(result.repeatedPromptPatterns)).not.toContain(
+      'Analyze the attached',
+    );
   });
 
   it('reports prompt-structure opportunities as heuristics rather than quality verdicts', () => {
