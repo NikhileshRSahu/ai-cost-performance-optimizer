@@ -85,8 +85,16 @@ export function createImplementationRecord(
     }>,
 ): ImplementationRecord {
   requireOperatorAuthorization(input.authorization);
-  const { authorization: _authorization, ...candidate } = input;
-  void _authorization;
+  const candidate: ImplementationRecord = {
+    recommendationId: input.recommendationId,
+    organizationId: input.organizationId,
+    implementedAt: input.implementedAt,
+    rolloutStart: input.rolloutStart,
+    stabilizationEnd: input.stabilizationEnd,
+    deploymentNote: input.deploymentNote,
+    rollbackInstructions: input.rollbackInstructions,
+    confirmedByUserId: input.confirmedByUserId,
+  };
   const data = implementationSchema.parse(candidate);
   if (Date.parse(data.stabilizationEnd) < Date.parse(data.rolloutStart)) {
     throw new Error('INVALID_STABILIZATION_INTERVAL');
