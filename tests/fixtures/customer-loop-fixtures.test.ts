@@ -16,9 +16,11 @@ describe('customer-loop hard fixtures', () => {
     );
     expect(parsed.records).toHaveLength(30);
     expect(parsed.issues).toHaveLength(4);
-    expect(new Set(parsed.records.map((row) => row.intervalStart.slice(0, 10))).size).toBe(
-      14,
-    );
+    expect(
+      new Set(
+        parsed.records.map((row) => row.intervalStart.slice(0, 10)),
+      ).size,
+    ).toBe(14);
     expect(new Set(parsed.records.map((row) => row.workload))).toEqual(
       new Set(['classification', 'extraction']),
     );
@@ -33,9 +35,11 @@ describe('customer-loop hard fixtures', () => {
     );
     expect(parsed.issues).toEqual([]);
     expect(parsed.records).toHaveLength(7);
-    expect(new Set(parsed.records.map((row) => row.intervalStart.slice(0, 10))).size).toBe(
-      7,
-    );
+    expect(
+      new Set(
+        parsed.records.map((row) => row.intervalStart.slice(0, 10)),
+      ).size,
+    ).toBe(7);
     expect(new Set(parsed.records.map((row) => row.configurationId))).toEqual(
       new Set(['model-b']),
     );
@@ -43,7 +47,10 @@ describe('customer-loop hard fixtures', () => {
 
   it('keeps research/reference data explicitly attributed', async () => {
     const reference = await readFile(
-      new URL('../../fixtures/research/model-reference-2026.csv', import.meta.url),
+      new URL(
+        '../../fixtures/research/model-reference-2026.csv',
+        import.meta.url,
+      ),
       'utf8',
     );
     const sources = await readFile(
