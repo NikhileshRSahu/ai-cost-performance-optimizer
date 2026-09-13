@@ -1,11 +1,4 @@
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-} from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import type { LedgerEvent } from '../../src/ledger/ledger.js';
 import { createDatabase } from '../../src/persistence/database.js';
 import {
@@ -135,9 +128,9 @@ describe('persistence tenant security boundary', () => {
       reason: null,
       invalidatesEventId: null,
     };
-    await expect(
-      evidence.appendLedgerEvent(sessionA, event),
-    ).rejects.toThrow('ORGANIZATION_MEMBERSHIP_REQUIRED');
+    await expect(evidence.appendLedgerEvent(sessionA, event)).rejects.toThrow(
+      'ORGANIZATION_MEMBERSHIP_REQUIRED',
+    );
 
     await expect(
       jobRepository.create(sessionA, {
@@ -161,12 +154,7 @@ describe('persistence tenant security boundary', () => {
       'provider error: token=secret',
     ]) {
       await expect(
-        jobRepository.markFailed(
-          sessionA,
-          'org-a',
-          'job-a',
-          unsafe,
-        ),
+        jobRepository.markFailed(sessionA, 'org-a', 'job-a', unsafe),
       ).rejects.toThrow('UNSAFE_ERROR_CATEGORY');
     }
   });

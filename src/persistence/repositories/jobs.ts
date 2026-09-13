@@ -55,10 +55,7 @@ export function createJobRepository(db: PersistenceDatabase) {
           completedAt: new Date().toISOString(),
         })
         .where(
-          and(
-            eq(jobs.organizationId, organizationId),
-            eq(jobs.id, jobId),
-          ),
+          and(eq(jobs.organizationId, organizationId), eq(jobs.id, jobId)),
         );
     },
 
@@ -82,10 +79,7 @@ export function createJobRepository(db: PersistenceDatabase) {
           completedAt: new Date().toISOString(),
         })
         .where(
-          and(
-            eq(jobs.organizationId, organizationId),
-            eq(jobs.id, jobId),
-          ),
+          and(eq(jobs.organizationId, organizationId), eq(jobs.id, jobId)),
         );
     },
 
@@ -102,12 +96,7 @@ export function createJobRepository(db: PersistenceDatabase) {
       const [row] = await db
         .select()
         .from(jobs)
-        .where(
-          and(
-            eq(jobs.organizationId, organizationId),
-            eq(jobs.id, jobId),
-          ),
-        )
+        .where(and(eq(jobs.organizationId, organizationId), eq(jobs.id, jobId)))
         .limit(1);
       return row ?? null;
     },

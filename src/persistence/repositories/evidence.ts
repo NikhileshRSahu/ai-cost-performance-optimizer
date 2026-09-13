@@ -1,8 +1,5 @@
 import { and, asc, eq } from 'drizzle-orm';
-import {
-  appendState,
-  type LedgerEvent,
-} from '../../ledger/ledger.js';
+import { appendState, type LedgerEvent } from '../../ledger/ledger.js';
 import type { ImplementationRecord } from '../../implementation/records.js';
 import type { AuthenticatedSession } from '../../workbench/authz.js';
 import type { PersistenceDatabase } from '../database.js';
@@ -28,9 +25,7 @@ export type PersistedVerificationWindow = Readonly<{
   evidence: Record<string, unknown>;
 }>;
 
-function toLedgerEvent(
-  row: typeof ledgerEvents.$inferSelect,
-): LedgerEvent {
+function toLedgerEvent(row: typeof ledgerEvents.$inferSelect): LedgerEvent {
   return Object.freeze({
     id: row.eventId,
     recommendationId: row.recommendationId,

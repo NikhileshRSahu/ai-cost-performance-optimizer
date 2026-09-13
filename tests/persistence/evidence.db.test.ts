@@ -1,5 +1,8 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { currentValidState, type LedgerEvent } from '../../src/ledger/ledger.js';
+import {
+  currentValidState,
+  type LedgerEvent,
+} from '../../src/ledger/ledger.js';
 import { createDatabase } from '../../src/persistence/database.js';
 import { createEvidenceRepository } from '../../src/persistence/repositories/evidence.js';
 import {
@@ -14,7 +17,8 @@ import {
 import type { AuthenticatedSession } from '../../src/workbench/authz.js';
 
 const databaseUrl = process.env.DATABASE_URL;
-if (databaseUrl === undefined) throw new Error('DATABASE_URL_REQUIRED_FOR_DB_TESTS');
+if (databaseUrl === undefined)
+  throw new Error('DATABASE_URL_REQUIRED_FOR_DB_TESTS');
 
 const database = createDatabase(databaseUrl);
 const repository = createEvidenceRepository(database.db);

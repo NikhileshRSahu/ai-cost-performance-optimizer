@@ -14,7 +14,8 @@ import {
 import type { AuthenticatedSession } from '../../src/workbench/authz.js';
 
 const databaseUrl = process.env.DATABASE_URL;
-if (databaseUrl === undefined) throw new Error('DATABASE_URL_REQUIRED_FOR_DB_TESTS');
+if (databaseUrl === undefined)
+  throw new Error('DATABASE_URL_REQUIRED_FOR_DB_TESTS');
 
 const database = createDatabase(databaseUrl);
 const imports = createImportRepository(database.db);
