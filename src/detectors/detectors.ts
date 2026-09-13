@@ -10,11 +10,7 @@ import {
   type Rational,
 } from '../economics/exact.js';
 import type { UsageRecord } from '../usage/contracts.js';
-import type {
-  DetectorFinding,
-  DetectorResult,
-  FindingType,
-} from './contracts.js';
+import type { DetectorFinding, DetectorResult, FindingType } from './contracts.js';
 
 function result(
   status: DetectorResult['status'],
