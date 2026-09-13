@@ -3,7 +3,13 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['dist/**', 'node_modules/**', 'coverage/**', '.superpowers/**', 'apps/web/.next/**'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      'coverage/**',
+      '.superpowers/**',
+      'apps/web/.next/**',
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
