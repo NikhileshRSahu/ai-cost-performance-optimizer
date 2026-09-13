@@ -5,11 +5,7 @@ import { createDatabase } from '../../../../../../src/persistence/database';
 import { evaluateAndPersistBenchmark } from '../../../../../../src/workbench/benchmark-service';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
 
-function textEntry(
-  formData: FormData,
-  key: string,
-  fallback = '',
-): string {
+function textEntry(formData: FormData, key: string, fallback = ''): string {
   const value = formData.get(key);
   return typeof value === 'string' ? value : fallback;
 }
@@ -50,7 +46,5 @@ export async function submitBenchmark(formData: FormData): Promise<never> {
     await database.close();
   }
 
-  redirect(
-    `/o/${organizationId}/lab/${encodeURIComponent(recommendationId)}`,
-  );
+  redirect(`/o/${organizationId}/lab/${encodeURIComponent(recommendationId)}`);
 }

@@ -5,11 +5,7 @@ import { createDatabase } from '../../../../../../../src/persistence/database';
 import { verifyCustomerChange } from '../../../../../../../src/workbench/verification-service';
 import { resolveRuntimeSession } from '../../../../../lib/runtime-session';
 
-function textEntry(
-  formData: FormData,
-  key: string,
-  fallback = '',
-): string {
+function textEntry(formData: FormData, key: string, fallback = ''): string {
   const value = formData.get(key);
   return typeof value === 'string' ? value : fallback;
 }
@@ -53,8 +49,7 @@ export async function submitVerification(formData: FormData): Promise<never> {
       attestations: {
         unitDefinitionUnchanged:
           formData.get('unitDefinitionUnchanged') === 'true',
-        workloadMixComparable:
-          formData.get('workloadMixComparable') === 'true',
+        workloadMixComparable: formData.get('workloadMixComparable') === 'true',
         concurrentDeploymentsResolved:
           formData.get('concurrentDeploymentsResolved') === 'true',
       },
