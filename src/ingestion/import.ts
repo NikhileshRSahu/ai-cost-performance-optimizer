@@ -62,11 +62,11 @@ export function importUsageCsv(
     warnings: 0,
     blocked: accepted.length === 0,
     partial: accepted.length > 0 && rejected > 0,
-    issues: Object.freeze(issues.map(Object.freeze)),
+    issues: Object.freeze(issues.map((issue) => Object.freeze(issue))),
   });
 
   return Object.freeze({
     run,
-    records: Object.freeze(accepted.map(Object.freeze)),
+    records: Object.freeze(accepted.map((record) => Object.freeze(record))),
   });
 }
