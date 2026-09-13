@@ -34,11 +34,7 @@ describe('implementation evidence records', () => {
   it('marks a complete guide reviewed only after authorized operator evidence', () => {
     const reviewed = markGuideReviewed({
       guide,
-      authorization: authorize(
-        operatorSession,
-        'org-1',
-        'PREPARE_GUIDE',
-      ),
+      authorization: authorize(operatorSession, 'org-1', 'PREPARE_GUIDE'),
       userId: 'user-operator',
       reviewedAt: '2026-09-13T10:00:00Z',
     });
@@ -86,11 +82,7 @@ describe('implementation evidence records', () => {
       deploymentNote: '10% canary expanded after stable quality.',
       rollbackInstructions: ['Restore model A configuration'],
       confirmedByUserId: 'user-operator',
-      authorization: authorize(
-        operatorSession,
-        'org-1',
-        'MARK_IMPLEMENTED',
-      ),
+      authorization: authorize(operatorSession, 'org-1', 'MARK_IMPLEMENTED'),
     });
     expect(record.stabilizationEnd).toBe('2026-09-14T11:00:00Z');
     expect(record.rollbackInstructions).toEqual([
@@ -131,11 +123,7 @@ describe('implementation evidence records', () => {
         deploymentNote: 'invalid',
         rollbackInstructions: ['rollback'],
         confirmedByUserId: 'user-operator',
-        authorization: authorize(
-          operatorSession,
-          'org-1',
-          'MARK_IMPLEMENTED',
-        ),
+        authorization: authorize(operatorSession, 'org-1', 'MARK_IMPLEMENTED'),
       }),
     ).toThrow('INVALID_STABILIZATION_INTERVAL');
   });
