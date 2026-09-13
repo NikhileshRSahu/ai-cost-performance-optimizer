@@ -40,8 +40,12 @@ export function excludeUnreconciledOverlaps(records: readonly UsageRecord[]): Ov
   }
 
   return Object.freeze({
-    included: Object.freeze(records.filter((record) => !excluded.has(record))),
-    excluded: Object.freeze(records.filter((record) => excluded.has(record))),
+    included: Object.freeze(
+      records.filter((record) => !excluded.has(record)),
+    ),
+    excluded: Object.freeze(
+      records.filter((record) => excluded.has(record)),
+    ),
     reasons: Object.freeze(reasons),
   });
 }
