@@ -7,7 +7,10 @@ import { workloads } from '../persistence/schema.js';
 import { requireOrganizationAccess } from '../persistence/tenant.js';
 import type { AuthenticatedSession } from './authz.js';
 
-const decimal = z.string().trim().regex(/^(0|[1-9]\d*)(\.\d+)?$/);
+const decimal = z
+  .string()
+  .trim()
+  .regex(/^(0|[1-9]\d*)(\.\d+)?$/);
 
 const workloadInputSchema = z
   .object({
@@ -42,20 +45,19 @@ function workloadId(
 
 function validateFraction(value: string, code: string): void {
   const parsed = parseDecimal(value);
-  if (
-    compare(parsed, rational(0n)) < 0 ||
-    compare(parsed, rational(1n)) > 0
-  ) {
+  if (compare(parsed, rational(0n)) < 0 || compare(parsed, rational(1n)) > 0) {
     throw new Error(code);
   }
 }
 
-export async function saveWorkloadConstraints(input: Readonly<{
-  db: PersistenceDatabase;
-  session: AuthenticatedSession;
-  organizationId: string;
-  values: WorkloadConstraintInput;
-}>) {
+export async function saveWorkloadConstraints(
+  input: Readonly<{
+    db: PersistenceDatabase;
+    session: AuthenticatedSession;
+    organizationId: string;
+    values: WorkloadConstraintInput;
+  }>,
+) {
   requireOrganizationAccess({
     session: input.session,
     organizationId: input.organizationId,

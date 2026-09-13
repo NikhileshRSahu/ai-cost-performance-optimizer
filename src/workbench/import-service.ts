@@ -35,15 +35,17 @@ function statusFor(input: {
   return input.partial ? 'PARTIAL' : 'COMPLETED';
 }
 
-export async function importCustomerUsage(input: Readonly<{
-  db: PersistenceDatabase;
-  session: AuthenticatedSession;
-  organizationId: string;
-  fileName: string;
-  bytes: Uint8Array;
-  isDemo: boolean;
-  receivedAt: string;
-}>): Promise<ImportCustomerUsageResult> {
+export async function importCustomerUsage(
+  input: Readonly<{
+    db: PersistenceDatabase;
+    session: AuthenticatedSession;
+    organizationId: string;
+    fileName: string;
+    bytes: Uint8Array;
+    isDemo: boolean;
+    receivedAt: string;
+  }>,
+): Promise<ImportCustomerUsageResult> {
   requireOrganizationAccess({
     session: input.session,
     organizationId: input.organizationId,

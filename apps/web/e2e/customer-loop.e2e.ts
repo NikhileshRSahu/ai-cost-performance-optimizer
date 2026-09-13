@@ -6,7 +6,10 @@ const baselineCsv = fileURLToPath(
   new URL('../../../fixtures/demo/customer-loop-tough.csv', import.meta.url),
 );
 const benchmarkCsv = fileURLToPath(
-  new URL('../../../fixtures/demo/customer-loop-benchmark.csv', import.meta.url),
+  new URL(
+    '../../../fixtures/demo/customer-loop-benchmark.csv',
+    import.meta.url,
+  ),
 );
 const postCsv = fileURLToPath(
   new URL(
@@ -42,7 +45,9 @@ async function reachVerification(page: Page, organizationId: string) {
   await page.getByLabel('Minimum quality').fill('0.90');
   await page.getByLabel('Maximum p95 latency (ms)').fill('1000');
   await page.getByLabel('Maximum failure rate').fill('0.05');
-  await page.getByRole('button', { name: 'Save constraints and continue' }).click();
+  await page
+    .getByRole('button', { name: 'Save constraints and continue' })
+    .click();
 
   await expect(
     page.getByRole('heading', { name: 'Test the cheaper candidate' }),

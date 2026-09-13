@@ -511,7 +511,6 @@ h1 {
   }
 }
 
-
 .org-workbench {
   display: grid;
   grid-template-columns: 220px minmax(0, 1fr);
@@ -855,7 +854,6 @@ h1 {
     display: block;
   }
 }
-
 
 .constraint-form,
 .benchmark-form {

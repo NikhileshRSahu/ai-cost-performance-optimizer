@@ -152,11 +152,11 @@ describe('complete customer verification loop', () => {
       0n,
     );
 
-    const [recommendation] = await database.db
-      .select()
-      .from(recommendations);
+    const [recommendation] = await database.db.select().from(recommendations);
     expect(recommendation?.savingState).toBe('VERIFIED');
-    expect(await database.db.select().from(verificationWindows)).toHaveLength(1);
+    expect(await database.db.select().from(verificationWindows)).toHaveLength(
+      1,
+    );
   });
 
   it('keeps the recommendation TESTED when post-change quality fails', async () => {
@@ -186,9 +186,7 @@ describe('complete customer verification loop', () => {
     expect(outcome.result.status).toBe('BLOCKED');
     expect(outcome.result.reasons).toContain('PERFORMANCE_CONSTRAINT_FAILED');
 
-    const [recommendation] = await database.db
-      .select()
-      .from(recommendations);
+    const [recommendation] = await database.db.select().from(recommendations);
     expect(recommendation?.savingState).toBe('TESTED');
   });
 });

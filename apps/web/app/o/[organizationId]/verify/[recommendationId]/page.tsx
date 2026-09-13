@@ -1,7 +1,10 @@
 import { and, eq } from 'drizzle-orm';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { formatDecimal, rational } from '../../../../../../../src/economics/exact';
+import {
+  formatDecimal,
+  rational,
+} from '../../../../../../../src/economics/exact';
 import { createDatabase } from '../../../../../../../src/persistence/database';
 import {
   implementationRecords,
@@ -76,7 +79,10 @@ export default async function VerifyPage({
         )
         .limit(1)
     ).at(0);
-    if (recommendation?.workloadId !== null && recommendation?.workloadId !== undefined) {
+    if (
+      recommendation?.workloadId !== null &&
+      recommendation?.workloadId !== undefined
+    ) {
       workload = (
         await database.db
           .select()
@@ -161,7 +167,9 @@ export default async function VerifyPage({
           {impact !== null ? (
             <div className="verified-impact">
               <span>Verified net impact</span>
-              <strong>{recommendation.currency ?? 'USD'} {impact}</strong>
+              <strong>
+                {recommendation.currency ?? 'USD'} {impact}
+              </strong>
               <small>Formula: {verification.formulaVersion}</small>
             </div>
           ) : null}
@@ -173,8 +181,18 @@ export default async function VerifyPage({
             </ul>
           ) : null}
           <dl className="evidence-list">
-            <div><dt>Baseline</dt><dd>{verification.baselineStart} → {verification.baselineEnd}</dd></div>
-            <div><dt>Post-change</dt><dd>{verification.postStart} → {verification.postEnd}</dd></div>
+            <div>
+              <dt>Baseline</dt>
+              <dd>
+                {verification.baselineStart} → {verification.baselineEnd}
+              </dd>
+            </div>
+            <div>
+              <dt>Post-change</dt>
+              <dd>
+                {verification.postStart} → {verification.postEnd}
+              </dd>
+            </div>
           </dl>
           <div className="action-row">
             <Link
@@ -203,7 +221,12 @@ export default async function VerifyPage({
               <small>
                 Use at least seven complete post-stabilization calendar days.
               </small>
-              <input name="postCsv" type="file" accept=".csv,text/csv" required />
+              <input
+                name="postCsv"
+                type="file"
+                accept=".csv,text/csv"
+                required
+              />
             </label>
 
             <label>
@@ -214,7 +237,9 @@ export default async function VerifyPage({
                 inputMode="decimal"
                 placeholder={requiredQuality ?? '0.92'}
               />
-              <small>Required minimum: {requiredQuality ?? 'Unavailable'}</small>
+              <small>
+                Required minimum: {requiredQuality ?? 'Unavailable'}
+              </small>
             </label>
             <label>
               <span>Post-change p95 latency (ms)</span>
@@ -246,7 +271,11 @@ export default async function VerifyPage({
             </label>
             <label>
               <span>Implementation cost in this window</span>
-              <input name="implementationCost" defaultValue="0" inputMode="decimal" />
+              <input
+                name="implementationCost"
+                defaultValue="0"
+                inputMode="decimal"
+              />
             </label>
             <label>
               <span>Incremental operating cost</span>

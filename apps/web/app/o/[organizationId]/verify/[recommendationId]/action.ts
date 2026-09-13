@@ -42,8 +42,7 @@ export async function submitVerification(formData: FormData): Promise<never> {
       attestations: {
         unitDefinitionUnchanged:
           formData.get('unitDefinitionUnchanged') === 'true',
-        workloadMixComparable:
-          formData.get('workloadMixComparable') === 'true',
+        workloadMixComparable: formData.get('workloadMixComparable') === 'true',
         concurrentDeploymentsResolved:
           formData.get('concurrentDeploymentsResolved') === 'true',
       },

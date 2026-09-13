@@ -12,17 +12,19 @@ import {
 import { requireOrganizationAccess } from '../persistence/tenant.js';
 import type { AuthenticatedSession } from './authz.js';
 
-export async function confirmImplementation(input: Readonly<{
-  db: PersistenceDatabase;
-  session: AuthenticatedSession;
-  organizationId: string;
-  recommendationId: string;
-  implementedAt: string;
-  rolloutStart: string;
-  stabilizationEnd: string;
-  deploymentNote: string;
-  rollbackInstructions: readonly string[];
-}>): Promise<ImplementationRecord> {
+export async function confirmImplementation(
+  input: Readonly<{
+    db: PersistenceDatabase;
+    session: AuthenticatedSession;
+    organizationId: string;
+    recommendationId: string;
+    implementedAt: string;
+    rolloutStart: string;
+    stabilizationEnd: string;
+    deploymentNote: string;
+    rollbackInstructions: readonly string[];
+  }>,
+): Promise<ImplementationRecord> {
   const authorization = requireOrganizationAccess({
     session: input.session,
     organizationId: input.organizationId,
@@ -56,10 +58,7 @@ export async function confirmImplementation(input: Readonly<{
       .where(
         and(
           eq(implementationRecords.organizationId, input.organizationId),
-          eq(
-            implementationRecords.recommendationId,
-            input.recommendationId,
-          ),
+          eq(implementationRecords.recommendationId, input.recommendationId),
         ),
       )
       .limit(1)

@@ -60,7 +60,10 @@ export default async function BenchmarkPage({
         <section className="workflow-card empty-state">
           <h2>No workload constraints yet</h2>
           <p>Define the production requirement before running a benchmark.</p>
-          <Link className="primary-action" href={`/o/${organizationId}/workloads`}>
+          <Link
+            className="primary-action"
+            href={`/o/${organizationId}/workloads`}
+          >
             Define constraints
           </Link>
         </section>
@@ -89,11 +92,19 @@ export default async function BenchmarkPage({
             </label>
             <label>
               <span>Current configuration</span>
-              <input name="currentConfigurationId" required defaultValue="model-a" />
+              <input
+                name="currentConfigurationId"
+                required
+                defaultValue="model-a"
+              />
             </label>
             <label>
               <span>Candidate configuration</span>
-              <input name="candidateConfigurationId" required defaultValue="model-b" />
+              <input
+                name="candidateConfigurationId"
+                required
+                defaultValue="model-b"
+              />
             </label>
             <label>
               <span>Evaluator version</span>
@@ -101,11 +112,18 @@ export default async function BenchmarkPage({
             </label>
             <label>
               <span>Currency</span>
-              <input name="currency" required defaultValue="USD" pattern="[A-Z]{3}" />
+              <input
+                name="currency"
+                required
+                defaultValue="USD"
+                pattern="[A-Z]{3}"
+              />
             </label>
             <label className="file-drop benchmark-upload">
               <span>Choose benchmark CSV</span>
-              <small>30 paired cases minimum · two repetitions recommended</small>
+              <small>
+                30 paired cases minimum · two repetitions recommended
+              </small>
               <input
                 name="benchmarkCsv"
                 type="file"

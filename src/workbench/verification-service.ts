@@ -2,7 +2,12 @@ import { createHash } from 'node:crypto';
 import { and, desc, eq, or } from 'drizzle-orm';
 import { z } from 'zod';
 import { summarizeCoverage } from '../coverage/coverage.js';
-import { add, formatDecimal, parseDecimal, rational } from '../economics/exact.js';
+import {
+  add,
+  formatDecimal,
+  parseDecimal,
+  rational,
+} from '../economics/exact.js';
 import type { PersistenceDatabase } from '../persistence/database.js';
 import { createEvidenceRepository } from '../persistence/repositories/evidence.js';
 import {
@@ -72,7 +77,10 @@ function aggregateWindow(
     if (row.totalCost === null) throw new Error('WINDOW_COST_REQUIRED');
     totalCost = add(totalCost, parseDecimal(row.totalCost));
     requests += BigInt(row.requests);
-    if (start === undefined || Date.parse(row.intervalStart) < Date.parse(start)) {
+    if (
+      start === undefined ||
+      Date.parse(row.intervalStart) < Date.parse(start)
+    ) {
       start = row.intervalStart;
     }
     if (end === undefined || Date.parse(row.intervalEnd) > Date.parse(end)) {
@@ -126,31 +134,35 @@ function verificationId(
   return `verify-${digest}`;
 }
 
-export async function verifyCustomerChange(input: Readonly<{
-  db: PersistenceDatabase;
-  session: AuthenticatedSession;
-  organizationId: string;
-  recommendationId: string;
-  postFileName: string;
-  postBytes: Uint8Array;
-  receivedAt: string;
-  measuredQuality: string;
-  postP95LatencyMs: string | null;
-  postFailureRate: string | null;
-  qualitySourceRef: string;
-  implementationCost: string;
-  incrementalOperatingCost: string;
-  attestations: Readonly<{
-    unitDefinitionUnchanged: boolean;
-    workloadMixComparable: boolean;
-    concurrentDeploymentsResolved: boolean;
-  }>;
-}>): Promise<Readonly<{
-  verificationId: string;
-  result: VerificationResult;
-  baselineImportId: string;
-  postImportId: string;
-}>> {
+export async function verifyCustomerChange(
+  input: Readonly<{
+    db: PersistenceDatabase;
+    session: AuthenticatedSession;
+    organizationId: string;
+    recommendationId: string;
+    postFileName: string;
+    postBytes: Uint8Array;
+    receivedAt: string;
+    measuredQuality: string;
+    postP95LatencyMs: string | null;
+    postFailureRate: string | null;
+    qualitySourceRef: string;
+    implementationCost: string;
+    incrementalOperatingCost: string;
+    attestations: Readonly<{
+      unitDefinitionUnchanged: boolean;
+      workloadMixComparable: boolean;
+      concurrentDeploymentsResolved: boolean;
+    }>;
+  }>,
+): Promise<
+  Readonly<{
+    verificationId: string;
+    result: VerificationResult;
+    baselineImportId: string;
+    postImportId: string;
+  }>
+> {
   requireOrganizationAccess({
     session: input.session,
     organizationId: input.organizationId,
@@ -181,10 +193,7 @@ export async function verifyCustomerChange(input: Readonly<{
       .where(
         and(
           eq(implementationRecords.organizationId, input.organizationId),
-          eq(
-            implementationRecords.recommendationId,
-            input.recommendationId,
-          ),
+          eq(implementationRecords.recommendationId, input.recommendationId),
         ),
       )
       .limit(1)
@@ -233,7 +242,10 @@ export async function verifyCustomerChange(input: Readonly<{
     .where(
       and(
         eq(importRuns.organizationId, input.organizationId),
-        or(eq(importRuns.status, 'COMPLETED'), eq(importRuns.status, 'PARTIAL')),
+        or(
+          eq(importRuns.status, 'COMPLETED'),
+          eq(importRuns.status, 'PARTIAL'),
+        ),
       ),
     )
     .orderBy(desc(importRuns.rangeEnd));

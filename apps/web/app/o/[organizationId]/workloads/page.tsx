@@ -69,11 +69,19 @@ export default async function WorkloadsPage({
           </label>
           <label>
             <span>Maximum p95 latency (ms)</span>
-            <input name="maxP95LatencyMs" inputMode="decimal" placeholder="1000" />
+            <input
+              name="maxP95LatencyMs"
+              inputMode="decimal"
+              placeholder="1000"
+            />
           </label>
           <label>
             <span>Maximum failure rate</span>
-            <input name="maxFailureRate" inputMode="decimal" placeholder="0.02" />
+            <input
+              name="maxFailureRate"
+              inputMode="decimal"
+              placeholder="0.02"
+            />
           </label>
           <button className="primary-button" type="submit">
             Save constraints and continue

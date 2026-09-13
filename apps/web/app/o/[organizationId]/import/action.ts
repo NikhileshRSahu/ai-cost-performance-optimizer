@@ -35,5 +35,7 @@ export async function uploadUsageCsv(formData: FormData): Promise<never> {
     await database.close();
   }
 
-  redirect(`/o/${organizationId}/import?importId=${encodeURIComponent(importId)}`);
+  redirect(
+    `/o/${organizationId}/import?importId=${encodeURIComponent(importId)}`,
+  );
 }

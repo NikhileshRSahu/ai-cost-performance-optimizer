@@ -17,9 +17,7 @@ describe('customer-loop hard fixtures', () => {
     expect(parsed.records).toHaveLength(30);
     expect(parsed.issues).toHaveLength(4);
     expect(
-      new Set(
-        parsed.records.map((row) => row.intervalStart.slice(0, 10)),
-      ).size,
+      new Set(parsed.records.map((row) => row.intervalStart.slice(0, 10))).size,
     ).toBe(14);
     expect(new Set(parsed.records.map((row) => row.workload))).toEqual(
       new Set(['classification', 'extraction']),
@@ -36,9 +34,7 @@ describe('customer-loop hard fixtures', () => {
     expect(parsed.issues).toEqual([]);
     expect(parsed.records).toHaveLength(7);
     expect(
-      new Set(
-        parsed.records.map((row) => row.intervalStart.slice(0, 10)),
-      ).size,
+      new Set(parsed.records.map((row) => row.intervalStart.slice(0, 10))).size,
     ).toBe(7);
     expect(new Set(parsed.records.map((row) => row.configurationId))).toEqual(
       new Set(['model-b']),

@@ -111,7 +111,8 @@ export default async function ImplementPage({
           <p className="eyebrow">Implementation evidence saved</p>
           <h2>{implementation.deploymentNote}</h2>
           <p>
-            Stabilization ends at <strong>{implementation.stabilizationEnd}</strong>.
+            Stabilization ends at{' '}
+            <strong>{implementation.stabilizationEnd}</strong>.
           </p>
           <a
             className="primary-action"

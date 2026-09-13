@@ -5,10 +5,7 @@ import {
   evaluateBenchmark,
   type BenchmarkDecision,
 } from '../benchmarks/evaluate.js';
-import {
-  formatDecimal,
-  rational,
-} from '../economics/exact.js';
+import { formatDecimal, rational } from '../economics/exact.js';
 import { createEvidenceRepository } from '../persistence/repositories/evidence.js';
 import type { PersistenceDatabase } from '../persistence/database.js';
 import { recommendations, workloads } from '../persistence/schema.js';
@@ -53,18 +50,20 @@ function stateFor(decision: BenchmarkDecision): 'OPPORTUNITY' | 'TESTED' {
   return decision === 'OPTIMIZE' ? 'TESTED' : 'OPPORTUNITY';
 }
 
-export async function evaluateAndPersistBenchmark(input: Readonly<{
-  db: PersistenceDatabase;
-  session: AuthenticatedSession;
-  organizationId: string;
-  workloadId: string;
-  bytes: Uint8Array;
-  currentConfigurationId: string;
-  candidateConfigurationId: string;
-  evaluatorVersion: string;
-  currency: string;
-  isDemo: boolean;
-}>) {
+export async function evaluateAndPersistBenchmark(
+  input: Readonly<{
+    db: PersistenceDatabase;
+    session: AuthenticatedSession;
+    organizationId: string;
+    workloadId: string;
+    bytes: Uint8Array;
+    currentConfigurationId: string;
+    candidateConfigurationId: string;
+    evaluatorVersion: string;
+    currency: string;
+    isDemo: boolean;
+  }>,
+) {
   requireOrganizationAccess({
     session: input.session,
     organizationId: input.organizationId,

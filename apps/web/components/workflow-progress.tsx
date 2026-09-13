@@ -36,7 +36,10 @@ export function WorkflowProgress({
               <span className="workflow-index" aria-hidden="true">
                 {state === 'complete' ? '✓' : index + 1}
               </span>
-              <Link href={href} aria-current={state === 'current' ? 'step' : undefined}>
+              <Link
+                href={href}
+                aria-current={state === 'current' ? 'step' : undefined}
+              >
                 {step.label}
               </Link>
             </li>

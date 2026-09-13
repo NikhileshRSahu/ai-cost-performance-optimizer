@@ -2,7 +2,10 @@ import { redirect } from 'next/navigation';
 import { buildFounderDashboardView } from '../../../../../src/workbench/dashboard-view';
 import { createDatabase } from '../../../../../src/persistence/database';
 import { MetricCard } from '../../../components/metric-card';
-import { WorkflowProgress, type WorkflowStep } from '../../../components/workflow-progress';
+import {
+  WorkflowProgress,
+  type WorkflowStep,
+} from '../../../components/workflow-progress';
 import { RecommendationCard } from '../../../components/recommendation-card';
 import { DASHBOARD_COPY } from '../../../lib/dashboard-copy';
 import { loadFounderDashboardEvidence } from '../../../lib/dashboard-data';

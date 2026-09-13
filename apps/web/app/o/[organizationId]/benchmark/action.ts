@@ -45,7 +45,5 @@ export async function submitBenchmark(formData: FormData): Promise<never> {
     await database.close();
   }
 
-  redirect(
-    `/o/${organizationId}/lab/${encodeURIComponent(recommendationId)}`,
-  );
+  redirect(`/o/${organizationId}/lab/${encodeURIComponent(recommendationId)}`);
 }
