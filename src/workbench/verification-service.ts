@@ -44,6 +44,14 @@ type AggregateWindow = Readonly<{
   configurationVersion: string;
 }>;
 
+function isoDatetime(value: string): string {
+  const parsed = new Date(value);
+  if (!Number.isFinite(parsed.getTime())) {
+    throw new Error('INVALID_PERSISTED_DATETIME');
+  }
+  return parsed.toISOString();
+}
+
 function canonicalString(
   canonical: Record<string, unknown>,
   key: string,
@@ -115,8 +123,8 @@ function aggregateWindow(
     cost: formatDecimal(totalCost, 12),
     requests: requests.toString(),
     currency,
-    start,
-    end,
+    start: isoDatetime(start),
+    end: isoDatetime(end),
     completeDays: coverage.completeDays,
     configurationVersion,
   });
@@ -319,9 +327,9 @@ export async function verifyCustomerChange(
     implementation: {
       recommendationId: implementation.recommendationId,
       organizationId: implementation.organizationId,
-      implementedAt: implementation.implementedAt,
-      rolloutStart: implementation.rolloutStart,
-      stabilizationEnd: implementation.stabilizationEnd,
+      implementedAt: isoDatetime(implementation.implementedAt),
+      rolloutStart: isoDatetime(implementation.rolloutStart),
+      stabilizationEnd: isoDatetime(implementation.stabilizationEnd),
       deploymentNote: implementation.deploymentNote,
       rollbackInstructions: implementation.rollbackInstructions,
       confirmedByUserId: implementation.confirmedByUserId,
