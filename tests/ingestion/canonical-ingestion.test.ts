@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { importUsageCsv } from '../../src/ingestion/import.js';
-import { parseUsageCsv } from '../../src/ingestion/csv.js';
 import { summarizeCoverage } from '../../src/coverage/coverage.js';
+import { parseUsageCsv } from '../../src/ingestion/csv.js';
+import { importUsageCsv } from '../../src/ingestion/import.js';
 import { excludeUnreconciledOverlaps } from '../../src/usage/overlap.js';
 
 const enc = new TextEncoder();
@@ -16,6 +16,7 @@ describe('canonical CSV ingestion', () => {
       'timestamp_start,timestamp_end,provider,model,requests,total_cost,currency\n' +
       '2026-09-01T00:00:00Z,2026-09-02T00:00:00Z,openai,gpt-x,2,1.2300,USD\n';
     const result = parseUsageCsv(enc.encode(csv), 'org');
+
     expect(result.records[0]?.granularity).toBe('AGGREGATE_BUCKET');
     expect(result.records[0]?.totalCost).toBe('1.2300');
     expect(result.records[0]?.workload).toBeNull();
@@ -27,6 +28,7 @@ describe('canonical CSV ingestion', () => {
       organizationId: 'org',
       receivedAt: '2026-09-13T00:00:00Z',
     });
+
     expect(result.run.accepted).toBe(1);
     expect(result.run.skippedDuplicates).toBe(1);
     expect(result.run.blocked).toBe(false);
@@ -40,6 +42,7 @@ describe('canonical CSV ingestion', () => {
       organizationId: 'org',
       receivedAt: '2026-09-13T00:00:00Z',
     });
+
     expect(result.run.accepted).toBe(1);
     expect(result.run.rejected).toBe(1);
     expect(result.run.partial).toBe(true);
@@ -57,6 +60,7 @@ describe('canonical CSV ingestion', () => {
       organizationId: 'org',
       receivedAt: '2026-09-13T00:00:00Z',
     });
+
     expect(result.run.accepted).toBe(2);
   });
 
@@ -79,6 +83,7 @@ describe('canonical CSV ingestion', () => {
       organizationId: 'org',
       receivedAt: '2026-09-13T00:00:00Z',
     });
+
     expect(result.run.blocked).toBe(true);
     expect(result.run.accepted).toBe(0);
   });
@@ -91,9 +96,11 @@ describe('coverage', () => {
       end: `2026-09-${String(i + 2).padStart(2, '0')}T00:00:00Z`,
       complete: true,
     }));
-    expect(summarizeCoverage({ intervals, timezone: 'UTC' }).eligibleForThirtyDayProjection).toBe(
-      true,
-    );
+
+    expect(
+      summarizeCoverage({ intervals, timezone: 'UTC' })
+        .eligibleForThirtyDayProjection,
+    ).toBe(true);
   });
 
   it('does not count partial buckets as complete days', () => {
@@ -107,6 +114,7 @@ describe('coverage', () => {
       ],
       timezone: 'UTC',
     });
+
     expect(summary.completeDays).toEqual([]);
   });
 });
@@ -121,6 +129,7 @@ describe('overlap safety', () => {
       sourceLine: 99,
     };
     const result = excludeUnreconciledOverlaps([a, b]);
+
     expect(result.included).toHaveLength(0);
     expect(result.excluded).toHaveLength(2);
   });
