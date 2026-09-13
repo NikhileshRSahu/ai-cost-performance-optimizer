@@ -43,6 +43,7 @@ jobs:
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/optimizer_test
       - run: npm audit --audit-level=high
+      - run: docker build --tag ai-efficiency-intelligence:ci .
       - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
