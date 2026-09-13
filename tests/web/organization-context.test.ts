@@ -22,7 +22,10 @@ describe('founder web organization context', () => {
     };
 
     await expect(
-      resolveWebSession(async () => ({ trusted: 'identity' }), adapter),
+      resolveWebSession(
+        () => Promise.resolve({ trusted: 'identity' }),
+        adapter,
+      ),
     ).resolves.toEqual(session);
   });
 
@@ -36,7 +39,7 @@ describe('founder web organization context', () => {
     };
 
     await expect(
-      resolveWebSession(async () => null, adapter),
+      resolveWebSession(() => Promise.resolve(null), adapter),
     ).resolves.toBeNull();
     expect(called).toBe(false);
   });

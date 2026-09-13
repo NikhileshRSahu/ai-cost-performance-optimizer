@@ -4,7 +4,7 @@ import { createMembershipRepository } from '../../../src/persistence/repositorie
 import type { AuthenticatedSession } from '../../../src/workbench/authz.js';
 import { resolveWebSession } from './session.js';
 
-function readTrustedIdentityFromEnvironment(): unknown | null {
+function readTrustedIdentityFromEnvironment(): unknown {
   const provider = process.env.AUTH_PROVIDER;
   const subject = process.env.AUTH_SUBJECT;
   const email = process.env.AUTH_EMAIL;
@@ -30,7 +30,7 @@ export async function resolveRuntimeSession(): Promise<AuthenticatedSession | nu
     const repository = createMembershipRepository(database.db);
     const adapter = createPasswordlessSessionAdapter(repository);
     return await resolveWebSession(
-      async () => readTrustedIdentityFromEnvironment(),
+      () => Promise.resolve(readTrustedIdentityFromEnvironment()),
       adapter,
     );
   } finally {
