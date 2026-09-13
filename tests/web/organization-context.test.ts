@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import type { PasswordlessSessionAdapter } from '../../src/auth/session-adapter.js';
 import type { AuthenticatedSession } from '../../src/workbench/authz.js';
-import { requireOrganizationContext } from '../../apps/web/lib/organization-context.js';
-import { resolveWebSession } from '../../apps/web/lib/session.js';
+import {
+  requireOrganizationContext,
+  resolveWebSession,
+} from '../../src/workbench/web-session.js';
 
 const session: AuthenticatedSession = {
   userId: 'founder-1',
