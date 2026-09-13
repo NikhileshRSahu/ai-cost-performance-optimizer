@@ -23,6 +23,7 @@ export type AuthenticatedSession = Readonly<{
 export type AuthorizationResult = Readonly<{
   allowed: boolean;
   role: Role | null;
+  organizationId: string;
   reason: 'ORGANIZATION_MEMBERSHIP_REQUIRED' | 'ACTION_NOT_ALLOWED' | null;
 }>;
 
@@ -47,6 +48,7 @@ export function authorize(
     return Object.freeze({
       allowed: false,
       role: null,
+      organizationId,
       reason: 'ORGANIZATION_MEMBERSHIP_REQUIRED',
     });
   }
@@ -59,6 +61,7 @@ export function authorize(
   return Object.freeze({
     allowed,
     role: membership.role,
+    organizationId,
     reason: allowed ? null : 'ACTION_NOT_ALLOWED',
   });
 }
