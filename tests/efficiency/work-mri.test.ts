@@ -23,7 +23,9 @@ describe('buildWorkMriSnapshot', () => {
         evidenceRef: 'usage-window-1',
       },
     ]);
-    expect(snapshot.withheldClaims.join(' ')).toContain('Prompt-quality claims');
+    expect(snapshot.withheldClaims.join(' ')).toContain(
+      'Prompt-quality claims',
+    );
     expect(snapshot.withheldClaims.join(' ')).toContain(
       'Cost-per-successful-outcome',
     );

@@ -11,9 +11,7 @@ const policy: HypothesisPolicy = {
   minimumCacheHitRatio: '0.50',
 };
 
-function diagnosis(
-  facts: UsageDiagnosis['facts'],
-): UsageDiagnosis {
+function diagnosis(facts: UsageDiagnosis['facts']): UsageDiagnosis {
   return {
     reportingCurrency: 'USD',
     includedRecords: 10,

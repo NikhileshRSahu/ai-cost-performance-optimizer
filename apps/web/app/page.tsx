@@ -55,7 +55,9 @@ export default function HomePage() {
       <section className="privacy-ladder" aria-labelledby="privacy-title">
         <div>
           <p className="eyebrow">Progressive privacy</p>
-          <h2 id="privacy-title">Prove value before asking for deeper access.</h2>
+          <h2 id="privacy-title">
+            Prove value before asking for deeper access.
+          </h2>
           <p className="lede">
             Each level unlocks more analysis. The product must never claim an
             insight that the current evidence cannot support.
@@ -75,12 +77,16 @@ export default function HomePage() {
           <article>
             <span>03</span>
             <strong>Authorized workspace</strong>
-            <p>Cross-tool duplication, buried decisions, and knowledge waste.</p>
+            <p>
+              Cross-tool duplication, buried decisions, and knowledge waste.
+            </p>
           </article>
           <article>
             <span>04</span>
             <strong>Production telemetry</strong>
-            <p>Continuous verification, drift, and cost per successful outcome.</p>
+            <p>
+              Continuous verification, drift, and cost per successful outcome.
+            </p>
           </article>
         </div>
       </section>

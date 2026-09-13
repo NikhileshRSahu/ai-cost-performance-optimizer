@@ -2,9 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { diagnoseUsage } from '../../src/efficiency/usage-diagnosis.js';
 import type { UsageRecord } from '../../src/usage/contracts.js';
 
-function record(
-  overrides: Partial<UsageRecord> = {},
-): UsageRecord {
+function record(overrides: Partial<UsageRecord> = {}): UsageRecord {
   return {
     organizationId: 'org-1',
     source: 'CSV',
@@ -85,15 +83,15 @@ describe('diagnoseUsage', () => {
     });
 
     expect(
-      diagnosis.facts.find((item) => item.key === 'TOP_MODEL_COST_SHARE')?.value,
+      diagnosis.facts.find((item) => item.key === 'TOP_MODEL_COST_SHARE')
+        ?.value,
     ).toBe('model-a · 100.00%');
     expect(
       diagnosis.facts.find((item) => item.key === 'RETRY_ATTEMPT_COST')?.value,
     ).toBe('USD 1.00');
     expect(
-      diagnosis.facts.find(
-        (item) => item.key === 'OUTPUT_TOKENS_PER_REQUEST',
-      )?.value,
+      diagnosis.facts.find((item) => item.key === 'OUTPUT_TOKENS_PER_REQUEST')
+        ?.value,
     ).toBe('40.00');
     expect(
       diagnosis.facts.find((item) => item.key === 'CACHE_HIT_RATIO')?.value,
@@ -118,12 +116,10 @@ describe('diagnoseUsage', () => {
     expect(
       diagnosis.facts.some((item) => item.key === 'COST_PER_SUCCESS'),
     ).toBe(false);
-    expect(
-      diagnosis.limitations.join(' '),
-    ).toContain('Cost per successful outcome is withheld');
     expect(diagnosis.limitations.join(' ')).toContain(
-      'Retry cost is withheld',
+      'Cost per successful outcome is withheld',
     );
+    expect(diagnosis.limitations.join(' ')).toContain('Retry cost is withheld');
   });
 
   it('excludes other currencies instead of silently converting them', () => {

@@ -55,8 +55,8 @@ export default async function ImportPage({
           <p className="eyebrow">Step 1 · Observe</p>
           <h1>Import production usage</h1>
           <p className="lede">
-            Start with the minimum evidence you are comfortable sharing. A
-            usage CSV is enough for cost analysis; richer data can unlock deeper
+            Start with the minimum evidence you are comfortable sharing. A usage
+            CSV is enough for cost analysis; richer data can unlock deeper
             workflow advice later. We preserve provenance and never turn missing
             values into zero.
           </p>
@@ -66,10 +66,7 @@ export default async function ImportPage({
         </span>
       </header>
 
-      <section
-        className="workflow-card"
-        aria-labelledby="analysis-depth-title"
-      >
+      <section className="workflow-card" aria-labelledby="analysis-depth-title">
         <div className="section-heading">
           <div>
             <p className="eyebrow">Choose your trust level</p>

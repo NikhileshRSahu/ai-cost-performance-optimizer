@@ -1,8 +1,5 @@
 import { compare, parseDecimal } from '../economics/exact.js';
-import type {
-  UsageDiagnosis,
-  UsageDiagnosisFact,
-} from './usage-diagnosis.js';
+import type { UsageDiagnosis, UsageDiagnosisFact } from './usage-diagnosis.js';
 
 export type OptimizationHypothesisKind =
   | 'RETRY_POLICY'
@@ -39,7 +36,9 @@ function decimalEvidence(
   return typeof value === 'string' ? value : null;
 }
 
-function exactFractionToDecimal(value: string): ReturnType<typeof parseDecimal> {
+function exactFractionToDecimal(
+  value: string,
+): ReturnType<typeof parseDecimal> {
   const match = /^(-?\d+)\/(\d+)$/.exec(value);
   if (match === null) {
     throw new Error('INVALID_DIAGNOSIS_FRACTION');
@@ -50,9 +49,7 @@ function exactFractionToDecimal(value: string): ReturnType<typeof parseDecimal> 
   return Object.freeze({ numerator, denominator });
 }
 
-function hypothesis(
-  input: OptimizationHypothesis,
-): OptimizationHypothesis {
+function hypothesis(input: OptimizationHypothesis): OptimizationHypothesis {
   return Object.freeze({
     ...input,
     evidenceKeys: Object.freeze([...input.evidenceKeys]),

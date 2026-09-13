@@ -17,9 +17,11 @@ The product may ingest either a small customer-controlled export or explicitly a
 ## Progressive privacy model
 
 ### Level 1 — Usage evidence
+
 Examples: billing CSV, request-level usage CSV, cost/latency export.
 
 Can support:
+
 - cost-efficiency analysis
 - retry/repeated-call waste
 - model-right-sizing candidates
@@ -28,24 +30,29 @@ Can support:
 - benchmark candidates
 
 Cannot claim:
+
 - prompt quality problems
 - repeated semantic context
 - workflow automation opportunities
 - organizational memory gaps
 
 ### Level 2 — Content-assisted evidence
+
 Examples: sanitized prompts/responses, ChatGPT/Claude exports explicitly supplied by the customer.
 
 Adds:
+
 - repeated-context analysis
 - prompt-structure analysis
 - recurring-task detection
 - candidate reusable prompt/workflow templates
 
 ### Level 3 — Authorized workspace evidence
+
 Examples: customer-authorized Gmail/Drive/Slack/GitHub/AI-history sources.
 
 Adds:
+
 - cross-tool duplicated work
 - buried decision retrieval
 - workflow fragmentation
@@ -53,9 +60,11 @@ Adds:
 - richer automation opportunities
 
 ### Level 4 — Continuous production evidence
+
 Examples: API traces, production telemetry, evaluation streams.
 
 Adds:
+
 - continuous verification
 - quality-drift monitoring
 - cost per successful outcome
@@ -74,6 +83,7 @@ Primary buckets:
 5. Knowledge/retrieval waste
 
 Each diagnosis must state:
+
 - what was measured
 - what is inferred
 - what is still unknown
@@ -99,6 +109,7 @@ Never animate fictional work. Every progress state must correspond to real compl
 Advice must be specific and actionable, but recommendations remain hypotheses until benchmarked.
 
 Examples:
+
 - restructure a repeated long system prompt
 - introduce prompt caching
 - route simple tasks to a smaller model
@@ -107,6 +118,7 @@ Examples:
 - change batching/retry behavior
 
 The Advisor must always preserve:
+
 - evidence reference
 - confidence/limitations
 - expected mechanism
@@ -137,6 +149,7 @@ This metric must not be produced when the success denominator is missing or ambi
 ## Moat direction
 
 The defensible system is the combination of:
+
 - progressive-trust ingestion
 - structured AI-work diagnosis
 - counterfactual/benchmark testing

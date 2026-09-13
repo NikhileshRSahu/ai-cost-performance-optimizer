@@ -135,7 +135,9 @@ export function diagnoseUsage(
       ),
     );
   } else {
-    limitations.push('Cost per request is withheld because request volume is zero.');
+    limitations.push(
+      'Cost per request is withheld because request volume is zero.',
+    );
   }
 
   const successes = sumOptionalCount(included, 'successes');
