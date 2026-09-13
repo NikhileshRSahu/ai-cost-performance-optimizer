@@ -1,6 +1,6 @@
 # AI Cost & Performance Optimizer V0 Design
 
-**Status:** Proposed design approved in principle on 2026-09-13; written specification awaiting review  
+**Status:** Written specification, including Section 29, approved by product owner on 2026-09-13  
 **Product owner:** Nikhilesh R. Sahu  
 **North-star metric:** Verified net savings  
 **Repository:** `NikhileshRSahu/ai-cost-performance-optimizer`
@@ -736,7 +736,7 @@ Provider capabilities must be rechecked against these official sources immediate
 
 ## 29. Specification Review Clarifications — 2026-09-13
 
-This section resolves implementation ambiguities found during self-review. Where an earlier section is less specific, these rules govern. Product-owner review of the written specification remains pending.
+This section resolves implementation ambiguities found during self-review. Where an earlier section is less specific, these rules govern. Product-owner approval of this reviewed specification was received on 2026-09-13.
 
 ### 29.1 Exact arithmetic and evidence
 
