@@ -8,7 +8,10 @@
     "./economics": "./dist/economics/index.js",
     "./usage": "./dist/usage/index.js",
     "./ingestion": "./dist/ingestion/index.js",
-    "./coverage": "./dist/coverage/index.js"
+    "./coverage": "./dist/coverage/index.js",
+    "./detectors": "./dist/detectors/index.js",
+    "./benchmarks": "./dist/benchmarks/index.js",
+    "./ranking": "./dist/ranking/index.js"
   },
   "engines": {
     "node": ">=24"
