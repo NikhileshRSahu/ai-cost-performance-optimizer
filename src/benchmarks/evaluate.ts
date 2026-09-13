@@ -8,10 +8,7 @@ import {
   subtract,
   type Rational,
 } from '../economics/exact.js';
-import {
-  computeConfidence,
-  type ConfidenceResult,
-} from './confidence.js';
+import { computeConfidence, type ConfidenceResult } from './confidence.js';
 
 export type BenchmarkOutcome = 'SUCCESS' | 'FAILURE' | 'TIMEOUT';
 export type BenchmarkDecision =
@@ -157,9 +154,9 @@ export function evaluateBenchmark(input: Readonly<{
     candidate.has(recordKey),
   );
   const pairedCaseIds = new Set(
-    matchedKeys.map((recordKey) => current.get(recordKey)?.caseId).filter(
-      (caseId): caseId is string => caseId !== undefined,
-    ),
+    matchedKeys
+      .map((recordKey) => current.get(recordKey)?.caseId)
+      .filter((caseId): caseId is string => caseId !== undefined),
   );
   const pairedValidCases = pairedCaseIds.size;
 
@@ -191,9 +188,8 @@ export function evaluateBenchmark(input: Readonly<{
     }
     if (candidateRecord.outcome !== 'SUCCESS') candidateFailures++;
 
-    const checks = repetitionConstraintPass.get(
-      candidateRecord.repetitionId,
-    ) ?? [];
+    const checks =
+      repetitionConstraintPass.get(candidateRecord.repetitionId) ?? [];
     if (candidateRecord.qualityScore !== null) {
       checks.push(
         compare(
@@ -214,8 +210,7 @@ export function evaluateBenchmark(input: Readonly<{
   const netSaving = subtract(currentCost, candidateCost);
 
   const configuredMeasurements =
-    2 +
-    (input.constraints.maxP95LatencyMs === null ? 0 : 1);
+    2 + (input.constraints.maxP95LatencyMs === null ? 0 : 1);
   const availableMeasurements =
     1 +
     (candidateQuality === null ? 0 : 1) +
@@ -223,8 +218,7 @@ export function evaluateBenchmark(input: Readonly<{
     candidateP95Latency !== null
       ? 1
       : 0);
-  const measurementCoverage =
-    availableMeasurements / configuredMeasurements;
+  const measurementCoverage = availableMeasurements / configuredMeasurements;
   const evaluatorCoverage =
     matchedKeys.length === 0
       ? 0
@@ -235,11 +229,13 @@ export function evaluateBenchmark(input: Readonly<{
       : matchedKeys.length / Math.max(current.size, candidate.size);
   const dataCompleteness = measurementCoverage;
 
-  const repetitionIds = [...new Set(
-    matchedKeys
-      .map((recordKey) => candidate.get(recordKey)?.repetitionId)
-      .filter((value): value is string => value !== undefined),
-  )];
+  const repetitionIds = [
+    ...new Set(
+      matchedKeys
+        .map((recordKey) => candidate.get(recordKey)?.repetitionId)
+        .filter((value): value is string => value !== undefined),
+    ),
+  ];
   const repetitionDecisions = repetitionIds
     .map((repetitionId) => repetitionConstraintPass.get(repetitionId) ?? [])
     .filter((checks) => checks.length > 0)
@@ -326,8 +322,7 @@ export function evaluateBenchmark(input: Readonly<{
     if (pairedValidCases < targetCases) reasons.push('INADEQUATE_SAMPLE');
     if (confidence.band === 'LOW') reasons.push('LOW_CONFIDENCE');
 
-    decision =
-      reasons.length === 0 ? 'OPTIMIZE' : 'INSUFFICIENT_EVIDENCE';
+    decision = reasons.length === 0 ? 'OPTIMIZE' : 'INSUFFICIENT_EVIDENCE';
   }
 
   return Object.freeze({
@@ -336,7 +331,9 @@ export function evaluateBenchmark(input: Readonly<{
     pairedValidCases,
     metrics: Object.freeze({
       candidateQuality:
-        candidateQuality === null ? null : Object.freeze(serialize(candidateQuality)),
+        candidateQuality === null
+          ? null
+          : Object.freeze(serialize(candidateQuality)),
       candidateP95LatencyMs:
         candidateP95Latency === null
           ? null
