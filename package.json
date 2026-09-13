@@ -16,7 +16,9 @@
     "./ledger": "./dist/ledger/index.js",
     "./implementation": "./dist/implementation/index.js",
     "./verification": "./dist/verification/index.js",
-    "./product-events": "./dist/product-events/index.js"
+    "./product-events": "./dist/product-events/index.js",
+    "./auth": "./dist/auth/index.js",
+    "./persistence": "./dist/persistence/index.js"
   },
   "engines": {
     "node": ">=24"
@@ -29,14 +31,21 @@
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "check": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run build",
-    "demo": "tsc -p tsconfig.demo.json && node dist/demo/examples/economics-demo.js"
+    "demo": "tsc -p tsconfig.demo.json && node dist/demo/examples/economics-demo.js",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "test:db": "vitest run tests/persistence --exclude tests/persistence/schema.test.ts"
   },
   "dependencies": {
+    "drizzle-orm": "0.45.2",
+    "pg": "8.23.0",
     "zod": "4.6.4"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@types/node": "26.5.1",
+    "@types/pg": "8.23.1",
+    "drizzle-kit": "0.31.10",
     "eslint": "10.10.0",
     "prettier": "3.9.6",
     "typescript": "6.0.3",
