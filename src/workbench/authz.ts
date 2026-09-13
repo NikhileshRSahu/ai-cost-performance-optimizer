@@ -9,7 +9,8 @@ export type WorkbenchAction =
   | 'SUBMIT_VERIFICATION'
   | 'MANAGE_MEMBERSHIP'
   | 'MANAGE_CREDENTIAL_REFERENCE'
-  | 'DELETE_DATA';
+  | 'DELETE_DATA'
+  | 'EXPORT_DATA';
 
 export type SessionMembership = Readonly<{
   organizationId: string;
