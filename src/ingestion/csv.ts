@@ -1,0 +1,132 @@
+import { parseDecimal } from '../economics/exact.js';
+import type { Granularity, ImportIssue, UsageRecord } from '../usage/contracts.js';
+import { fingerprintRow } from '../usage/fingerprint.js';
+
+export const MAX_BYTES = 10 * 1024 * 1024;
+export const MAX_ROWS = 50_000;
+export const MAX_CELL = 64 * 1024;
+
+const required = ['timestamp_start','timestamp_end','provider','model','requests','total_cost','currency'] as const;
+const optional = [
+  'source_event_id','project','workspace','workload','input_tokens','cached_input_tokens',
+  'cache_write_tokens','output_tokens','output_cost','tool_calls','tool_cost','successes',
+  'failures','latency_p50_ms','latency_p95_ms','granularity','configuration_id',
+  'operation_id','attempt_number','retry_count','stable_prefix_hash','stable_prefix_tokens',
+  'cache_eligible_input_tokens'
+] as const;
+const allowed = new Set<string>([...required, ...optional]);
+const integer = /^(0|[1-9]\d{0,25})$/;
+
+function parseCsvText(text: string): string[][] {
+  const rows: string[][] = [];
+  let row: string[] = [], cell = '', quoted = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i]!;
+    if (quoted) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { cell += '"'; i++; } else quoted = false;
+      } else cell += c;
+    } else if (c === '"') quoted = true;
+    else if (c === ',') { row.push(cell); cell = ''; }
+    else if (c === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
+    else if (c !== '\r') cell += c;
+  }
+  if (quoted) throw new Error('UNCLOSED_QUOTE');
+  if (cell.length || row.length) { row.push(cell); rows.push(row); }
+  return rows;
+}
+
+function value(row: string[], headers: string[], key: string): string | null {
+  const index = headers.indexOf(key);
+  if (index < 0) return null;
+  const v = row[index] ?? '';
+  return v === '' ? null : v;
+}
+
+function ensureMoney(v: string, nonNegative = true): void {
+  const r = parseDecimal(v);
+  if (nonNegative && r.numerator < 0n) throw new Error('NEGATIVE_MONEY');
+}
+
+function ensureInteger(v: string | null, key: string): void {
+  if (v !== null && !integer.test(v)) throw new Error(`INVALID_${key.toUpperCase()}`);
+}
+
+export type ParsedCsv = Readonly<{ records: UsageRecord[]; issues: ImportIssue[] }>;
+
+export function parseUsageCsv(bytes: Uint8Array, organizationId: string, isDemo = false): ParsedCsv {
+  if (bytes.byteLength > MAX_BYTES) throw new Error('FILE_TOO_LARGE');
+  const text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  const rows = parseCsvText(text);
+  if (rows.length === 0) throw new Error('EMPTY_CSV');
+  const headers = rows[0]!;
+  if (new Set(headers).size !== headers.length) throw new Error('DUPLICATE_HEADER');
+  for (const h of headers) if (!allowed.has(h)) throw new Error(`UNSUPPORTED_COLUMN:${h}`);
+  for (const h of required) if (!headers.includes(h)) throw new Error(`MISSING_COLUMN:${h}`);
+  if (rows.length - 1 > MAX_ROWS) throw new Error('TOO_MANY_ROWS');
+
+  const records: UsageRecord[] = [];
+  const issues: ImportIssue[] = [];
+  for (let i = 1; i < rows.length; i++) {
+    const line = i + 1;
+    const row = rows[i]!;
+    try {
+      if (row.length !== headers.length) throw new Error('COLUMN_COUNT_MISMATCH');
+      if (row.some((c) => c.length > MAX_CELL)) throw new Error('CELL_TOO_LARGE');
+      const start = value(row, headers, 'timestamp_start')!;
+      const end = value(row, headers, 'timestamp_end')!;
+      if (!start || !end || !Number.isFinite(Date.parse(start)) || !Number.isFinite(Date.parse(end))) throw new Error('INVALID_TIMESTAMP');
+      if (!/(Z|[+-]\d\d:\d\d)$/.test(start) || !/(Z|[+-]\d\d:\d\d)$/.test(end)) throw new Error('TIMESTAMP_OFFSET_REQUIRED');
+      if (Date.parse(end) <= Date.parse(start)) throw new Error('INVALID_INTERVAL');
+      const requests = value(row, headers, 'requests')!;
+      if (!requests || !integer.test(requests)) throw new Error('INVALID_REQUESTS');
+      const totalCost = value(row, headers, 'total_cost')!;
+      if (!totalCost) throw new Error('MISSING_TOTAL_COST');
+      ensureMoney(totalCost);
+      const currency = value(row, headers, 'currency')!;
+      if (!currency || !/^[A-Z]{3}$/.test(currency)) throw new Error('INVALID_CURRENCY');
+      const countKeys = ['input_tokens','cached_input_tokens','cache_write_tokens','output_tokens','tool_calls','successes','failures','attempt_number','retry_count','stable_prefix_tokens','cache_eligible_input_tokens'];
+      for (const key of countKeys) ensureInteger(value(row, headers, key), key);
+      const attempt = value(row, headers, 'attempt_number');
+      if (attempt === '0') throw new Error('ATTEMPT_NUMBER_MIN_1');
+      for (const key of ['output_cost','tool_cost']) {
+        const v = value(row, headers, key); if (v !== null) ensureMoney(v);
+      }
+      const successes = value(row, headers, 'successes');
+      const failures = value(row, headers, 'failures');
+      if (successes !== null && failures !== null && BigInt(successes) + BigInt(failures) > BigInt(requests)) throw new Error('OUTCOMES_EXCEED_REQUESTS');
+      const granularity = (value(row, headers, 'granularity') ?? 'AGGREGATE_BUCKET') as Granularity;
+      if (!['REQUEST','AGGREGATE_BUCKET'].includes(granularity)) throw new Error('INVALID_GRANULARITY');
+      if (granularity === 'REQUEST' && requests !== '1') throw new Error('REQUEST_GRANULARITY_REQUIRES_ONE_ATTEMPT');
+
+      const raw: Record<string,string|null> = {
+        intervalStart:start, intervalEnd:end, provider:value(row,headers,'provider'), model:value(row,headers,'model'),
+        requests,totalCost,currency,sourceEventId:value(row,headers,'source_event_id'),project:value(row,headers,'project'),
+        workspace:value(row,headers,'workspace'),workload:value(row,headers,'workload'),configurationId:value(row,headers,'configuration_id'),
+        operationId:value(row,headers,'operation_id'),attemptNumber:attempt,retryCount:value(row,headers,'retry_count'),
+        inputTokens:value(row,headers,'input_tokens'),cachedInputTokens:value(row,headers,'cached_input_tokens'),
+        cacheWriteTokens:value(row,headers,'cache_write_tokens'),outputTokens:value(row,headers,'output_tokens'),
+        outputCost:value(row,headers,'output_cost'),toolCalls:value(row,headers,'tool_calls'),toolCost:value(row,headers,'tool_cost'),
+        successes,failures,latencyP50Ms:value(row,headers,'latency_p50_ms'),latencyP95Ms:value(row,headers,'latency_p95_ms'),
+        granularity,stablePrefixHash:value(row,headers,'stable_prefix_hash'),stablePrefixTokens:value(row,headers,'stable_prefix_tokens'),
+        cacheEligibleInputTokens:value(row,headers,'cache_eligible_input_tokens')
+      };
+      if (!raw.provider || !raw.model) throw new Error('MISSING_PROVIDER_OR_MODEL');
+      const fingerprint = fingerprintRow(raw);
+      records.push({
+        organizationId, source:'CSV', granularity, intervalStart:start, intervalEnd:end,
+        provider:raw.provider, model:raw.model, requests,totalCost,currency,
+        sourceEventId:raw.sourceEventId,project:raw.project,workspace:raw.workspace,workload:raw.workload,
+        configurationId:raw.configurationId,operationId:raw.operationId,attemptNumber:raw.attemptNumber,retryCount:raw.retryCount,
+        inputTokens:raw.inputTokens,cachedInputTokens:raw.cachedInputTokens,cacheWriteTokens:raw.cacheWriteTokens,
+        outputTokens:raw.outputTokens,outputCost:raw.outputCost,toolCalls:raw.toolCalls,toolCost:raw.toolCost,
+        successes:raw.successes,failures:raw.failures,latencyP50Ms:raw.latencyP50Ms,latencyP95Ms:raw.latencyP95Ms,
+        stablePrefixHash:raw.stablePrefixHash,stablePrefixTokens:raw.stablePrefixTokens,cacheEligibleInputTokens:raw.cacheEligibleInputTokens,
+        sourceLine:line,fingerprint,isDemo
+      });
+    } catch (error) {
+      issues.push({ line, code: error instanceof Error ? error.message : 'ROW_ERROR', message: 'Row rejected by CSV contract' });
+    }
+  }
+  return { records, issues };
+}
