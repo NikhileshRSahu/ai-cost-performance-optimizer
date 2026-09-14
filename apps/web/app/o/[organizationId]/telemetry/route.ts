@@ -1,5 +1,13 @@
 import { NextResponse } from 'next/server';
 import { productionTelemetryBatchSchema } from '../../../../../../src/efficiency/telemetry-contracts';
+import {
+  buildOperationalEvent,
+  elapsedMs,
+  emitOperationalEvent,
+  resolveRequestId,
+  type OperationalEvent,
+  type OperationalStatus,
+} from '../../../../../../src/operations/observability';
 import { createDatabase } from '../../../../../../src/persistence/database';
 import type { AuthenticatedSession } from '../../../../../../src/workbench/authz';
 import { safeErrorFromUnknown } from '../../../../../../src/workbench/safe-errors';
@@ -20,15 +28,61 @@ export async function POST(
   request: Request,
   context: { params: Promise<{ organizationId: string }> },
 ) {
+  const startedAt = Date.now();
+  const requestId = resolveRequestId(request.headers.get('x-request-id'));
   const { organizationId } = await context.params;
+  const route = '/o/:organizationId/telemetry';
+  let actorKind: OperationalEvent['actorKind'] = 'ANONYMOUS';
+
+  function respond(
+    body: unknown,
+    statusCode: number,
+    options: Readonly<{
+      eventName?: OperationalEvent['eventName'];
+      status?: OperationalStatus;
+      safeErrorCategory?: string | null;
+      acceptedCount?: number | null;
+      skippedCount?: number | null;
+      headers?: Readonly<Record<string, string>>;
+    }> = {},
+  ) {
+    emitOperationalEvent(
+      buildOperationalEvent({
+        eventName: options.eventName ?? 'telemetry_ingest',
+        requestId,
+        route,
+        status:
+          options.status ??
+          (statusCode >= 200 && statusCode < 300 ? 'OK' : 'ERROR'),
+        statusCode,
+        durationMs: elapsedMs(startedAt),
+        organizationId,
+        actorKind,
+        safeErrorCategory: options.safeErrorCategory,
+        acceptedCount: options.acceptedCount,
+        skippedCount: options.skippedCount,
+      }),
+    );
+
+    return NextResponse.json(body, {
+      status: statusCode,
+      headers: {
+        'cache-control': 'no-store',
+        'x-request-id': requestId,
+        ...options.headers,
+      },
+    });
+  }
+
   const databaseUrl = process.env.DATABASE_URL;
   if (databaseUrl === undefined) {
-    return NextResponse.json(
+    return respond(
       {
         error: 'INTERNAL_ERROR',
         message: 'The request could not be completed safely.',
       },
-      { status: 500 },
+      500,
+      { safeErrorCategory: 'DATABASE_NOT_CONFIGURED' },
     );
   }
 
@@ -39,13 +93,18 @@ export async function POST(
 
   try {
     if (session !== null) {
+      actorKind = 'SESSION';
       rateScope = 'session:' + session.userId;
     } else {
       const pepper = process.env.TELEMETRY_CREDENTIAL_PEPPER;
       if (pepper === undefined) {
-        return NextResponse.json(
+        return respond(
           { error: 'UNAUTHORIZED', message: 'Authentication is required.' },
-          { status: 401 },
+          401,
+          {
+            eventName: 'telemetry_auth',
+            safeErrorCategory: 'TELEMETRY_CREDENTIALS_NOT_CONFIGURED',
+          },
         );
       }
 
@@ -57,12 +116,17 @@ export async function POST(
         now,
       });
       if (machine === null) {
-        return NextResponse.json(
+        return respond(
           { error: 'UNAUTHORIZED', message: 'Authentication is required.' },
-          { status: 401 },
+          401,
+          {
+            eventName: 'telemetry_auth',
+            safeErrorCategory: 'TELEMETRY_CREDENTIAL_REJECTED',
+          },
         );
       }
 
+      actorKind = 'MACHINE';
       session = {
         userId: 'machine:' + machine.credentialId,
         memberships: [{ organizationId, role: 'OPERATOR' }],
@@ -79,18 +143,18 @@ export async function POST(
       windowSeconds: 60,
     });
     if (!rate.allowed) {
-      return NextResponse.json(
+      return respond(
         {
           error: 'RATE_LIMITED',
           message:
             'Too many telemetry requests. Retry after the current window.',
         },
+        429,
         {
-          status: 429,
-          headers: {
-            'cache-control': 'no-store',
-            'retry-after': String(rate.retryAfterSeconds),
-          },
+          eventName: 'telemetry_rate_limit',
+          status: 'RATE_LIMITED',
+          safeErrorCategory: 'RATE_LIMITED',
+          headers: { 'retry-after': String(rate.retryAfterSeconds) },
         },
       );
     }
@@ -100,12 +164,13 @@ export async function POST(
       Number.isFinite(declaredLength) &&
       declaredLength > UPLOAD_LIMITS.productionTelemetryJsonBytes
     ) {
-      return NextResponse.json(
+      return respond(
         {
           error: 'UPLOAD_TOO_LARGE',
           message: 'The uploaded file exceeds the supported size limit.',
         },
-        { status: 413 },
+        413,
+        { safeErrorCategory: 'UPLOAD_TOO_LARGE' },
       );
     }
 
@@ -118,9 +183,10 @@ export async function POST(
       });
     } catch (error) {
       const safe = safeErrorFromUnknown(error);
-      return NextResponse.json(
+      return respond(
         { error: safe.category, message: safe.message },
-        { status: safe.status },
+        safe.status,
+        { safeErrorCategory: safe.category },
       );
     }
 
@@ -129,18 +195,20 @@ export async function POST(
       json = JSON.parse(raw);
     } catch {
       const safe = safeErrorFromUnknown(new Error('INVALID_TELEMETRY_JSON'));
-      return NextResponse.json(
+      return respond(
         { error: safe.category, message: safe.message },
-        { status: safe.status },
+        safe.status,
+        { safeErrorCategory: safe.category },
       );
     }
 
     const parsed = productionTelemetryBatchSchema.safeParse(json);
     if (!parsed.success) {
       const safe = safeErrorFromUnknown(new Error('INVALID_TELEMETRY_SCHEMA'));
-      return NextResponse.json(
+      return respond(
         { error: safe.category, message: safe.message },
-        { status: safe.status },
+        safe.status,
+        { safeErrorCategory: safe.category },
       );
     }
 
@@ -153,21 +221,23 @@ export async function POST(
       isDemo: false,
     });
 
-    return NextResponse.json(
+    return respond(
       {
         ...result,
         source: 'PRODUCTION_TELEMETRY',
       },
+      202,
       {
-        status: 202,
-        headers: { 'cache-control': 'no-store' },
+        acceptedCount: result.accepted,
+        skippedCount: result.skippedDuplicates,
       },
     );
   } catch (error) {
     const safe = safeErrorFromUnknown(error);
-    return NextResponse.json(
+    return respond(
       { error: safe.category, message: safe.message },
-      { status: safe.status },
+      safe.status,
+      { safeErrorCategory: safe.category },
     );
   } finally {
     await database.close();
