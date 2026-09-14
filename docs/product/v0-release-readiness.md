@@ -47,7 +47,7 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Comparable baseline/post-change verification.
 - [x] Negative verified impact remains visible.
 - [x] Cost-only historical counterfactual replay core for comparable workloads.
-- [ ] Customer-facing historical replay input and result surface.
+- [x] Customer-facing historical replay input and result surface with explicit non-verified claim boundary.
 - [x] Policy-bounded automatic hypothesis generation from MRI findings.
 - [x] Generated guarded implementation package for supported optimization hypotheses.
 
