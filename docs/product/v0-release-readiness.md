@@ -77,7 +77,7 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Accessibility checks in E2E.
 - [ ] First-run guided sample with unmistakable synthetic-data labeling.
 - [ ] Empty/error/recovery states reviewed screen-by-screen.
-- [ ] User-facing evidence drill-down for every MRI metric.
+- [x] User-facing evidence drill-down for MRI metrics with structured calculation evidence.
 
 ### 6. Operations
 
