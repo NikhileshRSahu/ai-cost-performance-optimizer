@@ -269,6 +269,7 @@ export async function loadFounderDashboardEvidence(
         label: fact.label,
         value: fact.value,
         evidenceRef: `import:${latestUsable.id}#${fact.key}`,
+        evidence: fact.evidence,
       }),
     );
 
