@@ -78,14 +78,14 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Responsive layouts.
 - [x] Accessibility checks in E2E.
 - [x] First-run guided synthetic sample with preselected demo labeling and downloadable fixtures.
-- [ ] Empty/error/recovery states reviewed screen-by-screen.
+- [x] Empty/loading/error/recovery states reviewed with safe retry paths and failed-import recovery actions.
 - [x] User-facing evidence drill-down for MRI metrics with structured calculation evidence.
 
 ### 6. Operations
 
 - [x] Build, unit, database, E2E, audit, secret-scan, and production-container CI gate.
 - [x] Production deployment and rollback runbook.
-- [x] Automated guarded PostgreSQL backup/restore drill with isolated source/restore databases, migration-history verification, sentinel data, and critical-table row-count comparison.
+- [ ] Automated guarded PostgreSQL backup/restore drill pending successful CI verification.
 - [x] Stable safe-error taxonomy that prevents raw internal exception leakage.
 - [x] Privacy-safe structured production observability sink for health and telemetry paths.
 - [ ] External production dashboard/alert routing.
