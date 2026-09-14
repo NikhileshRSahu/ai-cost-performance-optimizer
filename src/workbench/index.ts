@@ -6,3 +6,4 @@ export * from './data-export.js';
 export * from './safe-errors.js';
 export * from './upload-limits.js';
 export * from './telemetry-service.js';
+export * from './retention-service.js';
