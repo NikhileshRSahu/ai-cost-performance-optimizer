@@ -15,7 +15,8 @@ const SAFE_MESSAGES = Object.freeze({
   INVALID_INPUT: 'The supplied input is invalid.',
   UPLOAD_TOO_LARGE: 'The uploaded file exceeds the supported size limit.',
   DATA_UNAVAILABLE: 'Required evidence is unavailable or incomplete.',
-  DATABASE_UNAVAILABLE: 'The service is temporarily unable to access its data store.',
+  DATABASE_UNAVAILABLE:
+    'The service is temporarily unable to access its data store.',
   INTERNAL_ERROR: 'The request could not be completed safely.',
 } satisfies Record<SafeErrorCategory, string>);
 
@@ -28,7 +29,10 @@ export type SafeError = Readonly<{
 export function safeErrorFromUnknown(error: unknown): SafeError {
   const code = error instanceof Error ? error.message : '';
 
-  if (code === 'ORGANIZATION_MEMBERSHIP_REQUIRED' || code === 'ACTION_NOT_ALLOWED') {
+  if (
+    code === 'ORGANIZATION_MEMBERSHIP_REQUIRED' ||
+    code === 'ACTION_NOT_ALLOWED'
+  ) {
     return safe('FORBIDDEN', 403);
   }
   if (

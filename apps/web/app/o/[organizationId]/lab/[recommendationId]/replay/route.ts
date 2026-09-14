@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { formatDecimal, rational } from '../../../../../../../../../src/economics/exact';
+import {
+  formatDecimal,
+  rational,
+} from '../../../../../../../../../src/economics/exact';
 import { replayFromOptimizationLab } from '../../../../../../../../../src/efficiency/lab-replay';
 import { createDatabase } from '../../../../../../../../../src/persistence/database';
 import { safeErrorFromUnknown } from '../../../../../../../../../src/workbench/safe-errors';
@@ -11,9 +14,7 @@ export const dynamic = 'force-dynamic';
 
 const requestSchema = z
   .object({
-    historicalBaselineCost: z
-      .string()
-      .regex(/^(?:0|[1-9]\d*)(?:\.\d+)?$/),
+    historicalBaselineCost: z.string().regex(/^(?:0|[1-9]\d*)(?:\.\d+)?$/),
     historicalWindowComparable: z.boolean(),
   })
   .strict();

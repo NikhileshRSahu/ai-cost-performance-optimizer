@@ -3,9 +3,7 @@ import { safeErrorFromUnknown } from '../../src/workbench/safe-errors.js';
 
 describe('safe error taxonomy', () => {
   it('maps known authorization errors without returning internal messages', () => {
-    expect(
-      safeErrorFromUnknown(new Error('ACTION_NOT_ALLOWED')),
-    ).toEqual({
+    expect(safeErrorFromUnknown(new Error('ACTION_NOT_ALLOWED'))).toEqual({
       category: 'FORBIDDEN',
       message: 'You do not have permission to perform this action.',
       status: 403,

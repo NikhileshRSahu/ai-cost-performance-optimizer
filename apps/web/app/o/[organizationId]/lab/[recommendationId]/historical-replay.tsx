@@ -32,11 +32,7 @@ export function HistoricalReplay({
 
     try {
       const response = await fetch(
-        '/o/' +
-          organizationId +
-          '/lab/' +
-          recommendationId +
-          '/replay',
+        '/o/' + organizationId + '/lab/' + recommendationId + '/replay',
         {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
@@ -139,9 +135,7 @@ export function HistoricalReplay({
               </div>
               <div className="metric-card">
                 <p className="metric-label">Benchmark confidence</p>
-                <p className="metric-value">
-                  {result.benchmarkConfidenceBand}
-                </p>
+                <p className="metric-value">{result.benchmarkConfidenceBand}</p>
               </div>
             </div>
           ) : (

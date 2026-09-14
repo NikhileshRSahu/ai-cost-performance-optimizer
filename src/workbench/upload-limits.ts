@@ -4,7 +4,8 @@ export const UPLOAD_LIMITS = Object.freeze({
   sanitizedHistoryJsonBytes: 5 * 1024 * 1024,
 });
 
-export type UploadKind = 'USAGE_CSV' | 'BENCHMARK_CSV' | 'SANITIZED_HISTORY_JSON';
+export type UploadKind =
+  'USAGE_CSV' | 'BENCHMARK_CSV' | 'SANITIZED_HISTORY_JSON';
 
 export function assertUploadWithinLimit(
   input: Readonly<{

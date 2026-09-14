@@ -74,7 +74,9 @@ async function reachVerification(
   await page.getByRole('button', { name: 'Replay historical cost' }).click();
   await expect(page.getByText('Projected gross saving')).toBeVisible();
   await expect(
-    page.getByText('This replay is never written to the VERIFIED savings ledger.'),
+    page.getByText(
+      'This replay is never written to the VERIFIED savings ledger.',
+    ),
   ).toBeVisible();
   await expectAccessible(page);
 
@@ -150,7 +152,6 @@ test('failed post-change quality never becomes verified', async ({ page }) => {
   await expect(page.locator('.state-badge.state-tested')).toBeVisible();
   await expect(page.locator('.state-badge.state-verified')).toHaveCount(0);
 });
-
 
 test('guided synthetic walkthrough preselects demo mode', async ({ page }) => {
   await page.goto('/o/journey-org/demo');

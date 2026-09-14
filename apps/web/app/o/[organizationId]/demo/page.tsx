@@ -30,7 +30,9 @@ export default async function GuidedDemoPage({
             customer proof.
           </p>
         </div>
-        <span className="trust-chip">Synthetic demo · never customer proof</span>
+        <span className="trust-chip">
+          Synthetic demo · never customer proof
+        </span>
       </header>
 
       <section className="workflow-card">
@@ -84,8 +86,8 @@ export default async function GuidedDemoPage({
           </div>
         </div>
         <p>
-          Download the paired benchmark fixture and compare model-a with
-          model-b using evaluator version eval-v1.
+          Download the paired benchmark fixture and compare model-a with model-b
+          using evaluator version eval-v1.
         </p>
         <div className="action-row">
           <Link className="secondary-action" href="/demo-benchmark.csv">
