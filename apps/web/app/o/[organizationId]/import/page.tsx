@@ -124,7 +124,12 @@ export default async function ImportPage({
             />
           </label>
           <label className="checkbox-row">
-            <input name="isDemo" type="checkbox" value="true" />
+            <input
+              name="isDemo"
+              type="checkbox"
+              value="true"
+              defaultChecked={demo === 'true'}
+            />
             <span>This file is synthetic demo data</span>
           </label>
           <button className="primary-button" type="submit">
