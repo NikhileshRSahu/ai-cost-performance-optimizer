@@ -130,13 +130,14 @@ export async function provisionSelfServeIdentity(
     }
 
     const currentMemberships = await readMemberships(transaction, userId);
-    if (currentMemberships.length > 0) {
+    const currentMembership = currentMemberships[0];
+    if (currentMembership !== undefined) {
       return Object.freeze({
         session: Object.freeze({
           userId,
           memberships: currentMemberships,
         }),
-        activeOrganizationId: currentMemberships[0]!.organizationId,
+        activeOrganizationId: currentMembership.organizationId,
         userCreated,
         organizationCreated: false,
       });
