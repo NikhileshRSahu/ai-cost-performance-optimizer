@@ -20,7 +20,8 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Sanitized AI-history normalized import contract, parser, and non-persistent upload/analyze UI.
 - [ ] Authorized workspace connector storage and revocation model.
 - [x] Privacy-safe production telemetry event/batch contract and usage normalizer.
-- [ ] Authenticated continuous production telemetry ingestion endpoint.
+- [x] Session-authenticated production telemetry ingestion endpoint with bounded batches and idempotent event deduplication.
+- [ ] Machine-to-machine telemetry credentials and rotation for unattended agents.
 
 ### 2. AI Work MRI
 
