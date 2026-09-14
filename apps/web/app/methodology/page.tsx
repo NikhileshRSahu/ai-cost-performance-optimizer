@@ -7,7 +7,7 @@ export default function MethodologyPage() {
           Every recommendation should survive an evidence audit.
         </h1>
         <p className="lede">
-          AI Efficiency Intelligence separates observation, hypothesis,
+          Proovance separates observation, hypothesis,
           benchmark, implementation, and verification so an attractive estimate
           cannot quietly become a customer-savings claim.
         </p>
