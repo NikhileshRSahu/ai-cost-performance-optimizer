@@ -30,10 +30,10 @@ export default function LlmCostCalculatorPage() {
         </div>
         <div>
           <p className="lede">
-            Cost visibility is only the first step. Proovance
-            diagnoses supported inefficiencies, proposes bounded changes, tests
-            them against a quality floor, and keeps potential, tested, and
-            verified savings separate.
+            Cost visibility is only the first step. Proovance diagnoses
+            supported inefficiencies, proposes bounded changes, tests them
+            against a quality floor, and keeps potential, tested, and verified
+            savings separate.
           </p>
           <div className="hero-actions">
             <Link className="primary-action" href="/pricing">
