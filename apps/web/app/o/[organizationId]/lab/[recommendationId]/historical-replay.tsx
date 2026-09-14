@@ -39,16 +39,21 @@ export function HistoricalReplay({
       const baselineEntry = formData.get('historicalBaselineCost');
       const historicalBaselineCost =
         typeof baselineEntry === 'string' ? baselineEntry : '';
+      const historicalWindowComparable =
+        formData.get('historicalWindowComparable') === 'true';
 
       const response = await fetch(
         '/o/' + organizationId + '/lab/' + recommendationId + '/replay',
         {
           method: 'POST',
-          headers: { 'content-type': 'application/json' },
+          headers: {
+            'content-type': 'application/json',
+            'x-replay-baseline-cost': historicalBaselineCost,
+            'x-replay-window-comparable': String(historicalWindowComparable),
+          },
           body: JSON.stringify({
             historicalBaselineCost,
-            historicalWindowComparable:
-              formData.get('historicalWindowComparable') === 'true',
+            historicalWindowComparable,
           }),
         },
       );
