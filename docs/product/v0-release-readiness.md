@@ -64,7 +64,7 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [ ] Connector token rotation/revocation.
 - [x] Owner-only organization evidence purge service with explicit confirmation.
 - [x] Customer-facing owner-only data export and evidence-purge UI.
-- [ ] Retention-policy controls.
+- [x] Owner-controlled raw-evidence retention policy with dry-run preview, explicit enforcement, and preserved decision/audit records.
 - [ ] Threat-model review before provider admin connectors are enabled.
 
 ### 5. UX and trust
@@ -89,7 +89,7 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Stable safe-error taxonomy that prevents raw internal exception leakage.
 - [ ] Production observability sink and dashboards.
 - [ ] Distributed rate limiting.
-- [x] Server-side upload-size abuse controls for usage, benchmark, and sanitized-history evidence.
+- [x] Server-side upload-size abuse controls for usage, benchmark, sanitized-history, and telemetry evidence.
 - [x] Incident severity and response process.
 - [ ] Named production incident contact/escalation rotation.
 
