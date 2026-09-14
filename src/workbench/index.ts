@@ -5,3 +5,4 @@ export * from './data-lifecycle.js';
 export * from './data-export.js';
 export * from './safe-errors.js';
 export * from './upload-limits.js';
+export * from './telemetry-service.js';
