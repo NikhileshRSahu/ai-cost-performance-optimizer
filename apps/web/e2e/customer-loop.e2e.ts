@@ -200,3 +200,45 @@ test('owner can issue a telemetry-only machine credential', async ({
   await expect(page.getByText('e2e-production-agent').first()).toBeVisible();
   await expectAccessible(page);
 });
+
+
+test('recovery states stay actionable and accessible', async ({ page }) => {
+  await page.goto('/this-page-does-not-exist');
+  await expect(
+    page.getByRole('heading', { name: 'This workbench page does not exist.' }),
+  ).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Return home' })).toBeVisible();
+  await expectAccessible(page);
+
+  await page.goto('/o/not-a-member');
+  await expect(
+    page.getByRole('heading', {
+      name: 'You do not have access to this organization.',
+    }),
+  ).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Return home' })).toBeVisible();
+  await expectAccessible(page);
+
+  await page.goto('/o/journey-org/lab/missing-recommendation');
+  await expect(
+    page.getByRole('heading', { name: 'Insufficient benchmark evidence' }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'Return to benchmark' }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'Back to overview' }),
+  ).toBeVisible();
+  await expectAccessible(page);
+
+  await page.goto('/o/journey-org/report/missing-recommendation');
+  await expect(
+    page.getByRole('heading', {
+      name: 'This recommendation does not have complete report evidence.',
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'Return to benchmark' }),
+  ).toBeVisible();
+  await expectAccessible(page);
+});
