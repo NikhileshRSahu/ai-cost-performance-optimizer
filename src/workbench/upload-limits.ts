@@ -2,6 +2,7 @@ export const UPLOAD_LIMITS = Object.freeze({
   usageCsvBytes: 10 * 1024 * 1024,
   benchmarkCsvBytes: 10 * 1024 * 1024,
   sanitizedHistoryJsonBytes: 5 * 1024 * 1024,
+  productionTelemetryJsonBytes: 5 * 1024 * 1024,
 });
 
 export type UploadKind =
@@ -22,7 +23,9 @@ export function assertUploadWithinLimit(
       ? UPLOAD_LIMITS.usageCsvBytes
       : input.kind === 'BENCHMARK_CSV'
         ? UPLOAD_LIMITS.benchmarkCsvBytes
-        : UPLOAD_LIMITS.sanitizedHistoryJsonBytes;
+        : input.kind === 'SANITIZED_HISTORY_JSON'
+          ? UPLOAD_LIMITS.sanitizedHistoryJsonBytes
+          : UPLOAD_LIMITS.productionTelemetryJsonBytes;
 
   if (input.sizeBytes > limit) {
     throw new Error(input.kind + '_TOO_LARGE');
