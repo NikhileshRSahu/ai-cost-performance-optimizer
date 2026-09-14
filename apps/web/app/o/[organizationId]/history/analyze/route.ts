@@ -2,11 +2,10 @@ import { NextResponse } from 'next/server';
 import { diagnoseSanitizedHistory } from '../../../../../../../src/efficiency/history-diagnosis';
 import { sanitizedAiExportSchema } from '../../../../../../../src/efficiency/history-contracts';
 import { requireOrganizationAccess } from '../../../../../../../src/persistence/tenant';
+import { assertUploadWithinLimit } from '../../../../../../../src/workbench/upload-limits';
 import { resolveRuntimeSession } from '../../../../../lib/runtime-session';
 
 export const dynamic = 'force-dynamic';
-
-const MAX_HISTORY_BYTES = 5 * 1024 * 1024;
 
 export async function POST(
   request: Request,
