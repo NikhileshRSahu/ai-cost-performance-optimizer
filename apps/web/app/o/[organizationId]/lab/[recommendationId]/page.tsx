@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../../src/persistence/database';
 import { buildOptimizationLabView } from '../../../../../../../src/workbench/lab-view';
@@ -51,6 +52,14 @@ export default async function OptimizationLabPage({
             This recommendation does not have the complete
             current-versus-candidate evidence required for the Optimization Lab.
           </p>
+          <div className="action-row">
+            <Link className="primary-action" href={`/o/${organizationId}/benchmark`}>
+              Return to benchmark
+            </Link>
+            <Link className="secondary-action" href={`/o/${organizationId}`}>
+              Back to overview
+            </Link>
+          </div>
         </section>
       );
     }
