@@ -95,7 +95,8 @@ export default async function DataPage({
         <p>
           The export includes workloads, imports, canonical usage evidence,
           recommendations, savings-state events, implementation records,
-          verification windows, and background-job metadata.
+          verification windows, background-job metadata, and founding-pilot
+          invoice requests.
         </p>
         {isOwner ? (
           <Link
@@ -220,7 +221,8 @@ export default async function DataPage({
         <p>
           This permanently removes usage records, import runs, workloads,
           recommendations, implementation records, verification windows,
-          savings-state events, and job metadata for this organization.
+          savings-state events, job metadata, and pending founding-pilot invoice
+          requests for this organization.
         </p>
         {isOwner ? (
           <form action={purgeEvidence} className="upload-form">

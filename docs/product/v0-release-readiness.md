@@ -102,7 +102,7 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [ ] One sanitized prospect dataset producing a credible end-to-end MRI.
 - [ ] One design-partner benchmark with written permission to use results.
 - [x] Founding-pilot pricing page.
-- [ ] Checkout/invoice flow.
+- [x] Owner-authenticated fixed-price $299 Optimization Audit invoice-request flow with persisted request state; the $999+ sprint remains scoped before invoicing.
 - [ ] Terms, privacy notice, and data-processing language reviewed for the launch jurisdiction.
 - [x] Founding-pilot support and onboarding playbook.
 

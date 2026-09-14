@@ -4,6 +4,7 @@ import {
   implementationRecords,
   importRuns,
   jobs,
+  pilotInvoiceRequests,
   ledgerEvents,
   recommendations,
   usageRecords,
@@ -26,6 +27,7 @@ export type OrganizationEvidenceExport = Readonly<{
     implementationRecords: readonly unknown[];
     verificationWindows: readonly unknown[];
     jobs: readonly unknown[];
+    pilotInvoiceRequests: readonly unknown[];
   }>;
 }>;
 
@@ -52,6 +54,7 @@ export async function exportOrganizationEvidence(
     implementationRows,
     verificationRows,
     jobRows,
+    pilotInvoiceRows,
   ] = await Promise.all([
     input.db
       .select()
@@ -85,6 +88,10 @@ export async function exportOrganizationEvidence(
       .select()
       .from(jobs)
       .where(eq(jobs.organizationId, input.organizationId)),
+    input.db
+      .select()
+      .from(pilotInvoiceRequests)
+      .where(eq(pilotInvoiceRequests.organizationId, input.organizationId)),
   ]);
 
   return Object.freeze({
@@ -100,6 +107,7 @@ export async function exportOrganizationEvidence(
       implementationRecords: Object.freeze(implementationRows),
       verificationWindows: Object.freeze(verificationRows),
       jobs: Object.freeze(jobRows),
+      pilotInvoiceRequests: Object.freeze(pilotInvoiceRows),
     }),
   });
 }

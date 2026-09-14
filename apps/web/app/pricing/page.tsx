@@ -74,8 +74,14 @@ export default function PricingPage() {
 
       <div className="hero-actions">
         <Link className="primary-action" href="/">
-          See how the Work MRI works
+          Start with the free Work MRI
         </Link>
+        <p>
+          Organization owners can request the fixed $299 audit invoice from
+          <strong> Pilot &amp; billing</strong> inside the workbench. The $999+
+          implementation sprint is scoped separately before any invoice is
+          issued.
+        </p>
       </div>
     </div>
   );
