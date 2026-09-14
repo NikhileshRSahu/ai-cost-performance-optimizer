@@ -29,6 +29,7 @@ export default defineConfig({
       AUTH_PROVIDER: 'e2e',
       AUTH_SUBJECT: 'founder-1',
       AUTH_EMAIL: 'founder@example.com',
+      TELEMETRY_CREDENTIAL_PEPPER: 'e2e-test-only-not-a-secret-pepper',
     },
   },
 });
