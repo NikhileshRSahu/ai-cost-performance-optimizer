@@ -43,6 +43,7 @@ Precise, high-trust, technical, premium, and fast.
 Avoid generic AI brains, robot heads, neural-network stock imagery, crypto styling, exaggerated futuristic chrome, or gambling/finance hype.
 
 Suggested palette:
+
 - Midnight: #08111F
 - Deep navy: #0F1B2D
 - Signal cyan: #12C7E8
@@ -52,6 +53,7 @@ Suggested palette:
 - Muted slate: #93A4B8
 
 Typography:
+
 - headings: Inter / Geist / similar geometric sans
 - body: Inter / Geist / system sans
 - data: JetBrains Mono / ui-monospace
@@ -59,6 +61,7 @@ Typography:
 ## Logo direction
 
 A simple geometric **P** built from:
+
 1. an open diagnostic ring,
 2. a forward optimization path,
 3. a proof/check convergence point.
@@ -70,6 +73,7 @@ Do not reuse or imitate the discarded OptiProof mark.
 ## Motion identity
 
 Two-second ident:
+
 - 0.00–0.30s: one evidence point appears
 - 0.30–0.70s: points resolve into a diagnostic ring
 - 0.70–1.10s: ring opens into a forward path
@@ -84,12 +88,14 @@ Motion should feel engineered, not decorative.
 Clear, calm, evidence-led, useful, technical without being academic.
 
 Prefer:
+
 - "The evidence supports..."
 - "Potential saving..."
 - "This benchmark passed the declared quality floor."
 - "We cannot verify this claim from the current evidence."
 
 Avoid:
+
 - "revolutionary"
 - "guaranteed savings"
 - "world's best"
@@ -126,6 +132,7 @@ SPF, DKIM, and DMARC are required before outbound.
 The brand remains Proovance. Search keywords live in tools and content.
 
 Priority keyword families:
+
 - AI cost calculator
 - LLM cost calculator
 - AI cost optimization
@@ -141,6 +148,7 @@ Priority keyword families:
 - prompt caching savings
 
 Priority tools:
+
 1. LLM Cost Calculator
 2. GPT vs Claude Cost Calculator
 3. AI Agent Cost Calculator
@@ -166,6 +174,7 @@ Free tool → useful result → Work MRI → optimization opportunity → bounde
 ## Account rollout rule
 
 Before a paid domain purchase or irreversible account naming:
+
 1. verify exact domain availability at a registrar,
 2. run a final trademark screen in target launch jurisdictions,
 3. verify preferred handles on each platform,
