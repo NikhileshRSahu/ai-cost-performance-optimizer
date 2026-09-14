@@ -36,6 +36,7 @@ export default async function OrganizationLayout({
         </div>
         <nav aria-label="Organization workbench">
           <Link href={`/o/${organizationId}`}>Overview</Link>
+          <Link href={`/o/${organizationId}/demo`}>Guided demo</Link>
           <Link href={`/o/${organizationId}/import`}>Import</Link>
           <Link href={`/o/${organizationId}/history`}>AI history</Link>
           <Link href={`/o/${organizationId}/workloads`}>Workloads</Link>
