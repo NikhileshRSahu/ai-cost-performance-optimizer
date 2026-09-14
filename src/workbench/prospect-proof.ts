@@ -1,9 +1,7 @@
 import type { FounderDashboardView } from './dashboard-view.js';
 
 export type ProspectProofClassification =
-  | 'SYNTHETIC_DEMO'
-  | 'INSUFFICIENT_EVIDENCE'
-  | 'SANITIZED_PROSPECT_EVIDENCE';
+  'SYNTHETIC_DEMO' | 'INSUFFICIENT_EVIDENCE' | 'SANITIZED_PROSPECT_EVIDENCE';
 
 export type ProspectProofPack = Readonly<{
   classification: ProspectProofClassification;
