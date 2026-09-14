@@ -10,7 +10,8 @@ export type WorkbenchAction =
   | 'MANAGE_MEMBERSHIP'
   | 'MANAGE_CREDENTIAL_REFERENCE'
   | 'DELETE_DATA'
-  | 'EXPORT_DATA';
+  | 'EXPORT_DATA'
+  | 'MANAGE_RETENTION';
 
 export type SessionMembership = Readonly<{
   organizationId: string;
