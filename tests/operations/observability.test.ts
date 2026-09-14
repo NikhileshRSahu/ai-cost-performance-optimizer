@@ -202,6 +202,34 @@ describe('safe operational observability', () => {
     );
   });
 
+  it('does not route externally when webhook configuration is incomplete', async () => {
+    const fetchImpl = vi.fn<typeof fetch>();
+    const event = buildOperationalEvent({
+      eventName: 'health_check',
+      requestId: 'req-no-config',
+      route: '/api/health',
+      status: 'ERROR',
+      statusCode: 503,
+      durationMs: 2,
+      actorKind: 'SYSTEM',
+      safeErrorCategory: 'DATABASE_UNAVAILABLE',
+    });
+
+    await expect(
+      routeOperationalAlert(event, {
+        webhookUrl: 'https://alerts.example.test/hook',
+        signingSecret: 'short',
+        fetchImpl,
+      }),
+    ).resolves.toEqual({
+      routed: false,
+      delivered: false,
+      statusCode: null,
+      reason: 'NOT_CONFIGURED',
+    });
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
   it('isolates webhook delivery failures from the caller', async () => {
     const write = vi
       .spyOn(process.stdout, 'write')
@@ -224,6 +252,7 @@ describe('safe operational observability', () => {
     await expect(
       publishOperationalEvent(event, {
         webhookUrl: 'https://alerts.example.test/hook',
+        signingSecret: 'test-signing-secret',
         fetchImpl,
       }),
     ).resolves.toEqual({
