@@ -150,3 +150,18 @@ test('failed post-change quality never becomes verified', async ({ page }) => {
   await expect(page.locator('.state-badge.state-tested')).toBeVisible();
   await expect(page.locator('.state-badge.state-verified')).toHaveCount(0);
 });
+
+
+test('guided synthetic walkthrough preselects demo mode', async ({ page }) => {
+  await page.goto('/o/journey-org/demo');
+  await expect(
+    page.getByRole('heading', {
+      name: 'See the full proof loop without using customer data',
+    }),
+  ).toBeVisible();
+  await page.getByRole('link', { name: 'Open demo import' }).click();
+  await expect(page.locator('input[name="isDemo"]')).toBeChecked();
+  await expect(
+    page.getByText('Synthetic demo data — not a customer result.'),
+  ).toHaveCount(0);
+});
