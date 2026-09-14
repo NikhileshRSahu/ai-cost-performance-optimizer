@@ -158,9 +158,9 @@ describe('safe operational observability', () => {
   });
 
   it('sends a signed allowlisted alert payload without customer content', async () => {
-    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(
-      new Response(null, { status: 204 }),
-    );
+    const fetchImpl = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(new Response(null, { status: 204 }));
     const event = buildOperationalEvent({
       eventName: 'health_check',
       requestId: 'req-critical',
@@ -192,7 +192,9 @@ describe('safe operational observability', () => {
     expect(init?.method).toBe('POST');
 
     const headers = init?.headers as Record<string, string>;
-    expect(headers['x-ai-efficiency-signature']).toMatch(/^sha256=[a-f0-9]{64}$/);
+    expect(headers['x-ai-efficiency-signature']).toMatch(
+      /^sha256=[a-f0-9]{64}$/,
+    );
 
     const body = String(init?.body);
     expect(body).toContain('"severity":"CRITICAL"');
@@ -234,9 +236,9 @@ describe('safe operational observability', () => {
     const write = vi
       .spyOn(process.stdout, 'write')
       .mockImplementation(() => true);
-    const fetchImpl = vi.fn<typeof fetch>().mockRejectedValue(
-      new Error('network unavailable'),
-    );
+    const fetchImpl = vi
+      .fn<typeof fetch>()
+      .mockRejectedValue(new Error('network unavailable'));
     const event = buildOperationalEvent({
       eventName: 'telemetry_auth',
       requestId: 'req-warning',
