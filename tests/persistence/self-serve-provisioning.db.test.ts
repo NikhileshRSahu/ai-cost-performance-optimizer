@@ -47,10 +47,12 @@ describe('self-serve identity provisioning', () => {
     ]);
 
     await expect(database.db.select().from(users)).resolves.toHaveLength(1);
-    await expect(database.db.select().from(organizations)).resolves.toHaveLength(
+    await expect(
+      database.db.select().from(organizations),
+    ).resolves.toHaveLength(1);
+    await expect(database.db.select().from(memberships)).resolves.toHaveLength(
       1,
     );
-    await expect(database.db.select().from(memberships)).resolves.toHaveLength(1);
   });
 
   it('is idempotent for repeated login with the same identity', async () => {
