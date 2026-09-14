@@ -1262,3 +1262,9 @@ h1 {
 .recovery-state .lede {
   margin-top: 0;
 }
+
+
+.recovery-stack {
+  display: grid;
+  gap: 1rem;
+}
