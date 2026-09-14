@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
-import { productionTelemetryBatchSchema } from '../../../../../../../src/efficiency/telemetry-contracts';
-import { createDatabase } from '../../../../../../../src/persistence/database';
-import { safeErrorFromUnknown } from '../../../../../../../src/workbench/safe-errors';
-import { ingestProductionTelemetry } from '../../../../../../../src/workbench/telemetry-service';
+import { productionTelemetryBatchSchema } from '../../../../../../src/efficiency/telemetry-contracts';
+import { createDatabase } from '../../../../../../src/persistence/database';
+import { safeErrorFromUnknown } from '../../../../../../src/workbench/safe-errors';
+import { ingestProductionTelemetry } from '../../../../../../src/workbench/telemetry-service';
 import {
   assertUploadWithinLimit,
   UPLOAD_LIMITS,
-} from '../../../../../../../src/workbench/upload-limits';
-import { resolveRuntimeSession } from '../../../../../lib/runtime-session';
+} from '../../../../../../src/workbench/upload-limits';
+import { resolveRuntimeSession } from '../../../../lib/runtime-session';
 
 export const dynamic = 'force-dynamic';
 
