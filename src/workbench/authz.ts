@@ -12,6 +12,7 @@ export type WorkbenchAction =
   | 'DELETE_DATA'
   | 'EXPORT_DATA'
   | 'MANAGE_RETENTION'
+  | 'MANAGE_PROOF_PERMISSION'
   | 'REQUEST_PILOT_INVOICE';
 
 export type SessionMembership = Readonly<{
