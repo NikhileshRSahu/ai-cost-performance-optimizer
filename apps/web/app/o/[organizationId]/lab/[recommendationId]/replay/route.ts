@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { formatDecimal, rational } from '../../../../../../../../../src/economics/exact';
 import { replayFromOptimizationLab } from '../../../../../../../../../src/efficiency/lab-replay';
 import { createDatabase } from '../../../../../../../../../src/persistence/database';
+import { safeErrorFromUnknown } from '../../../../../../../../../src/workbench/safe-errors';
 import { loadOptimizationLabEvidence } from '../../../../../../../lib/lab-data';
 import { resolveRuntimeSession } from '../../../../../../../lib/runtime-session';
 
@@ -80,15 +81,11 @@ export async function POST(
       },
     );
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'REPLAY_FAILED';
-    const status =
-      message === 'ACTION_NOT_ALLOWED' ||
-      message === 'ORGANIZATION_MEMBERSHIP_REQUIRED'
-        ? 403
-        : message === 'RECOMMENDATION_NOT_FOUND'
-          ? 404
-          : 500;
-    return NextResponse.json({ error: message }, { status });
+    const safe = safeErrorFromUnknown(error);
+    return NextResponse.json(
+      { error: safe.category, message: safe.message },
+      { status: safe.status },
+    );
   } finally {
     await database.close();
   }
