@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { productionTelemetryBatchSchema } from '../../../../../../src/efficiency/telemetry-contracts';
+import { productionTelemetryBatchSchema } from '../../../../../../../src/efficiency/telemetry-contracts';
 import {
   buildOperationalEvent,
   elapsedMs,
@@ -7,20 +7,20 @@ import {
   resolveRequestId,
   type OperationalEvent,
   type OperationalStatus,
-} from '../../../../../../src/operations/observability';
-import { createDatabase } from '../../../../../../src/persistence/database';
-import type { AuthenticatedSession } from '../../../../../../src/workbench/authz';
-import { safeErrorFromUnknown } from '../../../../../../src/workbench/safe-errors';
+} from '../../../../../../../src/operations/observability';
+import { createDatabase } from '../../../../../../../src/persistence/database';
+import type { AuthenticatedSession } from '../../../../../../../src/workbench/authz';
+import { safeErrorFromUnknown } from '../../../../../../../src/workbench/safe-errors';
 import {
   authenticateTelemetryCredential,
   consumeDistributedRateLimit,
-} from '../../../../../../src/workbench/telemetry-auth';
-import { ingestProductionTelemetry } from '../../../../../../src/workbench/telemetry-service';
+} from '../../../../../../../src/workbench/telemetry-auth';
+import { ingestProductionTelemetry } from '../../../../../../../src/workbench/telemetry-service';
 import {
   assertUploadWithinLimit,
   UPLOAD_LIMITS,
-} from '../../../../../../src/workbench/upload-limits';
-import { resolveRuntimeSession } from '../../../../lib/runtime-session';
+} from '../../../../../../../src/workbench/upload-limits';
+import { resolveRuntimeSession } from '../../../../../lib/runtime-session';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,7 +31,7 @@ export async function POST(
   const startedAt = Date.now();
   const requestId = resolveRequestId(request.headers.get('x-request-id'));
   const { organizationId } = await context.params;
-  const route = '/o/:organizationId/telemetry';
+  const route = '/o/:organizationId/telemetry/ingest';
   let actorKind: OperationalEvent['actorKind'] = 'ANONYMOUS';
 
   function respond(
