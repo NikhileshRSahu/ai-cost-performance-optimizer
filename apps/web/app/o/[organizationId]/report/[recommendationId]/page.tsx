@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../../src/persistence/database';
 import { buildOptimizationReportView } from '../../../../../../../src/reports/report-view';
@@ -67,6 +68,34 @@ export default async function OptimizationReportPage({
         recommendationId,
       ),
     );
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      (error.message === 'RECOMMENDATION_NOT_FOUND' ||
+        error.message === 'LAB_EVIDENCE_INCOMPLETE')
+    ) {
+      return (
+        <section className="recovery-state" aria-labelledby="report-unavailable-title">
+          <p className="eyebrow">Report unavailable</p>
+          <h1 id="report-unavailable-title">
+            This recommendation does not have complete report evidence.
+          </h1>
+          <p className="lede">
+            Return to the benchmark workflow to rebuild the missing evidence, or
+            go back to the organization overview.
+          </p>
+          <div className="action-row">
+            <Link className="primary-action" href={`/o/${organizationId}/benchmark`}>
+              Return to benchmark
+            </Link>
+            <Link className="secondary-action" href={`/o/${organizationId}`}>
+              Back to overview
+            </Link>
+          </div>
+        </section>
+      );
+    }
+    throw error;
   } finally {
     await database.close();
   }
