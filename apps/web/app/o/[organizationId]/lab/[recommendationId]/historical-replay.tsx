@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useState } from 'react';
 
 type ReplayResult = Readonly<{
   status: 'PROJECTED' | 'INELIGIBLE_BENCHMARK' | 'INELIGIBLE_BASELINE';
@@ -62,11 +62,6 @@ export function HistoricalReplay({
     }
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    await replay(new FormData(event.currentTarget));
-  }
-
   return (
     <section className="lab-section" aria-labelledby="historical-replay-title">
       <p className="eyebrow">Counterfactual replay</p>
@@ -82,7 +77,8 @@ export function HistoricalReplay({
       <form
         className="benchmark-form"
         onSubmit={(event) => {
-          void handleSubmit(event);
+          event.preventDefault();
+          void replay(new FormData(event.currentTarget));
         }}
       >
         <label>
