@@ -105,7 +105,10 @@ export async function revokeProofPermission(args: {
     .where(
       and(
         eq(designPartnerPermissions.organizationId, args.organizationId),
-        eq(designPartnerPermissions.evidenceRef, bounded(args.evidenceRef, 240)),
+        eq(
+          designPartnerPermissions.evidenceRef,
+          bounded(args.evidenceRef, 240),
+        ),
       ),
     );
 }
