@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
 import { importCustomerUsage } from '../../../../../../src/workbench/import-service';
+import { assertUploadWithinLimit } from '../../../../../../src/workbench/upload-limits';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
 
 function textEntry(formData: FormData, key: string): string {
@@ -18,6 +19,7 @@ export async function uploadUsageCsv(formData: FormData): Promise<never> {
   if (organizationId.length === 0 || !(upload instanceof File)) {
     throw new Error('USAGE_CSV_REQUIRED');
   }
+  assertUploadWithinLimit({ kind: 'USAGE_CSV', sizeBytes: upload.size });
 
   const session = await resolveRuntimeSession();
   const databaseUrl = process.env.DATABASE_URL;
