@@ -11,7 +11,8 @@ export type WorkbenchAction =
   | 'MANAGE_CREDENTIAL_REFERENCE'
   | 'DELETE_DATA'
   | 'EXPORT_DATA'
-  | 'MANAGE_RETENTION';
+  | 'MANAGE_RETENTION'
+  | 'REQUEST_PILOT_INVOICE';
 
 export type SessionMembership = Readonly<{
   organizationId: string;
