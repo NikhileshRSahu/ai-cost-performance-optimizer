@@ -4,7 +4,9 @@ export default function HomePage() {
   return (
     <div className="landing-stack">
       <section className="hero hero-wide" aria-labelledby="page-title">
-        <p className="eyebrow">Proovance · Public beta · AI Efficiency Intelligence</p>
+        <p className="eyebrow">
+          Proovance · Public beta · AI Efficiency Intelligence
+        </p>
         <h1 id="page-title">
           See where AI work is wasting money before changing production.
         </h1>
