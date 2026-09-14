@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createDatabase } from '../../../../../../../src/persistence/database';
 import { exportOrganizationEvidence } from '../../../../../../../src/workbench/data-export';
+import { safeErrorFromUnknown } from '../../../../../../../src/workbench/safe-errors';
 import { resolveRuntimeSession } from '../../../../../lib/runtime-session';
 
 export const dynamic = 'force-dynamic';
@@ -34,13 +35,11 @@ export async function GET(
       },
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'EXPORT_FAILED';
-    const status =
-      message === 'ACTION_NOT_ALLOWED' ||
-      message === 'ORGANIZATION_MEMBERSHIP_REQUIRED'
-        ? 403
-        : 500;
-    return NextResponse.json({ error: message }, { status });
+    const safe = safeErrorFromUnknown(error);
+    return NextResponse.json(
+      { error: safe.category, message: safe.message },
+      { status: safe.status },
+    );
   } finally {
     await database.close();
   }
