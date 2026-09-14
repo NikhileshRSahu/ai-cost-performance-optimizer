@@ -85,7 +85,7 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 
 - [x] Build, unit, database, E2E, audit, secret-scan, and production-container CI gate.
 - [x] Production deployment and rollback runbook.
-- [ ] Automated guarded PostgreSQL backup/restore drill pending successful CI verification.
+- [x] Automated guarded PostgreSQL backup/restore drill verified in CI with isolated source/restore databases, migration history, sentinel data, and critical-table count comparison.
 - [x] Stable safe-error taxonomy that prevents raw internal exception leakage.
 - [x] Privacy-safe structured production observability sink for health and telemetry paths.
 - [ ] External production dashboard/alert routing.
