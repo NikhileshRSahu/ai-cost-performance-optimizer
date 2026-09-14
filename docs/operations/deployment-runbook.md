@@ -9,10 +9,12 @@ Minimum CSV-only pilot gate:
 1. CI is green on the exact release commit.
 2. Database migrations have been reviewed and backed up.
 3. `DATABASE_URL` is provided through the hosting platform's secret manager.
-4. No production secrets are committed to the repository or image.
-5. Synthetic/demo mode is not confused with customer evidence.
-6. The health endpoint returns HTTP 200 after deployment.
-7. Customer-facing deletion and retention behavior is documented for the pilot.
+4. `TELEMETRY_CREDENTIAL_PEPPER` is provided through the secret manager when unattended telemetry is enabled.
+5. The telemetry pepper is at least 16 characters, unique to the deployment, and never logged or committed.
+6. No production secrets are committed to the repository or image.
+7. Synthetic/demo mode is not confused with customer evidence.
+8. The health endpoint returns HTTP 200 after deployment.
+9. Customer-facing deletion and retention behavior is documented for the pilot.
 
 ## Container build
 
@@ -133,3 +135,18 @@ For each production release record:
 - operator,
 - rollback image,
 - material known limitations.
+
+
+## Unattended telemetry credentials
+
+When machine telemetry is enabled:
+
+1. configure `TELEMETRY_CREDENTIAL_PEPPER` in the platform secret manager,
+2. create a telemetry credential from the owner-only Telemetry screen,
+3. copy the token once into the sending agent's secret store,
+4. never persist the raw token in application logs, source code, tickets, or analytics,
+5. rotate the credential if its handling is uncertain,
+6. revoke the old credential before decommissioning an agent,
+7. treat a pepper compromise as requiring rotation of every telemetry credential because hashes are keyed with that pepper.
+
+The server stores only the credential identifier and keyed hash, never the raw bearer token.
