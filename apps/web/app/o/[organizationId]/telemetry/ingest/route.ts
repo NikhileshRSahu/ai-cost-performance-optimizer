@@ -79,7 +79,7 @@ export async function POST(
 
   const databaseUrl = process.env.DATABASE_URL;
   if (databaseUrl === undefined) {
-    return respond(
+    return await respond(
       {
         error: 'INTERNAL_ERROR',
         message: 'The request could not be completed safely.',
@@ -101,7 +101,7 @@ export async function POST(
     } else {
       const pepper = process.env.TELEMETRY_CREDENTIAL_PEPPER;
       if (pepper === undefined) {
-        return respond(
+        return await respond(
           { error: 'UNAUTHORIZED', message: 'Authentication is required.' },
           401,
           {
@@ -119,7 +119,7 @@ export async function POST(
         now,
       });
       if (machine === null) {
-        return respond(
+        return await respond(
           { error: 'UNAUTHORIZED', message: 'Authentication is required.' },
           401,
           {
@@ -146,7 +146,7 @@ export async function POST(
       windowSeconds: 60,
     });
     if (!rate.allowed) {
-      return respond(
+      return await respond(
         {
           error: 'RATE_LIMITED',
           message:
@@ -167,7 +167,7 @@ export async function POST(
       Number.isFinite(declaredLength) &&
       declaredLength > UPLOAD_LIMITS.productionTelemetryJsonBytes
     ) {
-      return respond(
+      return await respond(
         {
           error: 'UPLOAD_TOO_LARGE',
           message: 'The uploaded file exceeds the supported size limit.',
@@ -186,7 +186,7 @@ export async function POST(
       });
     } catch (error) {
       const safe = safeErrorFromUnknown(error);
-      return respond(
+      return await respond(
         { error: safe.category, message: safe.message },
         safe.status,
         { safeErrorCategory: safe.category },
@@ -198,7 +198,7 @@ export async function POST(
       json = JSON.parse(raw);
     } catch {
       const safe = safeErrorFromUnknown(new Error('INVALID_TELEMETRY_JSON'));
-      return respond(
+      return await respond(
         { error: safe.category, message: safe.message },
         safe.status,
         { safeErrorCategory: safe.category },
@@ -208,7 +208,7 @@ export async function POST(
     const parsed = productionTelemetryBatchSchema.safeParse(json);
     if (!parsed.success) {
       const safe = safeErrorFromUnknown(new Error('INVALID_TELEMETRY_SCHEMA'));
-      return respond(
+      return await respond(
         { error: safe.category, message: safe.message },
         safe.status,
         { safeErrorCategory: safe.category },
@@ -224,7 +224,7 @@ export async function POST(
       isDemo: false,
     });
 
-    return respond(
+    return await respond(
       {
         ...result,
         source: 'PRODUCTION_TELEMETRY',
@@ -237,7 +237,7 @@ export async function POST(
     );
   } catch (error) {
     const safe = safeErrorFromUnknown(error);
-    return respond(
+    return await respond(
       { error: safe.category, message: safe.message },
       safe.status,
       { safeErrorCategory: safe.category },
