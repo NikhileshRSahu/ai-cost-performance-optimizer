@@ -40,6 +40,7 @@ export type DashboardDiagnosticFact = Readonly<{
   label: string;
   value: string;
   evidenceRef: string | null;
+  evidence: Readonly<Record<string, string>>;
 }>;
 
 export type DashboardEvidence = Readonly<{
@@ -142,7 +143,12 @@ export function buildFounderDashboardView(
     strongestAction,
     verifiedNetSavings: verifiedImpactView(input.verifiedNetSavings),
     diagnosticFacts: Object.freeze(
-      input.diagnosticFacts.map((fact) => Object.freeze({ ...fact })),
+      input.diagnosticFacts.map((fact) =>
+        Object.freeze({
+          ...fact,
+          evidence: Object.freeze({ ...fact.evidence }),
+        }),
+      ),
     ),
     monthlyProjectionAllowed: input.completeCalendarDays >= 7,
     demoDisclaimer: input.isDemo
