@@ -70,10 +70,12 @@ describe('self-serve identity provisioning', () => {
     expect(second.userCreated).toBe(false);
     expect(second.organizationCreated).toBe(false);
     await expect(database.db.select().from(users)).resolves.toHaveLength(1);
-    await expect(database.db.select().from(organizations)).resolves.toHaveLength(
+    await expect(
+      database.db.select().from(organizations),
+    ).resolves.toHaveLength(1);
+    await expect(database.db.select().from(memberships)).resolves.toHaveLength(
       1,
     );
-    await expect(database.db.select().from(memberships)).resolves.toHaveLength(1);
   });
 
   it('does not silently link another identity to an occupied email', async () => {
