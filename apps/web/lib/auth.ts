@@ -42,6 +42,9 @@ export function getWebAuth(): ReturnType<typeof betterAuth> {
         prompt: 'select_account',
       },
     },
+    account: {
+      encryptOAuthTokens: true,
+    },
     advanced: {
       database: {
         joins: true,
