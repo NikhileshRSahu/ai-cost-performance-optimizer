@@ -21,7 +21,7 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [ ] Authorized workspace connector storage and revocation model.
 - [x] Privacy-safe production telemetry event/batch contract and usage normalizer.
 - [x] Session-authenticated production telemetry ingestion endpoint with bounded batches and idempotent event deduplication.
-- [ ] Machine-to-machine telemetry credentials and rotation for unattended agents.
+- [x] Machine-to-machine telemetry credentials with one-time secrets, hash-only storage, rotation, and revocation for unattended agents.
 
 ### 2. AI Work MRI
 
@@ -88,7 +88,7 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [ ] Database backup/restore drill.
 - [x] Stable safe-error taxonomy that prevents raw internal exception leakage.
 - [ ] Production observability sink and dashboards.
-- [ ] Distributed rate limiting.
+- [x] PostgreSQL-backed distributed telemetry rate limiting across app instances.
 - [x] Server-side upload-size abuse controls for usage, benchmark, sanitized-history, and telemetry evidence.
 - [x] Incident severity and response process.
 - [ ] Named production incident contact/escalation rotation.
