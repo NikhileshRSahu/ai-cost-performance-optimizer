@@ -1,6 +1,8 @@
 import { expect, test } from '@playwright/test';
 
-test('public beta trust path is visible without authentication', async ({ page }) => {
+test('public beta trust path is visible without authentication', async ({
+  page,
+}) => {
   await page.goto('/');
 
   await expect(
