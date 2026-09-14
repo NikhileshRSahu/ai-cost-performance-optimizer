@@ -4,9 +4,9 @@ import type { ReactNode } from 'react';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'AI Efficiency Intelligence',
+  title: 'Proovance | AI Efficiency Intelligence',
   description:
-    'Evidence-backed AI efficiency diagnosis, safe optimization testing, and verified outcomes.',
+    'Find AI waste, test safer optimizations, and prove what actually improved.',
 };
 
 export default function RootLayout({
@@ -21,7 +21,7 @@ export default function RootLayout({
         <header className="site-header">
           <div className="shell">
             <Link className="brand" href="/">
-              AI Efficiency Intelligence
+              Proovance
             </Link>
             <nav className="public-nav" aria-label="Public">
               <Link href="/tools/llm-cost-calculator">Free calculator</Link>

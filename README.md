@@ -1,6 +1,6 @@
-# AI Efficiency Intelligence
+# Proovance
 
-AI Efficiency Intelligence is an evidence-first system for improving how a team uses AI across cost, model choice, retries, tokens, prompts, workflows, knowledge, implementation, and verified outcomes.
+**Proovance** is an AI Efficiency Intelligence system for improving how a team uses AI across cost, model choice, retries, tokens, prompts, workflows, knowledge, implementation, and verified outcomes.
 
 The product is designed around one operating loop:
 

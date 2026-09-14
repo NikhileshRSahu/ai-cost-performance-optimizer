@@ -4,7 +4,7 @@ export default function PricingPage() {
   return (
     <div className="landing-stack">
       <section className="hero hero-wide" aria-labelledby="pricing-title">
-        <p className="eyebrow">Founding pilot</p>
+        <p className="eyebrow">Proovance founding pilot</p>
         <h1 id="pricing-title">Pay for a decision, not another dashboard.</h1>
         <p className="lede">
           Start with evidence you already own. The pilot is designed to find one
