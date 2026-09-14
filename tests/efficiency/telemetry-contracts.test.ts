@@ -74,6 +74,7 @@ describe('production telemetry contract', () => {
       isDemo: false,
     });
 
+    expect(usage.source).toBe('PRODUCTION_TELEMETRY');
     expect(usage.granularity).toBe('REQUEST');
     expect(usage.requests).toBe('1');
     expect(usage.successes).toBe('1');
