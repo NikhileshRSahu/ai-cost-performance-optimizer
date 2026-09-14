@@ -112,7 +112,11 @@ export function HistoricalReplay({
           type="submit"
           disabled={!hydrated || running}
         >
-          {!hydrated ? 'Preparing replay…' : running ? 'Replaying…' : 'Replay historical cost'}
+          {!hydrated
+            ? 'Preparing replay…'
+            : running
+              ? 'Replaying…'
+              : 'Replay historical cost'}
         </button>
       </form>
 
