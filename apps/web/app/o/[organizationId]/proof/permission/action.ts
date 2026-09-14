@@ -14,7 +14,9 @@ function textEntry(formData: FormData, key: string): string {
   return typeof value === 'string' ? value : '';
 }
 
-export async function submitProofPermission(formData: FormData): Promise<never> {
+export async function submitProofPermission(
+  formData: FormData,
+): Promise<never> {
   const organizationId = textEntry(formData, 'organizationId');
   const evidenceRef = textEntry(formData, 'evidenceRef');
   const writtenPermissionRef = textEntry(formData, 'writtenPermissionRef');
