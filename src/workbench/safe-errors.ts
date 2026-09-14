@@ -49,14 +49,18 @@ export function safeErrorFromUnknown(error: unknown): SafeError {
     code === 'INVALID_HISTORY_JSON' ||
     code === 'INVALID_HISTORY_SCHEMA' ||
     code === 'INVALID_REPLAY_INPUT' ||
-    code === 'DATA_DELETION_CONFIRMATION_MISMATCH'
+    code === 'DATA_DELETION_CONFIRMATION_MISMATCH' ||
+    code === 'DUPLICATE_TELEMETRY_EVENT_ID' ||
+    code === 'INVALID_TELEMETRY_JSON' ||
+    code === 'INVALID_TELEMETRY_SCHEMA'
   ) {
     return safe('INVALID_INPUT', 400);
   }
   if (
     code === 'USAGE_CSV_TOO_LARGE' ||
     code === 'BENCHMARK_CSV_TOO_LARGE' ||
-    code === 'SANITIZED_HISTORY_JSON_TOO_LARGE'
+    code === 'SANITIZED_HISTORY_JSON_TOO_LARGE' ||
+    code === 'PRODUCTION_TELEMETRY_JSON_TOO_LARGE'
   ) {
     return safe('UPLOAD_TOO_LARGE', 413);
   }
