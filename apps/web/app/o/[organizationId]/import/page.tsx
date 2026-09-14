@@ -15,10 +15,10 @@ export default async function ImportPage({
   searchParams,
 }: Readonly<{
   params: Promise<{ organizationId: string }>;
-  searchParams: Promise<{ importId?: string }>;
+  searchParams: Promise<{ importId?: string; demo?: string }>;
 }>) {
   const { organizationId } = await params;
-  const { importId } = await searchParams;
+  const { importId, demo } = await searchParams;
   const session = await resolveRuntimeSession();
   const databaseUrl = process.env.DATABASE_URL;
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
