@@ -149,3 +149,21 @@ When machine telemetry is enabled:
 7. treat a pepper compromise as requiring rotation of every telemetry credential because hashes are keyed with that pepper.
 
 The server stores only the credential identifier and keyed hash, never the raw bearer token.
+
+
+## Automated restore drill
+
+CI runs `scripts/db-backup-restore-drill.sh` against the migrated PostgreSQL test database.
+
+The drill:
+
+1. refuses to run unless `ALLOW_DESTRUCTIVE_RESTORE_DRILL=true`,
+2. refuses source databases whose names do not end in `_test`,
+3. refuses restore targets whose names do not end in `_restore`,
+4. creates a PostgreSQL custom-format backup with `pg_dump`,
+5. restores into a separate database with `pg_restore`,
+6. compares row counts for tenant, evidence, verification, telemetry credential, and rate-limit tables,
+7. verifies Drizzle migration history exists in the restored database,
+8. drops the isolated restore database during cleanup.
+
+The CI drill proves the repository's backup/restore procedure against disposable data. It does not by itself establish a production RPO/RTO; those require a production-like restore drill with measured backup age, restore duration, and operator response time.
