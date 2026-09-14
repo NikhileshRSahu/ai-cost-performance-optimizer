@@ -7,7 +7,26 @@ import {
   serialize,
   subtract,
 } from '../economics/exact.js';
-import type { BenchmarkEvaluation } from '../benchmarks/evaluate.js';
+export type ReplayBenchmarkEvidence = Readonly<{
+  decision: 'OPTIMIZE' | 'DO_NOT_CHANGE' | 'INSUFFICIENT_EVIDENCE';
+  confidenceBand: 'LOW' | 'MEDIUM' | 'HIGH';
+  currentComparableCost: Readonly<{
+    numerator: string;
+    denominator: string;
+  }>;
+  candidateComparableCost: Readonly<{
+    numerator: string;
+    denominator: string;
+  }>;
+  candidateQuality: Readonly<{
+    numerator: string;
+    denominator: string;
+  }> | null;
+  candidateP95LatencyMs: Readonly<{
+    numerator: string;
+    denominator: string;
+  }> | null;
+}>;
 
 export type CounterfactualReplayStatus =
   'PROJECTED' | 'INELIGIBLE_BENCHMARK' | 'INELIGIBLE_BASELINE';
@@ -31,10 +50,10 @@ export type CounterfactualReplay = Readonly<{
     numerator: string;
     denominator: string;
   }> | null;
-  benchmarkDecision: BenchmarkEvaluation['decision'];
-  benchmarkConfidenceBand: BenchmarkEvaluation['confidence']['band'];
-  qualityGuardEvidence: BenchmarkEvaluation['metrics']['candidateQuality'];
-  latencyGuardEvidence: BenchmarkEvaluation['metrics']['candidateP95LatencyMs'];
+  benchmarkDecision: ReplayBenchmarkEvidence['decision'];
+  benchmarkConfidenceBand: ReplayBenchmarkEvidence['confidenceBand'];
+  qualityGuardEvidence: ReplayBenchmarkEvidence['candidateQuality'];
+  latencyGuardEvidence: ReplayBenchmarkEvidence['candidateP95LatencyMs'];
   claimBoundary: string;
 }>;
 
@@ -50,7 +69,7 @@ function fromSerialized(
 export function replayHistoricalCounterfactual(
   input: Readonly<{
     historicalBaselineCost: string;
-    benchmark: BenchmarkEvaluation;
+    benchmark: ReplayBenchmarkEvidence;
     historicalWindowComparable: boolean;
   }>,
 ): CounterfactualReplay {
@@ -70,10 +89,10 @@ export function replayHistoricalCounterfactual(
   }
 
   const currentComparableCost = fromSerialized(
-    input.benchmark.metrics.currentComparableCost,
+    input.benchmark.currentComparableCost,
   );
   const candidateComparableCost = fromSerialized(
-    input.benchmark.metrics.candidateComparableCost,
+    input.benchmark.candidateComparableCost,
   );
 
   if (compare(currentComparableCost, rational(0n)) <= 0) {
@@ -95,9 +114,9 @@ export function replayHistoricalCounterfactual(
       projectedCandidateCost: null,
       projectedGrossSaving: null,
       benchmarkDecision: input.benchmark.decision,
-      benchmarkConfidenceBand: input.benchmark.confidence.band,
-      qualityGuardEvidence: input.benchmark.metrics.candidateQuality,
-      latencyGuardEvidence: input.benchmark.metrics.candidateP95LatencyMs,
+      benchmarkConfidenceBand: input.benchmark.confidenceBand,
+      qualityGuardEvidence: input.benchmark.candidateQuality,
+      latencyGuardEvidence: input.benchmark.candidateP95LatencyMs,
       claimBoundary:
         'Counterfactual replay is withheld until a positive comparable historical baseline and an OPTIMIZE benchmark exist.',
     });
@@ -115,9 +134,9 @@ export function replayHistoricalCounterfactual(
     projectedCandidateCost: Object.freeze(serialize(projectedCandidateCost)),
     projectedGrossSaving: Object.freeze(serialize(projectedGrossSaving)),
     benchmarkDecision: input.benchmark.decision,
-    benchmarkConfidenceBand: input.benchmark.confidence.band,
-    qualityGuardEvidence: input.benchmark.metrics.candidateQuality,
-    latencyGuardEvidence: input.benchmark.metrics.candidateP95LatencyMs,
+    benchmarkConfidenceBand: input.benchmark.confidenceBand,
+    qualityGuardEvidence: input.benchmark.candidateQuality,
+    latencyGuardEvidence: input.benchmark.candidateP95LatencyMs,
     claimBoundary:
       'This is a cost-only counterfactual extrapolation from a controlled benchmark onto a comparable historical baseline. It is not verified savings and does not claim historical quality or latency would have been identical.',
   });
