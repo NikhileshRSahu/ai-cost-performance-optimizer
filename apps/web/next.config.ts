@@ -8,6 +8,7 @@ type WebpackConfig = {
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  allowedDevOrigins: ['127.0.0.1'],
   webpack(config: WebpackConfig) {
     const resolve = config.resolve ?? {};
     resolve.extensionAlias = {
