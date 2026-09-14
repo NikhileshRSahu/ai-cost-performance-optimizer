@@ -39,9 +39,7 @@ async function replayInput(request: Request): Promise<unknown> {
     }
   }
 
-  const historicalBaselineCost = request.headers.get(
-    'x-replay-baseline-cost',
-  );
+  const historicalBaselineCost = request.headers.get('x-replay-baseline-cost');
   const comparable = request.headers.get('x-replay-window-comparable');
   if (historicalBaselineCost === null || comparable === null) return null;
   return {
