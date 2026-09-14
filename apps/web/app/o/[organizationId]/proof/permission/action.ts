@@ -14,6 +14,14 @@ function textEntry(formData: FormData, key: string): string {
   return typeof value === 'string' ? value : '';
 }
 
+function isProofPermissionScope(value: string): value is ProofPermissionScope {
+  return (
+    value === 'PRIVATE_SALES' ||
+    value === 'PUBLIC_CASE_STUDY' ||
+    value === 'TESTIMONIAL'
+  );
+}
+
 export async function submitProofPermission(
   formData: FormData,
 ): Promise<never> {
@@ -23,13 +31,8 @@ export async function submitProofPermission(
   const grantedAt = textEntry(formData, 'grantedAt');
   const scopes = formData
     .getAll('scopes')
-    .filter((value): value is ProofPermissionScope => typeof value === 'string')
-    .filter(
-      (value): value is ProofPermissionScope =>
-        value === 'PRIVATE_SALES' ||
-        value === 'PUBLIC_CASE_STUDY' ||
-        value === 'TESTIMONIAL',
-    );
+    .filter((value): value is string => typeof value === 'string')
+    .filter(isProofPermissionScope);
 
   const session = await resolveRuntimeSession();
   const databaseUrl = process.env.DATABASE_URL;
