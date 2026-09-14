@@ -30,6 +30,6 @@ test('public beta trust path is visible without authentication', async ({
       name: 'Every recommendation should survive an evidence audit.',
     }),
   ).toBeVisible();
-  await expect(page.getByText('Potential')).toBeVisible();
-  await expect(page.getByText('Verified')).toBeVisible();
+  await expect(page.getByText('Potential', { exact: true })).toBeVisible();
+  await expect(page.getByText('Verified', { exact: true })).toBeVisible();
 });
