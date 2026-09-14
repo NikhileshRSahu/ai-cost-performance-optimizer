@@ -31,7 +31,7 @@ export function telemetryEventToUsageRecord(
 
   return {
     organizationId: input.organizationId,
-    source: 'CSV',
+    source: 'PRODUCTION_TELEMETRY',
     granularity: 'REQUEST',
     intervalStart: input.event.occurredAt,
     intervalEnd: input.event.occurredAt,
