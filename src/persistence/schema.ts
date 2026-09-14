@@ -44,6 +44,11 @@ export const organizations = pgTable('organizations', {
   reportingCurrency: text('reporting_currency').notNull(),
   timezone: text('timezone').notNull(),
   materialityTarget: text('materiality_target').notNull(),
+  retentionDays: integer('retention_days'),
+  retentionLastEnforcedAt: timestamp('retention_last_enforced_at', {
+    withTimezone: true,
+    mode: 'string',
+  }),
   isDemo: boolean('is_demo').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
     .notNull()
