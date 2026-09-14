@@ -31,7 +31,10 @@ describe('public research cost-trace replay', () => {
 
   it('runs the canonical Work MRI diagnosis on the measured research slice', async () => {
     const csv = await readFile(
-      new URL('../../fixtures/research/ainetcafe-public-source-sample.csv', import.meta.url),
+      new URL(
+        '../../fixtures/research/ainetcafe-public-source-sample.csv',
+        import.meta.url,
+      ),
       'utf8',
     );
     const diagnosis = diagnoseUsage({
