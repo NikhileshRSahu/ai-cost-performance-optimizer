@@ -422,7 +422,6 @@ export const jobs = pgTable(
   ],
 );
 
-
 export const pilotInvoiceRequests = pgTable(
   'pilot_invoice_requests',
   {
