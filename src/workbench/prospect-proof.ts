@@ -95,7 +95,14 @@ export function buildProspectProofPack(
     verifiedNetSavings:
       view.verifiedNetSavings === null
         ? null
-        : Object.freeze({ ...view.verifiedNetSavings }),
+        : Object.freeze({
+            numerator: view.verifiedNetSavings.exactNumerator,
+            denominator: view.verifiedNetSavings.exactDenominator,
+            currency: view.verifiedNetSavings.currency,
+            evidenceRef: view.verifiedNetSavings.evidenceRef,
+            formulaVersion: view.verifiedNetSavings.formulaVersion,
+            direction: view.verifiedNetSavings.direction,
+          }),
     diagnosticFacts: Object.freeze(
       view.diagnosticFacts.map((fact) =>
         Object.freeze({
