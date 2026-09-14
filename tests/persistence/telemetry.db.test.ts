@@ -127,9 +127,7 @@ describe('production telemetry persistence', () => {
       reusedBatch: true,
     });
 
-    const records = await database.db
-      .select()
-      .from(usageRecords);
+    const records = await database.db.select().from(usageRecords);
     expect(records).toHaveLength(1);
     expect(records[0]?.source).toBe('PRODUCTION_TELEMETRY');
   });
