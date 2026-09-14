@@ -178,3 +178,22 @@ test('guided synthetic walkthrough preselects demo mode', async ({ page }) => {
     page.getByText('Synthetic demo data — not a customer result.'),
   ).toHaveCount(0);
 });
+
+
+test('owner can issue a telemetry-only machine credential', async ({ page }) => {
+  await page.goto('/o/journey-org/telemetry');
+  await expect(
+    page.getByRole('heading', { name: 'Connect unattended AI workloads safely' }),
+  ).toBeVisible();
+
+  await page.getByLabel('Agent label').fill('e2e-production-agent');
+  await page
+    .getByRole('button', { name: 'Create telemetry credential' })
+    .click();
+
+  await expect(page.getByText('Copy now', { exact: true })).toBeVisible();
+  const token = page.getByLabel('Telemetry bearer token');
+  await expect(token).toHaveValue(/^aie_tlm_[a-f0-9]{32}\.[A-Za-z0-9_-]+$/);
+  await expect(page.getByText('e2e-production-agent').first()).toBeVisible();
+  await expectAccessible(page);
+});
