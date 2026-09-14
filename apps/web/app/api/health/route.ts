@@ -2,12 +2,21 @@ import { NextResponse } from 'next/server';
 import {
   buildOperationalEvent,
   elapsedMs,
-  emitOperationalEvent,
+  publishOperationalEvent,
   resolveRequestId,
 } from '../../../../../src/operations/observability';
 import { createDatabase } from '../../../../../src/persistence/database';
 
 export const dynamic = 'force-dynamic';
+
+async function publishHealthEvent(
+  event: Parameters<typeof publishOperationalEvent>[0],
+): Promise<void> {
+  await publishOperationalEvent(event, {
+    webhookUrl: process.env.OPS_ALERT_WEBHOOK_URL,
+    signingSecret: process.env.OPS_ALERT_WEBHOOK_SECRET,
+  });
+}
 
 export async function GET(request: Request) {
   const startedAt = Date.now();
@@ -15,7 +24,7 @@ export async function GET(request: Request) {
   const databaseUrl = process.env.DATABASE_URL;
 
   if (databaseUrl === undefined || databaseUrl.trim().length === 0) {
-    emitOperationalEvent(
+    await publishHealthEvent(
       buildOperationalEvent({
         eventName: 'health_check',
         requestId,
@@ -36,7 +45,7 @@ export async function GET(request: Request) {
   const database = createDatabase(databaseUrl);
   try {
     await database.pool.query('select 1');
-    emitOperationalEvent(
+    await publishHealthEvent(
       buildOperationalEvent({
         eventName: 'health_check',
         requestId,
@@ -55,7 +64,7 @@ export async function GET(request: Request) {
       { headers: { 'x-request-id': requestId } },
     );
   } catch {
-    emitOperationalEvent(
+    await publishHealthEvent(
       buildOperationalEvent({
         eventName: 'health_check',
         requestId,
