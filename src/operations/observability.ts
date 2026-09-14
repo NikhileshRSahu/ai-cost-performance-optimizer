@@ -151,7 +151,33 @@ export async function routeOperationalAlert(
   }
 
   const webhookUrl = input.webhookUrl?.trim();
-  if (webhookUrl === undefined || webhookUrl.length === 0) {
+  const signingSecret = input.signingSecret?.trim();
+  if (
+    webhookUrl === undefined ||
+    webhookUrl.length === 0 ||
+    signingSecret === undefined ||
+    signingSecret.length < 16
+  ) {
+    return Object.freeze({
+      routed: false,
+      delivered: false,
+      statusCode: null,
+      reason: 'NOT_CONFIGURED',
+    });
+  }
+
+  let parsedUrl: URL;
+  try {
+    parsedUrl = new URL(webhookUrl);
+  } catch {
+    return Object.freeze({
+      routed: false,
+      delivered: false,
+      statusCode: null,
+      reason: 'NOT_CONFIGURED',
+    });
+  }
+  if (parsedUrl.protocol !== 'https:') {
     return Object.freeze({
       routed: false,
       delivered: false,
@@ -164,13 +190,8 @@ export async function routeOperationalAlert(
   const headers: Record<string, string> = {
     'content-type': 'application/json',
     'user-agent': 'ai-efficiency-intelligence-alert-router/1',
+    'x-ai-efficiency-signature': signAlertBody(body, signingSecret),
   };
-  if (input.signingSecret !== undefined && input.signingSecret.length > 0) {
-    headers['x-ai-efficiency-signature'] = signAlertBody(
-      body,
-      input.signingSecret,
-    );
-  }
 
   const fetchImpl = input.fetchImpl ?? fetch;
   try {
