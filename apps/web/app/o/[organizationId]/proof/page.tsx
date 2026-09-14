@@ -46,8 +46,12 @@ export default async function ProspectProofPage({
         <span className="trust-chip">{pack.classification}</span>
       </header>
 
-      <section className={ready ? 'workflow-card' : 'workflow-card limitations'}>
-        <h2>{ready ? 'Private prospect proof ready' : 'Proof claim blocked'}</h2>
+      <section
+        className={ready ? 'workflow-card' : 'workflow-card limitations'}
+      >
+        <h2>
+          {ready ? 'Private prospect proof ready' : 'Proof claim blocked'}
+        </h2>
         <p>{pack.commercialSummary}</p>
         <dl className="evidence-list">
           <div>
@@ -64,7 +68,11 @@ export default async function ProspectProofPage({
           </div>
           <div>
             <dt>Customer-result claim</dt>
-            <dd>{pack.customerResultClaimAllowed ? 'Allowed from evidence' : 'Blocked'}</dd>
+            <dd>
+              {pack.customerResultClaimAllowed
+                ? 'Allowed from evidence'
+                : 'Blocked'}
+            </dd>
           </div>
           <div>
             <dt>Publication</dt>
@@ -129,7 +137,10 @@ export default async function ProspectProofPage({
       ) : null}
 
       <div className="action-row">
-        <Link className="primary-action" href={`/o/${organizationId}/proof/download`}>
+        <Link
+          className="primary-action"
+          href={`/o/${organizationId}/proof/download`}
+        >
           Download sanitized JSON proof pack
         </Link>
         <Link className="secondary-action" href={`/o/${organizationId}`}>
