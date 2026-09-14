@@ -76,7 +76,9 @@ describe('telemetry machine credentials and distributed rate limiting', () => {
 
     expect(issued.token).toMatch(/^aie_tlm_[a-f0-9]{32}\.[A-Za-z0-9_-]+$/);
 
-    const stored = (await database.db.select().from(telemetryCredentials)).at(0);
+    const stored = (await database.db.select().from(telemetryCredentials)).at(
+      0,
+    );
     expect(stored?.secretHash).toMatch(/^[a-f0-9]{64}$/);
     expect(stored?.secretHash).not.toContain(issued.token);
     expect(stored).not.toHaveProperty('token');

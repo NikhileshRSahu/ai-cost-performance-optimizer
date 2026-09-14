@@ -82,7 +82,8 @@ export async function POST(
       return NextResponse.json(
         {
           error: 'RATE_LIMITED',
-          message: 'Too many telemetry requests. Retry after the current window.',
+          message:
+            'Too many telemetry requests. Retry after the current window.',
         },
         {
           status: 429,

@@ -29,7 +29,8 @@ export type AuthenticatedTelemetryCredential = Readonly<{
 }>;
 
 function hashSecret(secret: string, pepper: string): string {
-  if (pepper.length < 16) throw new Error('TELEMETRY_CREDENTIAL_PEPPER_REQUIRED');
+  if (pepper.length < 16)
+    throw new Error('TELEMETRY_CREDENTIAL_PEPPER_REQUIRED');
   return createHmac('sha256', pepper).update(secret).digest('hex');
 }
 
@@ -51,7 +52,11 @@ function parseBearer(authorizationHeader: string | null): {
   return { credentialId: match[1], secret: match[2] };
 }
 
-function issueSecret(): { credentialId: string; secret: string; token: string } {
+function issueSecret(): {
+  credentialId: string;
+  secret: string;
+  token: string;
+} {
   const credentialId = randomUUID().replaceAll('-', '');
   const secret = randomBytes(32).toString('base64url');
   return {
@@ -252,7 +257,9 @@ export async function consumeDistributedRateLimit(
     limit: number;
     windowSeconds?: number;
   }>,
-): Promise<Readonly<{ allowed: boolean; count: number; retryAfterSeconds: number }>> {
+): Promise<
+  Readonly<{ allowed: boolean; count: number; retryAfterSeconds: number }>
+> {
   const windowSeconds = input.windowSeconds ?? 60;
   if (input.limit < 1 || windowSeconds < 1) {
     throw new Error('INVALID_RATE_LIMIT_CONFIGURATION');

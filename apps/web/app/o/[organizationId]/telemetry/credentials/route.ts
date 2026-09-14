@@ -71,7 +71,10 @@ export async function GET(
     return noStore({ credentials });
   } catch (error) {
     const safe = safeErrorFromUnknown(error);
-    return noStore({ error: safe.category, message: safe.message }, safe.status);
+    return noStore(
+      { error: safe.category, message: safe.message },
+      safe.status,
+    );
   } finally {
     await database.close();
   }
@@ -119,7 +122,10 @@ export async function POST(
     );
   } catch (error) {
     const safe = safeErrorFromUnknown(error);
-    return noStore({ error: safe.category, message: safe.message }, safe.status);
+    return noStore(
+      { error: safe.category, message: safe.message },
+      safe.status,
+    );
   } finally {
     await database.close();
   }
@@ -165,7 +171,10 @@ export async function PUT(
     });
   } catch (error) {
     const safe = safeErrorFromUnknown(error);
-    return noStore({ error: safe.category, message: safe.message }, safe.status);
+    return noStore(
+      { error: safe.category, message: safe.message },
+      safe.status,
+    );
   } finally {
     await database.close();
   }
@@ -205,7 +214,10 @@ export async function DELETE(
     return noStore({ revoked: true });
   } catch (error) {
     const safe = safeErrorFromUnknown(error);
-    return noStore({ error: safe.category, message: safe.message }, safe.status);
+    return noStore(
+      { error: safe.category, message: safe.message },
+      safe.status,
+    );
   } finally {
     await database.close();
   }

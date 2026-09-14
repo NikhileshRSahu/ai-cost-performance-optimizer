@@ -120,9 +120,7 @@ export const telemetryCredentials = pgTable(
       mode: 'string',
     }),
   },
-  (table) => [
-    index('telemetry_credentials_org_idx').on(table.organizationId),
-  ],
+  (table) => [index('telemetry_credentials_org_idx').on(table.organizationId)],
 );
 
 export const rateLimitWindows = pgTable(
