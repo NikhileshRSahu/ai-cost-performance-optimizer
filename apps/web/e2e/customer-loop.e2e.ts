@@ -201,7 +201,6 @@ test('owner can issue a telemetry-only machine credential', async ({
   await expectAccessible(page);
 });
 
-
 test('recovery states stay actionable and accessible', async ({ page }) => {
   await page.goto('/this-page-does-not-exist');
   await expect(

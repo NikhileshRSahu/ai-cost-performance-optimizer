@@ -75,7 +75,10 @@ export default async function OptimizationReportPage({
         error.message === 'LAB_EVIDENCE_INCOMPLETE')
     ) {
       return (
-        <section className="recovery-state" aria-labelledby="report-unavailable-title">
+        <section
+          className="recovery-state"
+          aria-labelledby="report-unavailable-title"
+        >
           <p className="eyebrow">Report unavailable</p>
           <h1 id="report-unavailable-title">
             This recommendation does not have complete report evidence.
@@ -85,7 +88,10 @@ export default async function OptimizationReportPage({
             go back to the organization overview.
           </p>
           <div className="action-row">
-            <Link className="primary-action" href={`/o/${organizationId}/benchmark`}>
+            <Link
+              className="primary-action"
+              href={`/o/${organizationId}/benchmark`}
+            >
               Return to benchmark
             </Link>
             <Link className="secondary-action" href={`/o/${organizationId}`}>
