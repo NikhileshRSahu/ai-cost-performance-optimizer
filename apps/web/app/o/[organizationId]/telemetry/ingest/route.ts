@@ -3,7 +3,7 @@ import { productionTelemetryBatchSchema } from '../../../../../../../src/efficie
 import {
   buildOperationalEvent,
   elapsedMs,
-  emitOperationalEvent,
+  publishOperationalEvent,
   resolveRequestId,
   type OperationalEvent,
   type OperationalStatus,
@@ -34,7 +34,7 @@ export async function POST(
   const route = '/o/:organizationId/telemetry/ingest';
   let actorKind: OperationalEvent['actorKind'] = 'ANONYMOUS';
 
-  function respond(
+  async function respond(
     body: unknown,
     statusCode: number,
     options: Readonly<{
@@ -46,23 +46,26 @@ export async function POST(
       headers?: Readonly<Record<string, string>>;
     }> = {},
   ) {
-    emitOperationalEvent(
-      buildOperationalEvent({
-        eventName: options.eventName ?? 'telemetry_ingest',
-        requestId,
-        route,
-        status:
-          options.status ??
-          (statusCode >= 200 && statusCode < 300 ? 'OK' : 'ERROR'),
-        statusCode,
-        durationMs: elapsedMs(startedAt),
-        organizationId,
-        actorKind,
-        safeErrorCategory: options.safeErrorCategory,
-        acceptedCount: options.acceptedCount,
-        skippedCount: options.skippedCount,
-      }),
-    );
+    const event = buildOperationalEvent({
+      eventName: options.eventName ?? 'telemetry_ingest',
+      requestId,
+      route,
+      status:
+        options.status ??
+        (statusCode >= 200 && statusCode < 300 ? 'OK' : 'ERROR'),
+      statusCode,
+      durationMs: elapsedMs(startedAt),
+      organizationId,
+      actorKind,
+      safeErrorCategory: options.safeErrorCategory,
+      acceptedCount: options.acceptedCount,
+      skippedCount: options.skippedCount,
+    });
+
+    await publishOperationalEvent(event, {
+      webhookUrl: process.env.OPS_ALERT_WEBHOOK_URL,
+      signingSecret: process.env.OPS_ALERT_WEBHOOK_SECRET,
+    });
 
     return NextResponse.json(body, {
       status: statusCode,
