@@ -1,33 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import type { BenchmarkEvaluation } from '../../src/benchmarks/evaluate.js';
-import { replayHistoricalCounterfactual } from '../../src/efficiency/counterfactual-replay.js';
+import {
+  replayHistoricalCounterfactual,
+  type ReplayBenchmarkEvidence,
+} from '../../src/efficiency/counterfactual-replay.js';
 
 function benchmark(
-  overrides: Partial<BenchmarkEvaluation> = {},
-): BenchmarkEvaluation {
+  overrides: Partial<ReplayBenchmarkEvidence> = {},
+): ReplayBenchmarkEvidence {
   return {
     decision: 'OPTIMIZE',
-    reasons: [],
-    pairedValidCases: 30,
-    metrics: {
-      candidateQuality: { numerator: '19', denominator: '20' },
-      candidateP95LatencyMs: { numerator: '700', denominator: '1' },
-      candidateFailureRate: { numerator: '0', denominator: '1' },
-      currentComparableCost: { numerator: '100', denominator: '1' },
-      candidateComparableCost: { numerator: '70', denominator: '1' },
-      netSaving: { numerator: '30', denominator: '1' },
-    },
-    confidence: {
-      version: 'confidence-v1',
-      score: 0.9,
-      band: 'HIGH',
-      components: {
-        dataCompleteness: 1,
-        benchmarkStrength: 1,
-        sampleAdequacy: 1,
-        repeatability: 0.5,
-      },
-    },
+    confidenceBand: 'HIGH',
+    candidateQuality: { numerator: '19', denominator: '20' },
+    candidateP95LatencyMs: { numerator: '700', denominator: '1' },
+    currentComparableCost: { numerator: '100', denominator: '1' },
+    candidateComparableCost: { numerator: '70', denominator: '1' },
     ...overrides,
   };
 }
@@ -60,10 +46,7 @@ describe('replayHistoricalCounterfactual', () => {
     const result = replayHistoricalCounterfactual({
       historicalBaselineCost: '1000',
       historicalWindowComparable: true,
-      benchmark: benchmark({
-        decision: 'DO_NOT_CHANGE',
-        reasons: ['QUALITY_BELOW_REQUIREMENT'],
-      }),
+      benchmark: benchmark({ decision: 'DO_NOT_CHANGE' }),
     });
 
     expect(result.status).toBe('INELIGIBLE_BENCHMARK');
@@ -88,10 +71,7 @@ describe('replayHistoricalCounterfactual', () => {
       historicalBaselineCost: '1000',
       historicalWindowComparable: true,
       benchmark: benchmark({
-        metrics: {
-          ...benchmark().metrics,
-          currentComparableCost: { numerator: '0', denominator: '1' },
-        },
+        currentComparableCost: { numerator: '0', denominator: '1' },
       }),
     });
 
