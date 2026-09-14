@@ -449,7 +449,6 @@ export const pilotInvoiceRequests = pgTable(
   ],
 );
 
-
 export const designPartnerPermissions = pgTable(
   'design_partner_permissions',
   {
@@ -460,8 +459,10 @@ export const designPartnerPermissions = pgTable(
     writtenPermissionRef: text('written_permission_ref').notNull(),
     scopes: jsonb('scopes').$type<readonly string[]>().notNull(),
     status: text('status').notNull(),
-    grantedAt: timestamp('granted_at', { withTimezone: true, mode: 'string' })
-      .notNull(),
+    grantedAt: timestamp('granted_at', {
+      withTimezone: true,
+      mode: 'string',
+    }).notNull(),
     revokedAt: timestamp('revoked_at', { withTimezone: true, mode: 'string' }),
     recordedByUserId: text('recorded_by_user_id').notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
