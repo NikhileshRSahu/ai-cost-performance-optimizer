@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { diagnoseSanitizedHistory } from '../../../../../../../src/efficiency/history-diagnosis';
 import { sanitizedAiExportSchema } from '../../../../../../../src/efficiency/history-contracts';
 import { requireOrganizationAccess } from '../../../../../../../src/persistence/tenant';
+import { safeErrorFromUnknown } from '../../../../../../../src/workbench/safe-errors';
 import { assertUploadWithinLimit } from '../../../../../../../src/workbench/upload-limits';
 import { resolveRuntimeSession } from '../../../../../lib/runtime-session';
 
