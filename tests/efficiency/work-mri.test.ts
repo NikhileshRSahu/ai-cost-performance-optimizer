@@ -11,10 +11,6 @@ describe('buildWorkMriSnapshot', () => {
         amount: '1200.00',
         currency: 'USD',
         evidenceRef: 'usage-window-1',
-        evidence: {
-          amount: '1200.00',
-          currency: 'USD',
-        },
       },
       strongestAction: null,
       verifiedNetSavings: null,
