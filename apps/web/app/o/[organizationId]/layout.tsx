@@ -41,6 +41,7 @@ export default async function OrganizationLayout({
           <Link href={`/o/${organizationId}/history`}>AI history</Link>
           <Link href={`/o/${organizationId}/workloads`}>Workloads</Link>
           <Link href={`/o/${organizationId}/benchmark`}>Benchmark</Link>
+          <Link href={`/o/${organizationId}/telemetry`}>Telemetry</Link>
           <Link href={`/o/${organizationId}/data`}>Data &amp; privacy</Link>
         </nav>
         <p className="sidebar-note">
