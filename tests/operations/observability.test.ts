@@ -202,9 +202,7 @@ describe('safe operational observability', () => {
       throw new Error('EXPECTED_STRING_ALERT_BODY');
     }
     expect(requestBody).toContain('"severity":"CRITICAL"');
-    expect(requestBody).toContain(
-      '"safeErrorCategory":"DATABASE_UNAVAILABLE"',
-    );
+    expect(requestBody).toContain('"safeErrorCategory":"DATABASE_UNAVAILABLE"');
     expect(requestBody).not.toMatch(
       /authorization|prompt|response|bearer|password|customer content/i,
     );
