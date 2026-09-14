@@ -6,3 +6,4 @@ export * from './hypotheses.js';
 export * from './history-contracts.js';
 export * from './history-diagnosis.js';
 export * from './counterfactual-replay.js';
+export * from './lab-replay.js';
