@@ -442,8 +442,9 @@ export const pilotInvoiceRequests = pgTable(
       .defaultNow(),
   },
   (table) => [
-    index('pilot_invoice_requests_org_status_idx').on(
+    uniqueIndex('pilot_invoice_requests_org_plan_status_uq').on(
       table.organizationId,
+      table.plan,
       table.status,
     ),
   ],
