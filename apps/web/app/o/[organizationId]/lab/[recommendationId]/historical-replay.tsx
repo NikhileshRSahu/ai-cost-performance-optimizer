@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type ReplayResult = Readonly<{
   status: 'PROJECTED' | 'INELIGIBLE_BENCHMARK' | 'INELIGIBLE_BASELINE';
@@ -24,6 +24,11 @@ export function HistoricalReplay({
   const [result, setResult] = useState<ReplayResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
 
   async function replay(formData: FormData) {
     setRunning(true);
@@ -102,8 +107,12 @@ export function HistoricalReplay({
             basis for this projection.
           </span>
         </label>
-        <button className="primary-button" type="submit" disabled={running}>
-          {running ? 'Replaying…' : 'Replay historical cost'}
+        <button
+          className="primary-button"
+          type="submit"
+          disabled={!hydrated || running}
+        >
+          {!hydrated ? 'Preparing replay…' : running ? 'Replaying…' : 'Replay historical cost'}
         </button>
       </form>
 
