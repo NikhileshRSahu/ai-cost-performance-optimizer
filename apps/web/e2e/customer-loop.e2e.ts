@@ -71,7 +71,13 @@ async function reachVerification(
       'I confirm this window represents a comparable workload and volume basis for this projection.',
     )
     .check();
+  const replayResponsePromise = page.waitForResponse((response) =>
+    response.url().includes('/replay'),
+  );
   await page.getByRole('button', { name: 'Replay historical cost' }).click();
+  const replayResponse = await replayResponsePromise;
+  const replayBody = await replayResponse.text();
+  expect(replayResponse.status(), replayBody).toBe(200);
   await expect(page.getByText('Projected gross saving')).toBeVisible();
   await expect(
     page.getByText(
