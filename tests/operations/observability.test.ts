@@ -88,7 +88,7 @@ describe('safe operational observability', () => {
     expect(resolveRequestId('  abc-123  ')).toBe('abc-123');
   });
 
-  it('classifies only operationally meaningful failures for external alerting', () => {
+  it('classifies alert-worthy failures deterministically', () => {
     const healthy = buildOperationalEvent({
       eventName: 'health_check',
       requestId: 'healthy',
@@ -129,7 +129,7 @@ describe('safe operational observability', () => {
     });
   });
 
-  it('does not call an external webhook for non-alertable success events', async () => {
+  it('skips webhook delivery for successful events', async () => {
     const fetchImpl = vi.fn<typeof fetch>();
     const event = buildOperationalEvent({
       eventName: 'telemetry_ingest',
@@ -157,7 +157,7 @@ describe('safe operational observability', () => {
     expect(fetchImpl).not.toHaveBeenCalled();
   });
 
-  it('sends a signed allowlisted alert payload without customer content', async () => {
+  it('sends signed allowlisted alerts', async () => {
     const fetchImpl = vi
       .fn<typeof fetch>()
       .mockResolvedValue(new Response(null, { status: 204 }));
@@ -210,7 +210,7 @@ describe('safe operational observability', () => {
     );
   });
 
-  it('does not route externally when webhook configuration is incomplete', async () => {
+  it('skips routing with incomplete webhook config', async () => {
     const fetchImpl = vi.fn<typeof fetch>();
     const event = buildOperationalEvent({
       eventName: 'health_check',
