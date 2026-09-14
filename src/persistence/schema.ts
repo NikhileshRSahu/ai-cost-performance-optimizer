@@ -448,3 +448,35 @@ export const pilotInvoiceRequests = pgTable(
     ),
   ],
 );
+
+export const designPartnerPermissions = pgTable(
+  'design_partner_permissions',
+  {
+    organizationId: text('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    evidenceRef: text('evidence_ref').notNull(),
+    writtenPermissionRef: text('written_permission_ref').notNull(),
+    scopes: jsonb('scopes').$type<readonly string[]>().notNull(),
+    status: text('status').notNull(),
+    grantedAt: timestamp('granted_at', {
+      withTimezone: true,
+      mode: 'string',
+    }).notNull(),
+    revokedAt: timestamp('revoked_at', { withTimezone: true, mode: 'string' }),
+    recordedByUserId: text('recorded_by_user_id').notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    primaryKey({
+      name: 'design_partner_permissions_org_evidence_pk',
+      columns: [table.organizationId, table.evidenceRef],
+    }),
+    index('design_partner_permissions_org_status_idx').on(
+      table.organizationId,
+      table.status,
+    ),
+  ],
+);

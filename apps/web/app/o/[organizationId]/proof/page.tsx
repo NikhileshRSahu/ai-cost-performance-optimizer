@@ -143,6 +143,12 @@ export default async function ProspectProofPage({
         >
           Download sanitized JSON proof pack
         </Link>
+        <Link
+          className="secondary-action"
+          href={`/o/${organizationId}/proof/permission`}
+        >
+          Manage written permission
+        </Link>
         <Link className="secondary-action" href={`/o/${organizationId}`}>
           Back to Work MRI
         </Link>

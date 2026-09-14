@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm';
 import type { PersistenceDatabase } from '../persistence/database.js';
 import {
+  designPartnerPermissions,
   implementationRecords,
   importRuns,
   jobs,
@@ -39,6 +40,9 @@ export async function purgeOrganizationEvidence(
   }
 
   await input.db.transaction(async (tx) => {
+    await tx
+      .delete(designPartnerPermissions)
+      .where(eq(designPartnerPermissions.organizationId, input.organizationId));
     await tx
       .delete(verificationWindows)
       .where(eq(verificationWindows.organizationId, input.organizationId));

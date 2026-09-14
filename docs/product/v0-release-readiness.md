@@ -100,7 +100,7 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Clear positioning around AI Efficiency Intelligence rather than generic FinOps.
 - [x] Free/low-friction CSV-first value path.
 - [ ] One sanitized prospect dataset producing a credible end-to-end MRI. Product now includes an evidence-bounded prospect proof-pack surface and sanitized JSON export; this gate remains open until a genuine prospect dataset is used.
-- [ ] One design-partner benchmark with written permission to use results.
+- [ ] One design-partner benchmark with written permission to use results. Product now includes an OWNER-only written-permission registry with scope and revocation tracking; this gate remains open until a real partner grants permission.
 - [x] Founding-pilot pricing page.
 - [x] Owner-authenticated fixed-price $299 Optimization Audit invoice-request flow with persisted request state; the $999+ sprint remains scoped before invoicing.
 - [ ] Terms, privacy notice, and data-processing language reviewed for the launch jurisdiction.

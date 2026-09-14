@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm';
 import type { PersistenceDatabase } from '../persistence/database.js';
 import {
+  designPartnerPermissions,
   implementationRecords,
   importRuns,
   jobs,
@@ -20,6 +21,7 @@ export type OrganizationEvidenceExport = Readonly<{
   organizationId: string;
   data: Readonly<{
     workloads: readonly unknown[];
+    designPartnerPermissions: readonly unknown[];
     importRuns: readonly unknown[];
     usageRecords: readonly unknown[];
     recommendations: readonly unknown[];
@@ -47,6 +49,7 @@ export async function exportOrganizationEvidence(
 
   const [
     workloadRows,
+    permissionRows,
     importRows,
     usageRows,
     recommendationRows,
@@ -60,6 +63,10 @@ export async function exportOrganizationEvidence(
       .select()
       .from(workloads)
       .where(eq(workloads.organizationId, input.organizationId)),
+    input.db
+      .select()
+      .from(designPartnerPermissions)
+      .where(eq(designPartnerPermissions.organizationId, input.organizationId)),
     input.db
       .select()
       .from(importRuns)
@@ -100,6 +107,7 @@ export async function exportOrganizationEvidence(
     organizationId: input.organizationId,
     data: Object.freeze({
       workloads: Object.freeze(workloadRows),
+      designPartnerPermissions: Object.freeze(permissionRows),
       importRuns: Object.freeze(importRows),
       usageRecords: Object.freeze(usageRows),
       recommendations: Object.freeze(recommendationRows),

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  designPartnerPermissions,
   implementationRecords,
   importRuns,
   jobs,
@@ -27,6 +28,7 @@ describe('persistent workbench schema', () => {
       telemetryCredentials,
       rateLimitWindows,
       ledgerEvents,
+      designPartnerPermissions,
       implementationRecords,
       verificationWindows,
       jobs,
