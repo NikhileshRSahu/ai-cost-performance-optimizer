@@ -24,10 +24,10 @@ export default function RootLayout({
               AI Efficiency Intelligence
             </Link>
             <nav className="public-nav" aria-label="Public">
+              <Link href="/research">Research</Link>
+              <Link href="/methodology">Methodology</Link>
               <Link href="/pricing">Pricing</Link>
-              <span className="environment-badge">
-                Work MRI · Test · Verify
-              </span>
+              <span className="environment-badge">Public beta</span>
             </nav>
           </div>
         </header>
