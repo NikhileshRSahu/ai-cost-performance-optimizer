@@ -12,7 +12,9 @@ import { RecommendationCard } from '../../../components/recommendation-card';
 import { WorkMri } from '../../../components/work-mri';
 import { DASHBOARD_COPY } from '../../../lib/dashboard-copy';
 import { loadFounderDashboardEvidence } from '../../../lib/dashboard-data';
+import { hasGoogleAuthConfiguration } from '../../../lib/auth';
 import { resolveRuntimeSession } from '../../../lib/runtime-session';
+import { SignOutButton } from '../../../components/sign-out-button';
 
 export const dynamic = 'force-dynamic';
 
@@ -106,9 +108,12 @@ export default async function FounderDashboardPage({
             savings remain separate throughout the workflow.
           </p>
         </div>
-        <span className="quality-chip">
-          {DASHBOARD_COPY.dataQualityLabel}: {view.dataQuality}
-        </span>
+        <div className="dashboard-actions">
+          <span className="quality-chip">
+            {DASHBOARD_COPY.dataQualityLabel}: {view.dataQuality}
+          </span>
+          {hasGoogleAuthConfiguration() ? <SignOutButton /> : null}
+        </div>
       </header>
 
       <div className="metrics-grid">
