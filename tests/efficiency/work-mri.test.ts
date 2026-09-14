@@ -21,6 +21,10 @@ describe('buildWorkMriSnapshot', () => {
         label: 'Observed AI spend',
         value: 'USD 1200.00',
         evidenceRef: 'usage-window-1',
+        evidence: {
+          amount: '1200.00',
+          currency: 'USD',
+        },
       },
     ]);
     expect(snapshot.withheldClaims.join(' ')).toContain(
