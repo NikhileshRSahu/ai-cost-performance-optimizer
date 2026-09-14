@@ -179,11 +179,14 @@ test('guided synthetic walkthrough preselects demo mode', async ({ page }) => {
   ).toHaveCount(0);
 });
 
-
-test('owner can issue a telemetry-only machine credential', async ({ page }) => {
+test('owner can issue a telemetry-only machine credential', async ({
+  page,
+}) => {
   await page.goto('/o/journey-org/telemetry');
   await expect(
-    page.getByRole('heading', { name: 'Connect unattended AI workloads safely' }),
+    page.getByRole('heading', {
+      name: 'Connect unattended AI workloads safely',
+    }),
   ).toBeVisible();
 
   await page.getByLabel('Agent label').fill('e2e-production-agent');

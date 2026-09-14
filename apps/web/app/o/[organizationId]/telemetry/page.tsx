@@ -55,8 +55,8 @@ export default async function TelemetryPage({
           </div>
         </div>
         <p>
-          Send a bearer token to <code>/o/{organizationId}/telemetry</code>.
-          The endpoint is bounded to 120 requests per minute per credential and
+          Send a bearer token to <code>/o/{organizationId}/telemetry</code>. The
+          endpoint is bounded to 120 requests per minute per credential and
           returns HTTP 429 with <code>Retry-After</code> when the shared
           PostgreSQL rate window is exceeded.
         </p>

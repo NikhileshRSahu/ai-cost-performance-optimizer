@@ -136,7 +136,6 @@ For each production release record:
 - rollback image,
 - material known limitations.
 
-
 ## Unattended telemetry credentials
 
 When machine telemetry is enabled:
