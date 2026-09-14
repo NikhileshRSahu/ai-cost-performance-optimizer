@@ -75,7 +75,7 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Print-optimized report.
 - [x] Responsive layouts.
 - [x] Accessibility checks in E2E.
-- [ ] First-run guided sample with unmistakable synthetic-data labeling.
+- [x] First-run guided synthetic sample with preselected demo labeling and downloadable fixtures.
 - [ ] Empty/error/recovery states reviewed screen-by-screen.
 - [x] User-facing evidence drill-down for MRI metrics with structured calculation evidence.
 
@@ -84,8 +84,10 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Build, unit, database, E2E, audit, secret-scan, and production-container CI gate.
 - [x] Production deployment and rollback runbook.
 - [ ] Database backup/restore drill.
-- [ ] Observability and safe-error taxonomy for production.
-- [ ] Rate limiting and abuse controls.
+- [x] Stable safe-error taxonomy that prevents raw internal exception leakage.
+- [ ] Production observability sink and dashboards.
+- [ ] Distributed rate limiting.
+- [x] Server-side upload-size abuse controls for usage, benchmark, and sanitized-history evidence.
 - [x] Incident severity and response process.
 - [ ] Named production incident contact/escalation rotation.
 
