@@ -1,8 +1,6 @@
 import { betterAuth } from 'better-auth';
 import { Pool } from 'pg';
 
-let cachedAuth: ReturnType<typeof betterAuth> | null = null;
-
 export function hasGoogleAuthConfiguration(): boolean {
   return [
     process.env.DATABASE_URL,
@@ -21,16 +19,14 @@ function requiredEnvironment(name: string): string {
   return value;
 }
 
-export function getWebAuth(): ReturnType<typeof betterAuth> {
-  if (cachedAuth !== null) return cachedAuth;
-
+function createWebAuth() {
   const databaseUrl = requiredEnvironment('DATABASE_URL');
   const baseURL = requiredEnvironment('BETTER_AUTH_URL');
   const secret = requiredEnvironment('BETTER_AUTH_SECRET');
   const clientId = requiredEnvironment('GOOGLE_CLIENT_ID');
   const clientSecret = requiredEnvironment('GOOGLE_CLIENT_SECRET');
 
-  cachedAuth = betterAuth({
+  return betterAuth({
     appName: 'Proovance',
     baseURL,
     secret,
@@ -51,6 +47,13 @@ export function getWebAuth(): ReturnType<typeof betterAuth> {
       },
     },
   });
+}
 
+type WebAuth = ReturnType<typeof createWebAuth>;
+
+let cachedAuth: WebAuth | null = null;
+
+export function getWebAuth(): WebAuth {
+  cachedAuth ??= createWebAuth();
   return cachedAuth;
 }
