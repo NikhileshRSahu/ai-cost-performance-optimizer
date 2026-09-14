@@ -1150,3 +1150,37 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+
+
+.evidence-drilldown {
+  margin-top: 0.75rem;
+  border-top: 1px solid #d8e0e8;
+  padding-top: 0.75rem;
+}
+
+.evidence-drilldown summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.evidence-drilldown dl {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.75rem 0 0;
+}
+
+.evidence-drilldown dl > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 0.75rem;
+}
+
+.evidence-drilldown dt {
+  color: #596675;
+}
+
+.evidence-drilldown dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
