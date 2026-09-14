@@ -31,15 +31,17 @@ export function HistoricalReplay({
     setResult(null);
 
     try {
+      const baselineEntry = formData.get('historicalBaselineCost');
+      const historicalBaselineCost =
+        typeof baselineEntry === 'string' ? baselineEntry : '';
+
       const response = await fetch(
         '/o/' + organizationId + '/lab/' + recommendationId + '/replay',
         {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({
-            historicalBaselineCost: String(
-              formData.get('historicalBaselineCost') ?? '',
-            ),
+            historicalBaselineCost,
             historicalWindowComparable:
               formData.get('historicalWindowComparable') === 'true',
           }),
