@@ -38,7 +38,8 @@ export function safeErrorFromUnknown(error: unknown): SafeError {
   if (
     code === 'RECOMMENDATION_NOT_FOUND' ||
     code === 'WORKLOAD_NOT_FOUND' ||
-    code === 'ORGANIZATION_NOT_FOUND'
+    code === 'ORGANIZATION_NOT_FOUND' ||
+    code === 'TELEMETRY_CREDENTIAL_NOT_FOUND'
   ) {
     return safe('NOT_FOUND', 404);
   }
@@ -52,7 +53,8 @@ export function safeErrorFromUnknown(error: unknown): SafeError {
     code === 'DATA_DELETION_CONFIRMATION_MISMATCH' ||
     code === 'DUPLICATE_TELEMETRY_EVENT_ID' ||
     code === 'INVALID_TELEMETRY_JSON' ||
-    code === 'INVALID_TELEMETRY_SCHEMA'
+    code === 'INVALID_TELEMETRY_SCHEMA' ||
+    code === 'INVALID_TELEMETRY_CREDENTIAL_LABEL'
   ) {
     return safe('INVALID_INPUT', 400);
   }
