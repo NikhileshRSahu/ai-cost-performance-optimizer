@@ -30,13 +30,11 @@ export default async function PilotPage({
   }
 
   const canRequestInvoice = context.role === 'OWNER';
-  let pendingRequest:
-    | Readonly<{
-        id: string;
-        contactEmail: string;
-        companyName: string;
-      }>
-    | null = null;
+  let pendingRequest: Readonly<{
+    id: string;
+    contactEmail: string;
+    companyName: string;
+  }> | null = null;
 
   if (canRequestInvoice) {
     const database = createDatabase(databaseUrl);
@@ -71,8 +69,8 @@ export default async function PilotPage({
           <h1>Turn one optimization decision into measurable savings.</h1>
           <p className="lede">
             The fixed-price audit covers one workload, one prioritized
-            hypothesis, explicit quality constraints, a controlled benchmark,
-            an implementation plan, and a decision-ready report.
+            hypothesis, explicit quality constraints, a controlled benchmark, an
+            implementation plan, and a decision-ready report.
           </p>
         </div>
         <span className="quality-chip">USD $299 one-time</span>
@@ -83,8 +81,8 @@ export default async function PilotPage({
           <strong>Invoice request recorded.</strong>{' '}
           {pendingRequest === null ? (
             <>
-              Your request is tied to this organization and remains pending until
-              the founding-pilot invoice is issued.
+              Your request is tied to this organization and remains pending
+              until the founding-pilot invoice is issued.
             </>
           ) : (
             <>
@@ -134,7 +132,10 @@ export default async function PilotPage({
               This records a billing request only. It does not charge a card or
               mark the pilot as paid.
             </p>
-            <form action={submitPilotInvoiceRequest} className="dashboard-stack">
+            <form
+              action={submitPilotInvoiceRequest}
+              className="dashboard-stack"
+            >
               <input
                 type="hidden"
                 name="organizationId"
