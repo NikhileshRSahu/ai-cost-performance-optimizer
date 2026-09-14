@@ -31,6 +31,21 @@ export function WorkMri({ snapshot }: Readonly<{ snapshot: WorkMriSnapshot }>) {
               <span className="metric-detail">
                 Evidence: {fact.evidenceRef ?? 'not available'}
               </span>
+              <details className="evidence-drilldown">
+                <summary>Show calculation evidence</summary>
+                {Object.keys(fact.evidence).length === 0 ? (
+                  <p>No structured calculation evidence is available.</p>
+                ) : (
+                  <dl>
+                    {Object.entries(fact.evidence).map(([key, value]) => (
+                      <div key={key}>
+                        <dt>{key}</dt>
+                        <dd>{value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
+              </details>
             </article>
           ))
         )}
