@@ -50,7 +50,9 @@ describe('prospect proof pack', () => {
     expect(pack.classification).toBe('SYNTHETIC_DEMO');
     expect(pack.customerResultClaimAllowed).toBe(false);
     expect(pack.publicationPermissionRequired).toBe(true);
-    expect(pack.commercialSummary).toContain('never as customer or prospect proof');
+    expect(pack.commercialSummary).toContain(
+      'never as customer or prospect proof',
+    );
   });
 
   it('requires ready usage evidence and a strongest action', () => {
