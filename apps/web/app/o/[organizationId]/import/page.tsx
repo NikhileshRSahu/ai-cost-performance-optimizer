@@ -195,8 +195,24 @@ export default async function ImportPage({
           </dl>
 
           {imported.status === 'FAILED' ? (
-            <div className="blocking-note">
-              Analysis is blocked because no valid usage rows were accepted.
+            <div className="recovery-stack">
+              <div className="blocking-note">
+                Analysis is blocked because no valid usage rows were accepted.
+              </div>
+              <div className="action-row">
+                <Link
+                  className="primary-action"
+                  href={'/o/' + organizationId + '/import'}
+                >
+                  Try another CSV
+                </Link>
+                <Link
+                  className="secondary-action"
+                  href={'/o/' + organizationId}
+                >
+                  Return to overview
+                </Link>
+              </div>
             </div>
           ) : (
             <div className="action-row">
