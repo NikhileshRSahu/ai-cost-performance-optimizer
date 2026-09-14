@@ -16,5 +16,5 @@ ALTER TABLE "pilot_invoice_requests"
   FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id")
   ON DELETE cascade ON UPDATE no action;
 --> statement-breakpoint
-CREATE INDEX "pilot_invoice_requests_org_status_idx"
-  ON "pilot_invoice_requests" USING btree ("organization_id","status");
+CREATE UNIQUE INDEX "pilot_invoice_requests_org_plan_status_uq"
+  ON "pilot_invoice_requests" USING btree ("organization_id","plan","status");
