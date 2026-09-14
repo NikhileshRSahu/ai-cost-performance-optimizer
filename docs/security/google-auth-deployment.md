@@ -50,6 +50,7 @@ The application does not auto-migrate auth tables on normal requests.
 ## Launch checklist
 
 Before production enablement:
+
 1. Set the final domain in BETTER_AUTH_URL.
 2. Register the exact production callback URI in Google Cloud.
 3. Generate and store BETTER_AUTH_SECRET in the deployment secret manager.
