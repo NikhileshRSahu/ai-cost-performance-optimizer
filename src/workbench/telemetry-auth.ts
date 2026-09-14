@@ -49,7 +49,10 @@ function parseBearer(authorizationHeader: string | null): {
     authorizationHeader.trim(),
   );
   if (match === null) return null;
-  return { credentialId: match[1], secret: match[2] };
+  const credentialId = match[1];
+  const secret = match[2];
+  if (credentialId === undefined || secret === undefined) return null;
+  return { credentialId, secret };
 }
 
 function issueSecret(): {
