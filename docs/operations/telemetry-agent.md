@@ -10,7 +10,7 @@ The telemetry schema rejects raw prompt and response fields.
 
 An organization owner opens:
 
-`/o/<organizationId>/telemetry`
+`/o/<organizationId>/telemetry/ingest`
 
 Create a labeled credential such as `production-agent`.
 
