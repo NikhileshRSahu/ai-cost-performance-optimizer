@@ -4,6 +4,7 @@ import {
   implementationRecords,
   importRuns,
   jobs,
+  pilotInvoiceRequests,
   ledgerEvents,
   recommendations,
   usageRecords,
@@ -57,6 +58,9 @@ export async function purgeOrganizationEvidence(
       .delete(importRuns)
       .where(eq(importRuns.organizationId, input.organizationId));
     await tx.delete(jobs).where(eq(jobs.organizationId, input.organizationId));
+    await tx
+      .delete(pilotInvoiceRequests)
+      .where(eq(pilotInvoiceRequests.organizationId, input.organizationId));
     await tx
       .delete(workloads)
       .where(eq(workloads.organizationId, input.organizationId));
