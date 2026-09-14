@@ -1247,3 +1247,19 @@ h1 {
     flex-direction: column;
   }
 }
+
+
+.recovery-state {
+  max-width: 760px;
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.25rem, 4vw, 2.25rem);
+  border: 1px solid #d5dce5;
+  border-radius: 1rem;
+  background: #ffffff;
+  box-shadow: 0 8px 28px rgb(31 42 55 / 5%);
+}
+
+.recovery-state .lede {
+  margin-top: 0;
+}
