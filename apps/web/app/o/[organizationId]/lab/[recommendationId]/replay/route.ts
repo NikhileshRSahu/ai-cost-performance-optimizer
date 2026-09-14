@@ -29,6 +29,27 @@ function display(
   );
 }
 
+async function replayInput(request: Request): Promise<unknown> {
+  const raw = await request.text();
+  if (raw.trim().length > 0) {
+    try {
+      return JSON.parse(raw) as unknown;
+    } catch {
+      return null;
+    }
+  }
+
+  const historicalBaselineCost = request.headers.get(
+    'x-replay-baseline-cost',
+  );
+  const comparable = request.headers.get('x-replay-window-comparable');
+  if (historicalBaselineCost === null || comparable === null) return null;
+  return {
+    historicalBaselineCost,
+    historicalWindowComparable: comparable === 'true',
+  };
+}
+
 export async function POST(
   request: Request,
   context: {
@@ -42,7 +63,7 @@ export async function POST(
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
 
-  const parsed = requestSchema.safeParse(await request.json());
+  const parsed = requestSchema.safeParse(await replayInput(request));
   if (!parsed.success) {
     return NextResponse.json(
       { error: 'INVALID_REPLAY_INPUT' },
