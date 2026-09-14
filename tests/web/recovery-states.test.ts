@@ -16,7 +16,9 @@ describe('recovery states', () => {
       expect(page).toContain(
         'Internal exception details are intentionally withheld from this screen.',
       );
-      expect(page).not.toMatch(/error\.message|error\.stack|JSON\.stringify\(error/i);
+      expect(page).not.toMatch(
+        /error\.message|error\.stack|JSON\.stringify\(error/i,
+      );
       expect(page).toMatch(/Retry/);
       expect(page).toContain('Return home');
     }
@@ -42,7 +44,9 @@ describe('recovery states', () => {
 
     expect(rootLoading).toContain('aria-busy="true"');
     expect(organizationLoading).toContain('aria-busy="true"');
-    expect(organizationLoading).toContain('Existing evidence remains unchanged');
+    expect(organizationLoading).toContain(
+      'Existing evidence remains unchanged',
+    );
   });
 
   it('keeps not-found and unauthorized states actionable', async () => {
