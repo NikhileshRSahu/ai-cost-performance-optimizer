@@ -100,14 +100,18 @@ export function LlmCostCalculator() {
     <div className="calculator-shell">
       <form
         className="calculator-form"
-        onSubmit={(event) => event.preventDefault()}
+        onSubmit={(event) => {
+          event.preventDefault();
+        }}
       >
         <label>
           <span>Requests per month</span>
           <input
             inputMode="numeric"
             value={requests}
-            onChange={(event) => setRequests(event.target.value)}
+            onChange={(event) => {
+              setRequests(event.target.value);
+            }}
             aria-describedby="requests-help"
           />
           <small id="requests-help">Whole requests, no commas.</small>
@@ -118,7 +122,9 @@ export function LlmCostCalculator() {
           <input
             inputMode="numeric"
             value={inputTokens}
-            onChange={(event) => setInputTokens(event.target.value)}
+            onChange={(event) => {
+              setInputTokens(event.target.value);
+            }}
           />
         </label>
 
@@ -127,7 +133,9 @@ export function LlmCostCalculator() {
           <input
             inputMode="numeric"
             value={outputTokens}
-            onChange={(event) => setOutputTokens(event.target.value)}
+            onChange={(event) => {
+              setOutputTokens(event.target.value);
+            }}
           />
         </label>
 
@@ -136,7 +144,9 @@ export function LlmCostCalculator() {
           <input
             inputMode="decimal"
             value={inputRate}
-            onChange={(event) => setInputRate(event.target.value)}
+            onChange={(event) => {
+              setInputRate(event.target.value);
+            }}
           />
         </label>
 
@@ -145,7 +155,9 @@ export function LlmCostCalculator() {
           <input
             inputMode="decimal"
             value={outputRate}
-            onChange={(event) => setOutputRate(event.target.value)}
+            onChange={(event) => {
+              setOutputRate(event.target.value);
+            }}
           />
         </label>
 
@@ -153,7 +165,9 @@ export function LlmCostCalculator() {
           <span>Display currency</span>
           <select
             value={currency}
-            onChange={(event) => setCurrency(event.target.value)}
+            onChange={(event) => {
+              setCurrency(event.target.value);
+            }}
           >
             <option value="USD">USD</option>
             <option value="EUR">EUR</option>
