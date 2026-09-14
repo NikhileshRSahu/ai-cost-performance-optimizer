@@ -42,6 +42,15 @@ jobs:
       - run: npm run test:db
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/optimizer_test
+      - run: bash scripts/db-backup-restore-drill.sh
+        env:
+          ALLOW_DESTRUCTIVE_RESTORE_DRILL: 'true'
+          PGHOST: 127.0.0.1
+          PGPORT: '5432'
+          PGUSER: postgres
+          PGPASSWORD: postgres
+          PGDATABASE: optimizer_test
+          RESTORE_DATABASE: optimizer_restore
       - run: npx playwright install --with-deps chromium
       - run: npm run web:e2e
         env:
