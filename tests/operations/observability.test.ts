@@ -196,10 +196,16 @@ describe('safe operational observability', () => {
       /^sha256=[a-f0-9]{64}$/,
     );
 
-    const body = String(init?.body);
-    expect(body).toContain('"severity":"CRITICAL"');
-    expect(body).toContain('"safeErrorCategory":"DATABASE_UNAVAILABLE"');
-    expect(body).not.toMatch(
+    const requestBody = init?.body;
+    expect(typeof requestBody).toBe('string');
+    if (typeof requestBody !== 'string') {
+      throw new Error('EXPECTED_STRING_ALERT_BODY');
+    }
+    expect(requestBody).toContain('"severity":"CRITICAL"');
+    expect(requestBody).toContain(
+      '"safeErrorCategory":"DATABASE_UNAVAILABLE"',
+    );
+    expect(requestBody).not.toMatch(
       /authorization|prompt|response|bearer|password|customer content/i,
     );
   });
