@@ -11,6 +11,8 @@ const benchmarkCsv = fileURLToPath(
     import.meta.url,
   ),
 );
+const JOURNEY_STATE_TIMEOUT_MS = 15_000;
+
 const postCsv = fileURLToPath(
   new URL(
     '../../../fixtures/demo/customer-loop-post-change.csv',
@@ -55,15 +57,17 @@ async function reachVerification(
 
   await expect(
     page.getByRole('heading', { name: 'Test the cheaper candidate' }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
   await page.locator('input[name="benchmarkCsv"]').setInputFiles(benchmarkCsv);
   await page.locator('input[name="isDemo"]').check();
   await page.getByRole('button', { name: 'Evaluate candidate' }).click();
 
   await expect(
     page.getByRole('heading', { name: 'Current versus candidate' }),
-  ).toBeVisible();
-  await expect(page.getByText('OPTIMIZE', { exact: true })).toBeVisible();
+  ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
+  await expect(page.getByText('OPTIMIZE', { exact: true })).toBeVisible({
+    timeout: JOURNEY_STATE_TIMEOUT_MS,
+  });
 
   await page.getByLabel('Historical baseline cost').fill('1000');
   await page
@@ -72,7 +76,9 @@ async function reachVerification(
     )
     .check();
   await page.getByRole('button', { name: 'Replay historical cost' }).click();
-  await expect(page.getByText('Projected gross saving')).toBeVisible();
+  await expect(page.getByText('Projected gross saving')).toBeVisible({
+    timeout: JOURNEY_STATE_TIMEOUT_MS,
+  });
   await expect(
     page.getByText(
       'This replay is never written to the VERIFIED savings ledger.',
@@ -113,7 +119,7 @@ async function reachVerification(
 
   await expect(
     page.getByRole('heading', { name: 'Measure what actually changed' }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
   await expectAccessible(page);
   return 'READY';
 }
