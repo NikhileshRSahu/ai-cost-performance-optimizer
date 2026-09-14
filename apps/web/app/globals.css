@@ -1183,3 +1183,68 @@ h1 {
   overflow-wrap: anywhere;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
+
+
+.credential-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.credential-list article {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #dfe5ec;
+  border-radius: 0.8rem;
+  background: #f8fafc;
+}
+
+.credential-list article > div:first-child {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.credential-list span,
+.credential-list small {
+  color: #637181;
+  overflow-wrap: anywhere;
+}
+
+.token-display {
+  display: grid;
+  gap: 0.45rem;
+  font-weight: 700;
+}
+
+.token-display textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #aeb8c4;
+  border-radius: 0.65rem;
+  background: #f6f8fa;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  overflow-wrap: anywhere;
+  resize: vertical;
+}
+
+.danger-button {
+  min-height: 44px;
+  padding: 0.7rem 1rem;
+  border: 1px solid #a63b32;
+  border-radius: 0.7rem;
+  background: #fff0ef;
+  color: #79241e;
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .credential-list article {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
