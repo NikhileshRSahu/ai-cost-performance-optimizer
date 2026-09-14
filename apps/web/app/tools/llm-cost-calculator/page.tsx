@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { LlmCostCalculator } from '../../../components/llm-cost-calculator';
 
 export const metadata: Metadata = {
-  title: 'Free LLM Cost Calculator | AI Efficiency Intelligence',
+  title: 'Free LLM Cost Calculator | Proovance',
   description:
     'Estimate monthly LLM cost from request volume, token usage, and your own input/output token prices. No provider credentials required.',
 };
@@ -30,7 +30,7 @@ export default function LlmCostCalculatorPage() {
         </div>
         <div>
           <p className="lede">
-            Cost visibility is only the first step. AI Efficiency Intelligence
+            Cost visibility is only the first step. Proovance
             diagnoses supported inefficiencies, proposes bounded changes, tests
             them against a quality floor, and keeps potential, tested, and
             verified savings separate.
