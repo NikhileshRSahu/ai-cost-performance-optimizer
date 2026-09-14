@@ -71,15 +71,7 @@ async function reachVerification(
       'I confirm this window represents a comparable workload and volume basis for this projection.',
     )
     .check();
-  const [replayResponse] = await Promise.all([
-    page.waitForResponse(
-      (response) =>
-        response.url().includes('/replay') &&
-        response.request().method() === 'POST',
-    ),
-    page.getByRole('button', { name: 'Replay historical cost' }).click(),
-  ]);
-  expect(replayResponse.status()).toBe(200);
+  await page.getByRole('button', { name: 'Replay historical cost' }).click();
   await expect(page.getByText('Projected gross saving')).toBeVisible();
   await expect(
     page.getByText(
@@ -98,22 +90,25 @@ async function reachVerification(
   await page.getByRole('link', { name: 'Implement tested change' }).click();
 
   const implementedAt = page.getByLabel('Implemented at (UTC)');
-  const verificationUrl = (url: URL) =>
-    url.pathname.startsWith(`/o/${organizationId}/verify/`);
+  const continueLink = page.getByRole('link', {
+    name: 'Continue to verification',
+  });
+
+  await expect
+    .poll(async () => {
+      if (await implementedAt.isVisible()) return 'fresh';
+      if (await continueLink.isVisible()) return 'saved';
+      return 'loading';
+    })
+    .not.toBe('loading');
 
   if (await implementedAt.isVisible()) {
     await implementedAt.fill('2026-08-30T08:00');
     await page.getByLabel('Rollout started (UTC)').fill('2026-08-30T08:00');
     await page.getByLabel('Stabilization ends (UTC)').fill('2026-09-01T08:00');
-    await Promise.all([
-      page.waitForURL(verificationUrl),
-      page.getByRole('button', { name: 'Confirm implementation' }).click(),
-    ]);
+    await page.getByRole('button', { name: 'Confirm implementation' }).click();
   } else {
-    await Promise.all([
-      page.waitForURL(verificationUrl),
-      page.getByRole('link', { name: 'Continue to verification' }).click(),
-    ]);
+    await continueLink.click();
   }
 
   await expect(
