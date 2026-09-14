@@ -5,6 +5,7 @@ export const dataSourceSchema = z.enum([
   'CSV',
   'OPENAI_ADMIN_API',
   'ANTHROPIC_ADMIN_API',
+  'PRODUCTION_TELEMETRY',
 ]);
 export const granularitySchema = z.enum(['REQUEST', 'AGGREGATE_BUCKET']);
 export const nullableString = z.string().trim().min(1).nullable();
