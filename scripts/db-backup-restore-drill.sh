@@ -60,7 +60,15 @@ drop_database "$RESTORE_DB"
 pg_container postgres:16 createdb   -h "$PGHOST"   -p "$PGPORT"   -U "$PGUSER"   "$SOURCE_DB"
 
 SOURCE_URL="postgresql://$PGUSER:$PGPASSWORD@$PGHOST:$PGPORT/$SOURCE_DB"
-DATABASE_URL="$SOURCE_URL" npm run db:migrate
+DATABASE_URL="$SOURCE_URL" node --input-type=module -e "
+  const { createDatabase } = await import('./dist/persistence/database.js');
+  const database = createDatabase(process.env.DATABASE_URL);
+  try {
+    await database.migrate();
+  } finally {
+    await database.close();
+  }
+"
 
 pg_container postgres:16 psql   -h "$PGHOST"   -p "$PGPORT"   -U "$PGUSER"   -d "$SOURCE_DB"   -v ON_ERROR_STOP=1   -c "insert into organizations (id, name, reporting_currency, timezone, materiality_target, raw_evidence_retention_days) values ('restore-org', 'Restore Drill Org', 'USD', 'UTC', '100', 90);"   -c "insert into users (id, email, auth_provider, auth_subject) values ('restore-user', 'restore@example.test', 'restore-drill', 'restore-user');"   -c "insert into memberships (organization_id, user_id, role) values ('restore-org', 'restore-user', 'OWNER');"   -c "insert into telemetry_credentials (id, organization_id, label, secret_hash, created_by_user_id) values ('restorecredential000000000000000000', 'restore-org', 'restore-agent', repeat('a', 64), 'restore-user');"   -c "insert into rate_limit_windows (organization_id, scope_key, window_start, request_count) values ('restore-org', 'credential:restore', '2026-09-14T00:00:00Z', 3);"
 
