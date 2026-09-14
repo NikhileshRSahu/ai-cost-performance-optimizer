@@ -15,8 +15,8 @@ export default function HomePage() {
           separate.
         </p>
         <div className="hero-actions">
-          <Link className="primary-action" href="/pricing">
-            Start with the free Work MRI
+          <Link className="primary-action" href="/login">
+            Run the free Work MRI
           </Link>
           <Link href="/research">See the evidence behind the beta</Link>
           <Link href="/methodology">Read the methodology</Link>
