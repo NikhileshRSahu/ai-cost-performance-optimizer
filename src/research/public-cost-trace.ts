@@ -92,7 +92,9 @@ function sourceFingerprint(row: PublicCostTraceRow): string {
     .digest('hex');
 }
 
-export function parsePublicCostTrace(csv: string): readonly PublicCostTraceRow[] {
+export function parsePublicCostTrace(
+  csv: string,
+): readonly PublicCostTraceRow[] {
   const rows = parseCsv(csv);
   const headers = rows.shift();
   if (headers === undefined) throw new Error('EMPTY_RESEARCH_CSV');
@@ -145,7 +147,9 @@ export function toResearchUsageRecords(
       if (!Number.isFinite(latencyMs) || latencyMs < 0) {
         throw new Error('INVALID_RESEARCH_LATENCY');
       }
-      const end = new Date(Date.parse(start) + Math.max(1, latencyMs)).toISOString();
+      const end = new Date(
+        Date.parse(start) + Math.max(1, latencyMs),
+      ).toISOString();
       const cached = BigInt(row.cachedPromptTokens);
       const input = BigInt(row.promptTokens);
 
@@ -182,7 +186,11 @@ export function toResearchUsageRecords(
         stablePrefixHash: null,
         stablePrefixTokens: null,
         cacheEligibleInputTokens:
-          input > 0n ? input.toString() : cached > 0n ? cached.toString() : null,
+          input > 0n
+            ? input.toString()
+            : cached > 0n
+              ? cached.toString()
+              : null,
         sourceLine: index + 2,
         fingerprint: sourceFingerprint(row),
         isDemo: false,
