@@ -24,7 +24,10 @@ export async function POST(
   const databaseUrl = process.env.DATABASE_URL;
   if (databaseUrl === undefined) {
     return NextResponse.json(
-      { error: 'INTERNAL_ERROR', message: 'The request could not be completed safely.' },
+      {
+        error: 'INTERNAL_ERROR',
+        message: 'The request could not be completed safely.',
+      },
       { status: 500 },
     );
   }
