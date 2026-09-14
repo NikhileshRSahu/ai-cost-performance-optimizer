@@ -92,20 +92,16 @@ export function LlmCostCalculator() {
   const [currency, setCurrency] = useState('USD');
 
   const result = useMemo(
-    () =>
-      calculate(
-        requests,
-        inputTokens,
-        outputTokens,
-        inputRate,
-        outputRate,
-      ),
+    () => calculate(requests, inputTokens, outputTokens, inputRate, outputRate),
     [requests, inputTokens, outputTokens, inputRate, outputRate],
   );
 
   return (
     <div className="calculator-shell">
-      <form className="calculator-form" onSubmit={(event) => event.preventDefault()}>
+      <form
+        className="calculator-form"
+        onSubmit={(event) => event.preventDefault()}
+      >
         <label>
           <span>Requests per month</span>
           <input
@@ -171,8 +167,8 @@ export function LlmCostCalculator() {
       <section className="calculator-results" aria-live="polite">
         {result === null ? (
           <p>
-            Enter non-negative token counts and prices, with at least one request
-            per month.
+            Enter non-negative token counts and prices, with at least one
+            request per month.
           </p>
         ) : (
           <>
