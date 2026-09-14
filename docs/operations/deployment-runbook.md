@@ -150,7 +150,6 @@ When machine telemetry is enabled:
 
 The server stores only the credential identifier and keyed hash, never the raw bearer token.
 
-
 ## Automated restore drill
 
 CI runs `scripts/db-backup-restore-drill.sh` against the migrated PostgreSQL test database.
