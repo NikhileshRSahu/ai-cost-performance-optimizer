@@ -25,9 +25,11 @@ export async function POST(
       action: 'IMPORT',
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : 'ACTION_NOT_ALLOWED';
-    return NextResponse.json({ error: message }, { status: 403 });
+    const safe = safeErrorFromUnknown(error);
+    return NextResponse.json(
+      { error: safe.category, message: safe.message },
+      { status: safe.status },
+    );
   }
 
   const formData = await request.formData();
@@ -38,10 +40,16 @@ export async function POST(
       { status: 400 },
     );
   }
-  if (upload.size > MAX_HISTORY_BYTES) {
+  try {
+    assertUploadWithinLimit({
+      kind: 'SANITIZED_HISTORY_JSON',
+      sizeBytes: upload.size,
+    });
+  } catch (error) {
+    const safe = safeErrorFromUnknown(error);
     return NextResponse.json(
-      { error: 'HISTORY_JSON_TOO_LARGE' },
-      { status: 413 },
+      { error: safe.category, message: safe.message },
+      { status: safe.status },
     );
   }
 
