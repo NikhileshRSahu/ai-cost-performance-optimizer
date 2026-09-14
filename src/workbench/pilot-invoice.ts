@@ -47,7 +47,7 @@ function normalizedEmail(value: string): string {
 export function buildPilotInvoiceRequest(
   session: AuthenticatedSession,
   input: PilotInvoiceRequestInput,
-  id = randomUUID(),
+  id: string = randomUUID(),
 ): PilotInvoiceRequestRecord {
   const authorization = authorize(
     session,
