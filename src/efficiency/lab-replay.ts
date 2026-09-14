@@ -43,47 +43,21 @@ export function replayFromOptimizationLab(
     historicalWindowComparable: input.historicalWindowComparable,
     benchmark: {
       decision: input.lab.persistedDecision,
-      reasons: [],
-      pairedValidCases: 0,
-      metrics: {
-        candidateQuality:
-          qualityConstraint?.candidateMeasured === null ||
-          qualityConstraint?.candidateMeasured === undefined
-            ? null
-            : decimalToExact(qualityConstraint.candidateMeasured),
-        candidateP95LatencyMs:
-          latencyConstraint?.candidateMeasured === null ||
-          latencyConstraint?.candidateMeasured === undefined
-            ? null
-            : decimalToExact(latencyConstraint.candidateMeasured),
-        candidateFailureRate: { numerator: '0', denominator: '1' },
-        currentComparableCost: decimalToExact(
-          input.lab.economics.baselineCost,
-        ),
-        candidateComparableCost: decimalToExact(
-          input.lab.economics.candidateCost,
-        ),
-        netSaving: {
-          numerator: input.lab.economics.netSavingNumerator ?? '0',
-          denominator: input.lab.economics.netSavingDenominator ?? '1',
-        },
-      },
-      confidence: {
-        version: 'confidence-v1',
-        score:
-          input.lab.confidence.band === 'HIGH'
-            ? 0.8
-            : input.lab.confidence.band === 'MEDIUM'
-              ? 0.6
-              : 0,
-        band: input.lab.confidence.band,
-        components: {
-          dataCompleteness: 0,
-          benchmarkStrength: 0,
-          sampleAdequacy: 0,
-          repeatability: 0,
-        },
-      },
+      confidenceBand: input.lab.confidence.band,
+      candidateQuality:
+        qualityConstraint?.candidateMeasured === null ||
+        qualityConstraint?.candidateMeasured === undefined
+          ? null
+          : decimalToExact(qualityConstraint.candidateMeasured),
+      candidateP95LatencyMs:
+        latencyConstraint?.candidateMeasured === null ||
+        latencyConstraint?.candidateMeasured === undefined
+          ? null
+          : decimalToExact(latencyConstraint.candidateMeasured),
+      currentComparableCost: decimalToExact(input.lab.economics.baselineCost),
+      candidateComparableCost: decimalToExact(
+        input.lab.economics.candidateCost,
+      ),
     },
   });
 }
