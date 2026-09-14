@@ -8,7 +8,7 @@
     "start": "next start",
     "e2e": "playwright test",
     "e2e:seed": "node ./e2e/seed.ts",
-    "auth:migrate": "node ./scripts/migrate-auth.mjs"
+    "auth:migrate": "node ./scripts/migrate-auth.ts"
   },
   "dependencies": {
     "better-auth": "1.7.4",
