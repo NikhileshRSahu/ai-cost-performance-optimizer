@@ -2,10 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { and, eq } from 'drizzle-orm';
 import type { PersistenceDatabase } from '../persistence/database.js';
 import { pilotInvoiceRequests } from '../persistence/commercial-schema.js';
-import {
-  authorize,
-  type AuthenticatedSession,
-} from './authz.js';
+import { authorize, type AuthenticatedSession } from './authz.js';
 
 export const FOUNDING_AUDIT_OFFER = Object.freeze({
   plan: 'OPTIMIZATION_AUDIT',
