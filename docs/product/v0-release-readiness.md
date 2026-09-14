@@ -88,7 +88,8 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Automated guarded PostgreSQL backup/restore drill verified in CI with isolated source/restore databases, migration history, sentinel data, and critical-table count comparison.
 - [x] Stable safe-error taxonomy that prevents raw internal exception leakage.
 - [x] Privacy-safe structured production observability sink for health and telemetry paths.
-- [ ] External production dashboard/alert routing.
+- [x] Signed timeout-bounded external alert webhook routing from the allowlisted operational event schema.
+- [ ] Provider-specific production dashboard/alert destination configured for the deployment.
 - [x] PostgreSQL-backed distributed telemetry rate limiting across app instances.
 - [x] Server-side upload-size abuse controls for usage, benchmark, sanitized-history, and telemetry evidence.
 - [x] Incident severity and response process.
