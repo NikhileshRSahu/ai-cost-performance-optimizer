@@ -1,8 +1,14 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { createDatabase } from '../../../../../../src/persistence/database';
+import { previewRetention } from '../../../../../../src/workbench/retention-service';
 import { requireOrganizationContext } from '../../../../lib/organization-context';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
-import { purgeEvidence } from './action';
+import {
+  configureRetention,
+  enforceRetentionPolicy,
+  purgeEvidence,
+} from './action';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,12 +17,17 @@ export default async function DataPage({
   searchParams,
 }: Readonly<{
   params: Promise<{ organizationId: string }>;
-  searchParams: Promise<{ purged?: string }>;
+  searchParams: Promise<{
+    purged?: string;
+    retentionUpdated?: string;
+    retentionEnforced?: string;
+  }>;
 }>) {
   const { organizationId } = await params;
-  const { purged } = await searchParams;
+  const { purged, retentionUpdated, retentionEnforced } = await searchParams;
   const session = await resolveRuntimeSession();
-  if (session === null) redirect('/unauthorized');
+  const databaseUrl = process.env.DATABASE_URL;
+  if (session === null || databaseUrl === undefined) redirect('/unauthorized');
 
   let context;
   try {
@@ -26,6 +37,20 @@ export default async function DataPage({
   }
 
   const isOwner = context.role === 'OWNER';
+  let retention = null;
+  if (isOwner) {
+    const database = createDatabase(databaseUrl);
+    try {
+      retention = await previewRetention({
+        db: database.db,
+        session,
+        organizationId,
+        now: new Date().toISOString(),
+      });
+    } finally {
+      await database.close();
+    }
+  }
 
   return (
     <div className="workflow-page">
@@ -34,9 +59,9 @@ export default async function DataPage({
           <p className="eyebrow">Data & privacy</p>
           <h1>Control your organization evidence</h1>
           <p className="lede">
-            Export what the product stores for this organization or permanently
-            purge imported and derived evidence. Account and membership records
-            remain so access control can continue to work.
+            Export what the product stores, configure raw-evidence retention, or
+            permanently purge organization evidence. Account and membership
+            records remain so access control can continue to work.
           </p>
         </div>
       </header>
@@ -44,6 +69,16 @@ export default async function DataPage({
       {purged === 'true' ? (
         <div className="success-note" role="status">
           Organization evidence was purged.
+        </div>
+      ) : null}
+      {retentionUpdated === 'true' ? (
+        <div className="success-note" role="status">
+          Raw-evidence retention policy was updated.
+        </div>
+      ) : null}
+      {retentionEnforced === 'true' ? (
+        <div className="success-note" role="status">
+          Raw-evidence retention policy was enforced.
         </div>
       ) : null}
 
@@ -69,6 +104,105 @@ export default async function DataPage({
         ) : (
           <p className="blocking-note">
             Only an organization owner can export data.
+          </p>
+        )}
+      </section>
+
+      <section className="workflow-card">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Retention</p>
+            <h2>Control how long raw evidence is kept</h2>
+          </div>
+        </div>
+        <p>
+          Retention applies to raw usage records, import runs, and operational
+          job metadata. Recommendations, benchmark decisions, implementation
+          records, verification conclusions, and the savings-state audit trail
+          remain available for accountability until you use full purge.
+        </p>
+        {isOwner && retention !== null ? (
+          <>
+            <form action={configureRetention} className="upload-form">
+              <input
+                type="hidden"
+                name="organizationId"
+                value={organizationId}
+              />
+              <label>
+                Raw-evidence retention period
+                <select
+                  name="retentionDays"
+                  defaultValue={
+                    retention.retentionDays === null
+                      ? 'disabled'
+                      : String(retention.retentionDays)
+                  }
+                >
+                  <option value="disabled">Disabled — keep until purge</option>
+                  <option value="30">30 days</option>
+                  <option value="90">90 days</option>
+                  <option value="180">180 days</option>
+                  <option value="365">1 year</option>
+                  <option value="730">2 years</option>
+                  <option value="3650">10 years</option>
+                </select>
+              </label>
+              <button className="primary-button" type="submit">
+                Save retention policy
+              </button>
+            </form>
+
+            {retention.enabled ? (
+              <div className="mri-action">
+                <p className="eyebrow">Dry-run preview</p>
+                <h3>
+                  {retention.totalRawEvidenceRows} raw evidence rows currently
+                  fall before the cutoff
+                </h3>
+                <dl className="evidence-list">
+                  <div>
+                    <dt>Cutoff</dt>
+                    <dd>{retention.cutoff}</dd>
+                  </div>
+                  <div>
+                    <dt>Usage records</dt>
+                    <dd>{retention.usageRecords}</dd>
+                  </div>
+                  <div>
+                    <dt>Import runs</dt>
+                    <dd>{retention.importRuns}</dd>
+                  </div>
+                  <div>
+                    <dt>Operational jobs</dt>
+                    <dd>{retention.jobs}</dd>
+                  </div>
+                  <div>
+                    <dt>Last enforced</dt>
+                    <dd>{retention.lastEnforcedAt ?? 'Never'}</dd>
+                  </div>
+                </dl>
+                <form action={enforceRetentionPolicy}>
+                  <input
+                    type="hidden"
+                    name="organizationId"
+                    value={organizationId}
+                  />
+                  <button className="secondary-action" type="submit">
+                    Enforce retention now
+                  </button>
+                </form>
+              </div>
+            ) : (
+              <p className="projection-note">
+                Automatic age-based deletion is disabled. Raw evidence remains
+                until an owner enables retention or uses full purge.
+              </p>
+            )}
+          </>
+        ) : (
+          <p className="blocking-note">
+            Only an organization owner can configure or enforce retention.
           </p>
         )}
       </section>
