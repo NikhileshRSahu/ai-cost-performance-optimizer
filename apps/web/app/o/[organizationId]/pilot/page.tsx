@@ -88,7 +88,11 @@ export default async function PilotPage({
             mark the pilot as paid.
           </p>
           <form action={submitPilotInvoiceRequest} className="dashboard-stack">
-            <input type="hidden" name="organizationId" value={organizationId} />
+            <input
+              type="hidden"
+              name="organizationId"
+              value={organizationId}
+            />
             <label>
               Company name
               <input
