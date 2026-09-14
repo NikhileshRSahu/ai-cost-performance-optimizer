@@ -25,7 +25,9 @@ export default function LoginPage() {
           <GoogleSignInButton />
         ) : (
           <section className="evidence-note" role="status">
-            <strong>Google sign-in is not configured on this deployment.</strong>{' '}
+            <strong>
+              Google sign-in is not configured on this deployment.
+            </strong>{' '}
             The product can still be evaluated through its public tools and
             research pages.
           </section>
