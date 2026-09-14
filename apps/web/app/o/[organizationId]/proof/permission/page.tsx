@@ -5,10 +5,7 @@ import { createDatabase } from '../../../../../../../src/persistence/database';
 import { designPartnerPermissions } from '../../../../../../../src/persistence/schema';
 import { requireOrganizationContext } from '../../../../../lib/organization-context';
 import { resolveRuntimeSession } from '../../../../../lib/runtime-session';
-import {
-  revokeRecordedProofPermission,
-  submitProofPermission,
-} from './action';
+import { revokeRecordedProofPermission, submitProofPermission } from './action';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,8 +44,8 @@ export default async function ProofPermissionPage({
           <h1>Record what the design partner actually approved.</h1>
           <p className="lede">
             This registry references written permission; it does not create
-            permission by itself. Publication remains blocked unless the approved
-            scope explicitly covers the intended use.
+            permission by itself. Publication remains blocked unless the
+            approved scope explicitly covers the intended use.
           </p>
         </div>
       </header>
@@ -80,8 +77,16 @@ export default async function ProofPermissionPage({
                 </div>
                 {isOwner && row.status === 'GRANTED' ? (
                   <form action={revokeRecordedProofPermission}>
-                    <input type="hidden" name="organizationId" value={organizationId} />
-                    <input type="hidden" name="evidenceRef" value={row.evidenceRef} />
+                    <input
+                      type="hidden"
+                      name="organizationId"
+                      value={organizationId}
+                    />
+                    <input
+                      type="hidden"
+                      name="evidenceRef"
+                      value={row.evidenceRef}
+                    />
                     <button className="secondary-action" type="submit">
                       Revoke recorded permission
                     </button>
@@ -122,7 +127,11 @@ export default async function ProofPermissionPage({
                 Private sales conversations
               </label>
               <label className="checkbox-row">
-                <input type="checkbox" name="scopes" value="PUBLIC_CASE_STUDY" />
+                <input
+                  type="checkbox"
+                  name="scopes"
+                  value="PUBLIC_CASE_STUDY"
+                />
                 Public case study
               </label>
               <label className="checkbox-row">
