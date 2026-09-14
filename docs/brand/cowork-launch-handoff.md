@@ -40,6 +40,8 @@ Do not state a connector is live unless the release checklist marks it available
 
 The working brand is **Proovance**.
 
+A preliminary public-web collision screen on 2026-09-14 found no obvious exact-name software/SaaS/AI company conflict for Proovance across general search and major public platform indexes. This is **not** a legal trademark clearance and does not prove domain or handle availability. Cowork must still perform the live registrar, trademark-database, and platform-signup checks below before irreversible registration.
+
 Before spending money or making irreversible registrations:
 
 1. Run a current trademark collision screen in the United States, European Union, United Kingdom, and India for software/SaaS/AI/FinOps-related classes.
