@@ -1,6 +1,4 @@
-export function ProovanceMark({
-  size = 30,
-}: Readonly<{ size?: number }>) {
+export function ProovanceMark({ size = 30 }: Readonly<{ size?: number }>) {
   return (
     <svg
       aria-hidden="true"

@@ -19,6 +19,7 @@ Short motion/tagline:
 ## Important current product facts
 
 Already built in the repository:
+
 - public Proovance beta surface
 - Research and Methodology pages
 - Work MRI
@@ -40,6 +41,7 @@ Do not state a connector is live unless the release checklist marks it available
 The working brand is **Proovance**.
 
 Before spending money or making irreversible registrations:
+
 1. Run a current trademark collision screen in the United States, European Union, United Kingdom, and India for software/SaaS/AI/FinOps-related classes.
 2. Check exact registrar availability for:
    - proovance.com
@@ -70,6 +72,7 @@ After an approved domain is secured, create/prepare:
 Prefer aliases/inboxes that keep administration simple.
 
 Configure and verify:
+
 - SPF
 - DKIM
 - DMARC
@@ -81,6 +84,7 @@ Configure and verify:
 Do not send cold outbound until SPF/DKIM/DMARC are passing.
 
 Suggested display names:
+
 - Proovance
 - Nikhilesh at Proovance
 - Proovance Support
@@ -124,9 +128,11 @@ Search-oriented long bio:
 > AI cost optimization, workflow efficiency, bounded benchmarking, and verified impact.
 
 CTA:
+
 > Run the free LLM Cost Calculator / AI Work MRI.
 
 Use the same:
+
 - logo
 - avatar
 - wordmark
@@ -141,6 +147,7 @@ Use the source of truth:
 `docs/brand/proovance-brand-system.md`
 
 Visual direction:
+
 - precise
 - premium
 - technical
@@ -152,6 +159,7 @@ Visual direction:
 - strong whitespace/grid discipline
 
 Avoid:
+
 - AI brain stock imagery
 - robot heads
 - crypto aesthetics
@@ -162,6 +170,7 @@ Avoid:
 ## Required social assets
 
 Prepare platform-specific, correctly sized:
+
 - square avatar
 - horizontal wordmark
 - monochrome mark
@@ -197,6 +206,7 @@ Export platform-ready variants only if the tool supports them without watermarki
 ## Content engine
 
 Recurring franchises:
+
 - Proovance AI Cost Benchmark
 - AI Waste of the Week
 - Model Cost Battle
@@ -205,6 +215,7 @@ Recurring franchises:
 - AI Efficiency Index
 
 Weekly cadence:
+
 - Mon: cost benchmark
 - Tue: GPT/Claude/model comparison
 - Wed: AI Waste of the Week
@@ -214,6 +225,7 @@ Weekly cadence:
 - Sun: research/efficiency index
 
 Every evidence post must explicitly label:
+
 - PUBLIC_RESEARCH
 - SYNTHETIC_DEMO
 - BENCHMARKED
@@ -224,6 +236,7 @@ Never convert one class into another.
 ## SEO acquisition map
 
 Prioritize genuinely useful pages/tools:
+
 - /ai-cost-calculator
 - /llm-cost-calculator
 - /ai-agent-cost-calculator
@@ -262,6 +275,7 @@ Opening:
 > Most AI cost tools can tell you where money went. I wanted to answer the harder question: what can we safely change?
 
 Then explain:
+
 - Work MRI
 - explicit quality floor
 - bounded benchmark
@@ -282,6 +296,7 @@ Tagline:
 Do not ask for artificial upvotes.
 
 Launch only when a new visitor can:
+
 1. understand the product
 2. use a free tool
 3. sign in
@@ -293,6 +308,7 @@ Launch only when a new visitor can:
 Do not mass spam.
 
 Target teams where meaningful LLM usage is publicly plausible:
+
 - AI-native SaaS
 - AI agents
 - AI support platforms
@@ -301,6 +317,7 @@ Target teams where meaningful LLM usage is publicly plausible:
 - software companies with visible OpenAI/Anthropic/Gemini infrastructure
 
 For each target:
+
 1. research current product
 2. identify legitimate evidence of AI usage
 3. identify role: founder/CTO/FinOps/AI platform lead
@@ -318,6 +335,7 @@ Core outbound angle:
 ## Measurement
 
 Track real:
+
 - visitors
 - calculator starts/completions
 - signup starts/completions
@@ -335,6 +353,7 @@ Only publish traction when supported by product analytics.
 ## Proof requirement
 
 For every created account/action, return:
+
 - platform
 - account/page name
 - live URL or platform identifier
@@ -349,6 +368,7 @@ Never report an account, email, post, message, registration, DNS record, or deli
 ## Stop conditions
 
 STOP and request owner approval before:
+
 - spending money
 - purchasing a domain
 - accepting paid plan terms

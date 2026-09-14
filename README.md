@@ -79,7 +79,6 @@ The repository already includes:
 - dependency audit and secret scanning in CI
 - production container definition
 
-
 ## Self-serve authentication
 
 The public beta supports a Google OAuth path through Better Auth. Google authentication is mapped into the existing Proovance tenant/RBAC model; Better Auth is not the authorization source of truth.
