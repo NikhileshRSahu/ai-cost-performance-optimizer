@@ -6,6 +6,7 @@ import {
   ledgerEvents,
   memberships,
   organizations,
+  pilotInvoiceRequests,
   rateLimitWindows,
   recommendations,
   telemetryCredentials,
@@ -29,6 +30,7 @@ describe('persistent workbench schema', () => {
       implementationRecords,
       verificationWindows,
       jobs,
+      pilotInvoiceRequests,
     ]) {
       expect(table.organizationId).toBeDefined();
     }
