@@ -19,7 +19,8 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Progressive evidence-depth contract.
 - [x] Sanitized AI-history normalized import contract, parser, and non-persistent upload/analyze UI.
 - [ ] Authorized workspace connector storage and revocation model.
-- [ ] Production telemetry ingestion contract.
+- [x] Privacy-safe production telemetry event/batch contract and usage normalizer.
+- [ ] Authenticated continuous production telemetry ingestion endpoint.
 
 ### 2. AI Work MRI
 
