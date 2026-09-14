@@ -104,6 +104,36 @@ export async function requestPilotInvoice(args: {
     });
   }
 
-  await args.db.insert(pilotInvoiceRequests).values(record);
-  return record;
+  await args.db
+    .insert(pilotInvoiceRequests)
+    .values(record)
+    .onConflictDoNothing();
+
+  const persisted = await args.db
+    .select()
+    .from(pilotInvoiceRequests)
+    .where(
+      and(
+        eq(pilotInvoiceRequests.organizationId, record.organizationId),
+        eq(pilotInvoiceRequests.plan, record.plan),
+        eq(pilotInvoiceRequests.status, 'REQUESTED'),
+      ),
+    )
+    .limit(1);
+
+  if (persisted[0] === undefined) {
+    throw new Error('PILOT_INVOICE_PERSISTENCE_FAILED');
+  }
+
+  return Object.freeze({
+    id: persisted[0].id,
+    organizationId: persisted[0].organizationId,
+    plan: persisted[0].plan,
+    amountCents: persisted[0].amountCents,
+    currency: persisted[0].currency,
+    contactEmail: persisted[0].contactEmail,
+    companyName: persisted[0].companyName,
+    requestedByUserId: persisted[0].requestedByUserId,
+    status: 'REQUESTED' as const,
+  });
 }
