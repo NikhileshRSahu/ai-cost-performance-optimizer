@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
-import { previewRetention } from '../../../../../../src/workbench/retention-service';
+import {
+  previewRetention,
+  type RetentionPreview,
+} from '../../../../../../src/workbench/retention-service';
 import { requireOrganizationContext } from '../../../../lib/organization-context';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
 import {
@@ -37,7 +40,7 @@ export default async function DataPage({
   }
 
   const isOwner = context.role === 'OWNER';
-  let retention = null;
+  let retention: RetentionPreview | null = null;
   if (isOwner) {
     const database = createDatabase(databaseUrl);
     try {
