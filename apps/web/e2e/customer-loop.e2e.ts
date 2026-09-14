@@ -64,6 +64,18 @@ async function reachVerification(
     page.getByRole('heading', { name: 'Current versus candidate' }),
   ).toBeVisible();
   await expect(page.getByText('OPTIMIZE', { exact: true })).toBeVisible();
+
+  await page.getByLabel('Historical baseline cost').fill('1000');
+  await page
+    .getByLabel(
+      'I confirm this window represents a comparable workload and volume basis for this projection.',
+    )
+    .check();
+  await page.getByRole('button', { name: 'Replay historical cost' }).click();
+  await expect(page.getByText('Projected gross saving')).toBeVisible();
+  await expect(
+    page.getByText('This replay is never written to the VERIFIED savings ledger.'),
+  ).toBeVisible();
   await expectAccessible(page);
 
   await page.goto(`/o/${organizationId}`);
