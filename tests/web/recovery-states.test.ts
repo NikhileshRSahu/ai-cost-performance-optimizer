@@ -34,6 +34,17 @@ describe('recovery states', () => {
     );
   });
 
+  it('covers loading states without implying evidence mutation', async () => {
+    const rootLoading = await source('apps/web/app/loading.tsx');
+    const organizationLoading = await source(
+      'apps/web/app/o/[organizationId]/loading.tsx',
+    );
+
+    expect(rootLoading).toContain('aria-busy="true"');
+    expect(organizationLoading).toContain('aria-busy="true"');
+    expect(organizationLoading).toContain('Existing evidence remains unchanged');
+  });
+
   it('keeps not-found and unauthorized states actionable', async () => {
     const notFound = await source('apps/web/app/not-found.tsx');
     const unauthorized = await source('apps/web/app/unauthorized/page.tsx');
