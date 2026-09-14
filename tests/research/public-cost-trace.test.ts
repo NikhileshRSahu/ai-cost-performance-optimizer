@@ -9,21 +9,24 @@ import {
 describe('public research cost-trace replay', () => {
   it('normalizes measured public calls without inventing missing financial evidence', async () => {
     const csv = await readFile(
-      new URL('../../fixtures/research/ainetcafe-public-source-sample.csv', import.meta.url),
+      new URL(
+        '../../fixtures/research/ainetcafe-public-source-sample.csv',
+        import.meta.url,
+      ),
       'utf8',
     );
     const sourceRows = parsePublicCostTrace(csv);
     const records = toResearchUsageRecords(sourceRows);
 
     expect(records).toHaveLength(24);
-    expect(records.every((row) => row.project === 'PUBLIC_RESEARCH_TRACE')).toBe(
-      true,
-    );
+    expect(
+      records.every((row) => row.project === 'PUBLIC_RESEARCH_TRACE'),
+    ).toBe(true);
     expect(records.every((row) => row.currency === 'USD')).toBe(true);
     expect(records.every((row) => row.successes === '1')).toBe(true);
-    expect(records.some((row) => BigInt(row.cachedInputTokens ?? '0') > 0n)).toBe(
-      true,
-    );
+    expect(
+      records.some((row) => BigInt(row.cachedInputTokens ?? '0') > 0n),
+    ).toBe(true);
   });
 
   it('runs the canonical Work MRI diagnosis on the measured research slice', async () => {
