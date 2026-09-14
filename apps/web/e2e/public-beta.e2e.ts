@@ -12,7 +12,9 @@ test('public beta trust path is visible without authentication', async ({
   ).toBeVisible();
   await expect(page.getByText('No invented savings')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Research' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Methodology' })).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'Methodology', exact: true }),
+  ).toBeVisible();
 
   await page.getByRole('link', { name: 'Research' }).first().click();
   await expect(
