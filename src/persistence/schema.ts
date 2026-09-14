@@ -98,6 +98,57 @@ export const memberships = pgTable(
   ],
 );
 
+export const telemetryCredentials = pgTable(
+  'telemetry_credentials',
+  {
+    id: text('id').primaryKey(),
+    organizationId: text('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    label: text('label').notNull(),
+    secretHash: text('secret_hash').notNull(),
+    createdByUserId: text('created_by_user_id').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .notNull()
+      .defaultNow(),
+    lastUsedAt: timestamp('last_used_at', {
+      withTimezone: true,
+      mode: 'string',
+    }),
+    revokedAt: timestamp('revoked_at', {
+      withTimezone: true,
+      mode: 'string',
+    }),
+  },
+  (table) => [
+    index('telemetry_credentials_org_idx').on(table.organizationId),
+  ],
+);
+
+export const rateLimitWindows = pgTable(
+  'rate_limit_windows',
+  {
+    organizationId: text('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    scopeKey: text('scope_key').notNull(),
+    windowStart: timestamp('window_start', {
+      withTimezone: true,
+      mode: 'string',
+    }).notNull(),
+    requestCount: integer('request_count').notNull().default(0),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    primaryKey({
+      name: 'rate_limit_windows_org_scope_window_pk',
+      columns: [table.organizationId, table.scopeKey, table.windowStart],
+    }),
+  ],
+);
+
 export const workloads = pgTable(
   'workloads',
   {
