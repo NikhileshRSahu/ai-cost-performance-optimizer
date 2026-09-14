@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
 import { pilotInvoiceRequests } from '../../../../../../src/persistence/schema';
@@ -35,7 +35,6 @@ export default async function PilotPage({
         id: string;
         contactEmail: string;
         companyName: string;
-        createdAt: string;
       }>
     | null = null;
 
@@ -47,10 +46,15 @@ export default async function PilotPage({
           id: pilotInvoiceRequests.id,
           contactEmail: pilotInvoiceRequests.contactEmail,
           companyName: pilotInvoiceRequests.companyName,
-          createdAt: pilotInvoiceRequests.createdAt,
         })
         .from(pilotInvoiceRequests)
-        .where(eq(pilotInvoiceRequests.organizationId, organizationId))
+        .where(
+          and(
+            eq(pilotInvoiceRequests.organizationId, organizationId),
+            eq(pilotInvoiceRequests.plan, FOUNDING_AUDIT_OFFER.plan),
+            eq(pilotInvoiceRequests.status, 'REQUESTED'),
+          ),
+        )
         .limit(1);
 
       pendingRequest = rows[0] ?? null;
