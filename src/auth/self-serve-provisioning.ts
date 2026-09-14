@@ -97,10 +97,7 @@ export async function provisionSelfServeIdentity(
         throw new Error('AUTH_EMAIL_IDENTITY_CONFLICT');
       }
 
-      userId = stableId(
-        'usr',
-        `${identity.provider}\n${identity.subject}`,
-      );
+      userId = stableId('usr', `${identity.provider}\n${identity.subject}`);
 
       const insertedUsers = await transaction
         .insert(users)
