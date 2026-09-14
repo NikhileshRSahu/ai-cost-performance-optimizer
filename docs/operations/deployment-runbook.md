@@ -166,3 +166,29 @@ The drill:
 8. drops the isolated restore database during cleanup.
 
 The CI drill proves the repository's backup/restore procedure against disposable data. It does not by itself establish a production RPO/RTO; those require a production-like restore drill with measured backup age, restore duration, and operator response time.
+
+
+## External alert routing
+
+External operational alerts are optional and use the same allowlisted metadata schema as local structured logs.
+
+Configure both:
+
+- `OPS_ALERT_WEBHOOK_URL` — HTTPS endpoint owned by the deployment operator.
+- `OPS_ALERT_WEBHOOK_SECRET` — signing secret of at least 16 characters.
+
+Routing rules:
+
+- unhealthy database/health events: CRITICAL,
+- telemetry ingestion 5xx failures: CRITICAL,
+- rejected telemetry credentials: WARNING,
+- distributed telemetry rate-limit events: WARNING,
+- successful health/telemetry events remain local-only and do not call the webhook.
+
+Every delivered alert is signed with HMAC-SHA256 in `X-AI-Efficiency-Signature`.
+
+If the URL is missing, non-HTTPS, the signing secret is missing/short, the receiver is unavailable, or delivery times out, the customer request still completes according to its own result. Alert delivery failure never replaces the original application response.
+
+The webhook payload contains only the allowlisted operational event. It never contains request bodies, prompts, responses, bearer tokens, authorization headers, uploaded rows, or unrestricted exception text.
+
+A provider-specific dashboard can subscribe to these routed alerts and structured logs. Dashboard configuration is a deployment concern and must not expand the event schema without security review.
