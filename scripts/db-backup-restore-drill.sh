@@ -88,6 +88,7 @@ critical_tables=(
   verification_windows
   telemetry_credentials
   rate_limit_windows
+  pilot_invoice_requests
 )
 
 for table in "${critical_tables[@]}"; do
