@@ -97,10 +97,7 @@ export function classifyOperationalAlert(
   if (event.eventName === 'telemetry_ingest' && event.statusCode >= 500) {
     return 'CRITICAL';
   }
-  if (
-    event.eventName === 'telemetry_auth' &&
-    event.status === 'ERROR'
-  ) {
+  if (event.eventName === 'telemetry_auth' && event.status === 'ERROR') {
     return 'WARNING';
   }
   if (
@@ -126,8 +123,7 @@ export function buildOperationalAlert(
 
 function signAlertBody(body: string, signingSecret: string): string {
   return (
-    'sha256=' +
-    createHmac('sha256', signingSecret).update(body).digest('hex')
+    'sha256=' + createHmac('sha256', signingSecret).update(body).digest('hex')
   );
 }
 
@@ -199,9 +195,7 @@ export async function routeOperationalAlert(
       method: 'POST',
       headers,
       body,
-      signal: AbortSignal.timeout(
-        input.timeoutMs ?? DEFAULT_ALERT_TIMEOUT_MS,
-      ),
+      signal: AbortSignal.timeout(input.timeoutMs ?? DEFAULT_ALERT_TIMEOUT_MS),
     });
     return Object.freeze({
       routed: true,
