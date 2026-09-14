@@ -167,7 +167,6 @@ The drill:
 
 The CI drill proves the repository's backup/restore procedure against disposable data. It does not by itself establish a production RPO/RTO; those require a production-like restore drill with measured backup age, restore duration, and operator response time.
 
-
 ## External alert routing
 
 External operational alerts are optional and use the same allowlisted metadata schema as local structured logs.
