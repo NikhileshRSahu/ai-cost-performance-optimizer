@@ -4,6 +4,7 @@ export type MriEvidenceFact = Readonly<{
   label: string;
   value: string;
   evidenceRef: string | null;
+  evidence: Readonly<Record<string, string>>;
 }>;
 
 export type MriStrongestAction = Readonly<{
@@ -104,7 +105,10 @@ function nextUnlockLabel(depth: AnalysisDepth): string | null {
 
 export function buildWorkMriSnapshot(input: WorkMriInput): WorkMriSnapshot {
   const facts: MriEvidenceFact[] = input.additionalFacts.map((fact) =>
-    Object.freeze({ ...fact }),
+    Object.freeze({
+      ...fact,
+      evidence: Object.freeze({ ...fact.evidence }),
+    }),
   );
 
   if (input.observedSpend !== null) {
@@ -113,6 +117,10 @@ export function buildWorkMriSnapshot(input: WorkMriInput): WorkMriSnapshot {
         label: 'Observed AI spend',
         value: `${input.observedSpend.currency} ${input.observedSpend.amount}`,
         evidenceRef: input.observedSpend.evidenceRef,
+        evidence: Object.freeze({
+          amount: input.observedSpend.amount,
+          currency: input.observedSpend.currency,
+        }),
       }),
     );
   }
@@ -123,6 +131,11 @@ export function buildWorkMriSnapshot(input: WorkMriInput): WorkMriSnapshot {
         label: 'Verified net savings',
         value: `${input.verifiedNetSavings.currency} ${input.verifiedNetSavings.numerator}/${input.verifiedNetSavings.denominator}`,
         evidenceRef: input.verifiedNetSavings.evidenceRef,
+        evidence: Object.freeze({
+          exactNumerator: input.verifiedNetSavings.numerator,
+          exactDenominator: input.verifiedNetSavings.denominator,
+          currency: input.verifiedNetSavings.currency,
+        }),
       }),
     );
   }
