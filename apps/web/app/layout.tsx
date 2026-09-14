@@ -28,6 +28,7 @@ export default function RootLayout({
               <Link href="/research">Research</Link>
               <Link href="/methodology">Methodology</Link>
               <Link href="/pricing">Pricing</Link>
+              <Link href="/login">Sign in</Link>
               <span className="environment-badge">Public beta</span>
             </nav>
           </div>
