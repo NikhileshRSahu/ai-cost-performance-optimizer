@@ -40,7 +40,7 @@ async function readTrustedGoogleIdentity(): Promise<RuntimeIdentity | null> {
     headers: requestHeaders,
   });
 
-  if (session === null || session.user.emailVerified !== true) return null;
+  if (session === null || !session.user.emailVerified) return null;
 
   return Object.freeze({
     input: {
