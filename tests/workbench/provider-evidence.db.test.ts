@@ -116,8 +116,8 @@ describe('provider evidence persistence', () => {
 
     expect(second.snapshotId).toBe(first.snapshotId);
     expect(second.reused).toBe(true);
-    expect(await database.db.select().from(providerEvidenceSnapshots)).toHaveLength(
-      1,
-    );
+    expect(
+      await database.db.select().from(providerEvidenceSnapshots),
+    ).toHaveLength(1);
   });
 });
