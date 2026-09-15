@@ -2444,7 +2444,6 @@ samp,
   color: #a7b4c4;
 }
 
-
 /* Recovery release: WCAG AA floor for muted copy on authenticated dark surfaces */
 .workflow-page
   :is(p, span, small, dt, dd, li):not(.state-badge):not(.trust-chip):not(

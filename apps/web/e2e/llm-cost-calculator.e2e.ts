@@ -5,9 +5,7 @@ test('public LLM calculator estimates cost without authentication', async ({
 }) => {
   await page.goto('/tools/llm-cost-calculator');
 
-  await expect(
-    page.getByRole('heading', { name: 'LLM cost,' }),
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'LLM cost,' })).toBeVisible();
 
   await expect(page.getByText('USD 20.00')).toBeVisible();
   await expect(page.getByText('USD 240.00')).toBeVisible();
