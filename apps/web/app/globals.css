@@ -2504,3 +2504,19 @@ samp,
   :is(p, span, small, dt, dd, li, h1, h2, h3, h4, strong, b, label, code) {
   color: #334155 !important;
 }
+
+
+/* Light recovery/report surfaces must keep dark foregrounds inside the dark workbench. */
+.org-workbench .empty-state,
+.org-workbench .report-section,
+.org-workbench
+  :is(.empty-state, .report-section)
+  :is(p, span, small, dt, dd, li, th, td, label, legend, summary, code) {
+  color: #334155 !important;
+}
+
+.org-workbench
+  :is(.empty-state, .report-section)
+  :is(h1, h2, h3, h4, strong, b) {
+  color: #0f172a !important;
+}
