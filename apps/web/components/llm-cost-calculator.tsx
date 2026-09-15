@@ -162,7 +162,7 @@ export function LlmCostCalculator() {
         </label>
 
         <label>
-          <span>Display currency</span>
+          <span>Currency of the token rates you entered</span>
           <select
             value={currency}
             onChange={(event) => {
@@ -174,7 +174,7 @@ export function LlmCostCalculator() {
             <option value="GBP">GBP</option>
             <option value="INR">INR</option>
           </select>
-          <small>No FX conversion is performed.</small>
+          <small>Label only. Changing this does not convert the numeric rates.</small>
         </label>
       </form>
 
