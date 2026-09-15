@@ -8,6 +8,7 @@ export default defineConfig({
   testDir: './e2e',
   testMatch: '**/*.e2e.ts',
   fullyParallel: false,
+  workers: process.env.CI ? 1 : undefined,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? 'line' : 'list',
   use: {

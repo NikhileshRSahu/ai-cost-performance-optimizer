@@ -143,7 +143,11 @@ The root package exposes:
 
 ## Release status
 
-This is not yet being represented as a generally available finished product.
+Evalomics is being prepared as a **CSV-first public beta / founding pilot**, not as generally available connector infrastructure.
+
+The software release profile is `docs/product/csv-pilot-release-profile.md`. Workspace/provider connectors and provider-admin credentials are explicitly outside this launch mode until their security gates close.
+
+Public Privacy, Security, Terms, Methodology, and Research surfaces document the current product boundaries. Final legal review, production hosting/incident routing, and real design-partner/prospect evidence remain real-world launch gates rather than code placeholders.
 
 The authoritative ship checklist is:
 

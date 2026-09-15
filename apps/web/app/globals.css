@@ -1442,3 +1442,73 @@ h1 {
     opacity: 1;
   }
 }
+
+.site-footer {
+  margin-top: 2rem;
+  border-top: 1px solid #d8dee7;
+  background: #ffffff;
+}
+
+.footer-inner {
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-block: 1.25rem;
+}
+
+.footer-inner > div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.footer-inner span {
+  color: #637181;
+  font-size: 0.86rem;
+}
+
+.footer-inner nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.legal-page {
+  max-width: 980px;
+}
+
+.legal-sections {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.legal-sections article {
+  padding: 1.25rem;
+  border: 1px solid #d5dce5;
+  border-radius: 1rem;
+  background: #ffffff;
+}
+
+.legal-sections h2 {
+  margin-top: 0;
+  font-size: 1.15rem;
+}
+
+.legal-sections p {
+  margin-bottom: 0;
+  color: #596675;
+  line-height: 1.6;
+}
+
+@media (max-width: 720px) {
+  .footer-inner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .legal-sections {
+    grid-template-columns: 1fr;
+  }
+}
