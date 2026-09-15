@@ -6,6 +6,7 @@ import { useState, type ReactNode } from 'react';
 import {
   Activity,
   BarChart3,
+  BrainCircuit,
   ChevronRight,
   Database,
   FlaskConical,
@@ -19,6 +20,7 @@ import { cn } from '../../lib/utils';
 const journey = [
   { slug: '', label: 'Overview', icon: Activity },
   { slug: '/import', label: 'Evidence', icon: Database },
+  { slug: '/workloads', label: 'Constraints', icon: BrainCircuit },
   { slug: '/benchmark', label: 'Test', icon: FlaskConical },
   { slug: '/proof', label: 'Verify', icon: ShieldCheck },
 ] as const;
