@@ -2391,3 +2391,28 @@ samp,
 .lab-stack .text-link {
   color: #93c5fd;
 }
+
+
+/* Accessibility hard floor for authenticated dark surfaces */
+.lab-stack .lab-decision > span,
+.lab-stack .constraint-table th,
+.workflow-page .constraint-table th {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.lab-stack .lab-decision > strong,
+.lab-stack .constraint-table td,
+.workflow-page .constraint-table td {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.lab-stack .lab-section,
+.workflow-page .workflow-card,
+.workflow-page .configuration-card {
+  --muted-foreground: rgba(255, 255, 255, 0.68);
+}
+
+.lab-stack .lab-section :is(p, span, th, dt, small):not(.state-badge):not(.constraint-pass):not(.constraint-fail):not(.constraint-missing),
+.workflow-page :is(p, span, th, dt, small):not(.state-badge):not(.constraint-pass):not(.constraint-fail):not(.constraint-missing) {
+  color: rgba(255, 255, 255, 0.7);
+}
