@@ -45,7 +45,8 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
               Pricing
             </Link>
             <Link
-              className="rounded-lg bg-slate-950 px-3.5 py-2 text-white transition hover:bg-slate-800"
+              className="rounded-lg bg-slate-950 px-3.5 py-2 transition hover:bg-slate-800"
+              style={{ color: '#ffffff' }}
               href="/login"
             >
               Sign in
@@ -81,7 +82,8 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
                 Pricing
               </Link>
               <Link
-                className="rounded-lg bg-slate-950 px-3 py-2 text-white"
+                className="rounded-lg bg-slate-950 px-3 py-2"
+                style={{ color: '#ffffff' }}
                 href="/login"
               >
                 Sign in
