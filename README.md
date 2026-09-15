@@ -79,6 +79,18 @@ The repository already includes:
 - dependency audit and secret scanning in CI
 - production container definition
 
+## Self-serve authentication
+
+The public beta supports a Google OAuth path through Better Auth. Google authentication is mapped into the existing Proovance tenant/RBAC model; Better Auth is not the authorization source of truth.
+
+Production setup requires the Google OAuth environment variables documented in `docs/security/google-auth-deployment.md` and an explicit auth-schema migration:
+
+```sh
+npm run web:auth:migrate
+```
+
+The public calculator, research, methodology, and pricing surfaces remain usable without Google OAuth configuration.
+
 ## Run locally
 
 Node.js 24 or newer and PostgreSQL are required.

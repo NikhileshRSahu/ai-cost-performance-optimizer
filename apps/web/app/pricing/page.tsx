@@ -73,7 +73,7 @@ export default function PricingPage() {
       </section>
 
       <div className="hero-actions">
-        <Link className="primary-action" href="/">
+        <Link className="primary-action" href="/login">
           Start with the free Work MRI
         </Link>
         <p>

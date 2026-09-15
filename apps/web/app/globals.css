@@ -1369,3 +1369,76 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.proovance-mark {
+  flex: none;
+  color: #12c7e8;
+  overflow: visible;
+}
+
+.proovance-mark-ring {
+  stroke-dasharray: 55 12;
+  transform-origin: 16px 16px;
+  animation: proovance-ring 6s ease-in-out infinite;
+}
+
+.proovance-mark-path {
+  stroke: #3c7bff;
+}
+
+.proovance-mark-proof {
+  stroke: #38d996;
+  stroke-dasharray: 12;
+  stroke-dashoffset: 12;
+  animation: proovance-proof 6s ease-in-out infinite;
+}
+
+@keyframes proovance-ring {
+  0%,
+  72%,
+  100% {
+    transform: rotate(-14deg);
+  }
+
+  12%,
+  48% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes proovance-proof {
+  0%,
+  18% {
+    stroke-dashoffset: 12;
+    opacity: 0;
+  }
+
+  28%,
+  78% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  92%,
+  100% {
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .proovance-mark-ring,
+  .proovance-mark-proof {
+    animation: none;
+  }
+
+  .proovance-mark-proof {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
