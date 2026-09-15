@@ -221,6 +221,7 @@ export default function HomePage() {
             <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs font-medium text-white/45">
               <span>✓ CSV-first</span>
               <span>✓ No prompt content required</span>
+              <span>✓ No invented savings</span>
               <span>✓ Potential ≠ verified</span>
             </div>
           </div>
