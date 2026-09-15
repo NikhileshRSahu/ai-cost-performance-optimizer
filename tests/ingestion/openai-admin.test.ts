@@ -7,7 +7,7 @@ import {
 describe('OpenAI Admin connector', () => {
   it('paginates usage and cost evidence without inventing cost attribution', async () => {
     const seen: string[] = [];
-    const fetcher: OpenAIAdminFetch = async (url, init) => {
+    const fetcher: OpenAIAdminFetch = (url, init) => {
       seen.push(url);
       expect(init.headers.Authorization).toBe('Bearer admin-test-key');
 
@@ -16,7 +16,7 @@ describe('OpenAI Admin connector', () => {
           return {
             ok: true,
             status: 200,
-            json: async () => ({
+            json: () => ({
               object: 'page',
               data: [
                 {
@@ -49,7 +49,7 @@ describe('OpenAI Admin connector', () => {
         return {
           ok: true,
           status: 200,
-          json: async () => ({
+          json: () => ({
             object: 'page',
             data: [
               {
@@ -83,7 +83,7 @@ describe('OpenAI Admin connector', () => {
         return {
           ok: true,
           status: 200,
-          json: async () => ({
+          json: () => ({
             object: 'page',
             data: [
               {
@@ -136,10 +136,10 @@ describe('OpenAI Admin connector', () => {
   });
 
   it('does not expose the admin key in connector errors', async () => {
-    const fetcher: OpenAIAdminFetch = async () => ({
+    const fetcher: OpenAIAdminFetch = () => ({
       ok: false,
       status: 401,
-      json: async () => ({ error: { message: 'bad key' } }),
+      json: () => ({ error: { message: 'bad key' } }),
     });
 
     await expect(
