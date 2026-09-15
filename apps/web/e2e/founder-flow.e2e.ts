@@ -23,7 +23,9 @@ test('founder can traverse dashboard, lab, and report with demo evidence labeled
     page.getByRole('heading', { name: 'Demo Optimizer Co' }),
   ).toBeVisible();
   await expect(page.getByText(demoDisclaimer)).toBeVisible();
-  await expect(page.getByText('Tested saving', { exact: true }).first()).toBeVisible();
+  await expect(
+    page.getByText('Tested saving', { exact: true }).first(),
+  ).toBeVisible();
   await expectAccessible(page);
 
   await page.getByRole('link', { name: 'Inspect evidence' }).click();

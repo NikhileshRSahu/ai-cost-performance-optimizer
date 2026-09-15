@@ -158,7 +158,9 @@ test('hard customer journey reaches verified savings', async ({ page }) => {
   await expect(
     page.locator('.state-badge.state-verified').first(),
   ).toBeVisible();
-  await expect(page.getByText('Verified net saving', { exact: true })).toBeVisible();
+  await expect(
+    page.getByText('Verified net saving', { exact: true }),
+  ).toBeVisible();
 });
 
 test('failed post-change quality never becomes verified', async ({ page }) => {

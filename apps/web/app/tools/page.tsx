@@ -12,25 +12,29 @@ const toolItems = [
   {
     href: '/tools/llm-cost-calculator',
     label: 'LLM Cost',
-    description: 'Monthly inference cost from your request volume, token usage, and rates.',
+    description:
+      'Monthly inference cost from your request volume, token usage, and rates.',
     icon: Calculator,
   },
   {
     href: '/tools/cost-per-outcome',
     label: 'Cost / outcome',
-    description: 'How reliability changes the real cost of one successful AI outcome.',
+    description:
+      'How reliability changes the real cost of one successful AI outcome.',
     icon: Gauge,
   },
   {
     href: '/tools/prompt-cache-savings',
     label: 'Prompt cache',
-    description: 'Bounded cache savings from cacheable input and your own token rates.',
+    description:
+      'Bounded cache savings from cacheable input and your own token rates.',
     icon: Layers3,
   },
   {
     href: '/tools/ai-agent-cost',
     label: 'Agent cost',
-    description: 'Model and tool cost per agent run, per month, and annualized.',
+    description:
+      'Model and tool cost per agent run, per month, and annualized.',
     icon: Bot,
   },
 ] as const;
@@ -47,9 +51,9 @@ export default function ToolsPage() {
           <span className="block text-slate-400">before you optimize it.</span>
         </h1>
         <p className="mt-7 max-w-2xl text-base leading-7 text-slate-500">
-          These are small exact-arithmetic tools, not the main product. They help
-          you understand one economic question before the Work MRI diagnoses what
-          is actually worth changing.
+          These are small exact-arithmetic tools, not the main product. They
+          help you understand one economic question before the Work MRI
+          diagnoses what is actually worth changing.
         </p>
       </section>
 
@@ -71,9 +75,12 @@ export default function ToolsPage() {
             <h2 className="mt-12 text-xl font-semibold tracking-[-0.03em] text-slate-950">
               {label}
             </h2>
-            <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">{description}</p>
+            <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
+              {description}
+            </p>
             <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-slate-900">
-              Open tool <ArrowRight className="size-4 transition group-hover:translate-x-0.5" />
+              Open tool{' '}
+              <ArrowRight className="size-4 transition group-hover:translate-x-0.5" />
             </span>
           </Link>
         ))}
@@ -88,8 +95,8 @@ export default function ToolsPage() {
             Know the cost? Now find the waste.
           </h2>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-white/48">
-            The Work MRI ranks evidence-backed inefficiencies and tells you which
-            bounded change is worth benchmarking next.
+            The Work MRI ranks evidence-backed inefficiencies and tells you
+            which bounded change is worth benchmarking next.
           </p>
         </div>
         <Link

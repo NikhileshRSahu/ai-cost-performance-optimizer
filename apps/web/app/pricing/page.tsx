@@ -24,16 +24,21 @@ export default function PricingPage() {
         </p>
         <h1 className="mt-4 !text-[clamp(3.2rem,7vw,6.8rem)] !leading-[.9] !tracking-[-.07em] text-slate-950">
           Start free.
-          <span className="block text-slate-400">Pay only when you want a tested decision.</span>
+          <span className="block text-slate-400">
+            Pay only when you want a tested decision.
+          </span>
         </h1>
         <p className="mt-7 max-w-2xl text-base leading-7 text-slate-500">
-          Evalomics is still in public beta. There is no monthly SaaS subscription
-          yet. The product is free to explore; the only paid offer today is a
-          bounded founding optimization audit.
+          Evalomics is still in public beta. There is no monthly SaaS
+          subscription yet. The product is free to explore; the only paid offer
+          today is a bounded founding optimization audit.
         </p>
       </section>
 
-      <section className="grid gap-4 lg:grid-cols-2" aria-label="Current pricing">
+      <section
+        className="grid gap-4 lg:grid-cols-2"
+        aria-label="Current pricing"
+      >
         <article className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,.055)] sm:p-8">
           <div className="flex items-start justify-between gap-6">
             <div>
@@ -45,8 +50,12 @@ export default function PricingPage() {
               </h2>
             </div>
             <div className="text-right">
-              <strong className="font-mono text-4xl font-medium tracking-[-0.05em] text-slate-950">$0</strong>
-              <p className="m-0 mt-1 text-xs text-slate-400">during public beta</p>
+              <strong className="font-mono text-4xl font-medium tracking-[-0.05em] text-slate-950">
+                $0
+              </strong>
+              <p className="m-0 mt-1 text-xs text-slate-400">
+                during public beta
+              </p>
             </div>
           </div>
 
@@ -57,7 +66,10 @@ export default function PricingPage() {
 
           <ul className="mt-6 grid gap-3 p-0">
             {freeFeatures.map((feature) => (
-              <li key={feature} className="flex list-none items-start gap-2.5 text-sm text-slate-700">
+              <li
+                key={feature}
+                className="flex list-none items-start gap-2.5 text-sm text-slate-700"
+              >
                 <Check className="mt-0.5 size-4 shrink-0 text-emerald-600" />
                 {feature}
               </li>
@@ -85,7 +97,9 @@ export default function PricingPage() {
                 </h2>
               </div>
               <div className="text-right">
-                <strong className="font-mono text-4xl font-medium tracking-[-0.05em] text-white">$299</strong>
+                <strong className="font-mono text-4xl font-medium tracking-[-0.05em] text-white">
+                  $299
+                </strong>
                 <p className="m-0 mt-1 text-xs text-white/38">one time</p>
               </div>
             </div>
@@ -97,7 +111,10 @@ export default function PricingPage() {
 
             <ul className="mt-6 grid gap-3 p-0">
               {pilotFeatures.map((feature) => (
-                <li key={feature} className="flex list-none items-start gap-2.5 text-sm text-white/75">
+                <li
+                  key={feature}
+                  className="flex list-none items-start gap-2.5 text-sm text-white/75"
+                >
                   <Check className="mt-0.5 size-4 shrink-0 text-emerald-300" />
                   {feature}
                 </li>

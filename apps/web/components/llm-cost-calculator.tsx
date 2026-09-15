@@ -174,7 +174,9 @@ export function LlmCostCalculator() {
             <option value="GBP">GBP</option>
             <option value="INR">INR</option>
           </select>
-          <small>Label only. Changing this does not convert the numeric rates.</small>
+          <small>
+            Label only. Changing this does not convert the numeric rates.
+          </small>
         </label>
       </form>
 
