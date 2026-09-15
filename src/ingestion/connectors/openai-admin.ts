@@ -55,7 +55,7 @@ const costPageSchema = z.object({
 export type OpenAIAdminResponse = Readonly<{
   ok: boolean;
   status: number;
-  json: () => Promise<unknown>;
+  json: () => unknown | Promise<unknown>;
 }>;
 
 export type OpenAIAdminFetch = (
@@ -63,7 +63,7 @@ export type OpenAIAdminFetch = (
   init: Readonly<{
     headers: Readonly<Record<string, string>>;
   }>,
-) => Promise<OpenAIAdminResponse>;
+) => OpenAIAdminResponse | Promise<OpenAIAdminResponse>;
 
 export type OpenAIUsageEvidence = Readonly<{
   intervalStart: string;
