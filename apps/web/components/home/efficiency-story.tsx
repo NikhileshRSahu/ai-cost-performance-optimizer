@@ -4,7 +4,6 @@ import {
   ArrowDownRight,
   Check,
   CircleDollarSign,
-  Gauge,
   ScanSearch,
   ShieldCheck,
   Sparkles,
@@ -109,7 +108,9 @@ export function EfficiencyStory() {
                 <button
                   key={chapter.label}
                   type="button"
-                  onClick={() => setActive(index)}
+                  onClick={() => {
+                    setActive(index);
+                  }}
                   className={
                     'grid w-full grid-cols-[28px_1fr] gap-3 rounded-2xl border p-4 text-left transition duration-300 ' +
                     (active === index
