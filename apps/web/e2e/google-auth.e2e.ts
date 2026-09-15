@@ -6,12 +6,12 @@ test('login page is usable when Neon Auth is not configured', async ({
   await page.goto('/login');
 
   await expect(
-    page.getByRole('heading', { name: 'Start your AI Work MRI.' }),
+    page.getByRole('heading', { name: 'Start with real evidence.' }),
   ).toBeVisible();
   await expect(
-    page.getByText('Sign-in is not configured on this deployment.'),
+    page.getByText('Google sign-in is disabled on this preview host.'),
   ).toBeVisible();
   await expect(
-    page.getByRole('link', { name: 'Try the free LLM cost calculator' }),
+    page.getByRole('link', { name: 'Back to Evalomics' }),
   ).toBeVisible();
 });
