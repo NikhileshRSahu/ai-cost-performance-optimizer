@@ -52,10 +52,12 @@ const costPageSchema = z.object({
   next_page: z.string().nullable(),
 });
 
+export type OpenAIAdminJson = Readonly<Record<string, unknown>>;
+
 export type OpenAIAdminResponse = Readonly<{
   ok: boolean;
   status: number;
-  json: () => Promise<unknown>;
+  json: () => OpenAIAdminJson | Promise<OpenAIAdminJson>;
 }>;
 
 export type OpenAIAdminFetch = (
@@ -103,7 +105,7 @@ const defaultFetch: OpenAIAdminFetch = async (url, init) => {
   return {
     ok: response.ok,
     status: response.status,
-    json: () => response.json() as Promise<unknown>,
+    json: () => response.json() as Promise<OpenAIAdminJson>,
   };
 };
 
