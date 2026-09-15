@@ -2422,3 +2422,21 @@ samp,
   ):not(.constraint-missing) {
   color: rgba(255, 255, 255, 0.7);
 }
+
+
+/* Preserve readable dark copy on legacy light MRI cards inside the dark workbench */
+.workflow-page .mri-panel,
+.workflow-page .mri-panel :is(p, span, th, td, dt, dd, small),
+.lab-stack .mri-panel,
+.lab-stack .mri-panel :is(p, span, th, td, dt, dd, small) {
+  color: #334155;
+}
+
+.workflow-page .mri-panel .projection-note,
+.lab-stack .mri-panel .projection-note,
+.workflow-page .mri-action .projection-note,
+.lab-stack .mri-action .projection-note {
+  color: #334155;
+  border-color: #cbd5e1;
+  background: #ffffff;
+}
