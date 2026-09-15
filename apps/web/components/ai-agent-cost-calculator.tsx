@@ -92,14 +92,18 @@ export function AiAgentCostCalculator() {
     <div className="calculator-shell">
       <form
         className="calculator-form"
-        onSubmit={(event) => event.preventDefault()}
+        onSubmit={(event) => {
+          event.preventDefault();
+        }}
       >
         <label>
           <span>Agent runs per month</span>
           <input
             inputMode="numeric"
             value={runs}
-            onChange={(event) => setRuns(event.target.value)}
+            onChange={(event) => {
+              setRuns(event.target.value);
+            }}
           />
         </label>
         <label>
@@ -107,7 +111,9 @@ export function AiAgentCostCalculator() {
           <input
             inputMode="numeric"
             value={callsPerRun}
-            onChange={(event) => setCallsPerRun(event.target.value)}
+            onChange={(event) => {
+              setCallsPerRun(event.target.value);
+            }}
           />
         </label>
         <label>
@@ -115,7 +121,9 @@ export function AiAgentCostCalculator() {
           <input
             inputMode="numeric"
             value={inputTokens}
-            onChange={(event) => setInputTokens(event.target.value)}
+            onChange={(event) => {
+              setInputTokens(event.target.value);
+            }}
           />
         </label>
         <label>
@@ -123,7 +131,9 @@ export function AiAgentCostCalculator() {
           <input
             inputMode="numeric"
             value={outputTokens}
-            onChange={(event) => setOutputTokens(event.target.value)}
+            onChange={(event) => {
+              setOutputTokens(event.target.value);
+            }}
           />
         </label>
         <label>
@@ -131,7 +141,9 @@ export function AiAgentCostCalculator() {
           <input
             inputMode="decimal"
             value={inputRate}
-            onChange={(event) => setInputRate(event.target.value)}
+            onChange={(event) => {
+              setInputRate(event.target.value);
+            }}
           />
         </label>
         <label>
@@ -139,7 +151,9 @@ export function AiAgentCostCalculator() {
           <input
             inputMode="decimal"
             value={outputRate}
-            onChange={(event) => setOutputRate(event.target.value)}
+            onChange={(event) => {
+              setOutputRate(event.target.value);
+            }}
           />
         </label>
         <label>
@@ -147,14 +161,18 @@ export function AiAgentCostCalculator() {
           <input
             inputMode="decimal"
             value={toolCostPerRun}
-            onChange={(event) => setToolCostPerRun(event.target.value)}
+            onChange={(event) => {
+              setToolCostPerRun(event.target.value);
+            }}
           />
         </label>
         <label>
           <span>Display currency</span>
           <select
             value={currency}
-            onChange={(event) => setCurrency(event.target.value)}
+            onChange={(event) => {
+              setCurrency(event.target.value);
+            }}
           >
             <option value="USD">USD</option>
             <option value="EUR">EUR</option>
