@@ -111,7 +111,7 @@ export function WorkbenchShell({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#070a0f] text-white">
+    <div className="org-workbench min-h-screen bg-[#070a0f] text-white">
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-white/[0.07] bg-[#090d13] lg:flex lg:flex-col">
         <div className="flex h-16 items-center gap-2.5 border-b border-white/[0.07] px-5">
           <EvalomicsMark />
