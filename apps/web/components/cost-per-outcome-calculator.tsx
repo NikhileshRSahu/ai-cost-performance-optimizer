@@ -58,7 +58,10 @@ export function CostPerOutcomeCalculator() {
 
   return (
     <div className="calculator-shell">
-      <form className="calculator-form" onSubmit={(event) => event.preventDefault()}>
+      <form
+        className="calculator-form"
+        onSubmit={(event) => event.preventDefault()}
+      >
         <label>
           <span>Monthly AI cost</span>
           <input
@@ -86,7 +89,10 @@ export function CostPerOutcomeCalculator() {
         </label>
         <label>
           <span>Display currency</span>
-          <select value={currency} onChange={(event) => setCurrency(event.target.value)}>
+          <select
+            value={currency}
+            onChange={(event) => setCurrency(event.target.value)}
+          >
             <option value="USD">USD</option>
             <option value="EUR">EUR</option>
             <option value="GBP">GBP</option>
@@ -98,12 +104,17 @@ export function CostPerOutcomeCalculator() {
 
       <section className="calculator-results" aria-live="polite">
         {result === null ? (
-          <p>Enter a positive request count and a successful outcome rate above 0% and at most 100%.</p>
+          <p>
+            Enter a positive request count and a successful outcome rate above
+            0% and at most 100%.
+          </p>
         ) : (
           <>
             <div className="metrics-grid">
               <article className="metric-card">
-                <span className="metric-label">Cost per successful outcome</span>
+                <span className="metric-label">
+                  Cost per successful outcome
+                </span>
                 <strong className="metric-value">
                   {currency} {formatDecimal(result.costPerSuccess, 4)}
                 </strong>
@@ -125,7 +136,8 @@ export function CostPerOutcomeCalculator() {
               <div>
                 <dt>Implied spend on unsuccessful requests</dt>
                 <dd>
-                  {currency} {formatDecimal(result.impliedUnsuccessfulSpend, 2)}
+                  {currency}{' '}
+                  {formatDecimal(result.impliedUnsuccessfulSpend, 2)}
                 </dd>
               </div>
             </dl>
