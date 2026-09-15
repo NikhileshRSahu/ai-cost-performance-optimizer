@@ -28,7 +28,7 @@ describe('Neon Auth session adapter', () => {
     process.env.NEON_AUTH_BASE_URL =
       'https://example.neonauth.aws.neon.tech/evalomics/auth';
 
-    const fetcher = vi.fn((url: string, init?: RequestInit) => {
+    const fetcher = vi.fn((url: string | URL, init?: RequestInit) => {
       expect(url).toBe(
         'https://example.neonauth.aws.neon.tech/evalomics/auth/get-session',
       );
