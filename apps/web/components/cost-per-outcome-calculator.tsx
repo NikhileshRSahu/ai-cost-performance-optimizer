@@ -60,14 +60,18 @@ export function CostPerOutcomeCalculator() {
     <div className="calculator-shell">
       <form
         className="calculator-form"
-        onSubmit={(event) => event.preventDefault()}
+        onSubmit={(event) => {
+          event.preventDefault();
+        }}
       >
         <label>
           <span>Monthly AI cost</span>
           <input
             inputMode="decimal"
             value={monthlyCost}
-            onChange={(event) => setMonthlyCost(event.target.value)}
+            onChange={(event) => {
+              setMonthlyCost(event.target.value);
+            }}
           />
         </label>
         <label>
@@ -75,7 +79,9 @@ export function CostPerOutcomeCalculator() {
           <input
             inputMode="numeric"
             value={requests}
-            onChange={(event) => setRequests(event.target.value)}
+            onChange={(event) => {
+              setRequests(event.target.value);
+            }}
           />
         </label>
         <label>
@@ -83,7 +89,9 @@ export function CostPerOutcomeCalculator() {
           <input
             inputMode="decimal"
             value={successRate}
-            onChange={(event) => setSuccessRate(event.target.value)}
+            onChange={(event) => {
+              setSuccessRate(event.target.value);
+            }}
           />
           <small>Enter a value from 0 through 100.</small>
         </label>
@@ -91,7 +99,9 @@ export function CostPerOutcomeCalculator() {
           <span>Display currency</span>
           <select
             value={currency}
-            onChange={(event) => setCurrency(event.target.value)}
+            onChange={(event) => {
+              setCurrency(event.target.value);
+            }}
           >
             <option value="USD">USD</option>
             <option value="EUR">EUR</option>
