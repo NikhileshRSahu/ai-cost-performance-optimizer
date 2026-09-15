@@ -31,7 +31,7 @@ const usagePageSchema = z.object({
 const costResultSchema = z.object({
   object: z.string(),
   amount: z.object({
-    value: z.number().finite().nonnegative(),
+    value: z.number().nonnegative(),
     currency: z.string().min(3),
   }),
   line_item: z.string().nullable().optional(),
@@ -55,7 +55,7 @@ const costPageSchema = z.object({
 export type OpenAIAdminResponse = Readonly<{
   ok: boolean;
   status: number;
-  json: () => unknown | Promise<unknown>;
+  json: () => Promise<unknown>;
 }>;
 
 export type OpenAIAdminFetch = (
@@ -131,7 +131,7 @@ async function getJson(
   });
 
   if (!response.ok) {
-    throw new Error(`OPENAI_ADMIN_API_${response.status}`);
+    throw new Error('OPENAI_ADMIN_API_' + String(response.status));
   }
 
   return response.json();
