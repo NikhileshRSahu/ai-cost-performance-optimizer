@@ -9,6 +9,7 @@ export default tseslint.config(
       'coverage/**',
       '.superpowers/**',
       'apps/web/.next/**',
+      'apps/web/postcss.config.mjs',
     ],
   },
   js.configs.recommended,
