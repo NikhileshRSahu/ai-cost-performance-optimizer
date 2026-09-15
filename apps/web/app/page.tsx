@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link';
 import {
   ArrowRight,
   BadgeCheck,
@@ -7,28 +7,28 @@ import {
   CircleDollarSign,
   ShieldCheck,
   Sparkles,
-} from "lucide-react";
-import { ContainerScroll } from "@/components/ui/container-scroll-animation";
-import Velaris from "@/components/ui/velaris";
+} from 'lucide-react';
+import { ContainerScroll } from '@/components/ui/container-scroll-animation';
+import Velaris from '@/components/ui/velaris';
 
 const findings = [
   {
-    name: "Repeated context",
-    value: "$1,420/mo",
-    confidence: "High confidence",
-    signal: "Prompt overlap",
+    name: 'Repeated context',
+    value: '$1,420/mo',
+    confidence: 'High confidence',
+    signal: 'Prompt overlap',
   },
   {
-    name: "Model overqualification",
-    value: "$2,190/mo",
-    confidence: "Benchmark next",
-    signal: "Quality headroom",
+    name: 'Model overqualification',
+    value: '$2,190/mo',
+    confidence: 'Benchmark next',
+    signal: 'Quality headroom',
   },
   {
-    name: "Cache miss pattern",
-    value: "$1,260/mo",
-    confidence: "High confidence",
-    signal: "Reusable prefix",
+    name: 'Cache miss pattern',
+    value: '$1,260/mo',
+    confidence: 'High confidence',
+    signal: 'Reusable prefix',
   },
 ] as const;
 
@@ -44,7 +44,9 @@ function ProductSurface() {
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/40">
               Work MRI
             </p>
-            <p className="text-sm font-semibold text-white/90">Production workload</p>
+            <p className="text-sm font-semibold text-white/90">
+              Production workload
+            </p>
           </div>
         </div>
         <div className="hidden items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-xs font-medium text-emerald-200 sm:flex">
@@ -56,22 +58,32 @@ function ProductSurface() {
       <div className="grid gap-3 p-4 md:grid-cols-3 md:p-6">
         <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
           <p className="text-xs font-medium text-white/45">Observed spend</p>
-          <p className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">$18,420</p>
+          <p className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">
+            $18,420
+          </p>
           <p className="mt-1 text-xs text-white/35">monthly evidence window</p>
         </div>
         <div className="rounded-2xl border border-amber-300/15 bg-amber-300/[0.06] p-4">
-          <p className="text-xs font-medium text-amber-100/55">Potential waste</p>
+          <p className="text-xs font-medium text-amber-100/55">
+            Potential waste
+          </p>
           <p className="mt-2 text-2xl font-semibold tracking-tight text-amber-100 md:text-3xl">
             $4,870
           </p>
-          <p className="mt-1 text-xs text-amber-100/35">not yet claimed as savings</p>
+          <p className="mt-1 text-xs text-amber-100/35">
+            not yet claimed as savings
+          </p>
         </div>
         <div className="rounded-2xl border border-emerald-300/15 bg-emerald-300/[0.06] p-4">
-          <p className="text-xs font-medium text-emerald-100/55">Verified net saving</p>
+          <p className="text-xs font-medium text-emerald-100/55">
+            Verified net saving
+          </p>
           <p className="mt-2 text-2xl font-semibold tracking-tight text-emerald-100 md:text-3xl">
             $1,742
           </p>
-          <p className="mt-1 text-xs text-emerald-100/35">quality floor passed</p>
+          <p className="mt-1 text-xs text-emerald-100/35">
+            quality floor passed
+          </p>
         </div>
       </div>
 
@@ -80,7 +92,9 @@ function ProductSurface() {
           <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
             <div>
               <p className="text-sm font-semibold">Ranked opportunities</p>
-              <p className="text-xs text-white/40">Evidence strength × expected value × risk</p>
+              <p className="text-xs text-white/40">
+                Evidence strength × expected value × risk
+              </p>
             </div>
             <Sparkles className="size-4 text-emerald-300/70" />
           </div>
@@ -90,14 +104,20 @@ function ProductSurface() {
                 key={finding.name}
                 className="grid grid-cols-[28px_1fr_auto] items-center gap-3 border-b border-white/[0.07] px-4 py-3 last:border-0"
               >
-                <span className="font-mono text-[11px] text-blue-300/75">0{index + 1}</span>
+                <span className="font-mono text-[11px] text-blue-300/75">
+                  0{index + 1}
+                </span>
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-medium text-white/90">{finding.name}</p>
+                  <p className="truncate text-sm font-medium text-white/90">
+                    {finding.name}
+                  </p>
                   <p className="truncate text-xs text-white/35">
                     {finding.signal} · {finding.confidence}
                   </p>
                 </div>
-                <p className="text-sm font-semibold text-white/85">{finding.value}</p>
+                <p className="text-sm font-semibold text-white/85">
+                  {finding.value}
+                </p>
               </div>
             ))}
           </div>
@@ -109,16 +129,16 @@ function ProductSurface() {
           </p>
           <div className="mt-5 grid gap-3">
             {[
-              ["Opportunity", "Evidence supports testing", true],
-              ["Tested", "Benchmark cleared guardrail", true],
-              ["Verified", "Post-change proof recorded", true],
+              ['Opportunity', 'Evidence supports testing', true],
+              ['Tested', 'Benchmark cleared guardrail', true],
+              ['Verified', 'Post-change proof recorded', true],
             ].map(([label, note, complete]) => (
               <div key={String(label)} className="flex items-start gap-3">
                 <div
                   className={
                     complete
-                      ? "mt-0.5 grid size-6 shrink-0 place-items-center rounded-full border border-emerald-300/25 bg-emerald-300/10 text-emerald-200"
-                      : "mt-0.5 size-6 shrink-0 rounded-full border border-white/10"
+                      ? 'mt-0.5 grid size-6 shrink-0 place-items-center rounded-full border border-emerald-300/25 bg-emerald-300/10 text-emerald-200'
+                      : 'mt-0.5 size-6 shrink-0 rounded-full border border-white/10'
                   }
                 >
                   <BadgeCheck className="size-3.5" />
@@ -155,7 +175,7 @@ export default function HomePage() {
         height="min(760px, calc(100vh - 96px))"
         className="rounded-[28px] border border-white/10 shadow-[0_30px_90px_rgba(6,12,18,.28)]"
         bg="#030506"
-        colors={["#1d4ed8", "#10b981", "#065f46", "#020617"]}
+        colors={['#1d4ed8', '#10b981', '#065f46', '#020617']}
         speed={1.35}
         grain={0.18}
       >
@@ -179,9 +199,9 @@ export default function HomePage() {
               </span>
             </h1>
             <p className="mt-7 max-w-2xl text-base leading-7 text-white/62 sm:text-lg">
-              Evalomics turns usage evidence into a Work MRI: detect waste, rank the safest
-              optimization, benchmark it against your quality floor, and verify what actually
-              improved.
+              Evalomics turns usage evidence into a Work MRI: detect waste, rank
+              the safest optimization, benchmark it against your quality floor,
+              and verify what actually improved.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link
@@ -209,21 +229,25 @@ export default function HomePage() {
 
       <section className="mt-8 grid grid-cols-2 overflow-hidden rounded-2xl border border-slate-200 bg-white md:grid-cols-4">
         {[
-          ["01", "Observe", "Usage evidence"],
-          ["02", "Diagnose", "Waste map"],
-          ["03", "Benchmark", "Quality guard"],
-          ["04", "Verify", "Net savings"],
+          ['01', 'Observe', 'Usage evidence'],
+          ['02', 'Diagnose', 'Waste map'],
+          ['03', 'Benchmark', 'Quality guard'],
+          ['04', 'Verify', 'Net savings'],
         ].map(([index, title, note], position) => (
           <article
             key={title}
             className={
-              "p-5 md:p-6 " +
-              (position < 3 ? "md:border-r md:border-slate-200 " : "") +
-              (position < 2 ? "border-b border-slate-200 md:border-b-0 " : "")
+              'p-5 md:p-6 ' +
+              (position < 3 ? 'md:border-r md:border-slate-200 ' : '') +
+              (position < 2 ? 'border-b border-slate-200 md:border-b-0 ' : '')
             }
           >
-            <p className="font-mono text-xs font-semibold text-blue-600">{index}</p>
-            <p className="mt-3 text-base font-semibold text-slate-950">{title}</p>
+            <p className="font-mono text-xs font-semibold text-blue-600">
+              {index}
+            </p>
+            <p className="mt-3 text-base font-semibold text-slate-950">
+              {title}
+            </p>
             <p className="mt-1 text-sm text-slate-500">{note}</p>
           </article>
         ))}
@@ -240,8 +264,8 @@ export default function HomePage() {
                 From raw AI spend to a decision you can defend.
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-slate-500">
-                Every recommendation carries evidence, a test state, a quality guard, and a
-                verification boundary.
+                Every recommendation carries evidence, a test state, a quality
+                guard, and a verification boundary.
               </p>
             </div>
           }
@@ -259,18 +283,34 @@ export default function HomePage() {
             A decision system for AI efficiency.
           </h2>
           <p className="mt-6 max-w-xl text-base leading-7 text-slate-500">
-            Dashboards tell you what happened. Evalomics is designed to tell you what is worth
-            changing, what must be tested first, and whether the change actually improved unit
-            economics.
+            Dashboards tell you what happened. Evalomics is designed to tell you
+            what is worth changing, what must be tested first, and whether the
+            change actually improved unit economics.
           </p>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
           {[
-            [CircleDollarSign, "Waste map", "Locate spend, token, retry, cache, and repeated-context inefficiency."],
-            [ChartNoAxesCombined, "Ranked next action", "Prioritize bounded hypotheses by evidence strength, expected value, and risk."],
-            [ShieldCheck, "Quality guard", "Require an explicit performance floor before implementation is recommended."],
-            [BadgeCheck, "Proof state", "Keep Opportunity, Tested, and Verified states visibly separate."],
+            [
+              CircleDollarSign,
+              'Waste map',
+              'Locate spend, token, retry, cache, and repeated-context inefficiency.',
+            ],
+            [
+              ChartNoAxesCombined,
+              'Ranked next action',
+              'Prioritize bounded hypotheses by evidence strength, expected value, and risk.',
+            ],
+            [
+              ShieldCheck,
+              'Quality guard',
+              'Require an explicit performance floor before implementation is recommended.',
+            ],
+            [
+              BadgeCheck,
+              'Proof state',
+              'Keep Opportunity, Tested, and Verified states visibly separate.',
+            ],
           ].map(([Icon, title, description]) => {
             const FeatureIcon = Icon;
             return (
@@ -281,8 +321,12 @@ export default function HomePage() {
                 <div className="grid size-10 place-items-center rounded-xl border border-slate-200 bg-slate-50 text-slate-700">
                   <FeatureIcon className="size-5" />
                 </div>
-                <h3 className="mt-12 text-lg font-semibold tracking-tight text-slate-950">{title}</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-500">{description}</p>
+                <h3 className="mt-12 text-lg font-semibold tracking-tight text-slate-950">
+                  {title}
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-500">
+                  {description}
+                </p>
               </article>
             );
           })}
@@ -301,9 +345,18 @@ export default function HomePage() {
           </div>
           <div className="grid gap-3">
             {[
-              ["Potential", "A mathematically supported opportunity, not a saving."],
-              ["Tested", "A controlled benchmark passed the configured quality floor."],
-              ["Verified", "Post-change evidence confirms the net improvement."],
+              [
+                'Potential',
+                'A mathematically supported opportunity, not a saving.',
+              ],
+              [
+                'Tested',
+                'A controlled benchmark passed the configured quality floor.',
+              ],
+              [
+                'Verified',
+                'Post-change evidence confirms the net improvement.',
+              ],
             ].map(([state, description]) => (
               <div
                 key={state}
@@ -312,7 +365,9 @@ export default function HomePage() {
                 <span className="w-fit rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-xs font-semibold text-white/80">
                   {state}
                 </span>
-                <p className="m-0 text-sm leading-6 text-white/45">{description}</p>
+                <p className="m-0 text-sm leading-6 text-white/45">
+                  {description}
+                </p>
               </div>
             ))}
           </div>

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, type ReactNode } from "react";
-import { cn } from "@/lib/utils";
+import { useEffect, useRef, type ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 
 const vertexShaderGLSL = `
 attribute vec2 position;
@@ -92,14 +92,14 @@ export interface VelarisProps {
   children?: ReactNode;
 }
 
-const DEFAULT_COLORS = ["#86efac", "#4ade80", "#059669", "#000000"];
+const DEFAULT_COLORS = ['#86efac', '#4ade80', '#059669', '#000000'];
 
 const Velaris = ({
-  bg = "#000000",
+  bg = '#000000',
   colors = DEFAULT_COLORS,
   speed = 2.0,
   grain = 0.3,
-  height = "100vh",
+  height = '100vh',
   className,
   children,
 }: VelarisProps) => {
@@ -107,7 +107,7 @@ const Velaris = ({
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const hexToRgb = (hex: string): [number, number, number] => {
-    const h = hex.replace("#", "");
+    const h = hex.replace('#', '');
     return [
       parseInt(h.slice(0, 2), 16) / 255,
       parseInt(h.slice(2, 4), 16) / 255,
@@ -120,12 +120,12 @@ const Velaris = ({
     const container = containerRef.current;
     if (!canvas || !container) return;
 
-    const gl = canvas.getContext("webgl");
+    const gl = canvas.getContext('webgl');
     if (!gl) return;
 
     const createShader = (type: number, src: string) => {
       const shader = gl.createShader(type);
-      if (!shader) throw new Error("WEBGL_SHADER_CREATE_FAILED");
+      if (!shader) throw new Error('WEBGL_SHADER_CREATE_FAILED');
       gl.shaderSource(shader, src);
       gl.compileShader(shader);
       return shader;
@@ -149,16 +149,16 @@ const Velaris = ({
       gl.STATIC_DRAW,
     );
 
-    const pos = gl.getAttribLocation(program, "position");
+    const pos = gl.getAttribLocation(program, 'position');
     gl.enableVertexAttribArray(pos);
     gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
 
     const locs = {
-      res: gl.getUniformLocation(program, "u_resolution"),
-      time: gl.getUniformLocation(program, "u_time"),
-      grain: gl.getUniformLocation(program, "u_grain"),
-      colors: gl.getUniformLocation(program, "u_colors"),
-      bg: gl.getUniformLocation(program, "u_bg"),
+      res: gl.getUniformLocation(program, 'u_resolution'),
+      time: gl.getUniformLocation(program, 'u_time'),
+      grain: gl.getUniformLocation(program, 'u_grain'),
+      colors: gl.getUniformLocation(program, 'u_colors'),
+      bg: gl.getUniformLocation(program, 'u_bg'),
     };
 
     const palette = [...colors, ...DEFAULT_COLORS].slice(0, 4);
@@ -201,7 +201,7 @@ const Velaris = ({
     <div
       ref={containerRef}
       style={{ height }}
-      className={cn("relative w-full overflow-hidden", className)}
+      className={cn('relative w-full overflow-hidden', className)}
     >
       <canvas
         ref={canvasRef}
