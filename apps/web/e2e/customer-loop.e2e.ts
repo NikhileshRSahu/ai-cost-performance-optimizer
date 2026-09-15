@@ -234,7 +234,7 @@ test('recovery states stay actionable and accessible', async ({ page }) => {
   await page.goto('/o/journey-org/lab/missing-recommendation');
   await expect(
     page.getByRole('heading', { name: 'Insufficient benchmark evidence' }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
   await expect(
     page.getByRole('link', { name: 'Return to benchmark' }),
   ).toBeVisible();
