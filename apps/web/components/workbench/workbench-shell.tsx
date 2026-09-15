@@ -53,7 +53,7 @@ function NavLinks({
       'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium no-underline transition',
       active
         ? 'bg-white/[0.085] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,.07)]'
-        : 'text-white/48 hover:bg-white/[0.045] hover:text-white/80',
+        : 'text-white/64 hover:bg-white/[0.045] hover:text-white/80',
     );
   }
 
@@ -80,7 +80,7 @@ function NavLinks({
         })}
       </div>
       <div className="mt-7">
-        <p className="px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/25">
+        <p className="px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/58">
           Workspace
         </p>
         <div className="mt-2 grid gap-1">
@@ -127,7 +127,7 @@ export function WorkbenchShell({
           <p className="truncate text-sm font-semibold text-white/85">
             {organizationName}
           </p>
-          <div className="mt-1 flex items-center gap-2 text-[11px] text-white/35">
+          <div className="mt-1 flex items-center gap-2 text-[11px] text-white/62">
             <span>{role}</span>
             <span>·</span>
             <span className="truncate">Private workspace</span>
@@ -144,7 +144,7 @@ export function WorkbenchShell({
             <p className="text-[10px] font-semibold uppercase tracking-[0.13em] text-emerald-200/60">
               Proof boundary
             </p>
-            <p className="mt-1.5 text-xs leading-5 text-white/38">
+            <p className="mt-1.5 text-xs leading-5 text-white/62">
               Potential, tested, and verified savings are never silently merged.
             </p>
           </div>
@@ -191,7 +191,7 @@ export function WorkbenchShell({
               <p className="truncate text-sm font-semibold">
                 {organizationName}
               </p>
-              <p className="mt-1 text-xs text-white/35">
+              <p className="mt-1 text-xs text-white/62">
                 {role} · Private workspace
               </p>
             </div>
