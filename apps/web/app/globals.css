@@ -1,5 +1,17 @@
 @import 'tailwindcss';
 
+@theme inline {
+  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
+  --color-eval-canvas: #f4f7fa;
+  --color-eval-ink: #0b1017;
+  --color-eval-panel: #090d13;
+  --color-eval-panel-elevated: #101721;
+  --color-eval-evidence: #7aa7ff;
+  --color-eval-potential: #f6c56b;
+  --color-eval-verified: #6ee7b7;
+}
+
 :root {
   color-scheme: light;
   font-family:
@@ -2006,5 +2018,60 @@ h1 {
 
   .decision-grid article {
     min-height: 170px;
+  }
+}
+
+
+/* Premium V1 shared behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family:
+    var(--font-geist-sans),
+    "Geist",
+    "Geist Fallback",
+    ui-sans-serif,
+    system-ui,
+    sans-serif;
+}
+
+code,
+pre,
+kbd,
+samp,
+.font-mono {
+  font-family:
+    var(--font-geist-mono),
+    "Geist Mono",
+    "Geist Mono Fallback",
+    ui-monospace,
+    monospace;
+}
+
+::selection {
+  background: rgb(110 231 183 / 35%);
+  color: #0b1017;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .org-workbench {
+    display: block;
   }
 }
