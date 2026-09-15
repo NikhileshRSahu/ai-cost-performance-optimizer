@@ -2411,18 +2411,6 @@ samp,
   --muted-foreground: rgba(255, 255, 255, 0.68);
 }
 
-.lab-stack
-  .lab-section
-  :is(p, span, th, dt, small):not(.state-badge):not(.constraint-pass):not(
-    .constraint-fail
-  ):not(.constraint-missing),
-.workflow-page
-  :is(p, span, th, dt, small):not(.state-badge):not(.constraint-pass):not(
-    .constraint-fail
-  ):not(.constraint-missing) {
-  color: rgba(255, 255, 255, 0.7);
-}
-
 /* Preserve readable dark copy on legacy light MRI cards inside the dark workbench */
 .workflow-page .mri-panel,
 .workflow-page .mri-panel :is(p, span, th, td, dt, dd, small),
@@ -2438,4 +2426,16 @@ samp,
   color: #334155;
   border-color: #cbd5e1;
   background: #ffffff;
+}
+
+.workflow-page .credential-list article,
+.lab-stack .credential-list article {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.workflow-page .credential-list :is(strong, span, small),
+.lab-stack .credential-list :is(strong, span, small) {
+  color: rgba(255, 255, 255, 0.72);
 }
