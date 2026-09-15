@@ -122,10 +122,7 @@ export default async function VerifyPage({
     redirect(`/o/${organizationId}/workloads`);
   }
 
-  const constraintSet =
-    workload?.constraintSet === null || workload?.constraintSet === undefined
-      ? null
-      : workload.constraintSet;
+  const constraintSet = workload.constraintSet ?? null;
   const requiredQuality = constraint(constraintSet, 'requiredQuality');
   const maxP95LatencyMs = constraint(constraintSet, 'maxP95LatencyMs');
   const maxFailureRate = constraint(constraintSet, 'maxFailureRate');
