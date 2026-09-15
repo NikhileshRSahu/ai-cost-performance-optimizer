@@ -1,9 +1,4 @@
-import {
-  Braces,
-  FileCheck2,
-  LockKeyhole,
-  ShieldCheck,
-} from 'lucide-react';
+import { Braces, FileCheck2, LockKeyhole, ShieldCheck } from 'lucide-react';
 
 const boundaries = [
   {
@@ -50,7 +45,9 @@ export function EvidenceBoundary() {
               <div className="grid size-9 place-items-center rounded-xl border border-white/[0.08] bg-white/[0.04] text-white/55">
                 <Icon className="size-4" />
               </div>
-              <strong className="text-sm font-semibold text-white/85">{title}</strong>
+              <strong className="text-sm font-semibold text-white/85">
+                {title}
+              </strong>
               <p className="m-0 text-xs leading-5 text-white/38">{body}</p>
             </article>
           ))}

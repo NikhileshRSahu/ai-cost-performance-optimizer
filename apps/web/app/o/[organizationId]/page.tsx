@@ -1,15 +1,20 @@
-import { Activity, CircleDollarSign, FlaskConical, ShieldCheck } from 'lucide-react';
+import {
+  Activity,
+  CircleDollarSign,
+  FlaskConical,
+  ShieldCheck,
+} from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { buildAnalysisDepth } from '../../../../../src/efficiency/analysis-depth';
 import { buildWorkMriSnapshot } from '../../../../../src/efficiency/work-mri';
-import {
-  formatDecimal,
-  rational,
-} from '../../../../../src/economics/exact';
+import { formatDecimal, rational } from '../../../../../src/economics/exact';
 import { createDatabase } from '../../../../../src/persistence/database';
 import { buildFounderDashboardView } from '../../../../../src/workbench/dashboard-view';
 import { MetricTile } from '../../../components/metric-tile';
-import { ProofTimeline, type ProofStage } from '../../../components/proof-timeline';
+import {
+  ProofTimeline,
+  type ProofStage,
+} from '../../../components/proof-timeline';
 import { RecommendationCard } from '../../../components/recommendation-card';
 import { SignOutButton } from '../../../components/sign-out-button';
 import { WorkMri } from '../../../components/work-mri';
@@ -224,8 +229,8 @@ export default async function FounderDashboardPage({
             Give Evalomics one trustworthy evidence window.
           </h2>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-white/38">
-            Import a usage CSV to unlock cost diagnostics and the first Work MRI.
-            Missing values are never silently treated as zero.
+            Import a usage CSV to unlock cost diagnostics and the first Work
+            MRI. Missing values are never silently treated as zero.
           </p>
         </section>
       ) : (
@@ -254,8 +259,8 @@ export default async function FounderDashboardPage({
 
         {view.strongestAction === null ? (
           <div className="rounded-2xl border border-dashed border-white/12 bg-white/[0.02] p-5 text-sm leading-6 text-white/38">
-            No rank-1 recommendation is available with enough evidence to claim a
-            strongest action.
+            No rank-1 recommendation is available with enough evidence to claim
+            a strongest action.
           </div>
         ) : (
           <RecommendationCard

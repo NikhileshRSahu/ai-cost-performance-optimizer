@@ -1,7 +1,13 @@
 import { Check, Circle } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-const steps = ['Observed', 'Opportunity', 'Tested', 'Implemented', 'Verified'] as const;
+const steps = [
+  'Observed',
+  'Opportunity',
+  'Tested',
+  'Implemented',
+  'Verified',
+] as const;
 export type ProofStage = (typeof steps)[number];
 
 export function ProofTimeline({
@@ -11,10 +17,7 @@ export function ProofTimeline({
   const currentIndex = steps.indexOf(current);
   return (
     <ol
-      className={cn(
-        'grid gap-2',
-        compact ? 'grid-cols-5' : 'sm:grid-cols-5',
-      )}
+      className={cn('grid gap-2', compact ? 'grid-cols-5' : 'sm:grid-cols-5')}
       aria-label="Evidence proof state"
     >
       {steps.map((step, index) => {

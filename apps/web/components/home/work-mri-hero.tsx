@@ -75,8 +75,8 @@ export function WorkMriHero() {
 
               <p className="mt-7 max-w-[600px] text-base leading-7 text-white/58 sm:text-lg">
                 Evalomics turns usage evidence into a Work MRI: detect waste,
-                rank the safest change, benchmark it against your quality
-                floor, and verify what actually improved.
+                rank the safest change, benchmark it against your quality floor,
+                and verify what actually improved.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -104,9 +104,17 @@ export function WorkMriHero() {
             </motion.div>
 
             <motion.div
-              initial={reduceMotion ? false : { opacity: 0, scale: 0.975, y: 20 }}
-              animate={reduceMotion ? undefined : { opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.12, ease: [0.2, 0.8, 0.2, 1] }}
+              initial={
+                reduceMotion ? false : { opacity: 0, scale: 0.975, y: 20 }
+              }
+              animate={
+                reduceMotion ? undefined : { opacity: 1, scale: 1, y: 0 }
+              }
+              transition={{
+                duration: 0.8,
+                delay: 0.12,
+                ease: [0.2, 0.8, 0.2, 1],
+              }}
               className="relative"
             >
               <div className="absolute -inset-5 rounded-[32px] bg-gradient-to-br from-emerald-300/10 via-blue-300/[0.04] to-transparent blur-2xl" />
@@ -205,8 +213,8 @@ export function WorkMriHero() {
                         Selected recommendation
                       </p>
                       <p className="m-0 mt-1.5 max-w-md text-xs font-medium leading-5 text-emerald-50/82">
-                        Route low-complexity classification to a cheaper candidate
-                        only after the quality floor holds.
+                        Route low-complexity classification to a cheaper
+                        candidate only after the quality floor holds.
                       </p>
                     </div>
                     <div className="flex shrink-0 items-center gap-1.5 text-[10px] font-semibold text-emerald-200/75">

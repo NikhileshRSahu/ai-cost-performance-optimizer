@@ -7,7 +7,12 @@ import {
   ScanSearch,
   ShieldCheck,
 } from 'lucide-react';
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from 'framer-motion';
 import { useRef } from 'react';
 import { EvidenceStatePill } from '../evidence-state-pill';
 
@@ -135,8 +140,12 @@ export function ProofScrollStory() {
             <div className="mt-6 grid gap-5">
               <div>
                 <div className="mb-2 flex items-center justify-between text-xs">
-                  <span className="text-white/45">Current cost / 1k requests</span>
-                  <span className="font-mono font-semibold text-white/80">$12.84</span>
+                  <span className="text-white/45">
+                    Current cost / 1k requests
+                  </span>
+                  <span className="font-mono font-semibold text-white/80">
+                    $12.84
+                  </span>
                 </div>
                 <div className="h-2 overflow-hidden rounded-full bg-white/[0.07]">
                   <div className="h-full w-full rounded-full bg-white/26" />
@@ -144,8 +153,12 @@ export function ProofScrollStory() {
               </div>
               <div>
                 <div className="mb-2 flex items-center justify-between text-xs">
-                  <span className="text-white/45">Candidate cost / 1k requests</span>
-                  <span className="font-mono font-semibold text-emerald-200">$7.43</span>
+                  <span className="text-white/45">
+                    Candidate cost / 1k requests
+                  </span>
+                  <span className="font-mono font-semibold text-emerald-200">
+                    $7.43
+                  </span>
                 </div>
                 <div className="h-2 overflow-hidden rounded-full bg-white/[0.07]">
                   {reduceMotion ? (
@@ -171,8 +184,12 @@ export function ProofScrollStory() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="m-0 text-[10px] text-white/30">required floor</p>
-                  <p className="m-0 mt-1 font-mono text-sm text-blue-200">0.90</p>
+                  <p className="m-0 text-[10px] text-white/30">
+                    required floor
+                  </p>
+                  <p className="m-0 mt-1 font-mono text-sm text-blue-200">
+                    0.90
+                  </p>
                 </div>
               </div>
               <div className="relative mt-4 h-2 overflow-hidden rounded-full bg-white/[0.07]">
@@ -180,7 +197,8 @@ export function ProofScrollStory() {
                 <div className="h-full w-[93%] rounded-full bg-gradient-to-r from-blue-400/50 to-emerald-300/80" />
               </div>
               <p className="m-0 mt-3 flex items-center gap-1.5 text-[11px] font-medium text-emerald-200/75">
-                <CheckCircle2 className="size-3.5" /> Candidate stays above the floor
+                <CheckCircle2 className="size-3.5" /> Candidate stays above the
+                floor
               </p>
             </div>
 

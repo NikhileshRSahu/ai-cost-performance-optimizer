@@ -1,8 +1,8 @@
 @import 'tailwindcss';
 
 @theme inline {
-  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
+  --font-sans: 'Geist', 'Geist Fallback', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', 'Geist Mono Fallback', ui-monospace, monospace;
   --color-eval-canvas: #f4f7fa;
   --color-eval-ink: #0b1017;
   --color-eval-panel: #090d13;
@@ -2021,7 +2021,6 @@ h1 {
   }
 }
 
-
 /* Premium V1 shared behavior */
 html {
   scroll-behavior: smooth;
@@ -2029,11 +2028,7 @@ html {
 
 body {
   font-family:
-    var(--font-geist-sans),
-    "Geist",
-    "Geist Fallback",
-    ui-sans-serif,
-    system-ui,
+    var(--font-geist-sans), 'Geist', 'Geist Fallback', ui-sans-serif, system-ui,
     sans-serif;
 }
 
@@ -2043,10 +2038,7 @@ kbd,
 samp,
 .font-mono {
   font-family:
-    var(--font-geist-mono),
-    "Geist Mono",
-    "Geist Mono Fallback",
-    ui-monospace,
+    var(--font-geist-mono), 'Geist Mono', 'Geist Mono Fallback', ui-monospace,
     monospace;
 }
 
@@ -2075,7 +2067,6 @@ samp,
     display: block;
   }
 }
-
 
 /* Authenticated product surfaces */
 .workflow-page,
@@ -2233,14 +2224,22 @@ samp,
 .file-drop {
   border-color: rgba(255, 255, 255, 0.15);
   background:
-    radial-gradient(circle at 50% 0%, rgba(122, 167, 255, 0.08), transparent 45%),
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(122, 167, 255, 0.08),
+      transparent 45%
+    ),
     rgba(255, 255, 255, 0.025);
 }
 
 .file-drop:hover {
   border-color: rgba(122, 167, 255, 0.34);
   background:
-    radial-gradient(circle at 50% 0%, rgba(122, 167, 255, 0.12), transparent 48%),
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(122, 167, 255, 0.12),
+      transparent 48%
+    ),
     rgba(255, 255, 255, 0.035);
 }
 
@@ -2308,14 +2307,22 @@ samp,
 .verification-result.verification-verified {
   border-color: rgba(110, 231, 183, 0.25);
   background:
-    radial-gradient(circle at 100% 0%, rgba(110, 231, 183, 0.1), transparent 38%),
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(110, 231, 183, 0.1),
+      transparent 38%
+    ),
     #0a0f16;
 }
 
 .verification-result.verification-blocked {
   border-color: rgba(248, 113, 113, 0.22);
   background:
-    radial-gradient(circle at 100% 0%, rgba(248, 113, 113, 0.08), transparent 38%),
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(248, 113, 113, 0.08),
+      transparent 38%
+    ),
     #0a0f16;
 }
 

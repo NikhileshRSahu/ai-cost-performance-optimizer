@@ -60,11 +60,36 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
               Menu
             </summary>
             <nav className="absolute right-0 mt-2 grid min-w-48 gap-1 rounded-xl border border-slate-200 bg-white p-2 text-sm shadow-xl">
-              <Link className="rounded-lg px-3 py-2 hover:bg-slate-50" href="/tools">Free tools</Link>
-              <Link className="rounded-lg px-3 py-2 hover:bg-slate-50" href="/research">Research</Link>
-              <Link className="rounded-lg px-3 py-2 hover:bg-slate-50" href="/methodology">Methodology</Link>
-              <Link className="rounded-lg px-3 py-2 hover:bg-slate-50" href="/pricing">Pricing</Link>
-              <Link className="rounded-lg bg-slate-950 px-3 py-2 text-white" href="/login">Sign in</Link>
+              <Link
+                className="rounded-lg px-3 py-2 hover:bg-slate-50"
+                href="/tools"
+              >
+                Free tools
+              </Link>
+              <Link
+                className="rounded-lg px-3 py-2 hover:bg-slate-50"
+                href="/research"
+              >
+                Research
+              </Link>
+              <Link
+                className="rounded-lg px-3 py-2 hover:bg-slate-50"
+                href="/methodology"
+              >
+                Methodology
+              </Link>
+              <Link
+                className="rounded-lg px-3 py-2 hover:bg-slate-50"
+                href="/pricing"
+              >
+                Pricing
+              </Link>
+              <Link
+                className="rounded-lg bg-slate-950 px-3 py-2 text-white"
+                href="/login"
+              >
+                Sign in
+              </Link>
             </nav>
           </details>
         </div>

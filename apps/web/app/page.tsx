@@ -49,7 +49,9 @@ export default function HomePage() {
           </p>
           <h2 className="mt-4 !text-[clamp(2.7rem,5vw,5.2rem)] !leading-[.96] !tracking-[-.06em] text-slate-950">
             A dashboard tells you what happened.
-            <span className="block text-slate-400">Evalomics tells you what to test next.</span>
+            <span className="block text-slate-400">
+              Evalomics tells you what to test next.
+            </span>
           </h2>
           <p className="mt-6 max-w-lg text-base leading-7 text-slate-500">
             The product connects economics to an evidence trail: observe,
@@ -120,19 +122,41 @@ export default function HomePage() {
         </div>
         <div className="grid content-center gap-3 border-t border-slate-200 bg-slate-950 p-7 text-white sm:p-10 lg:border-l lg:border-t-0">
           {[
-            ['01', 'Usage evidence', 'Cost, model, token, cache, retry and outcome economics.'],
-            ['02', 'Sanitized AI history', 'Repeated context and recurring workflow patterns without requiring raw history by default.'],
-            ['03', 'Authorized workspace', 'Cross-tool waste only after explicit connector authorization.'],
-            ['04', 'Production telemetry', 'Continuous verification, drift and cost per successful outcome.'],
+            [
+              '01',
+              'Usage evidence',
+              'Cost, model, token, cache, retry and outcome economics.',
+            ],
+            [
+              '02',
+              'Sanitized AI history',
+              'Repeated context and recurring workflow patterns without requiring raw history by default.',
+            ],
+            [
+              '03',
+              'Authorized workspace',
+              'Cross-tool waste only after explicit connector authorization.',
+            ],
+            [
+              '04',
+              'Production telemetry',
+              'Continuous verification, drift and cost per successful outcome.',
+            ],
           ].map(([index, title, detail]) => (
             <div
               key={title}
               className="grid grid-cols-[30px_1fr] gap-3 rounded-xl border border-white/[0.08] bg-white/[0.03] p-4"
             >
-              <span className="font-mono text-[10px] font-semibold text-blue-300/65">{index}</span>
+              <span className="font-mono text-[10px] font-semibold text-blue-300/65">
+                {index}
+              </span>
               <div>
-                <strong className="text-sm font-semibold text-white/85">{title}</strong>
-                <p className="m-0 mt-1 text-xs leading-5 text-white/35">{detail}</p>
+                <strong className="text-sm font-semibold text-white/85">
+                  {title}
+                </strong>
+                <p className="m-0 mt-1 text-xs leading-5 text-white/35">
+                  {detail}
+                </p>
               </div>
             </div>
           ))}

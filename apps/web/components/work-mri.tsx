@@ -24,8 +24,8 @@ export function WorkMri({ snapshot }: Readonly<{ snapshot: WorkMriSnapshot }>) {
               {snapshot.title}
             </h2>
             <p className="m-0 mt-2 text-xs leading-5 text-white/35">
-              Depth {snapshot.depth.level}: {snapshot.depth.label}. The MRI states
-              only what current evidence can support.
+              Depth {snapshot.depth.level}: {snapshot.depth.label}. The MRI
+              states only what current evidence can support.
             </p>
           </div>
         </div>
@@ -55,7 +55,9 @@ export function WorkMri({ snapshot }: Readonly<{ snapshot: WorkMriSnapshot }>) {
                 {String(index + 1).padStart(2, '0')}
               </span>
               <div className="min-w-0">
-                <p className="m-0 text-sm font-medium text-white/82">{fact.label}</p>
+                <p className="m-0 text-sm font-medium text-white/82">
+                  {fact.label}
+                </p>
                 <p className="m-0 mt-1 truncate text-[10px] text-white/28">
                   Evidence: {fact.evidenceRef ?? 'not available'}
                 </p>
@@ -82,7 +84,9 @@ export function WorkMri({ snapshot }: Readonly<{ snapshot: WorkMriSnapshot }>) {
                             className="grid grid-cols-[minmax(0,1fr)_auto] gap-4 text-xs"
                           >
                             <dt className="text-white/32">{key}</dt>
-                            <dd className="m-0 font-mono text-white/65">{value}</dd>
+                            <dd className="m-0 font-mono text-white/65">
+                              {value}
+                            </dd>
                           </div>
                         ))}
                       </dl>

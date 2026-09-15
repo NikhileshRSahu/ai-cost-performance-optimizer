@@ -57,7 +57,10 @@ export function rewriteNeonResponseHeaders(
     if (requestOrigin === undefined) {
       headers.set('location', '/api/auth' + suffix);
     } else {
-      headers.set('location', new URL('/api/auth' + suffix, requestOrigin).toString());
+      headers.set(
+        'location',
+        new URL('/api/auth' + suffix, requestOrigin).toString(),
+      );
     }
   }
 

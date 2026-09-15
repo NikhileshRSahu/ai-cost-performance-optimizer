@@ -47,7 +47,9 @@ function NavLinks({
 
   function linkClass(href: string): string {
     const active =
-      href === base ? pathname === href : pathname === href || pathname.startsWith(href + '/');
+      href === base
+        ? pathname === href
+        : pathname === href || pathname.startsWith(href + '/');
     return cn(
       'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium no-underline transition',
       active
@@ -62,10 +64,18 @@ function NavLinks({
         {primary.map(({ slug, label, icon: Icon }) => {
           const href = base + slug;
           return (
-            <Link key={label} href={href} onClick={onNavigate} className={linkClass(href)}>
+            <Link
+              key={label}
+              href={href}
+              onClick={onNavigate}
+              className={linkClass(href)}
+            >
               <Icon className="size-4" aria-hidden="true" />
               <span>{label}</span>
-              <ChevronRight className="ml-auto size-3.5 opacity-0 transition group-hover:opacity-50" aria-hidden="true" />
+              <ChevronRight
+                className="ml-auto size-3.5 opacity-0 transition group-hover:opacity-50"
+                aria-hidden="true"
+              />
             </Link>
           );
         })}
@@ -78,7 +88,12 @@ function NavLinks({
           {secondary.map(({ slug, label, icon: Icon }) => {
             const href = base + slug;
             return (
-              <Link key={label} href={href} onClick={onNavigate} className={linkClass(href)}>
+              <Link
+                key={label}
+                href={href}
+                onClick={onNavigate}
+                className={linkClass(href)}
+              >
                 <Icon className="size-4" aria-hidden="true" />
                 <span>{label}</span>
               </Link>
@@ -110,14 +125,19 @@ export function WorkbenchShell({
           <span className="font-semibold tracking-[-0.02em]">Evalomics</span>
         </div>
         <div className="border-b border-white/[0.07] px-4 py-4">
-          <p className="truncate text-sm font-semibold text-white/85">{organizationName}</p>
+          <p className="truncate text-sm font-semibold text-white/85">
+            {organizationName}
+          </p>
           <div className="mt-1 flex items-center gap-2 text-[11px] text-white/35">
             <span>{role}</span>
             <span>·</span>
             <span className="truncate">Private workspace</span>
           </div>
         </div>
-        <nav className="flex-1 overflow-y-auto px-3 py-4" aria-label="Organization workbench">
+        <nav
+          className="flex-1 overflow-y-auto px-3 py-4"
+          aria-label="Organization workbench"
+        >
           <NavLinks organizationId={organizationId} />
         </nav>
         <div className="border-t border-white/[0.07] p-4">
@@ -133,13 +153,18 @@ export function WorkbenchShell({
       </aside>
 
       <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-white/[0.07] bg-[#090d13]/90 px-4 backdrop-blur-xl lg:hidden">
-        <Link href="/" className="flex items-center gap-2 font-semibold no-underline">
+        <Link
+          href="/"
+          className="flex items-center gap-2 font-semibold no-underline"
+        >
           <EvalomicsMark />
           Evalomics
         </Link>
         <button
           type="button"
-          aria-label={open ? 'Close workspace navigation' : 'Open workspace navigation'}
+          aria-label={
+            open ? 'Close workspace navigation' : 'Open workspace navigation'
+          }
           aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
           className="grid size-9 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-white"
@@ -149,17 +174,27 @@ export function WorkbenchShell({
       </header>
 
       {open ? (
-        <div className="fixed inset-0 z-20 bg-black/55 lg:hidden" onClick={() => setOpen(false)}>
+        <div
+          className="fixed inset-0 z-20 bg-black/55 lg:hidden"
+          onClick={() => setOpen(false)}
+        >
           <aside
             className="absolute left-0 top-14 h-[calc(100%-3.5rem)] w-[min(86vw,300px)] border-r border-white/10 bg-[#090d13] p-4"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="mb-4">
-              <p className="truncate text-sm font-semibold">{organizationName}</p>
-              <p className="mt-1 text-xs text-white/35">{role} · Private workspace</p>
+              <p className="truncate text-sm font-semibold">
+                {organizationName}
+              </p>
+              <p className="mt-1 text-xs text-white/35">
+                {role} · Private workspace
+              </p>
             </div>
             <nav aria-label="Organization workbench mobile">
-              <NavLinks organizationId={organizationId} onNavigate={() => setOpen(false)} />
+              <NavLinks
+                organizationId={organizationId}
+                onNavigate={() => setOpen(false)}
+              />
             </nav>
           </aside>
         </div>
