@@ -1513,7 +1513,6 @@ h1 {
   }
 }
 
-
 /* Premium public surface */
 .public-nav {
   display: flex;
@@ -1595,7 +1594,11 @@ h1 {
   border-radius: 1.4rem;
   color: #f7fbff;
   background:
-    radial-gradient(circle at 82% 5%, rgba(56, 217, 150, 0.17), transparent 30%),
+    radial-gradient(
+      circle at 82% 5%,
+      rgba(56, 217, 150, 0.17),
+      transparent 30%
+    ),
     radial-gradient(circle at 8% 0%, rgba(60, 123, 255, 0.22), transparent 36%),
     #10151d;
   box-shadow: 0 30px 80px rgb(18 27 38 / 22%);
@@ -1775,7 +1778,11 @@ h1 {
   gap: 1rem;
   padding: 0.9rem 1rem;
   border-radius: 0.9rem;
-  background: linear-gradient(90deg, rgba(46, 167, 108, 0.18), rgba(46, 167, 108, 0.05));
+  background: linear-gradient(
+    90deg,
+    rgba(46, 167, 108, 0.18),
+    rgba(46, 167, 108, 0.05)
+  );
   border: 1px solid rgba(89, 211, 150, 0.22);
 }
 

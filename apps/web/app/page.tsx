@@ -36,13 +36,18 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="product-stage" aria-label="Illustrative Evalomics Work MRI">
+        <div
+          className="product-stage"
+          aria-label="Illustrative Evalomics Work MRI"
+        >
           <div className="stage-topbar">
             <div>
               <span className="stage-kicker">Work MRI</span>
               <strong>Production workload</strong>
             </div>
-            <span className="live-pill"><i /> Evidence loaded</span>
+            <span className="live-pill">
+              <i /> Evidence loaded
+            </span>
           </div>
 
           <div className="spend-summary">
@@ -93,22 +98,32 @@ export default function HomePage() {
         <article>
           <span>01</span>
           <strong>Observe</strong>
-          <p>Import evidence you already own through CSV or authorized providers.</p>
+          <p>
+            Import evidence you already own through CSV or authorized providers.
+          </p>
         </article>
         <article>
           <span>02</span>
           <strong>Diagnose</strong>
-          <p>Detect spend, retry, cache, model, prompt, and workflow inefficiency.</p>
+          <p>
+            Detect spend, retry, cache, model, prompt, and workflow
+            inefficiency.
+          </p>
         </article>
         <article>
           <span>03</span>
           <strong>Benchmark</strong>
-          <p>Test bounded changes against explicit quality and performance floors.</p>
+          <p>
+            Test bounded changes against explicit quality and performance
+            floors.
+          </p>
         </article>
         <article>
           <span>04</span>
           <strong>Verify</strong>
-          <p>Measure post-change evidence before calling any saving verified.</p>
+          <p>
+            Measure post-change evidence before calling any saving verified.
+          </p>
         </article>
       </section>
 
@@ -118,30 +133,43 @@ export default function HomePage() {
           <h2 id="difference-title">A decision system for AI efficiency.</h2>
           <p className="lede">
             Dashboards tell you what happened. Evalomics is designed to tell you
-            what is worth changing, how to test it safely, and whether the change
-            actually improved economics without crossing your quality floor.
+            what is worth changing, how to test it safely, and whether the
+            change actually improved economics without crossing your quality
+            floor.
           </p>
         </div>
         <div className="decision-grid">
           <article>
             <span className="decision-icon">→</span>
             <strong>Waste map</strong>
-            <p>See where money, tokens, retries, repeated context, and workflow effort accumulate.</p>
+            <p>
+              See where money, tokens, retries, repeated context, and workflow
+              effort accumulate.
+            </p>
           </article>
           <article>
             <span className="decision-icon">△</span>
             <strong>Ranked next action</strong>
-            <p>Prioritize bounded hypotheses by evidence strength, expected value, and risk.</p>
+            <p>
+              Prioritize bounded hypotheses by evidence strength, expected
+              value, and risk.
+            </p>
           </article>
           <article>
             <span className="decision-icon">✓</span>
             <strong>Quality guard</strong>
-            <p>Require a measurable floor before any optimization is recommended for implementation.</p>
+            <p>
+              Require a measurable floor before any optimization is recommended
+              for implementation.
+            </p>
           </article>
           <article>
             <span className="decision-icon">◎</span>
             <strong>Proof state</strong>
-            <p>Keep Opportunity, Tested, and Verified states separate so claims stay honest.</p>
+            <p>
+              Keep Opportunity, Tested, and Verified states separate so claims
+              stay honest.
+            </p>
           </article>
         </div>
       </section>
@@ -152,9 +180,18 @@ export default function HomePage() {
           <h2>Every number has a state.</h2>
         </div>
         <div className="state-explainer">
-          <div><span>Potential</span><p>A mathematically supported opportunity, not a saving.</p></div>
-          <div><span>Tested</span><p>A controlled benchmark passed the configured quality floor.</p></div>
-          <div><span>Verified</span><p>Post-change production evidence confirms the net improvement.</p></div>
+          <div>
+            <span>Potential</span>
+            <p>A mathematically supported opportunity, not a saving.</p>
+          </div>
+          <div>
+            <span>Tested</span>
+            <p>A controlled benchmark passed the configured quality floor.</p>
+          </div>
+          <div>
+            <span>Verified</span>
+            <p>Post-change production evidence confirms the net improvement.</p>
+          </div>
         </div>
       </section>
 
@@ -166,8 +203,12 @@ export default function HomePage() {
           additional access is worth it.
         </p>
         <div className="hero-actions">
-          <Link className="primary-action" href="/login">Run the free Work MRI</Link>
-          <Link className="ghost-action" href="/methodology">Inspect the methodology</Link>
+          <Link className="primary-action" href="/login">
+            Run the free Work MRI
+          </Link>
+          <Link className="ghost-action" href="/methodology">
+            Inspect the methodology
+          </Link>
         </div>
       </section>
     </div>
