@@ -14,8 +14,8 @@ export default function TermsPage() {
         <h1>A decision-support tool, not an automatic production operator.</h1>
         <p className="lede">
           Evalomics helps customers analyze AI evidence, test bounded
-          optimization hypotheses, generate implementation guidance, and
-          measure post-change impact.
+          optimization hypotheses, generate implementation guidance, and measure
+          post-change impact.
         </p>
         <div className="evidence-note">
           <strong>Legal-review status:</strong> these pilot terms document the
@@ -44,15 +44,15 @@ export default function TermsPage() {
           <h2>No guaranteed savings</h2>
           <p>
             Opportunity estimates and benchmark results are not guaranteed
-            savings. A result becomes verified only after comparable
-            post-change evidence satisfies the product's verification rules.
+            savings. A result becomes verified only after comparable post-change
+            evidence satisfies the product's verification rules.
           </p>
         </article>
         <article>
           <h2>Performance constraints</h2>
           <p>
-            A cheaper candidate is not recommended simply because it costs
-            less. Customers define quality, latency, failure-rate, and other
+            A cheaper candidate is not recommended simply because it costs less.
+            Customers define quality, latency, failure-rate, and other
             applicable constraints for the workload being tested.
           </p>
         </article>
@@ -85,8 +85,8 @@ export default function TermsPage() {
           <p>
             Do not use the product to upload evidence you are not authorized to
             process, evade provider or organizational access controls, or
-            misrepresent synthetic, projected, or benchmarked output as
-            verified customer evidence.
+            misrepresent synthetic, projected, or benchmarked output as verified
+            customer evidence.
           </p>
         </article>
       </section>
