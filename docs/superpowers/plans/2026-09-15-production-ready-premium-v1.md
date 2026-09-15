@@ -166,3 +166,11 @@
 - [ ] Verify repeat login does not create duplicates.
 - [ ] Complete or reproduce the customer loop against production-equivalent data.
 - [ ] Only then declare the V1 ready to sell.
+
+
+## Final public-beta clarity pass
+
+- Pricing presents only the current public-beta product ($0) and the bounded $299 founding optimization audit.
+- Roadmap capabilities are explicitly not sold as product tiers.
+- Calculator currency is defined as the denomination of user-entered rates; changing the label never performs FX conversion.
+- The generic feature-card middle of the homepage has been replaced by a pinned, progress-driven evidence story inspired by 21st.dev scroll patterns while preserving native scrolling and reduced-motion fallbacks.
