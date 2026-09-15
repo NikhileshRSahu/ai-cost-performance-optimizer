@@ -127,12 +127,12 @@ describe('OpenAI Admin connector', () => {
       lineItem: 'Model usage',
     });
     expect(result.costs[0]).not.toHaveProperty('model');
-    expect(seen.filter((url) => url.includes('/usage/completions'))).toHaveLength(
-      2,
-    );
-    expect(seen.filter((url) => url.includes('/organization/costs'))).toHaveLength(
-      1,
-    );
+    expect(
+      seen.filter((url) => url.includes('/usage/completions')),
+    ).toHaveLength(2);
+    expect(
+      seen.filter((url) => url.includes('/organization/costs')),
+    ).toHaveLength(1);
   });
 
   it('does not expose the admin key in connector errors', async () => {
