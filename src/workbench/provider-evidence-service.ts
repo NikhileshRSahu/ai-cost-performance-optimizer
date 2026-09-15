@@ -27,13 +27,15 @@ function canonicalJson(value: unknown): string {
   );
 }
 
-function checksum(input: Readonly<{
-  source: ProviderEvidenceSource;
-  intervalStart: string;
-  intervalEnd: string;
-  usageEvidence: readonly Record<string, unknown>[];
-  costEvidence: readonly Record<string, unknown>[];
-}>): string {
+function checksum(
+  input: Readonly<{
+    source: ProviderEvidenceSource;
+    intervalStart: string;
+    intervalEnd: string;
+    usageEvidence: readonly Record<string, unknown>[];
+    costEvidence: readonly Record<string, unknown>[];
+  }>,
+): string {
   return createHash('sha256')
     .update(
       canonicalJson({
