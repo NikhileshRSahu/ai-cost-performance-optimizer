@@ -78,42 +78,84 @@ export function AiAgentCostCalculator() {
       costPerRun: divide(monthlyCost, rational(runCount)),
       annualCost: multiply(monthlyCost, rational(12n)),
     };
-  }, [runs, callsPerRun, inputTokens, outputTokens, inputRate, outputRate, toolCostPerRun]);
+  }, [
+    runs,
+    callsPerRun,
+    inputTokens,
+    outputTokens,
+    inputRate,
+    outputRate,
+    toolCostPerRun,
+  ]);
 
   return (
     <div className="calculator-shell">
-      <form className="calculator-form" onSubmit={(event) => event.preventDefault()}>
+      <form
+        className="calculator-form"
+        onSubmit={(event) => event.preventDefault()}
+      >
         <label>
           <span>Agent runs per month</span>
-          <input inputMode="numeric" value={runs} onChange={(event) => setRuns(event.target.value)} />
+          <input
+            inputMode="numeric"
+            value={runs}
+            onChange={(event) => setRuns(event.target.value)}
+          />
         </label>
         <label>
           <span>Model calls per agent run</span>
-          <input inputMode="numeric" value={callsPerRun} onChange={(event) => setCallsPerRun(event.target.value)} />
+          <input
+            inputMode="numeric"
+            value={callsPerRun}
+            onChange={(event) => setCallsPerRun(event.target.value)}
+          />
         </label>
         <label>
           <span>Input tokens per model call</span>
-          <input inputMode="numeric" value={inputTokens} onChange={(event) => setInputTokens(event.target.value)} />
+          <input
+            inputMode="numeric"
+            value={inputTokens}
+            onChange={(event) => setInputTokens(event.target.value)}
+          />
         </label>
         <label>
           <span>Output tokens per model call</span>
-          <input inputMode="numeric" value={outputTokens} onChange={(event) => setOutputTokens(event.target.value)} />
+          <input
+            inputMode="numeric"
+            value={outputTokens}
+            onChange={(event) => setOutputTokens(event.target.value)}
+          />
         </label>
         <label>
           <span>Input price per 1M tokens</span>
-          <input inputMode="decimal" value={inputRate} onChange={(event) => setInputRate(event.target.value)} />
+          <input
+            inputMode="decimal"
+            value={inputRate}
+            onChange={(event) => setInputRate(event.target.value)}
+          />
         </label>
         <label>
           <span>Output price per 1M tokens</span>
-          <input inputMode="decimal" value={outputRate} onChange={(event) => setOutputRate(event.target.value)} />
+          <input
+            inputMode="decimal"
+            value={outputRate}
+            onChange={(event) => setOutputRate(event.target.value)}
+          />
         </label>
         <label>
           <span>Other tool cost per run</span>
-          <input inputMode="decimal" value={toolCostPerRun} onChange={(event) => setToolCostPerRun(event.target.value)} />
+          <input
+            inputMode="decimal"
+            value={toolCostPerRun}
+            onChange={(event) => setToolCostPerRun(event.target.value)}
+          />
         </label>
         <label>
           <span>Display currency</span>
-          <select value={currency} onChange={(event) => setCurrency(event.target.value)}>
+          <select
+            value={currency}
+            onChange={(event) => setCurrency(event.target.value)}
+          >
             <option value="USD">USD</option>
             <option value="EUR">EUR</option>
             <option value="GBP">GBP</option>
@@ -125,12 +167,17 @@ export function AiAgentCostCalculator() {
 
       <section className="calculator-results" aria-live="polite">
         {result === null ? (
-          <p>Enter at least one agent run and non-negative token, price, and tool-cost values.</p>
+          <p>
+            Enter at least one agent run and non-negative token, price, and
+            tool-cost values.
+          </p>
         ) : (
           <>
             <div className="metrics-grid">
               <article className="metric-card">
-                <span className="metric-label">Estimated monthly agent cost</span>
+                <span className="metric-label">
+                  Estimated monthly agent cost
+                </span>
                 <strong className="metric-value">
                   {currency} {formatDecimal(result.monthlyCost, 2)}
                 </strong>
@@ -155,11 +202,15 @@ export function AiAgentCostCalculator() {
               </div>
               <div>
                 <dt>Model inference cost</dt>
-                <dd>{currency} {formatDecimal(result.modelCost, 2)}</dd>
+                <dd>
+                  {currency} {formatDecimal(result.modelCost, 2)}
+                </dd>
               </div>
               <div>
                 <dt>Other tool cost</dt>
-                <dd>{currency} {formatDecimal(result.monthlyToolCost, 2)}</dd>
+                <dd>
+                  {currency} {formatDecimal(result.monthlyToolCost, 2)}
+                </dd>
               </div>
             </dl>
           </>
