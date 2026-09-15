@@ -1,141 +1,145 @@
 import Link from 'next/link';
-import { ArrowRight, Check, ShieldCheck } from 'lucide-react';
-import { EfficiencyStory } from '../components/home/efficiency-story';
-import { EvidenceBoundary } from '../components/home/evidence-boundary';
-import { WorkMriHero } from '../components/home/work-mri-hero';
+import { ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
+
+const steps = [
+  ['01', 'Observe', 'Load one real usage window.'],
+  ['02', 'Diagnose', 'Rank waste by evidence, value, and risk.'],
+  ['03', 'Test', 'Challenge one change against the quality floor.'],
+  ['04', 'Verify', 'Count savings only after production evidence agrees.'],
+] as const;
 
 export default function HomePage() {
   return (
-    <div>
-      <WorkMriHero />
-
-      <section className="py-14 md:py-20">
-        <div className="grid gap-10 lg:grid-cols-[.92fr_1.08fr] lg:items-end lg:gap-14">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700">
-              Not another spend dashboard
-            </p>
-            <h2 className="mt-4 max-w-[10ch] !text-[clamp(2.8rem,5vw,5.1rem)] !leading-[.92] !tracking-[-.065em] text-slate-950">
-              Make the next decision obvious.
-            </h2>
+    <div className="grid gap-20 pb-10 md:gap-28">
+      <section className="grid min-h-[680px] items-center gap-12 rounded-[30px] border border-slate-800 bg-[#070a0f] px-6 py-12 text-white shadow-[0_40px_120px_rgba(2,6,23,.18)] sm:px-10 lg:grid-cols-[.86fr_1.14fr] lg:px-12">
+        <div className="max-w-xl">
+          <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-300/70">
+            AI Efficiency Intelligence
+          </p>
+          <h1 className="mt-5 text-[clamp(3.2rem,7vw,6.5rem)] font-semibold leading-[.9] tracking-[-.07em] text-white">
+            Find AI waste.
+            <span className="block text-white/45">Prove the fix.</span>
+          </h1>
+          <p className="mt-7 max-w-lg text-base leading-7 text-white/55 sm:text-lg">
+            Evalomics turns real usage evidence into one ranked optimization,
+            tests it against your quality floor, and verifies what actually
+            improved.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/login"
+              className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 no-underline transition hover:bg-emerald-100"
+            >
+              Run the Work MRI <ArrowRight className="size-4" />
+            </Link>
+            <Link
+              href="/tools/llm-cost-calculator"
+              className="inline-flex min-h-12 items-center rounded-xl border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white no-underline transition hover:bg-white/[0.08]"
+            >
+              Free cost calculator
+            </Link>
           </div>
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[11px] text-white/35">
+            <span>CSV-first</span>
+            <span>No prompt content required</span>
+            <span>No invented savings</span>
+          </div>
+        </div>
+
+        <div className="overflow-hidden rounded-[24px] border border-white/10 bg-[#0b1119] shadow-[0_30px_90px_rgba(0,0,0,.35)]">
+          <div className="flex items-center justify-between border-b border-white/[0.07] px-5 py-4">
+            <div>
+              <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/30">Work MRI</p>
+              <p className="m-0 mt-1 text-sm font-semibold text-white/85">Production workload</p>
+            </div>
+            <span className="rounded-full border border-emerald-300/20 bg-emerald-300/[0.07] px-3 py-1 text-[10px] font-semibold text-emerald-200">
+              Evidence loaded
+            </span>
+          </div>
+
+          <div className="grid gap-2.5 p-4 sm:grid-cols-3 sm:p-5">
             {[
-              ['01', 'Find the waste', 'Use evidence, not generic advice.'],
-              [
-                '02',
-                'Test the fix',
-                'Hold quality constant while economics change.',
-              ],
-              [
-                '03',
-                'Prove the result',
-                'Verified appears only after production evidence.',
-              ],
-            ].map(([index, title, body]) => (
-              <div key={title} className="border-t border-slate-300 pt-4">
-                <span className="font-mono text-[10px] font-semibold text-blue-600">
-                  {index}
-                </span>
-                <h3 className="mt-5 text-base font-semibold tracking-[-0.02em] text-slate-950">
-                  {title}
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-500">{body}</p>
+              ['Observed spend', '$18,420', 'Evidence'],
+              ['Potential', '$4,870', 'Not achieved'],
+              ['Verified', '$1,742', 'Post-change proof'],
+            ].map(([label, value, detail]) => (
+              <div key={label} className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4">
+                <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.13em] text-white/30">{label}</p>
+                <p className="m-0 mt-3 font-mono text-2xl font-medium tracking-[-0.04em] text-white">{value}</p>
+                <p className="m-0 mt-1 text-[10px] text-white/28">{detail}</p>
               </div>
             ))}
+          </div>
+
+          <div className="mx-4 mb-4 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 sm:mx-5 sm:mb-5">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-200/55">Rank #1</p>
+                <h2 className="m-0 mt-2 text-lg font-semibold tracking-[-0.025em] text-white/90">Route low-complexity classification to a cheaper model</h2>
+              </div>
+              <span className="shrink-0 rounded-full border border-amber-300/20 bg-amber-300/[0.07] px-3 py-1 text-[10px] font-semibold text-amber-100">Potential</span>
+            </div>
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              {[
+                ['Quality floor', '0.90'],
+                ['Candidate', '0.93'],
+                ['Projected saving', '$2,190/mo'],
+              ].map(([label, value]) => (
+                <div key={label}>
+                  <p className="m-0 text-[9px] uppercase tracking-[0.12em] text-white/25">{label}</p>
+                  <p className="m-0 mt-1 font-mono text-sm font-semibold text-white/75">{value}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-5 flex items-center gap-2 border-t border-white/[0.07] pt-4 text-[11px] font-semibold text-emerald-200/70">
+              <CheckCircle2 className="size-4" />
+              Next action: benchmark this candidate
+            </div>
           </div>
         </div>
       </section>
 
-      <EfficiencyStory />
+      <section className="grid gap-10 lg:grid-cols-[.76fr_1.24fr] lg:items-start">
+        <div className="max-w-xl">
+          <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+            One operating loop
+          </p>
+          <h2 className="mt-4 max-w-[11ch] text-[clamp(2.7rem,5vw,5rem)] font-semibold leading-[.94] tracking-[-.06em] text-slate-950">
+            From spend to a decision you can defend.
+          </h2>
+          <p className="mt-5 max-w-lg text-base leading-7 text-slate-500">
+            No generic optimization feed. Evalomics advances one claim through evidence, testing, implementation, and proof.
+          </p>
+        </div>
 
-      <EvidenceBoundary />
-
-      <section className="mb-12 overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_28px_80px_rgba(15,23,42,.06)]">
-        <div className="grid lg:grid-cols-[1.08fr_.92fr]">
-          <div className="p-7 sm:p-10 lg:p-12">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
-              Start with evidence you already own
-            </p>
-            <h2 className="mt-4 max-w-3xl !text-[clamp(2.7rem,5vw,5.2rem)] !leading-[.94] !tracking-[-.065em] text-slate-950">
-              Give Evalomics one real workload.
-            </h2>
-            <p className="mt-6 max-w-2xl text-base leading-7 text-slate-500">
-              Begin with a CSV or supported provider evidence. You do not need
-              to hand over prompt content just to see whether your workload has
-              measurable waste.
-            </p>
-
-            <div className="mt-7 grid gap-2.5 sm:grid-cols-2">
-              {[
-                'CSV-first onboarding',
-                'OpenAI / Anthropic usage evidence',
-                'No invented savings',
-                'Explicit quality floor',
-              ].map((item) => (
-                <div
-                  key={item}
-                  className="flex items-center gap-2 text-sm text-slate-600"
-                >
-                  <span className="grid size-5 place-items-center rounded-full bg-emerald-50 text-emerald-700">
-                    <Check className="size-3" />
-                  </span>
-                  {item}
-                </div>
-              ))}
+        <div className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-[0_24px_70px_rgba(15,23,42,.055)]">
+          {steps.map(([index, title, body]) => (
+            <div key={title} className="grid gap-3 border-b border-slate-100 p-5 last:border-0 sm:grid-cols-[52px_120px_1fr] sm:items-center sm:p-6">
+              <span className="font-mono text-[11px] font-semibold text-slate-400">{index}</span>
+              <strong className="text-sm font-semibold text-slate-950">{title}</strong>
+              <span className="text-sm leading-6 text-slate-500">{body}</span>
             </div>
+          ))}
+        </div>
+      </section>
 
-            <div className="mt-9 flex flex-wrap gap-3">
-              <Link
-                className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white no-underline transition hover:-translate-y-0.5 hover:bg-slate-800"
-                href="/login"
-              >
-                Run the free Work MRI <ArrowRight className="size-4" />
-              </Link>
-              <Link
-                className="inline-flex min-h-12 items-center rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-800 no-underline transition hover:bg-slate-50"
-                href="/pricing"
-              >
-                See beta pricing
-              </Link>
-            </div>
+      <section className="grid gap-8 rounded-[28px] border border-slate-200 bg-white p-7 shadow-[0_24px_70px_rgba(15,23,42,.05)] sm:p-10 lg:grid-cols-[1fr_.9fr] lg:items-center">
+        <div>
+          <div className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-700">
+            <ShieldCheck className="size-3.5" />
+            Product contract
           </div>
-
-          <div className="relative grid content-center gap-4 border-t border-slate-200 bg-[#071019] p-7 text-white sm:p-10 lg:border-l lg:border-t-0">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_15%,rgba(16,185,129,.12),transparent_36%),radial-gradient(circle_at_25%_90%,rgba(59,130,246,.11),transparent_42%)]" />
-            <div className="relative">
-              <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-200/55">
-                <ShieldCheck className="size-3.5" />
-                Trust contract
-              </div>
-              <p className="mt-5 max-w-lg text-2xl font-semibold leading-8 tracking-[-0.035em] text-white/90">
-                If the evidence cannot support the claim, the interface should
-                say “insufficient evidence” instead of inventing confidence.
-              </p>
-              <div className="mt-8 grid gap-2">
-                {[
-                  ['Potential', 'Worth testing, not yet a saving'],
-                  ['Tested', 'Controlled benchmark cleared the guardrail'],
-                  [
-                    'Verified',
-                    'Post-change production evidence confirmed impact',
-                  ],
-                ].map(([state, meaning]) => (
-                  <div
-                    key={state}
-                    className="grid gap-1 rounded-xl border border-white/[0.08] bg-white/[0.035] px-4 py-3 sm:grid-cols-[90px_1fr] sm:items-center"
-                  >
-                    <strong className="text-xs font-semibold text-white/80">
-                      {state}
-                    </strong>
-                    <span className="text-xs leading-5 text-white/65">
-                      {meaning}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <h2 className="mt-4 max-w-[11ch] text-[clamp(2.4rem,5vw,4.4rem)] font-semibold leading-[.95] tracking-[-.055em] text-slate-950">
+            No evidence, no claim.
+          </h2>
+        </div>
+        <div>
+          <p className="m-0 text-sm leading-6 text-slate-500">
+            Potential, Tested, and Verified remain separate states. Savings only become Verified after comparable post-change production evidence confirms the impact.
+          </p>
+          <Link href="/methodology" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-slate-950 no-underline">
+            Read the methodology <ArrowRight className="size-4" />
+          </Link>
         </div>
       </section>
     </div>
