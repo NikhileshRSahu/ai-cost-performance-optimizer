@@ -24,7 +24,9 @@ describe('Neon Auth session adapter', () => {
     expect(result).toBeNull();
   });
 
-  it('maps a verified Neon Auth user into the trusted Evalomics identity contract', async () => {
+  it(
+    'maps a verified Neon Auth user into the trusted Evalomics identity contract',
+    async () => {
     process.env.NEON_AUTH_BASE_URL =
       'https://example.neonauth.aws.neon.tech/evalomics/auth';
 
@@ -56,16 +58,17 @@ describe('Neon Auth session adapter', () => {
       fetcher,
     );
 
-    expect(result).toEqual({
-      input: {
-        provider: 'neon-auth',
-        subject: 'neon-user-1',
-        email: 'founder@example.com',
-        emailVerified: true,
-      },
-      allowProvision: true,
-    });
-  });
+      expect(result).toEqual({
+        input: {
+          provider: 'neon-auth',
+          subject: 'neon-user-1',
+          email: 'founder@example.com',
+          emailVerified: true,
+        },
+        allowProvision: true,
+      });
+    },
+  );
 
   it('rejects unverified, malformed, or expired sessions', async () => {
     process.env.NEON_AUTH_BASE_URL =
