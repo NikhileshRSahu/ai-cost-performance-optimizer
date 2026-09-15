@@ -51,7 +51,8 @@ export default async function OptimizationLabPage({
             <h1 id="lab-unavailable-title">Insufficient benchmark evidence</h1>
             <p>
               This recommendation does not have the complete
-              current-versus-candidate evidence required for the Optimization Lab.
+              current-versus-candidate evidence required for the Optimization
+              Lab.
             </p>
             <div className="action-row">
               <Link
