@@ -11,3 +11,4 @@ export * from './telemetry-auth.js';
 export * from './pilot-invoice.js';
 export * from './prospect-proof.js';
 export * from './proof-permission.js';
+export * from './analysis-service.js';
