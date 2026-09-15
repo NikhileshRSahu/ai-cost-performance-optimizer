@@ -2392,7 +2392,6 @@ samp,
   color: #93c5fd;
 }
 
-
 /* Accessibility hard floor for authenticated dark surfaces */
 .lab-stack .lab-decision > span,
 .lab-stack .constraint-table th,
@@ -2412,7 +2411,14 @@ samp,
   --muted-foreground: rgba(255, 255, 255, 0.68);
 }
 
-.lab-stack .lab-section :is(p, span, th, dt, small):not(.state-badge):not(.constraint-pass):not(.constraint-fail):not(.constraint-missing),
-.workflow-page :is(p, span, th, dt, small):not(.state-badge):not(.constraint-pass):not(.constraint-fail):not(.constraint-missing) {
+.lab-stack
+  .lab-section
+  :is(p, span, th, dt, small):not(.state-badge):not(.constraint-pass):not(
+    .constraint-fail
+  ):not(.constraint-missing),
+.workflow-page
+  :is(p, span, th, dt, small):not(.state-badge):not(.constraint-pass):not(
+    .constraint-fail
+  ):not(.constraint-missing) {
   color: rgba(255, 255, 255, 0.7);
 }
