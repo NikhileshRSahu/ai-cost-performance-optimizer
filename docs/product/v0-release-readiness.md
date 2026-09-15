@@ -8,6 +8,14 @@ A customer can start with a usage CSV, understand where AI spend or work is inef
 
 The product must never present synthetic, projected, benchmarked, or inferred savings as verified customer savings.
 
+## Chosen launch mode: CSV-first pilot
+
+The current launch mode is the **Evalomics CSV-first pilot / public beta** defined in `docs/product/csv-pilot-release-profile.md`.
+
+For this launch mode, workspace/provider connectors, provider-admin secret collection, cross-tool knowledge duplication, semantic embedding clustering, and automatic production mutation are explicitly excluded. Their unchecked gates remain mandatory before those capabilities can be advertised or enabled.
+
+The CSV-first software surface includes public trust pages for Privacy, Security, Terms, Methodology, and Research. The legal pages are intentionally labeled as prelaunch operational drafts and do **not** close the external legal-review gate.
+
 ## Ship gates
 
 ### 1. Ingestion and evidence
@@ -18,7 +26,7 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Same-currency financial aggregation without silent FX conversion.
 - [x] Progressive evidence-depth contract.
 - [x] Sanitized AI-history normalized import contract, parser, and non-persistent upload/analyze UI.
-- [ ] Authorized workspace connector storage and revocation model.
+- [ ] Authorized workspace connector storage and revocation model. **Excluded from CSV-first pilot; required before connector launch.**
 - [x] Privacy-safe production telemetry event/batch contract and usage normalizer.
 - [x] Session-authenticated production telemetry ingestion endpoint with bounded batches and idempotent event deduplication.
 - [x] Machine-to-machine telemetry credentials with one-time secrets, hash-only storage, owner UI, rotation, and revocation for unattended agents.
@@ -36,9 +44,9 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Deterministic prompt-structure diagnosis from sanitized content.
 - [x] Exact repeated-context detection without echoing raw prompt text.
 - [x] Privacy-safe bounded lexical near-duplicate context detection.
-- [ ] Embedding/semantic repeated-context clustering, if required for a later release.
+- [ ] Embedding/semantic repeated-context clustering. **Deferred beyond CSV-first pilot.**
 - [x] Exact-repeat recurring-workflow candidates with explicit heuristic limitations.
-- [ ] Cross-tool knowledge duplication.
+- [ ] Cross-tool knowledge duplication. **Excluded from CSV-first pilot.**
 
 ### 3. Optimization loop
 
@@ -60,12 +68,12 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Read-only VIEWER boundary.
 - [x] Product-event metadata allowlist.
 - [x] Secret scanning in CI.
-- [ ] Encrypted connector-secret storage.
-- [ ] Connector token rotation/revocation.
+- [ ] Encrypted connector-secret storage. **Excluded from CSV-first pilot because connector secrets are not collected.**
+- [ ] Connector token rotation/revocation. **Required before connector launch; no connector token is requested by the CSV pilot.**
 - [x] Owner-only organization evidence purge service with explicit confirmation.
 - [x] Customer-facing owner-only data export and evidence-purge UI.
 - [x] Owner-controlled raw-evidence retention policy with dry-run preview, explicit enforcement, and preserved decision/audit records.
-- [ ] Threat-model review before provider admin connectors are enabled.
+- [ ] Threat-model review before provider admin connectors are enabled. **Connector release gate; provider-admin connectors are disabled in the CSV pilot.**
 
 ### 5. UX and trust
 
@@ -89,11 +97,11 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [x] Stable safe-error taxonomy that prevents raw internal exception leakage.
 - [x] Privacy-safe structured production observability sink for health and telemetry paths.
 - [x] Signed timeout-bounded external alert webhook routing from the allowlisted operational event schema.
-- [ ] Provider-specific production dashboard/alert destination configured for the deployment.
+- [ ] Provider-specific production dashboard/alert destination configured for the deployment. **Production deployment gate, not a local software-completeness claim.**
 - [x] PostgreSQL-backed distributed telemetry rate limiting across app instances.
 - [x] Server-side upload-size abuse controls for usage, benchmark, sanitized-history, and telemetry evidence.
 - [x] Incident severity and response process.
-- [ ] Named production incident contact/escalation rotation.
+- [ ] Named production incident contact/escalation rotation. **Production operations gate; must be set to a monitored real contact at deployment.**
 
 ### 7. Commercial readiness
 
@@ -103,7 +111,7 @@ The product must never present synthetic, projected, benchmarked, or inferred sa
 - [ ] One design-partner benchmark with written permission to use results. Product now includes an OWNER-only written-permission registry with scope and revocation tracking; this gate remains open until a real partner grants permission.
 - [x] Founding-pilot pricing page.
 - [x] Owner-authenticated fixed-price $299 Optimization Audit invoice-request flow with persisted request state; the $999+ sprint remains scoped before invoicing.
-- [ ] Terms, privacy notice, and data-processing language reviewed for the launch jurisdiction.
+- [ ] Terms, privacy notice, and data-processing language reviewed for the launch jurisdiction. Public prelaunch Privacy/Terms/Security pages exist, but external jurisdiction review remains required.
 - [x] Founding-pilot support and onboarding playbook.
 
 ## V0 release rule
