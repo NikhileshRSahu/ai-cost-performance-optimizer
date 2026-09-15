@@ -56,7 +56,8 @@ export default async function ImportPage({
           <h1>Upload one real usage window</h1>
           <p className="lede">
             Start with the smallest useful dataset. Evalomics will validate the
-            file, preserve provenance, and only analyze accepted rows.
+            file, preserve provenance, only analyze accepted rows, and never turn
+            missing values into zero.
           </p>
         </div>
         <span className="trust-chip">CSV-first · no provider key required</span>
