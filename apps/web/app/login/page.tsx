@@ -59,6 +59,20 @@ export default function LoginPage() {
                 Public calculators and methodology pages remain available.
               </section>
             )}
+            <div className="mt-4 flex flex-wrap gap-4 text-xs font-semibold text-slate-500">
+              <Link
+                className="transition hover:text-slate-900"
+                href="/tools/llm-cost-calculator"
+              >
+                Try the free LLM cost calculator
+              </Link>
+              <Link
+                className="transition hover:text-slate-900"
+                href="/methodology"
+              >
+                Read the evidence methodology
+              </Link>
+            </div>
           </div>
         </div>
 
