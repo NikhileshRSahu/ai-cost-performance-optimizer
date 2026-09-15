@@ -7,13 +7,13 @@ test('free tools hub exposes exact-arithmetic acquisition calculators', async ({
 
   await expect(
     page.getByRole('heading', {
-      name: 'Make the AI economics visible before you optimize.',
+      name: 'Measure one thing before you optimize it.',
     }),
   ).toBeVisible();
-  await expect(page.getByText('LLM Cost Calculator')).toBeVisible();
-  await expect(page.getByText('Cost per Successful Outcome')).toBeVisible();
-  await expect(page.getByText('Prompt Cache Savings')).toBeVisible();
-  await expect(page.getByText('AI Agent Cost Calculator')).toBeVisible();
+  await expect(page.getByText('LLM Cost')).toBeVisible();
+  await expect(page.getByText('Cost / outcome')).toBeVisible();
+  await expect(page.getByText('Prompt cache')).toBeVisible();
+  await expect(page.getByText('Agent cost')).toBeVisible();
 
   await page.goto('/tools/cost-per-outcome');
   await expect(
