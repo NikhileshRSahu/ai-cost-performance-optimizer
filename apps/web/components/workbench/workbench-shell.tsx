@@ -158,7 +158,9 @@ export function WorkbenchShell({
             open ? 'Close workspace navigation' : 'Open workspace navigation'
           }
           aria-expanded={open}
-          onClick={() => setOpen((value) => !value)}
+          onClick={() => {
+            setOpen((value) => !value);
+          }}
           className="grid size-9 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-white"
         >
           {open ? <X className="size-4" /> : <Menu className="size-4" />}
@@ -168,11 +170,15 @@ export function WorkbenchShell({
       {open ? (
         <div
           className="fixed inset-0 z-20 bg-black/55 lg:hidden"
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            setOpen(false);
+          }}
         >
           <aside
             className="absolute left-0 top-14 h-[calc(100%-3.5rem)] w-[min(86vw,300px)] border-r border-white/10 bg-[#090d13] p-4"
-            onClick={(event) => event.stopPropagation()}
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
           >
             <div className="mb-5">
               <p className="truncate text-sm font-semibold">
@@ -183,7 +189,9 @@ export function WorkbenchShell({
             <nav aria-label="Evalomics workspace mobile">
               <NavLinks
                 organizationId={organizationId}
-                onNavigate={() => setOpen(false)}
+                onNavigate={() => {
+                  setOpen(false);
+                }}
               />
             </nav>
           </aside>
