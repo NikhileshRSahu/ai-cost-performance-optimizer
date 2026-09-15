@@ -38,6 +38,20 @@ export default function RootLayout({
         <main id="main-content" className="shell">
           {children}
         </main>
+        <footer className="site-footer">
+          <div className="shell footer-inner">
+            <div>
+              <strong>Evalomics</strong>
+              <span>AI Efficiency Intelligence · CSV-first public beta</span>
+            </div>
+            <nav aria-label="Trust and legal">
+              <Link href="/privacy">Privacy</Link>
+              <Link href="/security">Security</Link>
+              <Link href="/terms">Terms</Link>
+              <Link href="/methodology">Methodology</Link>
+            </nav>
+          </div>
+        </footer>
       </body>
     </html>
   );
