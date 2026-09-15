@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { GoogleSignInButton } from '../../components/google-sign-in-button';
-import { hasGoogleAuthConfiguration } from '../../lib/auth';
+import { hasNeonAuthConfiguration } from '../../lib/neon-auth';
 
 export const metadata: Metadata = {
   title: 'Sign in | Evalomics',
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default function LoginPage() {
-  const configured = hasGoogleAuthConfiguration();
+  const configured = hasNeonAuthConfiguration();
 
   return (
     <div className="landing-stack">
@@ -25,9 +25,7 @@ export default function LoginPage() {
           <GoogleSignInButton />
         ) : (
           <section className="evidence-note" role="status">
-            <strong>
-              Google sign-in is not configured on this deployment.
-            </strong>{' '}
+            <strong>Sign-in is not configured on this deployment.</strong>{' '}
             The product can still be evaluated through its public tools and
             research pages.
           </section>
