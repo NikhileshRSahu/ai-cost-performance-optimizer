@@ -103,7 +103,7 @@ module.exports = async function handler(req, res) {
           model: item.model || 'UNATTRIBUTED_MODEL',
           workspaceId: item.workspace_id || null,
           apiKeyId: item.api_key_id || null,
-          requests: String(item.request_count || 0),
+          requests: null,
           inputTokens: String(uncached + cacheRead + cacheWrite),
           outputTokens: String(item.output_tokens || 0),
           cachedInputTokens: String(cacheRead),
@@ -137,6 +137,8 @@ module.exports = async function handler(req, res) {
       boundaries: {
         currency:
           'Anthropic cost_report amounts are fractional cents. Evalomics converts them to USD only at presentation time.',
+        requestCount:
+          'The documented Messages Usage Report does not expose request count, so request-based metrics must be withheld for this connector.',
         secretHandling:
           'The Admin key is used for this request and is not included in the response or persisted by this function.',
       },
