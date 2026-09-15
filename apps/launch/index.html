@@ -94,6 +94,19 @@ button.primary{margin-top:14px;padding:12px 16px;border-radius:11px;border:0;bac
       </div>
     </div>
 
+    <div class="card">
+      <div class="eyebrow">Anthropic connector</div>
+      <h2>Option C — Connect Claude Platform usage</h2>
+      <p><b>Use this if you manage an Anthropic organization.</b> Evalomics reads the official Usage and Cost Admin reports, including cache-read and cache-creation evidence, and turns them into the same Work MRI.</p>
+      <label>Anthropic Admin API key</label><input id="anthropicAdminKey" type="password" autocomplete="off" placeholder="sk-ant-admin01-…"/>
+      <div class="form-grid">
+        <div><label>Start date</label><input id="anthropicStartDate" type="date"/></div>
+        <div><label>End date</label><input id="anthropicEndDate" type="date"/></div>
+      </div>
+      <button class="primary" id="runAnthropic">Analyze Anthropic usage</button>
+      <div class="secret-note">Anthropic cost-report amounts are returned in fractional cents; Evalomics converts them to USD for presentation. Your Admin key is not returned or persisted by Evalomics code.</div>
+    </div>
+
     <div id="mriResults" class="card" style="display:none">
       <div class="eyebrow">AI Work MRI</div>
       <h2>Evidence-backed snapshot</h2>
@@ -171,7 +184,7 @@ const money=(v,c='USD')=>c+' '+v.toLocaleString(undefined,{minimumFractionDigits
 function showTab(id){document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));scrollTo({top:document.querySelector('.tabs').offsetTop-12,behavior:'smooth'});}
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>showTab(b.dataset.go));
 
-const today=new Date();const seven=new Date(Date.now()-7*864e5);$('endDate').value=today.toISOString().slice(0,10);$('startDate').value=seven.toISOString().slice(0,10);
+const today=new Date();const seven=new Date(Date.now()-7*864e5);$('endDate').value=today.toISOString().slice(0,10);$('startDate').value=seven.toISOString().slice(0,10);$('anthropicEndDate').value=today.toISOString().slice(0,10);$('anthropicStartDate').value=seven.toISOString().slice(0,10);
 
 function parseCsv(text){
  const rows=[];let row=[],cell='',quoted=false;
@@ -223,6 +236,19 @@ $('runOpenAI').onclick=async()=>{
   const totals={};data.costs.forEach(c=>totals[c.currency]=(totals[c.currency]||0)+Number(c.amount));const entries=Object.entries(totals).sort((a,b)=>b[1]-a[1]);const cost=entries[0]?{currency:entries[0][0],amount:entries[0][1]}:null;
   analyze(records,cost?.currency||'USD',cost);
  }catch(e){alert(e.message||'OpenAI connector failed');}finally{btn.disabled=false;btn.textContent='Analyze OpenAI usage';$('adminKey').value='';}
+};
+
+$('runAnthropic').onclick=async()=>{
+ const key=$('anthropicAdminKey').value.trim();if(!key)return alert('Enter an Anthropic Admin API key.');
+ const start=$('anthropicStartDate').value+'T00:00:00Z',end=$('anthropicEndDate').value+'T23:59:59Z';
+ const btn=$('runAnthropic');btn.disabled=true;btn.textContent='Analyzing…';
+ try{
+  const res=await fetch('/api/anthropic-mri',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminKey:key,startingAt:start,endingAt:end})});
+  const data=await res.json();if(!res.ok)throw new Error(data.error||'Anthropic connector failed');
+  const records=data.usage.map(x=>({provider:'anthropic',model:x.model,requests:x.requests,inputTokens:x.inputTokens,outputTokens:x.outputTokens,cachedInputTokens:x.cachedInputTokens,totalCost:null,currency:'USD'}));
+  const totalCents=data.costs.reduce((sum,c)=>sum+Number(c.amountFractionalCents||0),0);const cost=data.costs.length?{currency:'USD',amount:totalCents/100}:null;
+  analyze(records,'USD',cost);
+ }catch(e){alert(e.message||'Anthropic connector failed');}finally{btn.disabled=false;btn.textContent='Analyze Anthropic usage';$('anthropicAdminKey').value='';}
 };
 
 $('runBenchmark').onclick=()=>{
