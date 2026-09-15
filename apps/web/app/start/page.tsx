@@ -5,6 +5,8 @@ export default async function StartPage() {
   const session = await resolveRuntimeSession();
   if (session === null) redirect('/login');
 
-  const membership = session.memberships[0];
+  const membership = session.memberships.at(0);
+  if (membership === undefined) redirect('/unauthorized');
+
   redirect(`/o/${membership.organizationId}`);
 }
