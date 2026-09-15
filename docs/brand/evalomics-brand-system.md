@@ -1,14 +1,14 @@
-# Proovance Brand System
+# Evalomics Brand System
 
 Status: working brand pending final legal/trademark review before paid registration.
 
 ## Brand
 
-**Proovance**
+**Evalomics**
 
-Pronunciation: **PROO-vance**
+Pronunciation: **ee-val-OM-iks**
 
-Name idea: **prove + advance**. It also intentionally evokes evidence provenance without using a generic cost-tool name.
+Name idea: **evaluation + economics** — a direct fit for measuring AI cost, performance, quality, and verified outcomes.
 
 Category: **AI Efficiency Intelligence**
 
@@ -18,15 +18,15 @@ Core promise:
 
 Primary product sentence:
 
-> Proovance helps AI teams find inefficient spend and work, test bounded alternatives against explicit quality constraints, and verify post-change impact.
+> Evalomics helps AI teams find inefficient spend and work, test bounded alternatives against explicit quality constraints, and verify post-change impact.
 
 ## Product architecture
 
-- **Proovance Work MRI** — evidence-backed diagnosis
+- **Evalomics Work MRI** — evidence-backed diagnosis
 - **Optimization Lab** — bounded candidate testing
 - **Verified Impact** — post-change measurement
-- **Proovance Research** — public benchmarks, methods, and AI Efficiency Index
-- **Proovance Tools** — free calculators and acquisition utilities
+- **Evalomics Research** — public benchmarks, methods, and AI Efficiency Index
+- **Evalomics Tools** — free calculators and acquisition utilities
 
 ## Taglines
 
@@ -77,7 +77,7 @@ Two-second ident:
 - 0.00–0.30s: one evidence point appears
 - 0.30–0.70s: points resolve into a diagnostic ring
 - 0.70–1.10s: ring opens into a forward path
-- 1.10–1.45s: path locks into the Proovance P mark
+- 1.10–1.45s: path locks into the Evalomics P mark
 - 1.45–1.75s: wordmark appears
 - 1.75–2.00s: **Analyze. Optimize. Prove.**
 
@@ -104,10 +104,10 @@ Avoid:
 
 ## Social identity
 
-Preferred handle: **@proovance**
-Fallback: **@proovanceai**
+Preferred handle: **@evalomics**
+Fallback: **@evalomicsai**
 
-Display name: **Proovance**
+Display name: **Evalomics**
 
 Bio:
 **AI Efficiency Intelligence. Find AI waste, test safer fixes, and prove what actually improved.**
@@ -129,7 +129,7 @@ SPF, DKIM, and DMARC are required before outbound.
 
 ## Search acquisition
 
-The brand remains Proovance. Search keywords live in tools and content.
+The brand remains Evalomics. Search keywords live in tools and content.
 
 Priority keyword families:
 
@@ -158,11 +158,11 @@ Priority tools:
 
 ## Content franchises
 
-- **Proovance AI Cost Benchmark**
+- **Evalomics AI Cost Benchmark**
 - **AI Waste of the Week**
 - **Model Cost Battle**
 - **Optimization Teardown**
-- **Proovance Research**
+- **Evalomics Research**
 - **AI Efficiency Index**
 
 Every research result must identify whether evidence is PUBLIC_RESEARCH, SYNTHETIC_DEMO, BENCHMARKED, or CUSTOMER_VERIFIED.

@@ -1,10 +1,10 @@
-# Proovance Cowork Launch Handoff
+# Evalomics Launch Handoff
 
 Use this only after the product owner explicitly hands it to Cowork.
 
 ## Mission
 
-Launch **Proovance** as a consistent, evidence-led public SaaS brand and establish its owned distribution accounts without fabricating traction, customers, savings, permissions, addresses, employees, reviews, or security claims.
+Launch **Evalomics** as a consistent, evidence-led public SaaS brand and establish its owned distribution accounts without fabricating traction, customers, savings, permissions, addresses, employees, reviews, or security claims.
 
 Brand category: **AI Efficiency Intelligence**
 
@@ -20,7 +20,7 @@ Short motion/tagline:
 
 Already built in the repository:
 
-- public Proovance beta surface
+- public Evalomics beta surface
 - Research and Methodology pages
 - Work MRI
 - Optimization Lab / benchmark decision flow
@@ -38,21 +38,21 @@ Do not state a connector is live unless the release checklist marks it available
 
 ## Step 1 — final name/domain/handle verification
 
-The working brand is **Proovance**.
+The working brand is **Evalomics**.
 
-A preliminary public-web collision screen on 2026-09-14 found no obvious exact-name software/SaaS/AI company conflict for Proovance across general search and major public platform indexes. This is **not** a legal trademark clearance and does not prove domain or handle availability. Cowork must still perform the live registrar, trademark-database, and platform-signup checks below before irreversible registration.
+A preliminary public-web collision screen on 2026-09-14 found no obvious exact-name software/SaaS/AI company conflict for Evalomics across general search and major public platform indexes. This is **not** a legal trademark clearance and does not prove domain or handle availability. Cowork must still perform the live registrar, trademark-database, and platform-signup checks below before irreversible registration.
 
 Before spending money or making irreversible registrations:
 
 1. Run a current trademark collision screen in the United States, European Union, United Kingdom, and India for software/SaaS/AI/FinOps-related classes.
 2. Check exact registrar availability for:
-   - proovance.com
-   - proovance.ai
-   - proovance.io
-   - proovance.dev
+   - evalomics.com
+   - evalomics.ai
+   - evalomics.io
+   - evalomics.dev
 3. Check live signup availability for:
-   - @proovance
-   - @proovanceai
+   - @evalomics
+   - @evalomicsai
 4. Check company/page naming on LinkedIn and Product Hunt.
 
 Search-engine absence is not availability proof.
@@ -87,10 +87,10 @@ Do not send cold outbound until SPF/DKIM/DMARC are passing.
 
 Suggested display names:
 
-- Proovance
-- Nikhilesh at Proovance
-- Proovance Support
-- Proovance Security
+- Evalomics
+- Nikhilesh at Evalomics
+- Evalomics Support
+- Evalomics Security
 
 ## Step 3 — account creation order
 
@@ -115,11 +115,11 @@ Do not invent employees.
 
 ## Profile standard
 
-Display name: **Proovance**
+Display name: **Evalomics**
 
-Preferred handle: **@proovance**
+Preferred handle: **@evalomics**
 
-Fallback: **@proovanceai**
+Fallback: **@evalomicsai**
 
 Primary bio:
 
@@ -146,7 +146,7 @@ Use the same:
 ## Brand visual rules
 
 Use the source of truth:
-`docs/brand/proovance-brand-system.md`
+`docs/brand/evalomics-brand-system.md`
 
 Visual direction:
 
@@ -190,7 +190,7 @@ Prepare platform-specific, correctly sized:
 - calculator-card template
 - launch-card template
 
-Do not redesign the core mark independently; use the Proovance mark already implemented in the product as the reference.
+Do not redesign the core mark independently; use the Evalomics mark already implemented in the product as the reference.
 
 ## Motion system
 
@@ -199,8 +199,8 @@ Create a clean ~2 second ident:
 0.00–0.30s — evidence point appears  
 0.30–0.70s — points form diagnostic ring  
 0.70–1.10s — ring opens into forward optimization path  
-1.10–1.45s — path resolves into Proovance P mark  
-1.45–1.75s — Proovance wordmark appears  
+1.10–1.45s — path resolves into Evalomics P mark  
+1.45–1.75s — Evalomics wordmark appears  
 1.75–2.00s — **Analyze. Optimize. Prove.**
 
 Export platform-ready variants only if the tool supports them without watermarking or rights ambiguity.
@@ -209,11 +209,11 @@ Export platform-ready variants only if the tool supports them without watermarki
 
 Recurring franchises:
 
-- Proovance AI Cost Benchmark
+- Evalomics AI Cost Benchmark
 - AI Waste of the Week
 - Model Cost Battle
 - Optimization Teardown
-- Proovance Research
+- Evalomics Research
 - AI Efficiency Index
 
 Weekly cadence:
@@ -270,7 +270,7 @@ Do not publish thin keyword pages.
 
 Title:
 
-**Show HN: Proovance – test AI cost reductions before changing production**
+**Show HN: Evalomics – test AI cost reductions before changing production**
 
 Opening:
 
@@ -289,7 +289,7 @@ Ask for technical/product feedback rather than votes.
 
 ## Product Hunt
 
-Name: **Proovance**
+Name: **Evalomics**
 
 Tagline:
 
@@ -332,7 +332,7 @@ Never fabricate a defect, spend estimate, loss, urgency, or security issue.
 
 Core outbound angle:
 
-> Most AI-cost tools tell you where the money went. Proovance is designed around the next question: what can you safely change without dropping below the required quality?
+> Most AI-cost tools tell you where the money went. Evalomics is designed around the next question: what can you safely change without dropping below the required quality?
 
 ## Measurement
 

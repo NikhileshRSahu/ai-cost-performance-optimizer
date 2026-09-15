@@ -1,6 +1,6 @@
-# Proovance
+# Evalomics
 
-**Proovance** is an AI Efficiency Intelligence system for improving how a team uses AI across cost, model choice, retries, tokens, prompts, workflows, knowledge, implementation, and verified outcomes.
+**Evalomics** is an AI Efficiency Intelligence system for improving how a team uses AI across cost, model choice, retries, tokens, prompts, workflows, knowledge, implementation, and verified outcomes.
 
 The product is designed around one operating loop:
 
@@ -81,7 +81,7 @@ The repository already includes:
 
 ## Self-serve authentication
 
-The public beta supports a Google OAuth path through Better Auth. Google authentication is mapped into the existing Proovance tenant/RBAC model; Better Auth is not the authorization source of truth.
+The public beta supports a Google OAuth path through Better Auth. Google authentication is mapped into the existing Evalomics tenant/RBAC model; Better Auth is not the authorization source of truth.
 
 Production setup requires the Google OAuth environment variables documented in `docs/security/google-auth-deployment.md` and an explicit auth-schema migration:
 

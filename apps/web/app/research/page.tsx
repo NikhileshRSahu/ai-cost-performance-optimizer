@@ -4,7 +4,7 @@ export default function ResearchPage() {
   return (
     <div className="landing-stack">
       <section className="hero hero-wide" aria-labelledby="research-title">
-        <p className="eyebrow">Proovance Research · Public beta validation</p>
+        <p className="eyebrow">Evalomics Research · Public beta validation</p>
         <h1 id="research-title">
           Real public evidence, visibly separated from customer proof.
         </h1>

@@ -27,7 +27,7 @@ function createWebAuth() {
   const clientSecret = requiredEnvironment('GOOGLE_CLIENT_SECRET');
 
   return betterAuth({
-    appName: 'Proovance',
+    appName: 'Evalomics',
     baseURL,
     secret,
     database: new Pool({ connectionString: databaseUrl }),

@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { ProovanceMark } from '../components/proovance-mark';
+import { EvalomicsMark } from '../components/evalomics-mark';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Proovance | AI Efficiency Intelligence',
+  title: 'Evalomics | AI Efficiency Intelligence',
   description:
     'Find AI waste, test safer optimizations, and prove what actually improved.',
 };
@@ -21,9 +21,9 @@ export default function RootLayout({
         </a>
         <header className="site-header">
           <div className="shell">
-            <Link className="brand" href="/" aria-label="Proovance home">
-              <ProovanceMark />
-              <span>Proovance</span>
+            <Link className="brand" href="/" aria-label="Evalomics home">
+              <EvalomicsMark />
+              <span>Evalomics</span>
             </Link>
             <nav className="public-nav" aria-label="Public">
               <Link href="/tools/llm-cost-calculator">Free calculator</Link>

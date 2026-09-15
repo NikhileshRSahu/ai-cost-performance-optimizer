@@ -1376,30 +1376,30 @@ h1 {
   gap: 0.55rem;
 }
 
-.proovance-mark {
+.evalomics-mark {
   flex: none;
   color: #12c7e8;
   overflow: visible;
 }
 
-.proovance-mark-ring {
+.evalomics-mark-ring {
   stroke-dasharray: 55 12;
   transform-origin: 16px 16px;
-  animation: proovance-ring 6s ease-in-out infinite;
+  animation: evalomics-ring 6s ease-in-out infinite;
 }
 
-.proovance-mark-path {
+.evalomics-mark-path {
   stroke: #3c7bff;
 }
 
-.proovance-mark-proof {
+.evalomics-mark-proof {
   stroke: #38d996;
   stroke-dasharray: 12;
   stroke-dashoffset: 12;
-  animation: proovance-proof 6s ease-in-out infinite;
+  animation: evalomics-proof 6s ease-in-out infinite;
 }
 
-@keyframes proovance-ring {
+@keyframes evalomics-ring {
   0%,
   72%,
   100% {
@@ -1412,7 +1412,7 @@ h1 {
   }
 }
 
-@keyframes proovance-proof {
+@keyframes evalomics-proof {
   0%,
   18% {
     stroke-dashoffset: 12;
@@ -1432,12 +1432,12 @@ h1 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .proovance-mark-ring,
-  .proovance-mark-proof {
+  .evalomics-mark-ring,
+  .evalomics-mark-proof {
     animation: none;
   }
 
-  .proovance-mark-proof {
+  .evalomics-mark-proof {
     stroke-dashoffset: 0;
     opacity: 1;
   }

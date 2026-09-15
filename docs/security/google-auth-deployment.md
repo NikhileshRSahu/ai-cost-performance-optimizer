@@ -1,6 +1,6 @@
 # Google sign-in deployment
 
-Proovance uses Better Auth for Google OAuth and cookie-backed authentication. Application authorization remains in the existing Proovance users/memberships/organizations model.
+Evalomics uses Better Auth for Google OAuth and cookie-backed authentication. Application authorization remains in the existing Evalomics users/memberships/organizations model.
 
 ## Required environment
 
@@ -41,7 +41,7 @@ The application does not auto-migrate auth tables on normal requests.
 - OAuth tokens are encrypted before database storage.
 - Only Google profile/login scopes are required for authentication.
 - Workspace/Drive/Gmail connector permissions are not requested during sign-in.
-- A verified Better Auth identity is mapped into the existing Proovance tenant/RBAC system.
+- A verified Better Auth identity is mapped into the existing Evalomics tenant/RBAC system.
 - First authenticated access provisions one private workspace with OWNER membership.
 - Repeated logins are idempotent.
 - Same-email/different-identity conflicts are rejected rather than silently linked.

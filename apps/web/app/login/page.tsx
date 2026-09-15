@@ -4,9 +4,9 @@ import { GoogleSignInButton } from '../../components/google-sign-in-button';
 import { hasGoogleAuthConfiguration } from '../../lib/auth';
 
 export const metadata: Metadata = {
-  title: 'Sign in | Proovance',
+  title: 'Sign in | Evalomics',
   description:
-    'Create your Proovance workspace with Google and start with evidence you already own.',
+    'Create your Evalomics workspace with Google and start with evidence you already own.',
 };
 
 export default function LoginPage() {
@@ -15,7 +15,7 @@ export default function LoginPage() {
   return (
     <div className="landing-stack">
       <section className="hero auth-hero" aria-labelledby="login-title">
-        <p className="eyebrow">Proovance · Self-serve beta</p>
+        <p className="eyebrow">Evalomics · Self-serve beta</p>
         <h1 id="login-title">Start your AI Work MRI.</h1>
         <p className="lede">
           Sign in with Google to create a private workspace. You can start
