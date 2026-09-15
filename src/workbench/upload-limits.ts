@@ -8,6 +8,7 @@ export const UPLOAD_LIMITS = Object.freeze({
 export type UploadKind =
   | 'USAGE_CSV'
   | 'BENCHMARK_CSV'
+  | 'POST_CHANGE_CSV'
   | 'SANITIZED_HISTORY_JSON'
   | 'PRODUCTION_TELEMETRY_JSON';
 
@@ -24,6 +25,7 @@ export function assertUploadWithinLimit(
   const limit = {
     USAGE_CSV: UPLOAD_LIMITS.usageCsvBytes,
     BENCHMARK_CSV: UPLOAD_LIMITS.benchmarkCsvBytes,
+    POST_CHANGE_CSV: UPLOAD_LIMITS.usageCsvBytes,
     SANITIZED_HISTORY_JSON: UPLOAD_LIMITS.sanitizedHistoryJsonBytes,
     PRODUCTION_TELEMETRY_JSON: UPLOAD_LIMITS.productionTelemetryJsonBytes,
   }[input.kind];
