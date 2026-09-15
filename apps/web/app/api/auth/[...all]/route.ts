@@ -18,6 +18,22 @@ function forwardedHeaders(request: Request): Headers {
   const headers = new Headers(request.headers);
   headers.delete('host');
   headers.delete('content-length');
+
+  // Vercel forwarding headers describe the public app host. They must not be
+  // forwarded to Neon Auth, which validates its own auth endpoint hostname.
+  for (const name of [
+    'forwarded',
+    'x-forwarded-host',
+    'x-forwarded-port',
+    'x-forwarded-proto',
+    'x-forwarded-for',
+    'x-vercel-forwarded-for',
+    'x-vercel-id',
+    'x-vercel-proxied-for',
+  ]) {
+    headers.delete(name);
+  }
+
   headers.set('accept-encoding', 'identity');
   return headers;
 }
