@@ -27,36 +27,36 @@ describe('Neon Auth session adapter', () => {
   it(
     'maps a verified Neon Auth user into the trusted Evalomics identity contract',
     async () => {
-    process.env.NEON_AUTH_BASE_URL =
-      'https://example.neonauth.aws.neon.tech/evalomics/auth';
+      process.env.NEON_AUTH_BASE_URL =
+        'https://example.neonauth.aws.neon.tech/evalomics/auth';
 
-    const fetcher = vi.fn(async (url: string, init?: RequestInit) => {
-      expect(url).toBe(
-        'https://example.neonauth.aws.neon.tech/evalomics/auth/get-session',
-      );
-      expect(new Headers(init?.headers).get('cookie')).toBe(
-        'session_cookie=value',
-      );
-      return new Response(
-        JSON.stringify({
-          session: { id: 'session-1', userId: 'neon-user-1' },
-          user: {
-            id: 'neon-user-1',
-            email: 'founder@example.com',
-            emailVerified: true,
+      const fetcher = vi.fn(async (url: string, init?: RequestInit) => {
+        expect(url).toBe(
+          'https://example.neonauth.aws.neon.tech/evalomics/auth/get-session',
+        );
+        expect(new Headers(init?.headers).get('cookie')).toBe(
+          'session_cookie=value',
+        );
+        return new Response(
+          JSON.stringify({
+            session: { id: 'session-1', userId: 'neon-user-1' },
+            user: {
+              id: 'neon-user-1',
+              email: 'founder@example.com',
+              emailVerified: true,
+            },
+          }),
+          {
+            status: 200,
+            headers: { 'content-type': 'application/json' },
           },
-        }),
-        {
-          status: 200,
-          headers: { 'content-type': 'application/json' },
-        },
-      );
-    });
+        );
+      });
 
-    const result = await readNeonAuthIdentity(
-      new Headers({ cookie: 'session_cookie=value' }),
-      fetcher,
-    );
+      const result = await readNeonAuthIdentity(
+        new Headers({ cookie: 'session_cookie=value' }),
+        fetcher,
+      );
 
       expect(result).toEqual({
         input: {
