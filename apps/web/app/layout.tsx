@@ -29,7 +29,9 @@ export default function RootLayout({
         <a className="skip-link" href="#main-content">
           Skip to content
         </a>
-        <SiteChrome>{children}</SiteChrome>
+        <main id="main-content">
+          <SiteChrome>{children}</SiteChrome>
+        </main>
       </body>
     </html>
   );
