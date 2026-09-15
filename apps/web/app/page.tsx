@@ -291,45 +291,46 @@ export default function HomePage() {
 
         <div className="grid gap-3 sm:grid-cols-2">
           {[
-            [
-              CircleDollarSign,
-              'Waste map',
-              'Locate spend, token, retry, cache, and repeated-context inefficiency.',
-            ],
-            [
-              ChartNoAxesCombined,
-              'Ranked next action',
-              'Prioritize bounded hypotheses by evidence strength, expected value, and risk.',
-            ],
-            [
-              ShieldCheck,
-              'Quality guard',
-              'Require an explicit performance floor before implementation is recommended.',
-            ],
-            [
-              BadgeCheck,
-              'Proof state',
-              'Keep Opportunity, Tested, and Verified states visibly separate.',
-            ],
-          ].map(([Icon, title, description]) => {
-            const FeatureIcon = Icon;
-            return (
-              <article
-                key={String(title)}
-                className="group min-h-56 rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_16px_45px_rgba(15,23,42,.05)] transition hover:-translate-y-1 hover:border-slate-300 hover:shadow-[0_20px_55px_rgba(15,23,42,.08)]"
-              >
-                <div className="grid size-10 place-items-center rounded-xl border border-slate-200 bg-slate-50 text-slate-700">
-                  <FeatureIcon className="size-5" />
-                </div>
-                <h3 className="mt-12 text-lg font-semibold tracking-tight text-slate-950">
-                  {title}
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-500">
-                  {description}
-                </p>
-              </article>
-            );
-          })}
+            {
+              Icon: CircleDollarSign,
+              title: 'Waste map',
+              description:
+                'Locate spend, token, retry, cache, and repeated-context inefficiency.',
+            },
+            {
+              Icon: ChartNoAxesCombined,
+              title: 'Ranked next action',
+              description:
+                'Prioritize bounded hypotheses by evidence strength, expected value, and risk.',
+            },
+            {
+              Icon: ShieldCheck,
+              title: 'Quality guard',
+              description:
+                'Require an explicit performance floor before implementation is recommended.',
+            },
+            {
+              Icon: BadgeCheck,
+              title: 'Proof state',
+              description:
+                'Keep Opportunity, Tested, and Verified states visibly separate.',
+            },
+          ].map(({ Icon, title, description }) => (
+            <article
+              key={title}
+              className="group min-h-56 rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_16px_45px_rgba(15,23,42,.05)] transition hover:-translate-y-1 hover:border-slate-300 hover:shadow-[0_20px_55px_rgba(15,23,42,.08)]"
+            >
+              <div className="grid size-10 place-items-center rounded-xl border border-slate-200 bg-slate-50 text-slate-700">
+                <Icon className="size-5" />
+              </div>
+              <h3 className="mt-12 text-lg font-semibold tracking-tight text-slate-950">
+                {title}
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-slate-500">
+                {description}
+              </p>
+            </article>
+          ))}
         </div>
       </section>
 
