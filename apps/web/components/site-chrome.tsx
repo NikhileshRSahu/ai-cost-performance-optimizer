@@ -10,11 +10,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
   const isWorkbench = pathname.startsWith('/o/');
 
   if (isWorkbench) {
-    return (
-      <main id="main-content" className="min-h-screen bg-[#070a0f]">
-        {children}
-      </main>
-    );
+    return <div className="min-h-screen bg-[#070a0f]">{children}</div>;
   }
 
   return (
@@ -94,12 +90,9 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
           </details>
         </div>
       </header>
-      <main
-        id="main-content"
-        className="mx-auto min-h-[70vh] w-[min(1320px,calc(100%-2rem))] py-8 md:py-12"
-      >
+      <div className="mx-auto min-h-[70vh] w-[min(1320px,calc(100%-2rem))] py-8 md:py-12">
         {children}
-      </main>
+      </div>
       <footer className="border-t border-slate-200 bg-white">
         <div className="mx-auto flex w-[min(1320px,calc(100%-2rem))] flex-col justify-between gap-6 py-8 text-sm text-slate-500 md:flex-row md:items-center">
           <div className="grid gap-1">
