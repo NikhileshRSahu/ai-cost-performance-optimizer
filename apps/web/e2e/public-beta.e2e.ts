@@ -7,7 +7,7 @@ test('public beta trust path is visible without authentication', async ({
 
   await expect(
     page.getByRole('heading', {
-      name: 'See where AI work is wasting money before changing production.',
+      name: 'Find AI waste. Prove the fix.',
     }),
   ).toBeVisible();
   await expect(page.getByText('No invented savings')).toBeVisible();
