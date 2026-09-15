@@ -31,7 +31,7 @@ export function MetricTile({
       )}
     >
       <div className="flex items-center justify-between gap-3">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.14em] opacity-55">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.14em] opacity-80">
           {label}
         </span>
         {icon === undefined ? null : <span className="opacity-80">{icon}</span>}
