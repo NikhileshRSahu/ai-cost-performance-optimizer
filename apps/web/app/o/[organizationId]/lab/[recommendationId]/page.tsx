@@ -42,28 +42,30 @@ export default async function OptimizationLabPage({
         error.message === 'RECOMMENDATION_NOT_FOUND')
     ) {
       return (
-        <section
-          className="empty-state"
-          aria-labelledby="lab-unavailable-title"
-        >
-          <p className="eyebrow">{LAB_COPY.heading}</p>
-          <h1 id="lab-unavailable-title">Insufficient benchmark evidence</h1>
-          <p>
-            This recommendation does not have the complete
-            current-versus-candidate evidence required for the Optimization Lab.
-          </p>
-          <div className="action-row">
-            <Link
-              className="primary-action"
-              href={`/o/${organizationId}/benchmark`}
-            >
-              Return to benchmark
-            </Link>
-            <Link className="secondary-action" href={`/o/${organizationId}`}>
-              Back to overview
-            </Link>
-          </div>
-        </section>
+        <div className="lab-stack">
+          <section
+            className="empty-state"
+            aria-labelledby="lab-unavailable-title"
+          >
+            <p className="eyebrow">{LAB_COPY.heading}</p>
+            <h1 id="lab-unavailable-title">Insufficient benchmark evidence</h1>
+            <p>
+              This recommendation does not have the complete
+              current-versus-candidate evidence required for the Optimization Lab.
+            </p>
+            <div className="action-row">
+              <Link
+                className="primary-action"
+                href={`/o/${organizationId}/benchmark`}
+              >
+                Return to benchmark
+              </Link>
+              <Link className="secondary-action" href={`/o/${organizationId}`}>
+                Back to overview
+              </Link>
+            </div>
+          </section>
+        </div>
       );
     }
     throw error;
