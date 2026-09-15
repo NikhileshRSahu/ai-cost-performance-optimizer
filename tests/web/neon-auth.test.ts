@@ -28,14 +28,14 @@ describe('Neon Auth session adapter', () => {
     process.env.NEON_AUTH_BASE_URL =
       'https://example.neonauth.aws.neon.tech/evalomics/auth';
 
-    const fetcher = vi.fn(async (url: string, init?: RequestInit) => {
+    const fetcher = vi.fn((url: string, init?: RequestInit) => {
       expect(url).toBe(
         'https://example.neonauth.aws.neon.tech/evalomics/auth/get-session',
       );
       expect(new Headers(init?.headers).get('cookie')).toBe(
         'session_cookie=value',
       );
-      return new Response(
+      return Promise.resolve(new Response(
         JSON.stringify({
           session: { id: 'session-1', userId: 'neon-user-1' },
           user: {
@@ -48,7 +48,7 @@ describe('Neon Auth session adapter', () => {
           status: 200,
           headers: { 'content-type': 'application/json' },
         },
-      );
+      ));
     });
 
     const result = await readNeonAuthIdentity(
@@ -72,8 +72,8 @@ describe('Neon Auth session adapter', () => {
       'https://example.neonauth.aws.neon.tech/evalomics/auth';
 
     const unverified = vi.fn(
-      async () =>
-        new Response(
+      () =>
+        Promise.resolve(new Response(
           JSON.stringify({
             session: { id: 'session-1' },
             user: {
@@ -83,11 +83,11 @@ describe('Neon Auth session adapter', () => {
             },
           }),
           { status: 200 },
-        ),
+        )),
     );
     expect(await readNeonAuthIdentity(new Headers(), unverified)).toBeNull();
 
-    const expired = vi.fn(async () => new Response(null, { status: 401 }));
+    const expired = vi.fn(() => Promise.resolve(new Response(null, { status: 401 })));
     expect(await readNeonAuthIdentity(new Headers(), expired)).toBeNull();
   });
 });
