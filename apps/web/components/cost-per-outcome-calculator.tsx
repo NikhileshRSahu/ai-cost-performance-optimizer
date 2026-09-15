@@ -136,8 +136,7 @@ export function CostPerOutcomeCalculator() {
               <div>
                 <dt>Implied spend on unsuccessful requests</dt>
                 <dd>
-                  {currency}{' '}
-                  {formatDecimal(result.impliedUnsuccessfulSpend, 2)}
+                  {currency} {formatDecimal(result.impliedUnsuccessfulSpend, 2)}
                 </dd>
               </div>
             </dl>
