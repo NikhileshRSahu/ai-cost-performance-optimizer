@@ -15,9 +15,10 @@ export default function LlmCostCalculatorPage() {
         <p className="eyebrow">Free tool · no login required</p>
         <h1 id="calculator-title">LLM Cost Calculator</h1>
         <p className="lede">
-          Estimate your monthly AI inference cost from request volume, average
-          token usage, and the prices you actually pay. We do not hard-code
-          provider prices or silently convert currencies.
+          Estimate monthly inference cost from request volume, average token
+          usage, and the rates you actually pay. Choose the currency those rates
+          are already denominated in; this tool never performs hidden FX
+          conversion.
         </p>
       </section>
 
@@ -37,7 +38,7 @@ export default function LlmCostCalculatorPage() {
           </p>
           <div className="hero-actions">
             <Link className="primary-action" href="/pricing">
-              Run the free Work MRI
+              Continue to the Work MRI
             </Link>
             <Link href="/methodology">See the methodology</Link>
           </div>
