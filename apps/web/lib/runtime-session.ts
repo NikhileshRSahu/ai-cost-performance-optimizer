@@ -30,7 +30,9 @@ function readTrustedIdentityFromEnvironment(): RuntimeIdentity | null {
   });
 }
 
-export async function resolveRuntimeSession(): Promise<AuthenticatedSession | null> {
+export async function resolveRuntimeSession(): Promise<
+  AuthenticatedSession | null
+> {
   const databaseUrl = process.env.DATABASE_URL;
   if (databaseUrl === undefined || databaseUrl.trim().length === 0) return null;
 
