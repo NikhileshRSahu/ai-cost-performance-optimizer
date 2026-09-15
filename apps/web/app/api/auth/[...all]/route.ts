@@ -62,6 +62,15 @@ async function proxy(request: Request): Promise<Response> {
     cache: 'no-store',
   });
 
+  if (!response.ok) {
+    const diagnostic = await response.clone().text();
+    console.error('NEON_AUTH_PROXY_ERROR', {
+      status: response.status,
+      path: new URL(request.url).pathname,
+      body: diagnostic.slice(0, 1000),
+    });
+  }
+
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
