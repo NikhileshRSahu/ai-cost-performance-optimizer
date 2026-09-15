@@ -87,12 +87,16 @@ async function reachVerification(
   await expectAccessible(page);
 
   await page.goto(`/o/${organizationId}`);
-  const verifiedBadge = page.locator('.state-badge.state-verified').first();
+  const verifiedBadge = page
+    .locator('.state-badge.state-verified')
+    .first();
   if (await verifiedBadge.isVisible()) {
     return 'ALREADY_VERIFIED';
   }
 
-  await expect(page.locator('.state-badge.state-tested').first()).toBeVisible();
+  await expect(
+    page.locator('.state-badge.state-tested').first(),
+  ).toBeVisible();
   await page.getByRole('link', { name: 'Implement tested change' }).click();
 
   const implementedAt = page.getByLabel('Implemented at (UTC)');
@@ -155,7 +159,9 @@ test('hard customer journey reaches verified savings', async ({ page }) => {
   }
 
   await page.goto('/o/journey-org');
-  await expect(page.locator('.state-badge.state-verified').first()).toBeVisible();
+  await expect(
+    page.locator('.state-badge.state-verified').first(),
+  ).toBeVisible();
   await expect(page.getByText('Verified net impact')).toBeVisible();
 });
 
