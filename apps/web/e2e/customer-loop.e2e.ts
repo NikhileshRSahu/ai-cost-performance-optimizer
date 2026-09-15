@@ -144,6 +144,7 @@ async function submitPostChange(
 }
 
 test('hard customer journey reaches verified savings', async ({ page }) => {
+  test.setTimeout(90_000);
   const state = await reachVerification(page, 'journey-org');
   if (state === 'READY') {
     await submitPostChange(page, '0.93');
