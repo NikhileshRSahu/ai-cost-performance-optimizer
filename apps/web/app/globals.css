@@ -2466,7 +2466,6 @@ samp,
   color: inherit;
 }
 
-
 /* Release gate: enforce readable foregrounds across the complete dark workbench. */
 .org-workbench
   :is(p, span, small, dt, dd, li, th, td, label, legend, summary, code) {
