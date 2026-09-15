@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../../src/persistence/database';
 import { verifyCustomerChange } from '../../../../../../../src/workbench/verification-service';
+import { assertUploadWithinLimit } from '../../../../../../../src/workbench/upload-limits';
 import { resolveRuntimeSession } from '../../../../../lib/runtime-session';
 
 function textEntry(formData: FormData, key: string, fallback = ''): string {
@@ -19,7 +20,14 @@ export async function submitVerification(formData: FormData): Promise<never> {
   const organizationId = textEntry(formData, 'organizationId');
   const recommendationId = textEntry(formData, 'recommendationId');
   const upload = formData.get('postCsv');
-  if (!(upload instanceof File)) throw new Error('POST_CHANGE_CSV_REQUIRED');
+  if (
+    organizationId.trim().length === 0 ||
+    recommendationId.trim().length === 0 ||
+    !(upload instanceof File)
+  ) {
+    throw new Error('POST_CHANGE_INPUT_REQUIRED');
+  }
+  assertUploadWithinLimit({ kind: 'POST_CHANGE_CSV', sizeBytes: upload.size });
 
   const session = await resolveRuntimeSession();
   const databaseUrl = process.env.DATABASE_URL;

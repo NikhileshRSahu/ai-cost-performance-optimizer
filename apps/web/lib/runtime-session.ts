@@ -45,7 +45,7 @@ export async function resolveRuntimeSession(): Promise<AuthenticatedSession | nu
       () => Promise.resolve(identity.input),
       adapter,
     );
-    if (existing !== null) return existing;
+    if (existing !== null && existing.memberships.length > 0) return existing;
 
     if (!identity.allowProvision) return null;
 

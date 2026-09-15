@@ -78,6 +78,34 @@ describe('self-serve identity provisioning', () => {
     );
   });
 
+  it('repairs an existing application identity that has no workspace membership', async () => {
+    await database.db.insert(users).values({
+      id: 'usr_orphan',
+      email: 'orphan@example.com',
+      authProvider: 'neon-auth',
+      authSubject: 'neon-orphan',
+    });
+
+    const result = await provisionSelfServeIdentity(database.db, {
+      provider: 'neon-auth',
+      subject: 'neon-orphan',
+      email: 'orphan@example.com',
+      emailVerified: true,
+    });
+
+    expect(result.userCreated).toBe(false);
+    expect(result.organizationCreated).toBe(true);
+    expect(result.session.memberships).toHaveLength(1);
+    expect(result.session.memberships[0]).toMatchObject({ role: 'OWNER' });
+    await expect(database.db.select().from(users)).resolves.toHaveLength(1);
+    await expect(
+      database.db.select().from(organizations),
+    ).resolves.toHaveLength(1);
+    await expect(database.db.select().from(memberships)).resolves.toHaveLength(
+      1,
+    );
+  });
+
   it('does not silently link another identity to an occupied email', async () => {
     await provisionSelfServeIdentity(database.db, {
       provider: 'google',

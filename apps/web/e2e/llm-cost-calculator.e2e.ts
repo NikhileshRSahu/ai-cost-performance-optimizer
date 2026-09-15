@@ -5,9 +5,7 @@ test('public LLM calculator estimates cost without authentication', async ({
 }) => {
   await page.goto('/tools/llm-cost-calculator');
 
-  await expect(
-    page.getByRole('heading', { name: 'LLM Cost Calculator' }),
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'LLM cost,' })).toBeVisible();
 
   await expect(page.getByText('USD 20.00')).toBeVisible();
   await expect(page.getByText('USD 240.00')).toBeVisible();
@@ -16,7 +14,7 @@ test('public LLM calculator estimates cost without authentication', async ({
   await page.getByLabel('Requests per month').fill('20000');
   await expect(page.getByText('USD 40.00')).toBeVisible();
 
-  await page.getByLabel('Display currency').selectOption('EUR');
+  await page.getByLabel('Currency of your entered rates').selectOption('EUR');
   await expect(page.getByText('EUR 40.00')).toBeVisible();
-  await expect(page.getByText('No FX conversion is performed.')).toBeVisible();
+  await expect(page.getByText('No FX conversion.')).toBeVisible();
 });
