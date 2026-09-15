@@ -30,7 +30,7 @@ export function EvidenceStatePill({
   return (
     <span
       className={cn(
-        'inline-flex w-fit items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold tracking-wide',
+        `state-badge state-${state.toLowerCase()} inline-flex w-fit items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold tracking-wide`,
         item.classes,
         className,
       )}
