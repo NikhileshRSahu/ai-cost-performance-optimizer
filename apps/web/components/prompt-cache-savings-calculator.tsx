@@ -82,14 +82,18 @@ export function PromptCacheSavingsCalculator() {
     <div className="calculator-shell">
       <form
         className="calculator-form"
-        onSubmit={(event) => event.preventDefault()}
+        onSubmit={(event) => {
+          event.preventDefault();
+        }}
       >
         <label>
           <span>Requests per month</span>
           <input
             inputMode="numeric"
             value={requests}
-            onChange={(event) => setRequests(event.target.value)}
+            onChange={(event) => {
+              setRequests(event.target.value);
+            }}
           />
         </label>
         <label>
@@ -97,7 +101,9 @@ export function PromptCacheSavingsCalculator() {
           <input
             inputMode="numeric"
             value={cacheableTokens}
-            onChange={(event) => setCacheableTokens(event.target.value)}
+            onChange={(event) => {
+              setCacheableTokens(event.target.value);
+            }}
           />
         </label>
         <label>
@@ -105,7 +111,9 @@ export function PromptCacheSavingsCalculator() {
           <input
             inputMode="decimal"
             value={uncachedRate}
-            onChange={(event) => setUncachedRate(event.target.value)}
+            onChange={(event) => {
+              setUncachedRate(event.target.value);
+            }}
           />
         </label>
         <label>
@@ -113,7 +121,9 @@ export function PromptCacheSavingsCalculator() {
           <input
             inputMode="decimal"
             value={cachedRate}
-            onChange={(event) => setCachedRate(event.target.value)}
+            onChange={(event) => {
+              setCachedRate(event.target.value);
+            }}
           />
         </label>
         <label>
@@ -121,14 +131,18 @@ export function PromptCacheSavingsCalculator() {
           <input
             inputMode="decimal"
             value={hitRate}
-            onChange={(event) => setHitRate(event.target.value)}
+            onChange={(event) => {
+              setHitRate(event.target.value);
+            }}
           />
         </label>
         <label>
           <span>Display currency</span>
           <select
             value={currency}
-            onChange={(event) => setCurrency(event.target.value)}
+            onChange={(event) => {
+              setCurrency(event.target.value);
+            }}
           >
             <option value="USD">USD</option>
             <option value="EUR">EUR</option>
