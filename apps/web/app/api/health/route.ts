@@ -18,6 +18,22 @@ async function publishHealthEvent(
   });
 }
 
+async function checkAuthProvider(): Promise<'ok' | 'not_configured' | 'unavailable'> {
+  const base = process.env.NEON_AUTH_BASE_URL?.replace(/\/+$/, '');
+  if (base === undefined || base.length === 0) return 'not_configured';
+
+  try {
+    const response = await fetch(`${base}/.well-known/jwks.json`, {
+      method: 'GET',
+      headers: { accept: 'application/json' },
+      cache: 'no-store',
+    });
+    return response.ok ? 'ok' : 'unavailable';
+  } catch {
+    return 'unavailable';
+  }
+}
+
 export async function GET(request: Request) {
   const startedAt = Date.now();
   const requestId = resolveRequestId(request.headers.get('x-request-id'));
@@ -37,50 +53,60 @@ export async function GET(request: Request) {
       }),
     );
     return NextResponse.json(
-      { status: 'not_ready', reason: 'database_not_configured' },
+      {
+        status: 'not_ready',
+        checks: {
+          database: 'not_configured',
+          auth: await checkAuthProvider(),
+        },
+      },
       { status: 503, headers: { 'x-request-id': requestId } },
     );
   }
 
   const database = createDatabase(databaseUrl);
+  let databaseStatus: 'ok' | 'unavailable' = 'ok';
+
   try {
     await database.pool.query('select 1');
-    await publishHealthEvent(
-      buildOperationalEvent({
-        eventName: 'health_check',
-        requestId,
-        route: '/api/health',
-        status: 'OK',
-        statusCode: 200,
-        durationMs: elapsedMs(startedAt),
-        actorKind: 'SYSTEM',
-      }),
-    );
-    return NextResponse.json(
-      {
-        status: 'ok',
-        checks: { database: 'ok' },
-      },
-      { headers: { 'x-request-id': requestId } },
-    );
   } catch {
-    await publishHealthEvent(
-      buildOperationalEvent({
-        eventName: 'health_check',
-        requestId,
-        route: '/api/health',
-        status: 'ERROR',
-        statusCode: 503,
-        durationMs: elapsedMs(startedAt),
-        actorKind: 'SYSTEM',
-        safeErrorCategory: 'DATABASE_UNAVAILABLE',
-      }),
-    );
-    return NextResponse.json(
-      { status: 'not_ready', reason: 'database_unavailable' },
-      { status: 503, headers: { 'x-request-id': requestId } },
-    );
+    databaseStatus = 'unavailable';
   } finally {
     await database.close();
   }
+
+  const authStatus = await checkAuthProvider();
+  const ready = databaseStatus === 'ok' && authStatus === 'ok';
+
+  await publishHealthEvent(
+    buildOperationalEvent({
+      eventName: 'health_check',
+      requestId,
+      route: '/api/health',
+      status: ready ? 'OK' : 'ERROR',
+      statusCode: ready ? 200 : 503,
+      durationMs: elapsedMs(startedAt),
+      actorKind: 'SYSTEM',
+      safeErrorCategory:
+        databaseStatus !== 'ok'
+          ? 'DATABASE_UNAVAILABLE'
+          : authStatus !== 'ok'
+            ? 'AUTH_UNAVAILABLE'
+            : undefined,
+    }),
+  );
+
+  return NextResponse.json(
+    {
+      status: ready ? 'ok' : 'not_ready',
+      checks: {
+        database: databaseStatus,
+        auth: authStatus,
+      },
+    },
+    {
+      status: ready ? 200 : 503,
+      headers: { 'x-request-id': requestId },
+    },
+  );
 }
