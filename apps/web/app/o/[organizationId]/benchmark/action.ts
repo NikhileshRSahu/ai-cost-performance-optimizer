@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
 import { evaluateAndPersistBenchmark } from '../../../../../../src/workbench/benchmark-service';
+import { assertUploadWithinLimit } from '../../../../../../src/workbench/upload-limits';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
 
 function textEntry(formData: FormData, key: string, fallback = ''): string {
@@ -21,6 +22,7 @@ export async function submitBenchmark(formData: FormData): Promise<never> {
   ) {
     throw new Error('BENCHMARK_INPUT_REQUIRED');
   }
+  assertUploadWithinLimit({ kind: 'BENCHMARK_CSV', sizeBytes: upload.size });
 
   const session = await resolveRuntimeSession();
   const databaseUrl = process.env.DATABASE_URL;

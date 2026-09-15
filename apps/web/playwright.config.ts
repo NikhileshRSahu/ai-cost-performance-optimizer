@@ -8,6 +8,7 @@ export default defineConfig({
   testDir: './e2e',
   testMatch: '**/*.e2e.ts',
   fullyParallel: false,
+  workers: process.env.CI ? 1 : undefined,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? 'line' : 'list',
   use: {
@@ -29,6 +30,7 @@ export default defineConfig({
       AUTH_PROVIDER: 'e2e',
       AUTH_SUBJECT: 'founder-1',
       AUTH_EMAIL: 'founder@example.com',
+      TELEMETRY_CREDENTIAL_PEPPER: 'e2e-test-only-not-a-secret-pepper',
     },
   },
 });

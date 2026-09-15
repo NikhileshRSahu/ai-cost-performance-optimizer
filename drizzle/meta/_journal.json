@@ -8,6 +8,34 @@
       "when": 1789312977113,
       "tag": "0000_dazzling_mister_fear",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789367710000,
+      "tag": "0001_raw_evidence_retention",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789368040000,
+      "tag": "0002_telemetry_machine_auth",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1789419000000,
+      "tag": "0003_founding_pilot_invoice",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1789420200000,
+      "tag": "0004_design_partner_permission",
+      "breakpoints": true
     }
   ]
 }

@@ -1,12 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import {
+  designPartnerPermissions,
   implementationRecords,
   importRuns,
   jobs,
   ledgerEvents,
   memberships,
   organizations,
+  pilotInvoiceRequests,
+  rateLimitWindows,
   recommendations,
+  telemetryCredentials,
   usageRecords,
   users,
   verificationWindows,
@@ -21,10 +25,14 @@ describe('persistent workbench schema', () => {
       importRuns,
       usageRecords,
       recommendations,
+      telemetryCredentials,
+      rateLimitWindows,
       ledgerEvents,
+      designPartnerPermissions,
       implementationRecords,
       verificationWindows,
       jobs,
+      pilotInvoiceRequests,
     ]) {
       expect(table.organizationId).toBeDefined();
     }

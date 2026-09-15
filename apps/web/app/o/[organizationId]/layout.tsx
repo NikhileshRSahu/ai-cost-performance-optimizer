@@ -36,9 +36,15 @@ export default async function OrganizationLayout({
         </div>
         <nav aria-label="Organization workbench">
           <Link href={`/o/${organizationId}`}>Overview</Link>
+          <Link href={`/o/${organizationId}/demo`}>Guided demo</Link>
           <Link href={`/o/${organizationId}/import`}>Import</Link>
+          <Link href={`/o/${organizationId}/history`}>AI history</Link>
           <Link href={`/o/${organizationId}/workloads`}>Workloads</Link>
           <Link href={`/o/${organizationId}/benchmark`}>Benchmark</Link>
+          <Link href={`/o/${organizationId}/telemetry`}>Telemetry</Link>
+          <Link href={`/o/${organizationId}/data`}>Data &amp; privacy</Link>
+          <Link href={`/o/${organizationId}/proof`}>Proof pack</Link>
+          <Link href={`/o/${organizationId}/pilot`}>Pilot &amp; billing</Link>
         </nav>
         <p className="sidebar-note">
           Savings stay separate as potential, tested, and verified evidence.

@@ -44,6 +44,11 @@ export const organizations = pgTable('organizations', {
   reportingCurrency: text('reporting_currency').notNull(),
   timezone: text('timezone').notNull(),
   materialityTarget: text('materiality_target').notNull(),
+  retentionDays: integer('retention_days'),
+  retentionLastEnforcedAt: timestamp('retention_last_enforced_at', {
+    withTimezone: true,
+    mode: 'string',
+  }),
   isDemo: boolean('is_demo').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
     .notNull()
@@ -90,6 +95,55 @@ export const memberships = pgTable(
       columns: [table.organizationId, table.userId],
     }),
     index('memberships_user_idx').on(table.userId),
+  ],
+);
+
+export const telemetryCredentials = pgTable(
+  'telemetry_credentials',
+  {
+    id: text('id').primaryKey(),
+    organizationId: text('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    label: text('label').notNull(),
+    secretHash: text('secret_hash').notNull(),
+    createdByUserId: text('created_by_user_id').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .notNull()
+      .defaultNow(),
+    lastUsedAt: timestamp('last_used_at', {
+      withTimezone: true,
+      mode: 'string',
+    }),
+    revokedAt: timestamp('revoked_at', {
+      withTimezone: true,
+      mode: 'string',
+    }),
+  },
+  (table) => [index('telemetry_credentials_org_idx').on(table.organizationId)],
+);
+
+export const rateLimitWindows = pgTable(
+  'rate_limit_windows',
+  {
+    organizationId: text('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    scopeKey: text('scope_key').notNull(),
+    windowStart: timestamp('window_start', {
+      withTimezone: true,
+      mode: 'string',
+    }).notNull(),
+    requestCount: integer('request_count').notNull().default(0),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    primaryKey({
+      name: 'rate_limit_windows_org_scope_window_pk',
+      columns: [table.organizationId, table.scopeKey, table.windowStart],
+    }),
   ],
 );
 
@@ -365,5 +419,64 @@ export const jobs = pgTable(
       columns: [table.organizationId, table.id],
     }),
     index('jobs_org_status_idx').on(table.organizationId, table.status),
+  ],
+);
+
+export const pilotInvoiceRequests = pgTable(
+  'pilot_invoice_requests',
+  {
+    id: text('id').primaryKey(),
+    organizationId: text('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    plan: text('plan').notNull(),
+    amountCents: integer('amount_cents').notNull(),
+    currency: text('currency').notNull(),
+    contactEmail: text('contact_email').notNull(),
+    companyName: text('company_name').notNull(),
+    requestedByUserId: text('requested_by_user_id').notNull(),
+    status: text('status').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    uniqueIndex('pilot_invoice_requests_org_plan_status_uq').on(
+      table.organizationId,
+      table.plan,
+      table.status,
+    ),
+  ],
+);
+
+export const designPartnerPermissions = pgTable(
+  'design_partner_permissions',
+  {
+    organizationId: text('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    evidenceRef: text('evidence_ref').notNull(),
+    writtenPermissionRef: text('written_permission_ref').notNull(),
+    scopes: jsonb('scopes').$type<readonly string[]>().notNull(),
+    status: text('status').notNull(),
+    grantedAt: timestamp('granted_at', {
+      withTimezone: true,
+      mode: 'string',
+    }).notNull(),
+    revokedAt: timestamp('revoked_at', { withTimezone: true, mode: 'string' }),
+    recordedByUserId: text('recorded_by_user_id').notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    primaryKey({
+      name: 'design_partner_permissions_org_evidence_pk',
+      columns: [table.organizationId, table.evidenceRef],
+    }),
+    index('design_partner_permissions_org_status_idx').on(
+      table.organizationId,
+      table.status,
+    ),
   ],
 );

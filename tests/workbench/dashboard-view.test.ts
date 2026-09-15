@@ -33,6 +33,7 @@ function evidence(
       nextAction: 'Run the representative workload benchmark.',
     },
     verifiedNetSavings: null,
+    diagnosticFacts: [],
     isDemo: false,
     limitations: [],
     ...overrides,
@@ -89,6 +90,30 @@ describe('founder dashboard view model', () => {
       exactNumerator: '-25',
       exactDenominator: '1',
     });
+  });
+
+  it('preserves structured diagnostic evidence immutably', () => {
+    const view = buildFounderDashboardView(
+      evidence({
+        diagnosticFacts: [
+          {
+            label: 'Cost per request',
+            value: 'USD 0.10',
+            evidenceRef: 'import-1#COST_PER_REQUEST',
+            evidence: {
+              exactCostPerRequest: '1/10',
+              requests: '100',
+            },
+          },
+        ],
+      }),
+    );
+
+    expect(view.diagnosticFacts[0]?.evidence).toEqual({
+      exactCostPerRequest: '1/10',
+      requests: '100',
+    });
+    expect(Object.isFrozen(view.diagnosticFacts[0]?.evidence)).toBe(true);
   });
 
   it('makes the synthetic demo disclaimer immutable in the view', () => {

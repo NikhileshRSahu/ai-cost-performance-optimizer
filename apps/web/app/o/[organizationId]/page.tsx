@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation';
 import { buildFounderDashboardView } from '../../../../../src/workbench/dashboard-view';
+import { buildAnalysisDepth } from '../../../../../src/efficiency/analysis-depth';
+import { buildWorkMriSnapshot } from '../../../../../src/efficiency/work-mri';
 import { createDatabase } from '../../../../../src/persistence/database';
 import { MetricCard } from '../../../components/metric-card';
 import {
@@ -7,9 +9,12 @@ import {
   type WorkflowStep,
 } from '../../../components/workflow-progress';
 import { RecommendationCard } from '../../../components/recommendation-card';
+import { WorkMri } from '../../../components/work-mri';
 import { DASHBOARD_COPY } from '../../../lib/dashboard-copy';
 import { loadFounderDashboardEvidence } from '../../../lib/dashboard-data';
+import { hasGoogleAuthConfiguration } from '../../../lib/auth';
 import { resolveRuntimeSession } from '../../../lib/runtime-session';
+import { SignOutButton } from '../../../components/sign-out-button';
 
 export const dynamic = 'force-dynamic';
 
@@ -56,6 +61,35 @@ export default async function FounderDashboardPage({
       ? 'Not verified yet'
       : `${view.verifiedNetSavings.currency} ${view.verifiedNetSavings.exactNumerator}/${view.verifiedNetSavings.exactDenominator} · ${view.verifiedNetSavings.direction}`;
 
+  const analysisDepth = buildAnalysisDepth(
+    view.dataQuality === 'NO_DATA' ? [] : ['USAGE_CSV'],
+  );
+  const mri = buildWorkMriSnapshot({
+    depth: analysisDepth,
+    additionalFacts: view.diagnosticFacts,
+    observedSpend: view.observedSpend,
+    strongestAction:
+      view.strongestAction === null
+        ? null
+        : {
+            title: view.strongestAction.title,
+            state: view.strongestAction.state,
+            confidenceBand: view.strongestAction.confidenceBand,
+            saving: view.strongestAction.saving,
+            principalLimitation: view.strongestAction.principalLimitation,
+            nextAction: view.strongestAction.nextAction,
+          },
+    verifiedNetSavings:
+      view.verifiedNetSavings === null
+        ? null
+        : {
+            numerator: view.verifiedNetSavings.exactNumerator,
+            denominator: view.verifiedNetSavings.exactDenominator,
+            currency: view.verifiedNetSavings.currency,
+            evidenceRef: view.verifiedNetSavings.evidenceRef,
+          },
+  });
+
   return (
     <div className="dashboard-stack">
       <WorkflowProgress organizationId={organizationId} current={currentStep} />
@@ -74,9 +108,12 @@ export default async function FounderDashboardPage({
             savings remain separate throughout the workflow.
           </p>
         </div>
-        <span className="quality-chip">
-          {DASHBOARD_COPY.dataQualityLabel}: {view.dataQuality}
-        </span>
+        <div className="dashboard-actions">
+          <span className="quality-chip">
+            {DASHBOARD_COPY.dataQualityLabel}: {view.dataQuality}
+          </span>
+          {hasGoogleAuthConfiguration() ? <SignOutButton /> : null}
+        </div>
       </header>
 
       <div className="metrics-grid">
@@ -99,6 +136,8 @@ export default async function FounderDashboardPage({
           }
         />
       </div>
+
+      {view.dataQuality === 'NO_DATA' ? null : <WorkMri snapshot={mri} />}
 
       <section aria-labelledby="strongest-action-title">
         <div className="section-heading">

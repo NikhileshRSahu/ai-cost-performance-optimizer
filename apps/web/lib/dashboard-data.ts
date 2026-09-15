@@ -1,5 +1,6 @@
 import { and, desc, eq, or } from 'drizzle-orm';
 import { summarizeCoverage } from '../../../src/coverage/coverage';
+import { diagnoseUsage } from '../../../src/efficiency/usage-diagnosis';
 import {
   add,
   formatDecimal,
@@ -15,6 +16,7 @@ import {
   verificationWindows,
 } from '../../../src/persistence/schema';
 import { requireOrganizationAccess } from '../../../src/persistence/tenant';
+import { usageRecordSchema } from '../../../src/usage/contracts';
 import type { AuthenticatedSession } from '../../../src/workbench/authz';
 import type {
   DashboardDecision,
@@ -186,6 +188,7 @@ export async function loadFounderDashboardEvidence(
       completeCalendarDays: 0,
       strongestAction: null,
       verifiedNetSavings: null,
+      diagnosticFacts: Object.freeze([]),
       isDemo: organization.isDemo,
       limitations: Object.freeze([
         ...limitations,
@@ -243,6 +246,32 @@ export async function loadFounderDashboardEvidence(
       'Records in currencies other than the organization reporting currency are excluded from observed spend.',
     );
   }
+
+  const canonicalRecords = rows.flatMap((row) => {
+    const parsed = usageRecordSchema.safeParse(row.canonical);
+    if (!parsed.success) {
+      limitations.push(
+        `Canonical usage evidence failed validation for record ${row.id}; diagnostic facts exclude it.`,
+      );
+      return [];
+    }
+    return [parsed.data];
+  });
+  const diagnosis = diagnoseUsage({
+    records: canonicalRecords,
+    reportingCurrency: organization.reportingCurrency,
+  });
+  limitations.push(...diagnosis.limitations);
+  const diagnosticFacts = diagnosis.facts
+    .filter((fact) => fact.key !== 'TOTAL_SPEND')
+    .map((fact) =>
+      Object.freeze({
+        label: fact.label,
+        value: fact.value,
+        evidenceRef: `import:${latestUsable.id}#${fact.key}`,
+        evidence: fact.evidence,
+      }),
+    );
 
   const rankedRows = await db
     .select()
@@ -321,6 +350,7 @@ export async function loadFounderDashboardEvidence(
     completeCalendarDays: coverage?.completeDays.length ?? 0,
     strongestAction,
     verifiedNetSavings,
+    diagnosticFacts: Object.freeze(diagnosticFacts),
     isDemo:
       organization.isDemo || latestUsable.isDemo || rankOne?.isDemo === true,
     limitations: Object.freeze(limitations),

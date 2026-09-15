@@ -11,6 +11,8 @@ const benchmarkCsv = fileURLToPath(
     import.meta.url,
   ),
 );
+const JOURNEY_STATE_TIMEOUT_MS = 15_000;
+
 const postCsv = fileURLToPath(
   new URL(
     '../../../fixtures/demo/customer-loop-post-change.csv',
@@ -38,8 +40,9 @@ async function reachVerification(
   await page.locator('input[name="isDemo"]').check();
   await page.getByRole('button', { name: 'Validate and import' }).click();
   await expect(page.getByRole('heading', { name: 'PARTIAL' })).toBeVisible();
-  await expect(page.locator('.summary-grid')).toContainText('28');
-  await expect(page.locator('.summary-grid')).toContainText('5');
+  const importSummary = page.getByLabel('Import evidence summary');
+  await expect(importSummary).toContainText('28');
+  await expect(importSummary).toContainText('5');
   await expectAccessible(page);
 
   await page.getByRole('link', { name: 'Define workload constraints' }).click();
@@ -54,15 +57,33 @@ async function reachVerification(
 
   await expect(
     page.getByRole('heading', { name: 'Test the cheaper candidate' }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
   await page.locator('input[name="benchmarkCsv"]').setInputFiles(benchmarkCsv);
   await page.locator('input[name="isDemo"]').check();
   await page.getByRole('button', { name: 'Evaluate candidate' }).click();
 
   await expect(
     page.getByRole('heading', { name: 'Current versus candidate' }),
+  ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
+  await expect(page.getByText('OPTIMIZE', { exact: true })).toBeVisible({
+    timeout: JOURNEY_STATE_TIMEOUT_MS,
+  });
+
+  await page.getByLabel('Historical baseline cost').fill('1000');
+  await page
+    .getByLabel(
+      'I confirm this window represents a comparable workload and volume basis for this projection.',
+    )
+    .check();
+  await page.getByRole('button', { name: 'Replay historical cost' }).click();
+  await expect(page.getByText('Projected gross saving')).toBeVisible({
+    timeout: JOURNEY_STATE_TIMEOUT_MS,
+  });
+  await expect(
+    page.getByText(
+      'This replay is never written to the VERIFIED savings ledger.',
+    ),
   ).toBeVisible();
-  await expect(page.getByText('OPTIMIZE', { exact: true })).toBeVisible();
   await expectAccessible(page);
 
   await page.goto(`/o/${organizationId}`);
@@ -75,18 +96,30 @@ async function reachVerification(
   await page.getByRole('link', { name: 'Implement tested change' }).click();
 
   const implementedAt = page.getByLabel('Implemented at (UTC)');
+  const continueLink = page.getByRole('link', {
+    name: 'Continue to verification',
+  });
+
+  await expect
+    .poll(async () => {
+      if (await implementedAt.isVisible()) return 'fresh';
+      if (await continueLink.isVisible()) return 'saved';
+      return 'loading';
+    })
+    .not.toBe('loading');
+
   if (await implementedAt.isVisible()) {
     await implementedAt.fill('2026-08-30T08:00');
     await page.getByLabel('Rollout started (UTC)').fill('2026-08-30T08:00');
     await page.getByLabel('Stabilization ends (UTC)').fill('2026-09-01T08:00');
     await page.getByRole('button', { name: 'Confirm implementation' }).click();
   } else {
-    await page.getByRole('link', { name: 'Continue to verification' }).click();
+    await continueLink.click();
   }
 
   await expect(
     page.getByRole('heading', { name: 'Measure what actually changed' }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
   await expectAccessible(page);
   return 'READY';
 }
@@ -111,6 +144,7 @@ async function submitPostChange(
 }
 
 test('hard customer journey reaches verified savings', async ({ page }) => {
+  test.setTimeout(90_000);
   const state = await reachVerification(page, 'journey-org');
   if (state === 'READY') {
     await submitPostChange(page, '0.93');
@@ -136,4 +170,81 @@ test('failed post-change quality never becomes verified', async ({ page }) => {
   await page.goto('/o/journey-bad-org');
   await expect(page.locator('.state-badge.state-tested')).toBeVisible();
   await expect(page.locator('.state-badge.state-verified')).toHaveCount(0);
+});
+
+test('guided synthetic walkthrough preselects demo mode', async ({ page }) => {
+  await page.goto('/o/journey-org/demo');
+  await expect(
+    page.getByRole('heading', {
+      name: 'See the full proof loop without using customer data',
+    }),
+  ).toBeVisible();
+  await page.getByRole('link', { name: 'Open demo import' }).click();
+  await expect(page.locator('input[name="isDemo"]')).toBeChecked();
+  await expect(
+    page.getByText('Synthetic demo data — not a customer result.'),
+  ).toHaveCount(0);
+});
+
+test('owner can issue a telemetry-only machine credential', async ({
+  page,
+}) => {
+  await page.goto('/o/journey-org/telemetry');
+  await expect(
+    page.getByRole('heading', {
+      name: 'Connect unattended AI workloads safely',
+    }),
+  ).toBeVisible();
+
+  await page.getByLabel('Agent label').fill('e2e-production-agent');
+  await page
+    .getByRole('button', { name: 'Create telemetry credential' })
+    .click();
+
+  await expect(page.getByText('Copy now', { exact: true })).toBeVisible();
+  const token = page.getByLabel('Telemetry bearer token');
+  await expect(token).toHaveValue(/^aie_tlm_[a-f0-9]{32}\.[A-Za-z0-9_-]+$/);
+  await expect(page.getByText('e2e-production-agent').first()).toBeVisible();
+  await expectAccessible(page);
+});
+
+test('recovery states stay actionable and accessible', async ({ page }) => {
+  await page.goto('/this-page-does-not-exist');
+  await expect(
+    page.getByRole('heading', { name: 'This workbench page does not exist.' }),
+  ).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Return home' })).toBeVisible();
+  await expectAccessible(page);
+
+  await page.goto('/o/not-a-member');
+  await expect(
+    page.getByRole('heading', {
+      name: 'You do not have access to this organization.',
+    }),
+  ).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Return home' })).toBeVisible();
+  await expectAccessible(page);
+
+  await page.goto('/o/journey-org/lab/missing-recommendation');
+  await expect(
+    page.getByRole('heading', { name: 'Insufficient benchmark evidence' }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'Return to benchmark' }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'Back to overview' }),
+  ).toBeVisible();
+  await expectAccessible(page);
+
+  await page.goto('/o/journey-org/report/missing-recommendation');
+  await expect(
+    page.getByRole('heading', {
+      name: 'This recommendation does not have complete report evidence.',
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'Return to benchmark' }),
+  ).toBeVisible();
+  await expectAccessible(page);
 });

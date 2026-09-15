@@ -15,10 +15,10 @@ export default async function ImportPage({
   searchParams,
 }: Readonly<{
   params: Promise<{ organizationId: string }>;
-  searchParams: Promise<{ importId?: string }>;
+  searchParams: Promise<{ importId?: string; demo?: string }>;
 }>) {
   const { organizationId } = await params;
-  const { importId } = await searchParams;
+  const { importId, demo } = await searchParams;
   const session = await resolveRuntimeSession();
   const databaseUrl = process.env.DATABASE_URL;
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
@@ -55,12 +55,49 @@ export default async function ImportPage({
           <p className="eyebrow">Step 1 · Observe</p>
           <h1>Import production usage</h1>
           <p className="lede">
-            Start with the evidence you already own. We validate every row,
-            preserve provenance, and never turn missing values into zero.
+            Start with the minimum evidence you are comfortable sharing. A usage
+            CSV is enough for cost analysis; richer data can unlock deeper
+            workflow advice later. We preserve provenance and never turn missing
+            values into zero.
           </p>
         </div>
-        <span className="trust-chip">CSV-first · no provider key required</span>
+        <span className="trust-chip">
+          Progressive privacy · CSV-first · no provider key required
+        </span>
       </header>
+
+      <section className="workflow-card" aria-labelledby="analysis-depth-title">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Choose your trust level</p>
+            <h2 id="analysis-depth-title">
+              More access unlocks more analysis — never more than you authorize
+            </h2>
+          </div>
+        </div>
+        <div className="summary-grid">
+          <div>
+            <span>Level 1 · Usage CSV</span>
+            <strong>Cost + model efficiency</strong>
+          </div>
+          <div>
+            <span>Level 2 · Sanitized AI export</span>
+            <strong>Prompt + repeated context</strong>
+          </div>
+          <div>
+            <span>Level 3 · Authorized workspace</span>
+            <strong>Workflow + knowledge waste</strong>
+          </div>
+          <div>
+            <span>Level 4 · Production telemetry</span>
+            <strong>Continuous verification</strong>
+          </div>
+        </div>
+        <p className="lede">
+          Start at Level 1. The product must prove value before asking you to
+          connect anything deeper.
+        </p>
+      </section>
 
       <section className="workflow-card upload-card">
         <div>
@@ -87,7 +124,12 @@ export default async function ImportPage({
             />
           </label>
           <label className="checkbox-row">
-            <input name="isDemo" type="checkbox" value="true" />
+            <input
+              name="isDemo"
+              type="checkbox"
+              value="true"
+              defaultChecked={demo === 'true'}
+            />
             <span>This file is synthetic demo data</span>
           </label>
           <button className="primary-button" type="submit">
@@ -113,7 +155,7 @@ export default async function ImportPage({
             ) : null}
           </div>
 
-          <div className="summary-grid">
+          <div className="summary-grid" aria-label="Import evidence summary">
             <div>
               <span>Accepted</span>
               <strong>{imported.acceptedRows}</strong>
@@ -153,8 +195,24 @@ export default async function ImportPage({
           </dl>
 
           {imported.status === 'FAILED' ? (
-            <div className="blocking-note">
-              Analysis is blocked because no valid usage rows were accepted.
+            <div className="recovery-stack">
+              <div className="blocking-note">
+                Analysis is blocked because no valid usage rows were accepted.
+              </div>
+              <div className="action-row">
+                <Link
+                  className="primary-action"
+                  href={'/o/' + organizationId + '/import'}
+                >
+                  Try another CSV
+                </Link>
+                <Link
+                  className="secondary-action"
+                  href={'/o/' + organizationId}
+                >
+                  Return to overview
+                </Link>
+              </div>
             </div>
           ) : (
             <div className="action-row">

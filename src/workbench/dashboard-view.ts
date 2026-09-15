@@ -36,6 +36,13 @@ export type VerifiedNetSavingsEvidence = Readonly<{
   formulaVersion: string;
 }>;
 
+export type DashboardDiagnosticFact = Readonly<{
+  label: string;
+  value: string;
+  evidenceRef: string | null;
+  evidence: Readonly<Record<string, string>>;
+}>;
+
 export type DashboardEvidence = Readonly<{
   organizationName: string;
   periodLabel: string;
@@ -44,6 +51,7 @@ export type DashboardEvidence = Readonly<{
   completeCalendarDays: number;
   strongestAction: DashboardRecommendationEvidence | null;
   verifiedNetSavings: VerifiedNetSavingsEvidence | null;
+  diagnosticFacts: readonly DashboardDiagnosticFact[];
   isDemo: boolean;
   limitations: readonly string[];
 }>;
@@ -70,6 +78,7 @@ export type FounderDashboardView = Readonly<{
   observedSpend: DisplayMoneyEvidence | null;
   strongestAction: DashboardRecommendationView | null;
   verifiedNetSavings: VerifiedNetSavingsView | null;
+  diagnosticFacts: readonly DashboardDiagnosticFact[];
   monthlyProjectionAllowed: boolean;
   demoDisclaimer: 'Synthetic demo data — not a customer result.' | null;
   limitations: readonly string[];
@@ -133,6 +142,14 @@ export function buildFounderDashboardView(
         : Object.freeze({ ...input.observedSpend }),
     strongestAction,
     verifiedNetSavings: verifiedImpactView(input.verifiedNetSavings),
+    diagnosticFacts: Object.freeze(
+      input.diagnosticFacts.map((fact) =>
+        Object.freeze({
+          ...fact,
+          evidence: Object.freeze({ ...fact.evidence }),
+        }),
+      ),
+    ),
     monthlyProjectionAllowed: input.completeCalendarDays >= 7,
     demoDisclaimer: input.isDemo
       ? 'Synthetic demo data — not a customer result.'

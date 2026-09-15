@@ -4,6 +4,10 @@ on:
   push:
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -38,11 +42,21 @@ jobs:
       - run: npm run test:db
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/optimizer_test
+      - run: bash scripts/db-backup-restore-drill.sh
+        env:
+          ALLOW_DESTRUCTIVE_RESTORE_DRILL: 'true'
+          PGHOST: 127.0.0.1
+          PGPORT: '5432'
+          PGUSER: postgres
+          PGPASSWORD: postgres
+          PGDATABASE: optimizer_test
+          RESTORE_DATABASE: optimizer_restore
       - run: npx playwright install --with-deps chromium
       - run: npm run web:e2e
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/optimizer_test
       - run: npm audit --audit-level=high
+      - run: docker build --tag ai-efficiency-intelligence:ci .
       - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
