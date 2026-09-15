@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Evalomics — AI Efficiency Intelligence</title>
+<meta name="description" content="Find AI waste. Test safer fixes. Prove what actually improved."/>
+<style>
+:root{--bg:#07090d;--panel:#10141c;--panel2:#0b0f15;--line:#232a36;--text:#f5f7fb;--muted:#9aa6b5;--accent:#8fe388;--warn:#f4cf69;--bad:#ff8a8a}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#07090d,#0b0f16);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.wrap{max-width:1160px;margin:auto;padding:28px 18px 76px}.nav{display:flex;justify-content:space-between;align-items:center;padding:6px 0 34px}.brand{font-weight:800;letter-spacing:-.03em;font-size:23px}.badge,.chip{border:1px solid var(--line);padding:7px 11px;border-radius:999px;color:var(--muted);font-size:12px}
+.hero{padding:38px 0 30px;max-width:900px}.eyebrow{color:var(--accent);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.12em}h1{font-size:clamp(42px,7vw,78px);line-height:.97;letter-spacing:-.055em;margin:15px 0 20px}h2{letter-spacing:-.025em}.lead{font-size:19px;line-height:1.55;color:#c8d0dc;max-width:820px}.line{font-weight:700;margin-top:20px}.trust{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}
+.tabs{display:flex;gap:9px;flex-wrap:wrap;margin:32px 0 18px}.tabs button{background:#0b0f15;color:#b9c3d1;border:1px solid var(--line);padding:10px 14px;border-radius:999px;cursor:pointer}.tabs button.active{background:#eef7ef;color:#08100a;border-color:#eef7ef;font-weight:800}
+.panel{display:none}.panel.active{display:block}.card{background:rgba(16,20,28,.94);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.2);margin-bottom:16px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card p,.muted{color:var(--muted);line-height:1.55}.small{font-size:12px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}label{display:block;font-size:12px;color:#aeb8c6;margin:8px 0 5px}input,select,textarea{width:100%;padding:11px 12px;border-radius:10px;border:1px solid #2a3342;background:#0b0f15;color:white;outline:none}input:focus,select:focus,textarea:focus{border-color:#62748f}
+button.primary{margin-top:14px;padding:12px 16px;border-radius:11px;border:0;background:#f2f8f2;color:#08100a;font-weight:800;cursor:pointer}button.secondary{margin-top:14px;padding:12px 16px;border-radius:11px;border:1px solid var(--line);background:#111722;color:#e7edf5;font-weight:700;cursor:pointer}
+.metric{background:var(--panel2);border:1px solid #202836;border-radius:14px;padding:16px}.metric span{font-size:12px;color:var(--muted)}.metric strong{display:block;font-size:26px;margin-top:6px;letter-spacing:-.035em}
+.opportunity{border-left:3px solid var(--accent);padding:14px 16px;background:#0b0f15;border-radius:10px;margin:10px 0}.opportunity h3{margin:0 0 8px}.opportunity p{margin:4px 0;font-size:13px}.limitations{border:1px dashed #3b4557;background:#0a0d13;padding:14px;border-radius:12px}.limitations li{color:#aab5c4;margin:6px 0;font-size:13px}
+.status{margin-top:12px;padding:12px 14px;border-radius:10px;background:#0b0f15;border:1px solid #222a36}.status.ok{border-color:#3c6940}.status.warn{border-color:#6b5d2b}.status.bad{border-color:#6e3434}
+.footer{margin-top:42px;border-top:1px solid var(--line);padding-top:24px;color:var(--muted);font-size:12px}
+.filebox{border:1px dashed #3a4453;padding:16px;border-radius:12px;background:#0b0f15}.secret-note{font-size:12px;color:#aab5c4;margin-top:8px}
+@media(max-width:800px){.grid,.three,.form-grid{grid-template-columns:1fr}.hero{padding-top:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="nav"><div class="brand">Evalomics</div><div class="badge">AI Efficiency Intelligence</div></div>
+  <section class="hero">
+    <div class="eyebrow">Analyze. Optimize. Prove.</div>
+    <h1>Find AI waste.<br/>Test safer fixes.<br/>Prove what improved.</h1>
+    <p class="lead">A proof-first AI efficiency workflow: inspect usage, surface bounded optimization opportunities, benchmark candidates against a quality floor, and only label savings verified when comparable post-change evidence exists.</p>
+    <div class="trust"><span class="chip">No silent FX</span><span class="chip">Potential ≠ tested ≠ verified</span><span class="chip">CSV can stay in your browser</span><span class="chip">OpenAI costs kept separate from usage attribution</span></div>
+  </section>
+
+  <div class="tabs">
+    <button class="active" data-tab="mri">1. Work MRI</button>
+    <button data-tab="benchmark">2. Benchmark</button>
+    <button data-tab="verify">3. Verify</button>
+    <button data-tab="calculators">Free calculators</button>
+  </div>
+
+  <section id="mri" class="panel active">
+    <div class="grid">
+      <div class="card">
+        <div class="eyebrow">CSV-first</div>
+        <h2>Run a private Work MRI from CSV</h2>
+        <p>Your file is parsed in this browser. Required columns: <code>provider,model,requests,total_cost,currency</code>. Optional: <code>input_tokens,output_tokens,cached_input_tokens</code>.</p>
+        <div class="filebox"><input id="csvFile" type="file" accept=".csv,text/csv"/><div class="secret-note">CSV contents are not uploaded by this page.</div></div>
+        <label>Reporting currency</label><input id="csvCurrency" value="USD" maxlength="3"/>
+        <button class="primary" id="runCsv">Analyze CSV</button>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">Direct connector</div>
+        <h2>Run Work MRI from OpenAI Admin API</h2>
+        <p>Uses organization Usage and Costs endpoints. The key is sent to this serverless function for the request and is not returned or persisted by Evalomics code.</p>
+        <label>OpenAI Admin API key</label><input id="adminKey" type="password" autocomplete="off" placeholder="sk-admin-…"/>
+        <div class="form-grid">
+          <div><label>Start date</label><input id="startDate" type="date"/></div>
+          <div><label>End date</label><input id="endDate" type="date"/></div>
+        </div>
+        <button class="primary" id="runOpenAI">Analyze OpenAI usage</button>
+        <div class="secret-note">Maximum analysis window: 31 days. Usage and billing evidence remain separate; no model-level cost attribution is invented.</div>
+      </div>
+    </div>
+
+    <div id="mriResults" class="card" style="display:none">
+      <div class="eyebrow">AI Work MRI</div>
+      <h2>Evidence-backed snapshot</h2>
+      <div id="metricGrid" class="grid three"></div>
+      <h2>What should we test next?</h2>
+      <div id="opportunities"></div>
+      <h2>Evidence limitations</h2>
+      <ul id="limitations" class="limitations"></ul>
+      <button class="primary" data-go="benchmark">Continue to controlled benchmark</button>
+    </div>
+  </section>
+
+  <section id="benchmark" class="panel">
+    <div class="card">
+      <div class="eyebrow">Controlled benchmark</div>
+      <h2>Test the candidate without lowering the quality floor</h2>
+      <p>A cheaper candidate is not a saving if quality drops below the workload requirement.</p>
+      <div class="form-grid">
+        <div><label>Baseline cost</label><input id="baseCost" type="number" step="0.0001" value="100"/></div>
+        <div><label>Candidate cost</label><input id="candCost" type="number" step="0.0001" value="70"/></div>
+        <div><label>Baseline quality (0–1)</label><input id="baseQ" type="number" step="0.001" value="0.90"/></div>
+        <div><label>Candidate quality (0–1)</label><input id="candQ" type="number" step="0.001" value="0.88"/></div>
+        <div><label>Required quality floor (0–1)</label><input id="floorQ" type="number" step="0.001" value="0.85"/></div>
+        <div><label>Currency</label><input id="benchCurrency" value="USD" maxlength="3"/></div>
+      </div>
+      <button class="primary" id="runBenchmark">Evaluate candidate</button>
+      <div id="benchmarkResult"></div>
+    </div>
+  </section>
+
+  <section id="verify" class="panel">
+    <div class="card">
+      <div class="eyebrow">Post-change verification</div>
+      <h2>Verify only comparable production evidence</h2>
+      <p>This gate intentionally refuses to call a cost delta “verified savings” until you confirm the baseline and post-change periods represent comparable workload scope.</p>
+      <div class="form-grid">
+        <div><label>Baseline comparable-period cost</label><input id="verifyBase" type="number" step="0.0001" value="1000"/></div>
+        <div><label>Post-change comparable-period cost</label><input id="verifyPost" type="number" step="0.0001" value="760"/></div>
+        <div><label>Currency</label><input id="verifyCurrency" value="USD" maxlength="3"/></div>
+      </div>
+      <label style="margin-top:14px"><input id="comparable" type="checkbox" style="width:auto;margin-right:8px"/>I confirm the compared periods have comparable workload scope and measurement boundaries.</label>
+      <button class="primary" id="runVerify">Run verification gate</button>
+      <div id="verifyResult"></div>
+    </div>
+  </section>
+
+  <section id="calculators" class="panel">
+    <div class="grid">
+      <div class="card"><h2>LLM Cost Calculator</h2>
+        <label>Requests / month</label><input id="llmReq" type="number" value="10000"/>
+        <label>Input tokens / request</label><input id="llmIn" type="number" value="1500"/>
+        <label>Output tokens / request</label><input id="llmOut" type="number" value="300"/>
+        <label>Input price / 1M tokens</label><input id="llmInRate" type="number" step="0.0001" value="1"/>
+        <label>Output price / 1M tokens</label><input id="llmOutRate" type="number" step="0.0001" value="4"/>
+        <div class="metric" style="margin-top:14px"><span>Estimated monthly model cost</span><strong id="llmResult">$0.00</strong></div>
+      </div>
+      <div class="card"><h2>Prompt Cache Savings</h2>
+        <label>Requests / month</label><input id="cacheReq" type="number" value="10000"/>
+        <label>Cacheable input tokens / request</label><input id="cacheTok" type="number" value="1000"/>
+        <label>Uncached price / 1M</label><input id="cacheNormal" type="number" step="0.0001" value="1"/>
+        <label>Cached price / 1M</label><input id="cacheDiscount" type="number" step="0.0001" value="0.1"/>
+        <label>Cache hit rate (%)</label><input id="cacheHit" type="number" value="80"/>
+        <div class="metric" style="margin-top:14px"><span>Potential monthly saving</span><strong id="cacheResult">$0.00</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">Evalomics early V0. Opportunity estimates are hypotheses. Benchmark results remain tested—not verified—until comparable post-change evidence exists.</div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const n=id=>Math.max(0,Number($(id).value)||0);
+const money=(v,c='USD')=>c+' '+v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+function showTab(id){document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));scrollTo({top:document.querySelector('.tabs').offsetTop-12,behavior:'smooth'});}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>showTab(b.dataset.go));
+
+const today=new Date();const seven=new Date(Date.now()-7*864e5);$('endDate').value=today.toISOString().slice(0,10);$('startDate').value=seven.toISOString().slice(0,10);
+
+function parseCsv(text){
+ const rows=[];let row=[],cell='',quoted=false;
+ for(let i=0;i<text.length;i++){const c=text[i];if(quoted){if(c==='"'&&text[i+1]==='"'){cell+='"';i++;}else if(c==='"'){quoted=false;}else cell+=c;}else if(c==='"'){quoted=true;}else if(c===','){row.push(cell);cell='';}else if(c==='\n'){row.push(cell);rows.push(row);row=[];cell='';}else if(c!=='\r')cell+=c;}
+ if(cell.length||row.length){row.push(cell);rows.push(row);}return rows.filter(r=>r.some(x=>x.trim()!==''));
+}
+function analyze(records,currency,costOverride=null){
+ let req=0,input=0,output=0,cached=0;let inputOk=true,outputOk=true,cachedOk=true;let spend=0,hasSpend=false,mixed=false;const models={};
+ records.forEach(r=>{const q=Number(r.requests||0);req+=q;models[r.model||'unknown']=(models[r.model||'unknown']||0)+q;
+  if(r.inputTokens==null||r.inputTokens==='')inputOk=false;else input+=Number(r.inputTokens);
+  if(r.outputTokens==null||r.outputTokens==='')outputOk=false;else output+=Number(r.outputTokens);
+  if(r.cachedInputTokens==null||r.cachedInputTokens==='')cachedOk=false;else cached+=Number(r.cachedInputTokens);
+  if(r.totalCost!=null&&r.totalCost!==''){if((r.currency||'').toUpperCase()===currency){spend+=Number(r.totalCost);hasSpend=true;}else mixed=true;}
+ });
+ if(costOverride){spend=costOverride.amount;hasSpend=true;currency=costOverride.currency;}
+ const metrics=[['Requests',req.toLocaleString()],['Observed spend',hasSpend?money(spend,currency):'Unavailable'],['Cost / request',hasSpend&&req?money(spend/req,currency):'Unavailable'],['Output tokens / request',outputOk&&req?(output/req).toFixed(2):'Unavailable'],['Cached-input share',inputOk&&cachedOk&&input?((cached/input)*100).toFixed(2)+'%':'Unavailable']];
+ const opportunities=[];const limitations=[];
+ if(inputOk&&cachedOk&&input){const ratio=cached/input;if(ratio<.25)opportunities.push({title:'Test higher prompt-cache reuse',why:'Cached input is below 25% of observed input tokens.',test:'Benchmark provider-supported caching on stable prompt prefixes.',guard:'Do not change effective prompt semantics merely to raise cache usage.'});limitations.push('Cache analysis uses cached input / observed input as a launch proxy; it does not infer provider cache eligibility.');} else limitations.push('Cache analysis withheld because token evidence is incomplete.');
+ if(outputOk&&req){const rate=output/req;if(rate>300)opportunities.push({title:'Test a tighter output budget',why:'Observed output tokens per request exceed 300.',test:'Run the same evaluation set with a lower output cap or more concise response instruction.',guard:'Reject the candidate if answer completeness or required quality falls below the floor.'});}else limitations.push('Output-token efficiency withheld because output evidence is incomplete.');
+ if(req){const top=Object.entries(models).sort((a,b)=>b[1]-a[1])[0];if(top&&top[1]/req>.70)opportunities.push({title:'Benchmark a lower-cost candidate on the dominant request slice',why:`${top[0]} handles ${((top[1]/req)*100).toFixed(2)}% of requests.`,test:'Benchmark a representative eligible slice against a lower-cost candidate.',guard:'Keep the current model unless every quality and latency constraint passes.'});limitations.push('Model concentration is based on request volume, not attributed cost.');}
+ if(mixed)limitations.push('Records outside '+currency+' are excluded from spend metrics.');
+ if(!hasSpend)limitations.push('Observed spend unavailable from this evidence path.');
+ renderMRI(metrics,opportunities,limitations);
+}
+function renderMRI(metrics,opps,lims){
+ $('metricGrid').innerHTML=metrics.map(([a,b])=>`<div class="metric"><span>${escapeHtml(a)}</span><strong>${escapeHtml(String(b))}</strong></div>`).join('');
+ $('opportunities').innerHTML=opps.length?opps.map(o=>`<div class="opportunity"><h3>${escapeHtml(o.title)}</h3><p><b>Why:</b> ${escapeHtml(o.why)}</p><p><b>Test:</b> ${escapeHtml(o.test)}</p><p><b>Quality guard:</b> ${escapeHtml(o.guard)}</p></div>`).join(''):'<div class="status warn">No optimization hypothesis crossed the launch thresholds with the available evidence.</div>';
+ $('limitations').innerHTML=lims.map(x=>`<li>${escapeHtml(x)}</li>`).join('');
+ $('mriResults').style.display='block';$('mriResults').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+
+$('runCsv').onclick=async()=>{
+ const f=$('csvFile').files[0];if(!f)return alert('Choose a CSV first.');
+ const rows=parseCsv(await f.text());if(rows.length<2)return alert('CSV has no data rows.');
+ const h=rows[0].map(x=>x.trim());const idx=k=>h.indexOf(k);for(const k of ['provider','model','requests','total_cost','currency'])if(idx(k)<0)return alert('Missing column: '+k);
+ const records=rows.slice(1).map(r=>({provider:r[idx('provider')],model:r[idx('model')],requests:r[idx('requests')],totalCost:r[idx('total_cost')],currency:(r[idx('currency')]||'').toUpperCase(),inputTokens:idx('input_tokens')>=0?r[idx('input_tokens')]:null,outputTokens:idx('output_tokens')>=0?r[idx('output_tokens')]:null,cachedInputTokens:idx('cached_input_tokens')>=0?r[idx('cached_input_tokens')]:null}));
+ analyze(records,$('csvCurrency').value.toUpperCase());
+};
+
+$('runOpenAI').onclick=async()=>{
+ const key=$('adminKey').value.trim();if(!key)return alert('Enter an OpenAI Admin API key.');
+ const start=Math.floor(new Date($('startDate').value+'T00:00:00Z').getTime()/1000),end=Math.floor(new Date($('endDate').value+'T23:59:59Z').getTime()/1000);
+ const btn=$('runOpenAI');btn.disabled=true;btn.textContent='Analyzing…';
+ try{
+  const res=await fetch('/api/openai-mri',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminKey:key,startTime:start,endTime:end})});
+  const data=await res.json();if(!res.ok)throw new Error(data.error||'OpenAI connector failed');
+  const records=data.usage.map(x=>({provider:'openai',model:x.model,requests:x.requests,inputTokens:x.inputTokens,outputTokens:x.outputTokens,cachedInputTokens:x.cachedInputTokens,totalCost:null,currency:'USD'}));
+  const totals={};data.costs.forEach(c=>totals[c.currency]=(totals[c.currency]||0)+Number(c.amount));const entries=Object.entries(totals).sort((a,b)=>b[1]-a[1]);const cost=entries[0]?{currency:entries[0][0],amount:entries[0][1]}:null;
+  analyze(records,cost?.currency||'USD',cost);
+ }catch(e){alert(e.message||'OpenAI connector failed');}finally{btn.disabled=false;btn.textContent='Analyze OpenAI usage';$('adminKey').value='';}
+};
+
+$('runBenchmark').onclick=()=>{
+ const b=n('baseCost'),c=n('candCost'),cq=n('candQ'),floor=n('floorQ'),cur=$('benchCurrency').value.toUpperCase();
+ let html;if(cq<floor)html=`<div class="status bad"><b>QUALITY FLOOR FAILED</b><br/>Candidate is cheaper, but no saving is promoted because measured quality ${cq.toFixed(3)} is below the required ${floor.toFixed(3)}.</div>`;
+ else if(c>=b)html=`<div class="status warn"><b>NO TESTED SAVING</b><br/>Quality passed, but candidate cost did not improve.</div>`;
+ else html=`<div class="status ok"><b>TESTED SAVING: ${money(b-c,cur)}</b><br/>Candidate passed the quality floor. This is a controlled benchmark result, not verified production savings.</div>`;
+ $('benchmarkResult').innerHTML=html;
+};
+
+$('runVerify').onclick=()=>{
+ const b=n('verifyBase'),p=n('verifyPost'),cur=$('verifyCurrency').value.toUpperCase();
+ if(!$('comparable').checked){$('verifyResult').innerHTML='<div class="status warn"><b>VERIFICATION WITHHELD</b><br/>Confirm comparable workload scope and measurement boundaries first.</div>';return;}
+ if(p>=b){$('verifyResult').innerHTML='<div class="status warn"><b>NO VERIFIED SAVING</b><br/>Comparable post-change evidence does not show a positive cost reduction.</div>';return;}
+ $('verifyResult').innerHTML=`<div class="status ok"><b>VERIFIED SAVING: ${money(b-p,cur)}</b><br/>Comparable-period evidence shows a positive reduction. Continuous outcome-bearing telemetry remains the stronger verification level.</div>`;
+};
+
+function calc(){const llm=n('llmReq')*(n('llmIn')*n('llmInRate')+n('llmOut')*n('llmOutRate'))/1e6;$('llmResult').textContent='$'+llm.toFixed(2);const tokens=n('cacheReq')*n('cacheTok'),hit=Math.min(100,n('cacheHit'))/100,base=tokens*n('cacheNormal')/1e6,blend=tokens*(hit*n('cacheDiscount')+(1-hit)*n('cacheNormal'))/1e6;$('cacheResult').textContent='$'+Math.max(0,base-blend).toFixed(2);}
+document.querySelectorAll('#calculators input').forEach(x=>x.addEventListener('input',calc));calc();
+</script>
+</body></html>
