@@ -26,7 +26,7 @@ export default function RootLayout({
               <span>Evalomics</span>
             </Link>
             <nav className="public-nav" aria-label="Public">
-              <Link href="/tools/llm-cost-calculator">Free calculator</Link>
+              <Link href="/tools">Free tools</Link>
               <Link href="/research">Research</Link>
               <Link href="/methodology">Methodology</Link>
               <Link href="/pricing">Pricing</Link>
