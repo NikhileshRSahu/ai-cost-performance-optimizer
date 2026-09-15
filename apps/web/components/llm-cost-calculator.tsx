@@ -1,6 +1,11 @@
 'use client';
 
-import { Calculator, CircleDollarSign, Sparkles, TrendingUp } from 'lucide-react';
+import {
+  Calculator,
+  CircleDollarSign,
+  Sparkles,
+  TrendingUp,
+} from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import {
@@ -159,7 +164,10 @@ export function LlmCostCalculator() {
               }}
               aria-describedby="requests-help"
             />
-            <small id="requests-help" className="text-xs font-normal text-slate-500">
+            <small
+              id="requests-help"
+              className="text-xs font-normal text-slate-500"
+            >
               Whole requests, no commas.
             </small>
           </label>
@@ -249,8 +257,8 @@ export function LlmCostCalculator() {
 
         {result === null ? (
           <div className="p-6 text-sm leading-6 text-white/75">
-            Enter non-negative token counts and prices, with at least one request
-            per month.
+            Enter non-negative token counts and prices, with at least one
+            request per month.
           </div>
         ) : (
           <>
@@ -279,17 +287,31 @@ export function LlmCostCalculator() {
 
             <dl className="m-0 grid divide-y divide-white/[0.07] px-5 py-2 sm:px-6">
               {[
-                ['Monthly input tokens', result.monthlyInputTokens.toLocaleString('en-US')],
-                ['Monthly output tokens', result.monthlyOutputTokens.toLocaleString('en-US')],
-                ['Input cost', `${currency} ${formatDecimal(result.inputCost, 2)}`],
-                ['Output cost', `${currency} ${formatDecimal(result.outputCost, 2)}`],
+                [
+                  'Monthly input tokens',
+                  result.monthlyInputTokens.toLocaleString('en-US'),
+                ],
+                [
+                  'Monthly output tokens',
+                  result.monthlyOutputTokens.toLocaleString('en-US'),
+                ],
+                [
+                  'Input cost',
+                  `${currency} ${formatDecimal(result.inputCost, 2)}`,
+                ],
+                [
+                  'Output cost',
+                  `${currency} ${formatDecimal(result.outputCost, 2)}`,
+                ],
               ].map(([label, value]) => (
                 <div
                   key={label}
                   className="flex items-center justify-between gap-5 py-3.5 text-sm"
                 >
                   <dt className="text-white/65">{label}</dt>
-                  <dd className="m-0 font-mono font-semibold text-white/90">{value}</dd>
+                  <dd className="m-0 font-mono font-semibold text-white/90">
+                    {value}
+                  </dd>
                 </div>
               ))}
             </dl>
