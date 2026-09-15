@@ -118,6 +118,9 @@ export default async function VerifyPage({
   if (implementation === undefined) {
     redirect(`/o/${organizationId}/implement/${recommendationId}`);
   }
+  if (workload === undefined) {
+    redirect(`/o/${organizationId}/workloads`);
+  }
 
   const constraintSet =
     workload?.constraintSet === null || workload?.constraintSet === undefined
