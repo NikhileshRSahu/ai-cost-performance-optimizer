@@ -87,16 +87,12 @@ async function reachVerification(
   await expectAccessible(page);
 
   await page.goto(`/o/${organizationId}`);
-  const verifiedBadge = page
-    .locator('.state-badge.state-verified')
-    .first();
+  const verifiedBadge = page.locator('.state-badge.state-verified').first();
   if (await verifiedBadge.isVisible()) {
     return 'ALREADY_VERIFIED';
   }
 
-  await expect(
-    page.locator('.state-badge.state-tested').first(),
-  ).toBeVisible();
+  await expect(page.locator('.state-badge.state-tested').first()).toBeVisible();
   await page.getByRole('link', { name: 'Implement tested change' }).click();
 
   const implementedAt = page.getByLabel('Implemented at (UTC)');
