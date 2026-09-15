@@ -125,7 +125,10 @@ export function WorkbenchShell({
           <p className="mt-1 text-[11px] text-white/34">{role} workspace</p>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-3 py-4" aria-label="Evalomics workspace">
+        <nav
+          className="flex-1 overflow-y-auto px-3 py-4"
+          aria-label="Evalomics workspace"
+        >
           <NavLinks organizationId={organizationId} />
         </nav>
 
@@ -142,13 +145,18 @@ export function WorkbenchShell({
       </aside>
 
       <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-white/[0.07] bg-[#090d13]/92 px-4 backdrop-blur-xl lg:hidden">
-        <Link href="/" className="flex items-center gap-2 font-semibold no-underline">
+        <Link
+          href="/"
+          className="flex items-center gap-2 font-semibold no-underline"
+        >
           <EvalomicsMark />
           Evalomics
         </Link>
         <button
           type="button"
-          aria-label={open ? 'Close workspace navigation' : 'Open workspace navigation'}
+          aria-label={
+            open ? 'Close workspace navigation' : 'Open workspace navigation'
+          }
           aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
           className="grid size-9 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-white"
@@ -167,11 +175,16 @@ export function WorkbenchShell({
             onClick={(event) => event.stopPropagation()}
           >
             <div className="mb-5">
-              <p className="truncate text-sm font-semibold">{organizationName}</p>
+              <p className="truncate text-sm font-semibold">
+                {organizationName}
+              </p>
               <p className="mt-1 text-xs text-white/34">{role} workspace</p>
             </div>
             <nav aria-label="Evalomics workspace mobile">
-              <NavLinks organizationId={organizationId} onNavigate={() => setOpen(false)} />
+              <NavLinks
+                organizationId={organizationId}
+                onNavigate={() => setOpen(false)}
+              />
             </nav>
           </aside>
         </div>

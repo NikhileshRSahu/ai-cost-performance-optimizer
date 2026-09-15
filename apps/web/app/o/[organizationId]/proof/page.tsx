@@ -46,7 +46,9 @@ export default async function VerificationPage({
           </p>
         </div>
         <span className="trust-chip">
-          {verified ? 'Verified production evidence' : 'Verification incomplete'}
+          {verified
+            ? 'Verified production evidence'
+            : 'Verification incomplete'}
         </span>
       </header>
 
@@ -74,19 +76,29 @@ export default async function VerificationPage({
           </p>
         </div>
 
-        <div className={verified
-          ? 'rounded-2xl border border-emerald-300/18 bg-emerald-300/[0.05] p-5'
-          : 'rounded-2xl border border-white/[0.08] bg-white/[0.025] p-5'}
+        <div
+          className={
+            verified
+              ? 'rounded-2xl border border-emerald-300/18 bg-emerald-300/[0.05] p-5'
+              : 'rounded-2xl border border-white/[0.08] bg-white/[0.025] p-5'
+          }
         >
           <div className="flex items-center gap-2">
-            <ShieldCheck className={verified ? 'size-4 text-emerald-200/70' : 'size-4 text-white/30'} />
+            <ShieldCheck
+              className={
+                verified ? 'size-4 text-emerald-200/70' : 'size-4 text-white/30'
+              }
+            />
             <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.13em] text-white/30">
               Verified net impact
             </p>
           </div>
-          <p className={verified
-            ? 'm-0 mt-3 font-mono text-2xl font-medium text-emerald-100'
-            : 'm-0 mt-3 font-mono text-2xl font-medium text-white/55'}
+          <p
+            className={
+              verified
+                ? 'm-0 mt-3 font-mono text-2xl font-medium text-emerald-100'
+                : 'm-0 mt-3 font-mono text-2xl font-medium text-white/55'
+            }
           >
             {pack.verifiedNetSavings === null
               ? 'Not verified'

@@ -55,8 +55,8 @@ export default async function ImportPage({
           <p className="eyebrow">Evidence</p>
           <h1>Upload one real usage window</h1>
           <p className="lede">
-            Start with the smallest useful dataset. Evalomics will validate the file,
-            preserve provenance, and only analyze accepted rows.
+            Start with the smallest useful dataset. Evalomics will validate the
+            file, preserve provenance, and only analyze accepted rows.
           </p>
         </div>
         <span className="trust-chip">CSV-first · no provider key required</span>
@@ -67,8 +67,8 @@ export default async function ImportPage({
           <p className="eyebrow">Usage CSV</p>
           <h2>Choose the period you want analyzed</h2>
           <p>
-            Required fields: timestamps, provider, model, requests, total cost, and currency.
-            Maximum 10 MiB and 50,000 rows.
+            Required fields: timestamps, provider, model, requests, total cost,
+            and currency. Maximum 10 MiB and 50,000 rows.
           </p>
           <Link className="text-link" href="/usage-template.csv">
             Download CSV template

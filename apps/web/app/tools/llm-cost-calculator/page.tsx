@@ -12,7 +12,10 @@ export const metadata: Metadata = {
 export default function LlmCostCalculatorPage() {
   return (
     <div className="grid gap-12 pb-8 sm:gap-14">
-      <section className="max-w-4xl pt-4 sm:pt-8" aria-labelledby="calculator-title">
+      <section
+        className="max-w-4xl pt-4 sm:pt-8"
+        aria-labelledby="calculator-title"
+      >
         <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700">
           Free tool · no login
         </p>
@@ -21,7 +24,9 @@ export default function LlmCostCalculatorPage() {
           className="mt-4 !text-[clamp(3.2rem,7vw,6.4rem)] !leading-[.9] !tracking-[-.07em] text-slate-950"
         >
           LLM cost,
-          <span className="block text-slate-400">without hidden assumptions.</span>
+          <span className="block text-slate-400">
+            without hidden assumptions.
+          </span>
         </h1>
         <p className="mt-7 max-w-2xl text-base leading-7 text-slate-500">
           Enter your real request volume, token averages, and token prices.
@@ -39,7 +44,9 @@ export default function LlmCostCalculatorPage() {
           </p>
           <h2 className="mt-3 !text-[clamp(2rem,4vw,3.5rem)] !leading-[.98] !tracking-[-.05em] text-slate-950">
             The Work MRI answers:
-            <span className="block text-slate-400">“what should I change?”</span>
+            <span className="block text-slate-400">
+              “what should I change?”
+            </span>
           </h2>
         </div>
 

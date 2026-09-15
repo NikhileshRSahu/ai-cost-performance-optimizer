@@ -108,7 +108,9 @@ export default async function BenchmarkPage({
             <label>
               <span>Evaluator version</span>
               <input name="evaluatorVersion" required defaultValue="eval-v1" />
-              <small>Use the same evaluator for current and candidate runs.</small>
+              <small>
+                Use the same evaluator for current and candidate runs.
+              </small>
             </label>
             <label>
               <span>Currency</span>

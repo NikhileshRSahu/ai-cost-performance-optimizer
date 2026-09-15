@@ -49,8 +49,12 @@ export default function HomePage() {
         <div className="overflow-hidden rounded-[24px] border border-white/10 bg-[#0b1119] shadow-[0_30px_90px_rgba(0,0,0,.35)]">
           <div className="flex items-center justify-between border-b border-white/[0.07] px-5 py-4">
             <div>
-              <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/30">Work MRI</p>
-              <p className="m-0 mt-1 text-sm font-semibold text-white/85">Production workload</p>
+              <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/30">
+                Work MRI
+              </p>
+              <p className="m-0 mt-1 text-sm font-semibold text-white/85">
+                Production workload
+              </p>
             </div>
             <span className="rounded-full border border-emerald-300/20 bg-emerald-300/[0.07] px-3 py-1 text-[10px] font-semibold text-emerald-200">
               Evidence loaded
@@ -63,9 +67,16 @@ export default function HomePage() {
               ['Potential', '$4,870', 'Not achieved'],
               ['Verified', '$1,742', 'Post-change proof'],
             ].map(([label, value, detail]) => (
-              <div key={label} className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4">
-                <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.13em] text-white/30">{label}</p>
-                <p className="m-0 mt-3 font-mono text-2xl font-medium tracking-[-0.04em] text-white">{value}</p>
+              <div
+                key={label}
+                className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4"
+              >
+                <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.13em] text-white/30">
+                  {label}
+                </p>
+                <p className="m-0 mt-3 font-mono text-2xl font-medium tracking-[-0.04em] text-white">
+                  {value}
+                </p>
                 <p className="m-0 mt-1 text-[10px] text-white/28">{detail}</p>
               </div>
             ))}
@@ -74,10 +85,16 @@ export default function HomePage() {
           <div className="mx-4 mb-4 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 sm:mx-5 sm:mb-5">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-200/55">Rank #1</p>
-                <h2 className="m-0 mt-2 text-lg font-semibold tracking-[-0.025em] text-white/90">Route low-complexity classification to a cheaper model</h2>
+                <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-200/55">
+                  Rank #1
+                </p>
+                <h2 className="m-0 mt-2 text-lg font-semibold tracking-[-0.025em] text-white/90">
+                  Route low-complexity classification to a cheaper model
+                </h2>
               </div>
-              <span className="shrink-0 rounded-full border border-amber-300/20 bg-amber-300/[0.07] px-3 py-1 text-[10px] font-semibold text-amber-100">Potential</span>
+              <span className="shrink-0 rounded-full border border-amber-300/20 bg-amber-300/[0.07] px-3 py-1 text-[10px] font-semibold text-amber-100">
+                Potential
+              </span>
             </div>
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
               {[
@@ -86,8 +103,12 @@ export default function HomePage() {
                 ['Projected saving', '$2,190/mo'],
               ].map(([label, value]) => (
                 <div key={label}>
-                  <p className="m-0 text-[9px] uppercase tracking-[0.12em] text-white/25">{label}</p>
-                  <p className="m-0 mt-1 font-mono text-sm font-semibold text-white/75">{value}</p>
+                  <p className="m-0 text-[9px] uppercase tracking-[0.12em] text-white/25">
+                    {label}
+                  </p>
+                  <p className="m-0 mt-1 font-mono text-sm font-semibold text-white/75">
+                    {value}
+                  </p>
                 </div>
               ))}
             </div>
@@ -108,15 +129,23 @@ export default function HomePage() {
             From spend to a decision you can defend.
           </h2>
           <p className="mt-5 max-w-lg text-base leading-7 text-slate-500">
-            No generic optimization feed. Evalomics advances one claim through evidence, testing, implementation, and proof.
+            No generic optimization feed. Evalomics advances one claim through
+            evidence, testing, implementation, and proof.
           </p>
         </div>
 
         <div className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-[0_24px_70px_rgba(15,23,42,.055)]">
           {steps.map(([index, title, body]) => (
-            <div key={title} className="grid gap-3 border-b border-slate-100 p-5 last:border-0 sm:grid-cols-[52px_120px_1fr] sm:items-center sm:p-6">
-              <span className="font-mono text-[11px] font-semibold text-slate-400">{index}</span>
-              <strong className="text-sm font-semibold text-slate-950">{title}</strong>
+            <div
+              key={title}
+              className="grid gap-3 border-b border-slate-100 p-5 last:border-0 sm:grid-cols-[52px_120px_1fr] sm:items-center sm:p-6"
+            >
+              <span className="font-mono text-[11px] font-semibold text-slate-400">
+                {index}
+              </span>
+              <strong className="text-sm font-semibold text-slate-950">
+                {title}
+              </strong>
               <span className="text-sm leading-6 text-slate-500">{body}</span>
             </div>
           ))}
@@ -135,9 +164,14 @@ export default function HomePage() {
         </div>
         <div>
           <p className="m-0 text-sm leading-6 text-slate-500">
-            Potential, Tested, and Verified remain separate states. Savings only become Verified after comparable post-change production evidence confirms the impact.
+            Potential, Tested, and Verified remain separate states. Savings only
+            become Verified after comparable post-change production evidence
+            confirms the impact.
           </p>
-          <Link href="/methodology" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-slate-950 no-underline">
+          <Link
+            href="/methodology"
+            className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-slate-950 no-underline"
+          >
             Read the methodology <ArrowRight className="size-4" />
           </Link>
         </div>

@@ -18,7 +18,9 @@ async function publishHealthEvent(
   });
 }
 
-async function checkAuthProvider(): Promise<'ok' | 'not_configured' | 'unavailable'> {
+async function checkAuthProvider(): Promise<
+  'ok' | 'not_configured' | 'unavailable'
+> {
   const base = process.env.NEON_AUTH_BASE_URL?.replace(/\/+$/, '');
   if (base === undefined || base.length === 0) return 'not_configured';
 
