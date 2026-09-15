@@ -195,19 +195,20 @@ function parseCsv(text){
  if(cell.length||row.length){row.push(cell);rows.push(row);}return rows.filter(r=>r.some(x=>x.trim()!==''));
 }
 function analyze(records,currency,costOverride=null){
- let req=0,input=0,output=0,cached=0;let inputOk=true,outputOk=true,cachedOk=true;let spend=0,hasSpend=false,mixed=false;const models={};
- records.forEach(r=>{const q=Number(r.requests||0);req+=q;models[r.model||'unknown']=(models[r.model||'unknown']||0)+q;
+ let req=0,input=0,output=0,cached=0;let requestsOk=true,inputOk=true,outputOk=true,cachedOk=true;let spend=0,hasSpend=false,mixed=false;const models={};
+ records.forEach(r=>{let q=0;if(r.requests==null||r.requests===''){requestsOk=false;}else{q=Number(r.requests);req+=q;models[r.model||'unknown']=(models[r.model||'unknown']||0)+q;}
   if(r.inputTokens==null||r.inputTokens==='')inputOk=false;else input+=Number(r.inputTokens);
   if(r.outputTokens==null||r.outputTokens==='')outputOk=false;else output+=Number(r.outputTokens);
   if(r.cachedInputTokens==null||r.cachedInputTokens==='')cachedOk=false;else cached+=Number(r.cachedInputTokens);
   if(r.totalCost!=null&&r.totalCost!==''){if((r.currency||'').toUpperCase()===currency){spend+=Number(r.totalCost);hasSpend=true;}else mixed=true;}
  });
  if(costOverride){spend=costOverride.amount;hasSpend=true;currency=costOverride.currency;}
- const metrics=[['Requests',req.toLocaleString()],['Observed spend',hasSpend?money(spend,currency):'Unavailable'],['Cost / request',hasSpend&&req?money(spend/req,currency):'Unavailable'],['Output tokens / request',outputOk&&req?(output/req).toFixed(2):'Unavailable'],['Cached-input share',inputOk&&cachedOk&&input?((cached/input)*100).toFixed(2)+'%':'Unavailable']];
+ const metrics=[['Requests',requestsOk?req.toLocaleString():'Unavailable'],['Observed spend',hasSpend?money(spend,currency):'Unavailable'],['Cost / request',hasSpend&&requestsOk&&req?money(spend/req,currency):'Unavailable'],['Output tokens / request',outputOk&&requestsOk&&req?(output/req).toFixed(2):'Unavailable'],['Cached-input share',inputOk&&cachedOk&&input?((cached/input)*100).toFixed(2)+'%':'Unavailable']];
  const opportunities=[];const limitations=[];
  if(inputOk&&cachedOk&&input){const ratio=cached/input;if(ratio<.25)opportunities.push({title:'Test higher prompt-cache reuse',why:'Cached input is below 25% of observed input tokens.',test:'Benchmark provider-supported caching on stable prompt prefixes.',guard:'Do not change effective prompt semantics merely to raise cache usage.'});limitations.push('Cache analysis uses cached input / observed input as a launch proxy; it does not infer provider cache eligibility.');} else limitations.push('Cache analysis withheld because token evidence is incomplete.');
- if(outputOk&&req){const rate=output/req;if(rate>300)opportunities.push({title:'Test a tighter output budget',why:'Observed output tokens per request exceed 300.',test:'Run the same evaluation set with a lower output cap or more concise response instruction.',guard:'Reject the candidate if answer completeness or required quality falls below the floor.'});}else limitations.push('Output-token efficiency withheld because output evidence is incomplete.');
- if(req){const top=Object.entries(models).sort((a,b)=>b[1]-a[1])[0];if(top&&top[1]/req>.70)opportunities.push({title:'Benchmark a lower-cost candidate on the dominant request slice',why:`${top[0]} handles ${((top[1]/req)*100).toFixed(2)}% of requests.`,test:'Benchmark a representative eligible slice against a lower-cost candidate.',guard:'Keep the current model unless every quality and latency constraint passes.'});limitations.push('Model concentration is based on request volume, not attributed cost.');}
+ if(outputOk&&requestsOk&&req){const rate=output/req;if(rate>300)opportunities.push({title:'Test a tighter output budget',why:'Observed output tokens per request exceed 300.',test:'Run the same evaluation set with a lower output cap or more concise response instruction.',guard:'Reject the candidate if answer completeness or required quality falls below the floor.'});}else limitations.push('Output-token efficiency withheld because output or request-count evidence is incomplete.');
+ if(requestsOk&&req){const top=Object.entries(models).sort((a,b)=>b[1]-a[1])[0];if(top&&top[1]/req>.70)opportunities.push({title:'Benchmark a lower-cost candidate on the dominant request slice',why:`${top[0]} handles ${((top[1]/req)*100).toFixed(2)}% of requests.`,test:'Benchmark a representative eligible slice against a lower-cost candidate.',guard:'Keep the current model unless every quality and latency constraint passes.'});limitations.push('Model concentration is based on request volume, not attributed cost.');}
+ if(!requestsOk)limitations.push('Request-based metrics are withheld because this source does not provide documented request counts.');
  if(mixed)limitations.push('Records outside '+currency+' are excluded from spend metrics.');
  if(!hasSpend)limitations.push('Observed spend unavailable from this evidence path.');
  renderMRI(metrics,opportunities,limitations);
