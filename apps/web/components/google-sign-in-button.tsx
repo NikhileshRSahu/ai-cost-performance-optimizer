@@ -11,9 +11,11 @@ export function GoogleSignInButton() {
     setPending(true);
     setError(null);
     try {
+      const origin = window.location.origin;
       const result = await authClient.signIn.social({
         provider: 'google',
-        callbackURL: '/start',
+        callbackURL: `${origin}/start`,
+        errorCallbackURL: `${origin}/login?error=auth`,
       });
       if (result.error !== null) {
         setError('Google sign-in could not be started. Please try again.');
