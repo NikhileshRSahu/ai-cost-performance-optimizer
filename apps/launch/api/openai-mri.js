@@ -51,7 +51,7 @@ function iso(seconds) {
   return new Date(seconds * 1000).toISOString();
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return send(res, 405, { error: 'METHOD_NOT_ALLOWED' });
