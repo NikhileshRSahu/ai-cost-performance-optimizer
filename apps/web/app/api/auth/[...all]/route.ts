@@ -19,8 +19,6 @@ function forwardedHeaders(request: Request): Headers {
   headers.delete('host');
   headers.delete('content-length');
 
-  // Vercel forwarding headers describe the public app host. They must not be
-  // forwarded to Neon Auth, which validates its own auth endpoint hostname.
   for (const name of [
     'forwarded',
     'x-forwarded-host',
@@ -63,6 +61,51 @@ function rewriteResponseHeaders(source: Headers): Headers {
   return headers;
 }
 
+async function rewriteSocialSignInResponse(
+  request: Request,
+  response: Response,
+): Promise<Response> {
+  const path = new URL(request.url).pathname;
+  if (
+    path !== '/api/auth/sign-in/social' ||
+    !response.ok ||
+    !response.headers.get('content-type')?.includes('application/json')
+  ) {
+    return response;
+  }
+
+  let payload: unknown;
+  try {
+    payload = await response.clone().json();
+  } catch {
+    return response;
+  }
+
+  if (payload === null || typeof payload !== 'object') return response;
+  const record = payload as Record<string, unknown>;
+  if (typeof record.url !== 'string') return response;
+
+  try {
+    const providerUrl = new URL(record.url);
+    if (providerUrl.hostname !== 'accounts.google.com') return response;
+
+    const incoming = new URL(request.url);
+    providerUrl.searchParams.set(
+      'redirect_uri',
+      `${incoming.origin}/api/auth/callback/google`,
+    );
+    record.url = providerUrl.toString();
+
+    return new Response(JSON.stringify(record), {
+      status: response.status,
+      statusText: response.statusText,
+      headers: rewriteResponseHeaders(response.headers),
+    });
+  } catch {
+    return response;
+  }
+}
+
 async function proxy(request: Request): Promise<Response> {
   const method = request.method.toUpperCase();
   const body =
@@ -70,7 +113,7 @@ async function proxy(request: Request): Promise<Response> {
       ? undefined
       : await request.arrayBuffer();
 
-  const response = await fetch(targetUrl(request), {
+  const upstream = await fetch(targetUrl(request), {
     method,
     headers: forwardedHeaders(request),
     body,
@@ -78,20 +121,22 @@ async function proxy(request: Request): Promise<Response> {
     cache: 'no-store',
   });
 
-  if (!response.ok) {
-    const diagnostic = await response.clone().text();
+  if (!upstream.ok) {
+    const diagnostic = await upstream.clone().text();
     console.error('NEON_AUTH_PROXY_ERROR', {
-      status: response.status,
+      status: upstream.status,
       path: new URL(request.url).pathname,
       body: diagnostic.slice(0, 1000),
     });
   }
 
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers: rewriteResponseHeaders(response.headers),
+  const proxied = new Response(upstream.body, {
+    status: upstream.status,
+    statusText: upstream.statusText,
+    headers: rewriteResponseHeaders(upstream.headers),
   });
+
+  return rewriteSocialSignInResponse(request, proxied);
 }
 
 export async function GET(request: Request): Promise<Response> {
