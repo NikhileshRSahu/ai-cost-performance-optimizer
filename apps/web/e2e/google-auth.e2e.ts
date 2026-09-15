@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('login page is usable when Google OAuth is not configured', async ({
+test('login page is usable when Neon Auth is not configured', async ({
   page,
 }) => {
   await page.goto('/login');
@@ -9,7 +9,7 @@ test('login page is usable when Google OAuth is not configured', async ({
     page.getByRole('heading', { name: 'Start your AI Work MRI.' }),
   ).toBeVisible();
   await expect(
-    page.getByText('Google sign-in is not configured on this deployment.'),
+    page.getByText('Sign-in is not configured on this deployment.'),
   ).toBeVisible();
   await expect(
     page.getByRole('link', { name: 'Try the free LLM cost calculator' }),

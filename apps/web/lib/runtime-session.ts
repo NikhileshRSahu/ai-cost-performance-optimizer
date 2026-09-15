@@ -4,13 +4,8 @@ import { createPasswordlessSessionAdapter } from '../../../src/auth/session-adap
 import { createDatabase } from '../../../src/persistence/database';
 import { createMembershipRepository } from '../../../src/persistence/repositories/memberships';
 import type { AuthenticatedSession } from '../../../src/workbench/authz';
-import { getWebAuth, hasGoogleAuthConfiguration } from './auth';
+import { readNeonAuthIdentity, type RuntimeIdentity } from './neon-auth';
 import { resolveWebSession } from './session';
-
-type RuntimeIdentity = Readonly<{
-  input: unknown;
-  allowProvision: boolean;
-}>;
 
 function readTrustedIdentityFromEnvironment(): RuntimeIdentity | null {
   const provider = process.env.AUTH_PROVIDER;
@@ -32,33 +27,14 @@ function readTrustedIdentityFromEnvironment(): RuntimeIdentity | null {
   });
 }
 
-async function readTrustedGoogleIdentity(): Promise<RuntimeIdentity | null> {
-  if (!hasGoogleAuthConfiguration()) return null;
-
-  const requestHeaders = await headers();
-  const session = await getWebAuth().api.getSession({
-    headers: requestHeaders,
-  });
-
-  if (session === null || !session.user.emailVerified) return null;
-
-  return Object.freeze({
-    input: {
-      provider: 'better-auth/google',
-      subject: session.user.id,
-      email: session.user.email,
-      emailVerified: true,
-    },
-    allowProvision: true,
-  });
-}
-
 export async function resolveRuntimeSession(): Promise<AuthenticatedSession | null> {
   const databaseUrl = process.env.DATABASE_URL;
-  if (databaseUrl === undefined) return null;
+  if (databaseUrl === undefined || databaseUrl.trim().length === 0) return null;
 
+  const requestHeaders = await headers();
   const identity =
-    (await readTrustedGoogleIdentity()) ?? readTrustedIdentityFromEnvironment();
+    (await readNeonAuthIdentity(requestHeaders)) ??
+    readTrustedIdentityFromEnvironment();
   if (identity === null) return null;
 
   const database = createDatabase(databaseUrl);
