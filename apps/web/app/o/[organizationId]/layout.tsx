@@ -1,6 +1,9 @@
-import Link from 'next/link';
+import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
+import { WorkbenchShell } from '../../../components/workbench/workbench-shell';
+import { createDatabase } from '../../../../../src/persistence/database';
+import { organizations } from '../../../../../src/persistence/schema';
 import { requireOrganizationContext } from '../../../lib/organization-context';
 import { resolveRuntimeSession } from '../../../lib/runtime-session';
 
@@ -24,33 +27,35 @@ export default async function OrganizationLayout({
     redirect('/unauthorized');
   }
 
+  const databaseUrl = process.env.DATABASE_URL;
+  if (databaseUrl === undefined || databaseUrl.trim().length === 0) {
+    redirect('/unauthorized');
+  }
+
+  const database = createDatabase(databaseUrl);
+  let organizationName = 'Evalomics workspace';
+  try {
+    const organization = (
+      await database.db
+        .select({ name: organizations.name })
+        .from(organizations)
+        .where(eq(organizations.id, organizationId))
+        .limit(1)
+    ).at(0);
+
+    if (organization === undefined) redirect('/unauthorized');
+    organizationName = organization.name;
+  } finally {
+    await database.close();
+  }
+
   return (
-    <div className="org-workbench">
-      <aside className="workbench-sidebar">
-        <div>
-          <p className="sidebar-kicker">Optimization workbench</p>
-          <p className="sidebar-org">{organizationId}</p>
-          <span className="role-chip" aria-label="Current role">
-            {context.role}
-          </span>
-        </div>
-        <nav aria-label="Organization workbench">
-          <Link href={`/o/${organizationId}`}>Overview</Link>
-          <Link href={`/o/${organizationId}/demo`}>Guided demo</Link>
-          <Link href={`/o/${organizationId}/import`}>Import</Link>
-          <Link href={`/o/${organizationId}/history`}>AI history</Link>
-          <Link href={`/o/${organizationId}/workloads`}>Workloads</Link>
-          <Link href={`/o/${organizationId}/benchmark`}>Benchmark</Link>
-          <Link href={`/o/${organizationId}/telemetry`}>Telemetry</Link>
-          <Link href={`/o/${organizationId}/data`}>Data &amp; privacy</Link>
-          <Link href={`/o/${organizationId}/proof`}>Proof pack</Link>
-          <Link href={`/o/${organizationId}/pilot`}>Pilot &amp; billing</Link>
-        </nav>
-        <p className="sidebar-note">
-          Savings stay separate as potential, tested, and verified evidence.
-        </p>
-      </aside>
-      <div className="workbench-content">{children}</div>
-    </div>
+    <WorkbenchShell
+      organizationId={organizationId}
+      organizationName={organizationName}
+      role={context.role}
+    >
+      {children}
+    </WorkbenchShell>
   );
 }
