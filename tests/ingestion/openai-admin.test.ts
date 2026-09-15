@@ -16,7 +16,7 @@ describe('OpenAI Admin connector', () => {
           return {
             ok: true,
             status: 200,
-            json: () => Promise.resolve({
+            json: () => ({
               object: 'page',
               data: [
                 {
@@ -49,7 +49,7 @@ describe('OpenAI Admin connector', () => {
         return {
           ok: true,
           status: 200,
-          json: () => Promise.resolve({
+          json: () => ({
             object: 'page',
             data: [
               {
@@ -83,7 +83,7 @@ describe('OpenAI Admin connector', () => {
         return {
           ok: true,
           status: 200,
-          json: () => Promise.resolve({
+          json: () => ({
             object: 'page',
             data: [
               {
@@ -139,7 +139,7 @@ describe('OpenAI Admin connector', () => {
     const fetcher: OpenAIAdminFetch = () => ({
       ok: false,
       status: 401,
-      json: () => Promise.resolve({ error: { message: 'bad key' } }),
+      json: () => ({ error: { message: 'bad key' } }),
     });
 
     await expect(
