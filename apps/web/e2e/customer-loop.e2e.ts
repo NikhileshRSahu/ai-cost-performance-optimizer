@@ -87,7 +87,7 @@ async function reachVerification(
   await expectAccessible(page);
 
   await page.goto(`/o/${organizationId}`);
-  const verifiedBadge = page.locator('.state-badge.state-verified');
+  const verifiedBadge = page.locator('.state-badge.state-verified').first();
   if (await verifiedBadge.isVisible()) {
     return 'ALREADY_VERIFIED';
   }
@@ -155,7 +155,7 @@ test('hard customer journey reaches verified savings', async ({ page }) => {
   }
 
   await page.goto('/o/journey-org');
-  await expect(page.locator('.state-badge.state-verified')).toBeVisible();
+  await expect(page.locator('.state-badge.state-verified').first()).toBeVisible();
   await expect(page.getByText('Verified net impact')).toBeVisible();
 });
 
@@ -168,7 +168,7 @@ test('failed post-change quality never becomes verified', async ({ page }) => {
   await expect(page.getByText('Verified net impact')).toHaveCount(0);
 
   await page.goto('/o/journey-bad-org');
-  await expect(page.locator('.state-badge.state-tested')).toBeVisible();
+  await expect(page.locator('.state-badge.state-tested').first()).toBeVisible();
   await expect(page.locator('.state-badge.state-verified')).toHaveCount(0);
 });
 
