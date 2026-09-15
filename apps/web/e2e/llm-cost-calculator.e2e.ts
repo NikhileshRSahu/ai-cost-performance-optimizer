@@ -14,7 +14,7 @@ test('public LLM calculator estimates cost without authentication', async ({
   await page.getByLabel('Requests per month').fill('20000');
   await expect(page.getByText('USD 40.00')).toBeVisible();
 
-  await page.getByLabel('Display currency').selectOption('EUR');
+  await page.getByLabel('Currency of your entered rates').selectOption('EUR');
   await expect(page.getByText('EUR 40.00')).toBeVisible();
-  await expect(page.getByText('No FX conversion is performed.')).toBeVisible();
+  await expect(page.getByText('No FX conversion.')).toBeVisible();
 });
