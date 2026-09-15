@@ -131,8 +131,7 @@ const Velaris = ({
       return shader;
     };
 
-    const program = gl.createProgram();
-    if (!program) return;
+    const program = gl.createProgram()!;
 
     const vertex = createShader(gl.VERTEX_SHADER, vertexShaderGLSL);
     const fragment = createShader(gl.FRAGMENT_SHADER, fragmentShaderGLSL);
