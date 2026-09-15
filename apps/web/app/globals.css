@@ -2078,13 +2078,13 @@ samp,
 .workflow-page .eyebrow,
 .lab-stack .eyebrow,
 .dashboard-stack .eyebrow {
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.62);
 }
 
 .workflow-page .lede,
 .lab-stack .lede,
 .dashboard-stack .lede {
-  color: rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.68);
 }
 
 .workflow-header,
@@ -2127,7 +2127,7 @@ samp,
 .configuration-card p,
 .lab-section p,
 .evidence-details p {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.64);
 }
 
 .trust-chip,
@@ -2218,7 +2218,7 @@ samp,
 
 .workflow-page small,
 .lab-stack small {
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.58);
 }
 
 .file-drop {
@@ -2359,4 +2359,31 @@ samp,
   .lab-header {
     flex-direction: column;
   }
+}
+
+
+/* WCAG AA dark-surface contrast guardrails */
+.workflow-page .eyebrow,
+.lab-stack .eyebrow,
+.dashboard-stack .eyebrow {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.workflow-page .lede,
+.lab-stack .lede,
+.dashboard-stack .lede,
+.workflow-card p,
+.configuration-card p,
+.lab-section p,
+.evidence-details p {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.workflow-page small,
+.lab-stack small,
+.summary-grid span,
+.evidence-list dt,
+.recommendation-meta dt,
+.configuration-card dt {
+  color: rgba(255, 255, 255, 0.58);
 }
