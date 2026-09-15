@@ -30,11 +30,12 @@ function rewriteResponseHeaders(source: Headers): Headers {
     headers.set('location', '/api/auth' + location.slice(base.length));
   }
 
-  const getSetCookie = (source as Headers & { getSetCookie?: () => string[] })
-    .getSetCookie;
-  if (typeof getSetCookie === 'function') {
+  const headerSource = source as Headers & {
+    getSetCookie?: (this: Headers) => string[];
+  };
+  if (typeof headerSource.getSetCookie === 'function') {
     headers.delete('set-cookie');
-    for (const cookie of getSetCookie.call(source)) {
+    for (const cookie of headerSource.getSetCookie()) {
       headers.append('set-cookie', cookie.replace(/;?\s*Domain=[^;]+/gi, ''));
     }
   } else {
