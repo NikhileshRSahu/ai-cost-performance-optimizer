@@ -22,11 +22,21 @@ export default function HomePage() {
           <div className="grid gap-4 sm:grid-cols-3">
             {[
               ['01', 'Find the waste', 'Use evidence, not generic advice.'],
-              ['02', 'Test the fix', 'Hold quality constant while economics change.'],
-              ['03', 'Prove the result', 'Verified appears only after production evidence.'],
+              [
+                '02',
+                'Test the fix',
+                'Hold quality constant while economics change.',
+              ],
+              [
+                '03',
+                'Prove the result',
+                'Verified appears only after production evidence.',
+              ],
             ].map(([index, title, body]) => (
               <div key={title} className="border-t border-slate-300 pt-4">
-                <span className="font-mono text-[10px] font-semibold text-blue-600">{index}</span>
+                <span className="font-mono text-[10px] font-semibold text-blue-600">
+                  {index}
+                </span>
                 <h3 className="mt-5 text-base font-semibold tracking-[-0.02em] text-slate-950">
                   {title}
                 </h3>
@@ -63,7 +73,10 @@ export default function HomePage() {
                 'No invented savings',
                 'Explicit quality floor',
               ].map((item) => (
-                <div key={item} className="flex items-center gap-2 text-sm text-slate-600">
+                <div
+                  key={item}
+                  className="flex items-center gap-2 text-sm text-slate-600"
+                >
                   <span className="grid size-5 place-items-center rounded-full bg-emerald-50 text-emerald-700">
                     <Check className="size-3" />
                   </span>
@@ -103,14 +116,21 @@ export default function HomePage() {
                 {[
                   ['Potential', 'Worth testing, not yet a saving'],
                   ['Tested', 'Controlled benchmark cleared the guardrail'],
-                  ['Verified', 'Post-change production evidence confirmed impact'],
+                  [
+                    'Verified',
+                    'Post-change production evidence confirmed impact',
+                  ],
                 ].map(([state, meaning]) => (
                   <div
                     key={state}
                     className="grid gap-1 rounded-xl border border-white/[0.08] bg-white/[0.035] px-4 py-3 sm:grid-cols-[90px_1fr] sm:items-center"
                   >
-                    <strong className="text-xs font-semibold text-white/80">{state}</strong>
-                    <span className="text-xs leading-5 text-white/40">{meaning}</span>
+                    <strong className="text-xs font-semibold text-white/80">
+                      {state}
+                    </strong>
+                    <span className="text-xs leading-5 text-white/40">
+                      {meaning}
+                    </span>
                   </div>
                 ))}
               </div>

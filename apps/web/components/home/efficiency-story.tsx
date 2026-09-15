@@ -184,7 +184,9 @@ export function EfficiencyStory() {
                   <strong className="mt-1.5 block font-mono text-2xl font-medium tracking-[-0.04em] text-white">
                     $18,420
                   </strong>
-                  <p className="m-0 mt-1 text-[10px] text-white/32">evidence window</p>
+                  <p className="m-0 mt-1 text-[10px] text-white/32">
+                    evidence window
+                  </p>
                 </article>
 
                 <article className="rounded-2xl border border-amber-300/15 bg-amber-300/[0.05] p-4">
@@ -195,7 +197,9 @@ export function EfficiencyStory() {
                   <strong className="mt-1.5 block font-mono text-2xl font-medium tracking-[-0.04em] text-amber-100">
                     $4,870
                   </strong>
-                  <p className="m-0 mt-1 text-[10px] text-white/32">not savings yet</p>
+                  <p className="m-0 mt-1 text-[10px] text-white/32">
+                    not savings yet
+                  </p>
                 </article>
 
                 <article className="rounded-2xl border border-emerald-300/15 bg-emerald-300/[0.05] p-4">
@@ -204,20 +208,27 @@ export function EfficiencyStory() {
                     Verified net saving
                   </p>
                   <motion.strong
-                    style={reduceMotion ? undefined : { opacity: verifiedOpacity }}
+                    style={
+                      reduceMotion ? undefined : { opacity: verifiedOpacity }
+                    }
                     className="mt-1.5 block font-mono text-2xl font-medium tracking-[-0.04em] text-emerald-100"
                   >
                     {active === 3 || reduceMotion ? '$1,742' : 'Locked'}
                   </motion.strong>
                   <p className="m-0 mt-1 text-[10px] text-white/32">
-                    {active === 3 || reduceMotion ? 'post-change proof' : 'requires verification'}
+                    {active === 3 || reduceMotion
+                      ? 'post-change proof'
+                      : 'requires verification'}
                   </p>
                 </article>
               </div>
 
               <div className="relative min-h-[410px] border-t border-white/[0.06]">
                 <motion.div
-                  animate={{ opacity: active === 0 ? 1 : 0, y: active === 0 ? 0 : -10 }}
+                  animate={{
+                    opacity: active === 0 ? 1 : 0,
+                    y: active === 0 ? 0 : -10,
+                  }}
                   transition={{ duration: reduceMotion ? 0 : 0.28 }}
                   className="absolute inset-0 p-5 sm:p-6"
                   aria-hidden={active !== 0}
@@ -242,11 +253,15 @@ export function EfficiencyStory() {
                           key={label}
                           initial={reduceMotion ? false : { opacity: 0, x: 12 }}
                           animate={{ opacity: active === 0 ? 1 : 0.3, x: 0 }}
-                          transition={{ delay: reduceMotion ? 0 : index * 0.07 }}
+                          transition={{
+                            delay: reduceMotion ? 0 : index * 0.07,
+                          }}
                           className="flex items-center justify-between rounded-xl border border-white/[0.06] bg-white/[0.025] px-4 py-3"
                         >
                           <span className="text-xs text-white/42">{label}</span>
-                          <span className="font-mono text-xs font-semibold text-white/74">{value}</span>
+                          <span className="font-mono text-xs font-semibold text-white/74">
+                            {value}
+                          </span>
                         </motion.div>
                       ))}
                     </div>
@@ -257,7 +272,10 @@ export function EfficiencyStory() {
                 </motion.div>
 
                 <motion.div
-                  animate={{ opacity: active === 1 ? 1 : 0, y: active === 1 ? 0 : 10 }}
+                  animate={{
+                    opacity: active === 1 ? 1 : 0,
+                    y: active === 1 ? 0 : 10,
+                  }}
                   transition={{ duration: reduceMotion ? 0 : 0.28 }}
                   className="absolute inset-0 p-5 sm:p-6"
                   aria-hidden={active !== 1}
@@ -265,7 +283,9 @@ export function EfficiencyStory() {
                   <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.025]">
                     <div className="flex items-center justify-between border-b border-white/[0.07] px-4 py-3">
                       <div>
-                        <p className="m-0 text-sm font-semibold text-white/86">Ranked opportunities</p>
+                        <p className="m-0 text-sm font-semibold text-white/86">
+                          Ranked opportunities
+                        </p>
                         <p className="m-0 mt-0.5 text-[10px] text-white/28">
                           evidence strength × expected value × risk
                         </p>
@@ -280,15 +300,26 @@ export function EfficiencyStory() {
                           (index === 1 ? 'bg-amber-300/[0.055]' : '')
                         }
                       >
-                        <span className="font-mono text-[10px] font-semibold text-blue-300/55">0{index + 1}</span>
+                        <span className="font-mono text-[10px] font-semibold text-blue-300/55">
+                          0{index + 1}
+                        </span>
                         <div>
-                          <p className="m-0 text-sm font-medium text-white/82">{label}</p>
-                          <p className="m-0 mt-1 text-[10px] text-white/30">{evidence}</p>
+                          <p className="m-0 text-sm font-medium text-white/82">
+                            {label}
+                          </p>
+                          <p className="m-0 mt-1 text-[10px] text-white/30">
+                            {evidence}
+                          </p>
                         </div>
                         <div className="text-right">
-                          <p className="m-0 font-mono text-xs font-semibold text-white/70">{value}</p>
+                          <p className="m-0 font-mono text-xs font-semibold text-white/70">
+                            {value}
+                          </p>
                           {index === 1 ? (
-                            <EvidenceStatePill state="OPPORTUNITY" className="mt-1.5" />
+                            <EvidenceStatePill
+                              state="OPPORTUNITY"
+                              className="mt-1.5"
+                            />
                           ) : null}
                         </div>
                       </div>
@@ -299,7 +330,8 @@ export function EfficiencyStory() {
                           Selected
                         </p>
                         <p className="m-0 mt-1 text-xs font-medium text-white/72">
-                          Test cheaper routing for low-complexity classification.
+                          Test cheaper routing for low-complexity
+                          classification.
                         </p>
                       </div>
                       <ArrowDownRight className="size-4 shrink-0 text-amber-200/55" />
@@ -308,7 +340,10 @@ export function EfficiencyStory() {
                 </motion.div>
 
                 <motion.div
-                  animate={{ opacity: active === 2 ? 1 : 0, y: active === 2 ? 0 : 10 }}
+                  animate={{
+                    opacity: active === 2 ? 1 : 0,
+                    y: active === 2 ? 0 : 10,
+                  }}
                   transition={{ duration: reduceMotion ? 0 : 0.28 }}
                   className="absolute inset-0 p-5 sm:p-6"
                   aria-hidden={active !== 2}
@@ -329,8 +364,12 @@ export function EfficiencyStory() {
                     <div className="grid gap-6">
                       <div>
                         <div className="mb-2 flex justify-between text-xs">
-                          <span className="text-white/38">Baseline cost / 1k requests</span>
-                          <span className="font-mono font-semibold text-white/74">$12.84</span>
+                          <span className="text-white/38">
+                            Baseline cost / 1k requests
+                          </span>
+                          <span className="font-mono font-semibold text-white/74">
+                            $12.84
+                          </span>
                         </div>
                         <div className="h-2 rounded-full bg-white/[0.07]">
                           <div className="h-full w-full rounded-full bg-white/22" />
@@ -338,12 +377,20 @@ export function EfficiencyStory() {
                       </div>
                       <div>
                         <div className="mb-2 flex justify-between text-xs">
-                          <span className="text-white/38">Candidate cost / 1k requests</span>
-                          <span className="font-mono font-semibold text-emerald-200">$7.43</span>
+                          <span className="text-white/38">
+                            Candidate cost / 1k requests
+                          </span>
+                          <span className="font-mono font-semibold text-emerald-200">
+                            $7.43
+                          </span>
                         </div>
                         <div className="h-2 overflow-hidden rounded-full bg-white/[0.07]">
                           <motion.div
-                            style={reduceMotion ? { width: '58%' } : { width: candidateWidth }}
+                            style={
+                              reduceMotion
+                                ? { width: '58%' }
+                                : { width: candidateWidth }
+                            }
                             className="h-full rounded-full bg-emerald-300/75"
                           />
                         </div>
@@ -356,11 +403,17 @@ export function EfficiencyStory() {
                           <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-white/28">
                             Quality guard
                           </p>
-                          <p className="m-0 mt-1 font-mono text-2xl text-white/88">0.93</p>
+                          <p className="m-0 mt-1 font-mono text-2xl text-white/88">
+                            0.93
+                          </p>
                         </div>
                         <div className="text-right">
-                          <p className="m-0 text-[9px] text-white/28">required floor</p>
-                          <p className="m-0 mt-1 font-mono text-sm text-blue-200">0.90</p>
+                          <p className="m-0 text-[9px] text-white/28">
+                            required floor
+                          </p>
+                          <p className="m-0 mt-1 font-mono text-sm text-blue-200">
+                            0.90
+                          </p>
                         </div>
                       </div>
                       <div className="relative mt-3 h-2 rounded-full bg-white/[0.07]">
@@ -368,15 +421,22 @@ export function EfficiencyStory() {
                         <div className="h-full w-[93%] rounded-full bg-gradient-to-r from-blue-400/55 to-emerald-300/80" />
                       </div>
                       <p className="m-0 mt-3 flex items-center gap-1.5 text-[10px] font-semibold text-emerald-200/70">
-                        <Check className="size-3.5" /> Candidate clears the quality floor
+                        <Check className="size-3.5" /> Candidate clears the
+                        quality floor
                       </p>
                     </div>
                   </div>
                 </motion.div>
 
                 <motion.div
-                  style={reduceMotion ? undefined : { opacity: verifiedOpacity, y: verifiedY }}
-                  animate={reduceMotion ? { opacity: active === 3 ? 1 : 0 } : undefined}
+                  style={
+                    reduceMotion
+                      ? undefined
+                      : { opacity: verifiedOpacity, y: verifiedY }
+                  }
+                  animate={
+                    reduceMotion ? { opacity: active === 3 ? 1 : 0 } : undefined
+                  }
                   className="absolute inset-0 p-5 sm:p-6"
                   aria-hidden={active !== 3}
                 >
@@ -387,7 +447,8 @@ export function EfficiencyStory() {
                           Post-change verification
                         </p>
                         <h3 className="mt-2 max-w-lg text-2xl font-semibold tracking-[-0.04em] text-white/92">
-                          The saving is unlocked only after production evidence agrees.
+                          The saving is unlocked only after production evidence
+                          agrees.
                         </h3>
                       </div>
                       <EvidenceStatePill state="VERIFIED" />
@@ -399,9 +460,16 @@ export function EfficiencyStory() {
                         ['Post-change', '$16,522'],
                         ['Quality', '0.93'],
                       ].map(([label, value]) => (
-                        <div key={label} className="rounded-xl border border-white/[0.07] bg-black/10 p-4">
-                          <p className="m-0 text-[9px] uppercase tracking-[0.12em] text-white/28">{label}</p>
-                          <p className="m-0 mt-2 font-mono text-xl font-medium text-white/82">{value}</p>
+                        <div
+                          key={label}
+                          className="rounded-xl border border-white/[0.07] bg-black/10 p-4"
+                        >
+                          <p className="m-0 text-[9px] uppercase tracking-[0.12em] text-white/28">
+                            {label}
+                          </p>
+                          <p className="m-0 mt-2 font-mono text-xl font-medium text-white/82">
+                            {value}
+                          </p>
                         </div>
                       ))}
                     </div>
@@ -416,8 +484,8 @@ export function EfficiencyStory() {
                         </p>
                       </div>
                       <p className="m-0 max-w-xs text-xs leading-5 text-emerald-50/45">
-                        Illustrative interface. In the product, this state requires
-                        comparable post-change customer evidence.
+                        Illustrative interface. In the product, this state
+                        requires comparable post-change customer evidence.
                       </p>
                     </div>
                   </div>
