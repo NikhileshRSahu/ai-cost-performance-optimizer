@@ -1,159 +1,174 @@
 import Link from 'next/link';
 
+const findings = [
+  ['Repeated context', '$1,420/mo', 'High confidence'],
+  ['Model overqualification', '$2,190/mo', 'Benchmark next'],
+  ['Cache miss pattern', '$1,260/mo', 'High confidence'],
+] as const;
+
 export default function HomePage() {
   return (
-    <div className="landing-stack">
-      <section className="hero hero-wide" aria-labelledby="page-title">
-        <p className="eyebrow">
-          Evalomics · Public beta · AI Efficiency Intelligence
-        </p>
-        <h1 id="page-title">
-          See where AI work is wasting money before changing production.
-        </h1>
-        <p className="lede">
-          Evalomics Work MRI turns usage evidence into an explainable efficiency
-          diagnosis, proposes bounded optimizations, tests them against a
-          quality floor, and keeps potential, tested, and verified savings
-          separate.
+    <div className="landing-stack premium-home">
+      <section className="premium-hero" aria-labelledby="page-title">
+        <div className="premium-hero-copy">
+          <p className="eyebrow">Evalomics · AI Efficiency Intelligence</p>
+          <h1 id="page-title">
+            Find AI waste.
+            <span>Prove the fix.</span>
+          </h1>
+          <p className="lede">
+            Turn usage evidence into a Work MRI that finds cost and workflow
+            waste, tests safer alternatives against a quality floor, and keeps
+            opportunity, tested, and verified savings visibly separate.
+          </p>
+          <div className="hero-actions">
+            <Link className="primary-action" href="/login">
+              Run the free Work MRI
+            </Link>
+            <Link className="ghost-action" href="/tools">
+              Explore free tools
+            </Link>
+          </div>
+          <div className="trust-row" aria-label="Product trust signals">
+            <span>No provider key required to start</span>
+            <span>No prompt content required</span>
+            <span>No invented savings</span>
+          </div>
+        </div>
+
+        <div className="product-stage" aria-label="Illustrative Evalomics Work MRI">
+          <div className="stage-topbar">
+            <div>
+              <span className="stage-kicker">Work MRI</span>
+              <strong>Production workload</strong>
+            </div>
+            <span className="live-pill"><i /> Evidence loaded</span>
+          </div>
+
+          <div className="spend-summary">
+            <div>
+              <span>Observed AI spend</span>
+              <strong>$18,420</strong>
+              <small>per month</small>
+            </div>
+            <div className="waste-callout">
+              <span>Potential waste</span>
+              <strong>$4,870</strong>
+              <small>requires testing</small>
+            </div>
+          </div>
+
+          <div className="finding-list">
+            {findings.map(([name, value, state], index) => (
+              <article key={name}>
+                <span className="finding-index">0{index + 1}</span>
+                <div>
+                  <strong>{name}</strong>
+                  <small>{state}</small>
+                </div>
+                <b>{value}</b>
+              </article>
+            ))}
+          </div>
+
+          <div className="proof-track">
+            <span className="proof-node active">Opportunity</span>
+            <i />
+            <span className="proof-node active">Tested</span>
+            <i />
+            <span className="proof-node verified">Verified</span>
+          </div>
+
+          <div className="verified-bar">
+            <div>
+              <span>Verified net saving</span>
+              <strong>$1,742/mo</strong>
+            </div>
+            <span className="quality-pass">Quality floor passed</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="outcome-strip" aria-label="What Evalomics does">
+        <article>
+          <span>01</span>
+          <strong>Observe</strong>
+          <p>Import evidence you already own through CSV or authorized providers.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <strong>Diagnose</strong>
+          <p>Detect spend, retry, cache, model, prompt, and workflow inefficiency.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <strong>Benchmark</strong>
+          <p>Test bounded changes against explicit quality and performance floors.</p>
+        </article>
+        <article>
+          <span>04</span>
+          <strong>Verify</strong>
+          <p>Measure post-change evidence before calling any saving verified.</p>
+        </article>
+      </section>
+
+      <section className="premium-section" aria-labelledby="difference-title">
+        <div className="section-copy">
+          <p className="eyebrow">Not another cost dashboard</p>
+          <h2 id="difference-title">A decision system for AI efficiency.</h2>
+          <p className="lede">
+            Dashboards tell you what happened. Evalomics is designed to tell you
+            what is worth changing, how to test it safely, and whether the change
+            actually improved economics without crossing your quality floor.
+          </p>
+        </div>
+        <div className="decision-grid">
+          <article>
+            <span className="decision-icon">→</span>
+            <strong>Waste map</strong>
+            <p>See where money, tokens, retries, repeated context, and workflow effort accumulate.</p>
+          </article>
+          <article>
+            <span className="decision-icon">△</span>
+            <strong>Ranked next action</strong>
+            <p>Prioritize bounded hypotheses by evidence strength, expected value, and risk.</p>
+          </article>
+          <article>
+            <span className="decision-icon">✓</span>
+            <strong>Quality guard</strong>
+            <p>Require a measurable floor before any optimization is recommended for implementation.</p>
+          </article>
+          <article>
+            <span className="decision-icon">◎</span>
+            <strong>Proof state</strong>
+            <p>Keep Opportunity, Tested, and Verified states separate so claims stay honest.</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="evidence-band">
+        <div>
+          <p className="eyebrow">Evidence before claims</p>
+          <h2>Every number has a state.</h2>
+        </div>
+        <div className="state-explainer">
+          <div><span>Potential</span><p>A mathematically supported opportunity, not a saving.</p></div>
+          <div><span>Tested</span><p>A controlled benchmark passed the configured quality floor.</p></div>
+          <div><span>Verified</span><p>Post-change production evidence confirms the net improvement.</p></div>
+        </div>
+      </section>
+
+      <section className="final-cta">
+        <p className="eyebrow">Start with evidence you already own</p>
+        <h2>See what your AI workload is really costing you.</h2>
+        <p>
+          Start free with CSV evidence. Connect deeper sources only when the
+          additional access is worth it.
         </p>
         <div className="hero-actions">
-          <Link className="primary-action" href="/login">
-            Run the free Work MRI
-          </Link>
-          <Link href="/research">See the evidence behind the beta</Link>
-          <Link href="/methodology">Read the methodology</Link>
+          <Link className="primary-action" href="/login">Run the free Work MRI</Link>
+          <Link className="ghost-action" href="/methodology">Inspect the methodology</Link>
         </div>
-        <div className="hero-actions" aria-label="Product trust signals">
-          <span className="trust-chip">No provider key required to start</span>
-          <span className="trust-chip">
-            No prompt content required for usage MRI
-          </span>
-          <span className="trust-chip">No invented savings</span>
-        </div>
-      </section>
-
-      <section className="landing-grid" aria-labelledby="proof-title">
-        <div>
-          <p className="eyebrow">Evidence before social proof</p>
-          <h2 id="proof-title">
-            A public beta you can inspect, not a user count you have to trust.
-          </h2>
-          <p className="lede">
-            The product is validated against public measured-cost evidence and
-            real-world LLM workload traces. Research evidence is visibly labeled
-            and is never presented as customer savings.
-          </p>
-        </div>
-        <div className="metrics-grid" aria-label="Public beta evidence">
-          <article className="metric-card">
-            <span className="metric-label">Measured-cost replay</span>
-            <strong className="metric-value">Real calls</strong>
-            <span className="metric-detail">
-              Provider-reported token usage, measured USD cost, latency, cache,
-              model, and outcome evidence.
-            </span>
-          </article>
-          <article className="metric-card">
-            <span className="metric-label">Workload reference</span>
-            <strong className="metric-value">Millions of requests</strong>
-            <span className="metric-detail">
-              BurstGPT real-world Azure-backed traces are used for
-              workload-pattern validation, not customer-result claims.
-            </span>
-          </article>
-          <article className="metric-card">
-            <span className="metric-label">Claim boundary</span>
-            <strong className="metric-value">Potential ≠ verified</strong>
-            <span className="metric-detail">
-              Every optimization state stays explicit from opportunity through
-              benchmark and post-change verification.
-            </span>
-          </article>
-        </div>
-      </section>
-
-      <section className="landing-grid" aria-labelledby="how-title">
-        <div>
-          <p className="eyebrow">How it works</p>
-          <h2 id="how-title">Observe → diagnose → test → verify.</h2>
-        </div>
-        <ol className="landing-steps">
-          <li>
-            <strong>Observe</strong>
-            <span>
-              Start with usage evidence you already own. Deeper access is
-              optional and must be explicitly authorized.
-            </span>
-          </li>
-          <li>
-            <strong>Diagnose</strong>
-            <span>
-              Measure spend, outcome efficiency, retries, model concentration,
-              output intensity, and cache coverage where evidence supports it.
-            </span>
-          </li>
-          <li>
-            <strong>Test</strong>
-            <span>
-              Benchmark candidate changes against an explicit performance floor
-              before recommending implementation.
-            </span>
-          </li>
-          <li>
-            <strong>Verify</strong>
-            <span>
-              Compare post-change evidence and keep neutral or negative outcomes
-              visible instead of rewriting the story.
-            </span>
-          </li>
-        </ol>
-      </section>
-
-      <section className="privacy-ladder" aria-labelledby="privacy-title">
-        <div>
-          <p className="eyebrow">Progressive privacy</p>
-          <h2 id="privacy-title">Earn deeper access by proving value first.</h2>
-          <p className="lede">
-            Each evidence level unlocks more analysis. The Work MRI must
-            withhold any conclusion that the current evidence cannot support.
-          </p>
-        </div>
-        <div className="privacy-levels">
-          <article>
-            <span>01</span>
-            <strong>Usage evidence</strong>
-            <p>
-              Cost, model, retry, token, cache, latency, and outcome economics.
-            </p>
-          </article>
-          <article>
-            <span>02</span>
-            <strong>Sanitized AI history</strong>
-            <p>Prompt structure, repeated context, and recurring workflows.</p>
-          </article>
-          <article>
-            <span>03</span>
-            <strong>Authorized workspace</strong>
-            <p>
-              Cross-tool duplication and knowledge waste only after connector
-              security gates are complete.
-            </p>
-          </article>
-          <article>
-            <span>04</span>
-            <strong>Production telemetry</strong>
-            <p>
-              Continuous verification, drift, and cost per successful outcome.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section className="evidence-note">
-        <strong>Public-beta rule:</strong> research evidence is research
-        evidence, demo evidence is demo evidence, and customer evidence is
-        customer evidence. None are silently relabeled to make the product look
-        more popular or more successful than it is.
       </section>
     </div>
   );
