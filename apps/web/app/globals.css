@@ -2496,3 +2496,12 @@ samp,
 .org-workbench .mri-panel :is(p, span, small, dt, dd, li, th, td, label) {
   color: #334155 !important;
 }
+
+
+/* Telemetry token reveal is intentionally a light card inside the dark workbench. */
+.org-workbench .mri-action,
+.org-workbench
+  .mri-action
+  :is(p, span, small, dt, dd, li, h1, h2, h3, h4, strong, b, label, code) {
+  color: #334155 !important;
+}
