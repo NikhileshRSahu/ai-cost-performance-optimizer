@@ -2443,3 +2443,26 @@ samp,
 .empty-state .eyebrow {
   color: #a7b4c4;
 }
+
+
+/* Recovery release: WCAG AA floor for muted copy on authenticated dark surfaces */
+.workflow-page
+  :is(p, span, small, dt, dd, li):not(.state-badge):not(.trust-chip):not(
+    .demo-inline
+  ),
+.lab-stack
+  :is(p, span, small, dt, dd, li):not(.state-badge):not(.trust-chip):not(
+    .demo-inline
+  ),
+.dashboard-stack
+  :is(p, span, small, dt, dd, li):not(.state-badge):not(.trust-chip):not(
+    .demo-inline
+  ) {
+  color: rgba(255, 255, 255, 0.74) !important;
+}
+
+.workflow-page a,
+.lab-stack a,
+.dashboard-stack a {
+  color: inherit;
+}
