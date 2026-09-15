@@ -4,10 +4,7 @@ import { createPasswordlessSessionAdapter } from '../../../src/auth/session-adap
 import { createDatabase } from '../../../src/persistence/database';
 import { createMembershipRepository } from '../../../src/persistence/repositories/memberships';
 import type { AuthenticatedSession } from '../../../src/workbench/authz';
-import {
-  readNeonAuthIdentity,
-  type RuntimeIdentity,
-} from './neon-auth';
+import { readNeonAuthIdentity, type RuntimeIdentity } from './neon-auth';
 import { resolveWebSession } from './session';
 
 function readTrustedIdentityFromEnvironment(): RuntimeIdentity | null {
@@ -30,9 +27,7 @@ function readTrustedIdentityFromEnvironment(): RuntimeIdentity | null {
   });
 }
 
-export async function resolveRuntimeSession(): Promise<
-  AuthenticatedSession | null
-> {
+export async function resolveRuntimeSession(): Promise<AuthenticatedSession | null> {
   const databaseUrl = process.env.DATABASE_URL;
   if (databaseUrl === undefined || databaseUrl.trim().length === 0) return null;
 
