@@ -92,7 +92,7 @@ async function reachVerification(
     return 'ALREADY_VERIFIED';
   }
 
-  await expect(page.locator('.state-badge.state-tested')).toBeVisible();
+  await expect(page.locator('.state-badge.state-tested').first()).toBeVisible();
   await page.getByRole('link', { name: 'Implement tested change' }).click();
 
   const implementedAt = page.getByLabel('Implemented at (UTC)');
