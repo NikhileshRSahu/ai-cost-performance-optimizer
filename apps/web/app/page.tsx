@@ -9,14 +9,14 @@ export default function HomePage() {
     <div>
       <WorkMriHero />
 
-      <section className="py-20 md:py-28">
-        <div className="grid gap-10 lg:grid-cols-[.72fr_1.28fr] lg:items-end lg:gap-16">
+      <section className="py-14 md:py-20">
+        <div className="grid gap-10 lg:grid-cols-[.92fr_1.08fr] lg:items-end lg:gap-14">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700">
               Not another spend dashboard
             </p>
-            <h2 className="mt-4 !text-[clamp(2.8rem,5.4vw,5.6rem)] !leading-[.94] !tracking-[-.065em] text-slate-950">
-              The product should make the next decision obvious.
+            <h2 className="mt-4 max-w-[10ch] !text-[clamp(2.8rem,5vw,5.1rem)] !leading-[.92] !tracking-[-.065em] text-slate-950">
+              Make the next decision obvious.
             </h2>
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
@@ -128,7 +128,7 @@ export default function HomePage() {
                     <strong className="text-xs font-semibold text-white/80">
                       {state}
                     </strong>
-                    <span className="text-xs leading-5 text-white/40">
+                    <span className="text-xs leading-5 text-white/65">
                       {meaning}
                     </span>
                   </div>
