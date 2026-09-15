@@ -2465,3 +2465,35 @@ samp,
 .dashboard-stack a {
   color: inherit;
 }
+
+
+/* Release gate: enforce readable foregrounds across the complete dark workbench. */
+.org-workbench
+  :is(p, span, small, dt, dd, li, th, td, label, legend, summary, code) {
+  color: #aeb8c4 !important;
+}
+
+.org-workbench :is(h1, h2, h3, h4, strong, b) {
+  color: #f3f6fa !important;
+}
+
+.org-workbench .state-opportunity {
+  color: #f6d899 !important;
+}
+
+.org-workbench .state-tested {
+  color: #b9d0ff !important;
+}
+
+.org-workbench .state-verified {
+  color: #a8f0d2 !important;
+}
+
+.org-workbench :is(.primary-action, .primary-button) {
+  color: #0b1017 !important;
+}
+
+.org-workbench .mri-panel,
+.org-workbench .mri-panel :is(p, span, small, dt, dd, li, th, td, label) {
+  color: #334155 !important;
+}
