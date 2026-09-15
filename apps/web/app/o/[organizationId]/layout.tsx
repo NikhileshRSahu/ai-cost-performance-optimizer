@@ -33,21 +33,22 @@ export default async function OrganizationLayout({
   }
 
   const database = createDatabase(databaseUrl);
-  let organizationName = 'Evalomics workspace';
-  try {
-    const organization = (
-      await database.db
-        .select({ name: organizations.name })
-        .from(organizations)
-        .where(eq(organizations.id, organizationId))
-        .limit(1)
-    ).at(0);
+  const organizationName = await (async () => {
+    try {
+      const organization = (
+        await database.db
+          .select({ name: organizations.name })
+          .from(organizations)
+          .where(eq(organizations.id, organizationId))
+          .limit(1)
+      ).at(0);
 
-    if (organization === undefined) redirect('/unauthorized');
-    organizationName = organization.name;
-  } finally {
-    await database.close();
-  }
+      if (organization === undefined) redirect('/unauthorized');
+      return organization.name;
+    } finally {
+      await database.close();
+    }
+  })();
 
   return (
     <WorkbenchShell
