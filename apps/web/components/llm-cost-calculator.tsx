@@ -17,6 +17,7 @@ import {
   rational,
   type Rational,
 } from '../../../src/economics/exact';
+import { useFxRate } from '../hooks/use-fx-rate';
 
 type CalculatorResult = Readonly<{
   monthlyInputTokens: bigint;
@@ -27,6 +28,8 @@ type CalculatorResult = Readonly<{
   annualCost: Rational;
   costPerRequest: Rational;
 }>;
+
+const currencies = ['USD', 'EUR', 'GBP', 'INR'] as const;
 
 function parseCount(value: string): bigint | null {
   if (!/^(0|[1-9]\d{0,17})$/.test(value)) return null;
@@ -90,6 +93,10 @@ function calculate(
   });
 }
 
+function convert(value: Rational, fxRate: Rational): Rational {
+  return multiply(value, fxRate);
+}
+
 const fieldClass =
   'min-h-12 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm font-semibold text-slate-950 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100';
 
@@ -99,32 +106,51 @@ export function LlmCostCalculator() {
   const [outputTokens, setOutputTokens] = useState('250');
   const [inputRate, setInputRate] = useState('1');
   const [outputRate, setOutputRate] = useState('4');
-  const [currency, setCurrency] = useState('USD');
+  const [rateCurrency, setRateCurrency] = useState('USD');
+  const [displayCurrency, setDisplayCurrency] = useState('USD');
+  const fx = useFxRate(rateCurrency, displayCurrency);
 
   const result = useMemo(
     () => calculate(requests, inputTokens, outputTokens, inputRate, outputRate),
     [requests, inputTokens, outputTokens, inputRate, outputRate],
   );
 
+  const fxRate = useMemo(() => {
+    if (fx.status !== 'ready' && fx.status !== 'identity') return null;
+    return parseRate(fx.rate);
+  }, [fx]);
+
+  const displayResult = useMemo(() => {
+    if (result === null || fxRate === null) return null;
+    return {
+      ...result,
+      inputCost: convert(result.inputCost, fxRate),
+      outputCost: convert(result.outputCost, fxRate),
+      monthlyCost: convert(result.monthlyCost, fxRate),
+      annualCost: convert(result.annualCost, fxRate),
+      costPerRequest: convert(result.costPerRequest, fxRate),
+    };
+  }, [result, fxRate]);
+
   const metrics =
-    result === null
+    displayResult === null
       ? []
       : [
           {
             label: 'Monthly cost',
-            value: `${currency} ${formatDecimal(result.monthlyCost, 2)}`,
-            detail: 'Exact arithmetic from your entered rates',
+            value: `${displayCurrency} ${formatDecimal(displayResult.monthlyCost, 2)}`,
+            detail: 'Exact workload arithmetic, then explicit FX conversion',
             icon: CircleDollarSign,
           },
           {
             label: 'Annual run rate',
-            value: `${currency} ${formatDecimal(result.annualCost, 2)}`,
+            value: `${displayCurrency} ${formatDecimal(displayResult.annualCost, 2)}`,
             detail: 'Monthly estimate × 12 · not a forecast',
             icon: TrendingUp,
           },
           {
             label: 'Cost / request',
-            value: `${currency} ${formatDecimal(result.costPerRequest, 6)}`,
+            value: `${displayCurrency} ${formatDecimal(displayResult.costPerRequest, 6)}`,
             detail: 'Based on the request volume above',
             icon: Sparkles,
           },
@@ -159,15 +185,10 @@ export function LlmCostCalculator() {
               className={fieldClass}
               inputMode="numeric"
               value={requests}
-              onChange={(event) => {
-                setRequests(event.target.value);
-              }}
+              onChange={(event) => setRequests(event.target.value)}
               aria-describedby="requests-help"
             />
-            <small
-              id="requests-help"
-              className="text-xs font-normal text-slate-500"
-            >
+            <small id="requests-help" className="text-xs font-normal text-slate-500">
               Whole requests, no commas.
             </small>
           </label>
@@ -178,9 +199,7 @@ export function LlmCostCalculator() {
               className={fieldClass}
               inputMode="numeric"
               value={inputTokens}
-              onChange={(event) => {
-                setInputTokens(event.target.value);
-              }}
+              onChange={(event) => setInputTokens(event.target.value)}
             />
           </label>
 
@@ -190,9 +209,7 @@ export function LlmCostCalculator() {
               className={fieldClass}
               inputMode="numeric"
               value={outputTokens}
-              onChange={(event) => {
-                setOutputTokens(event.target.value);
-              }}
+              onChange={(event) => setOutputTokens(event.target.value)}
             />
           </label>
 
@@ -202,9 +219,7 @@ export function LlmCostCalculator() {
               className={fieldClass}
               inputMode="decimal"
               value={inputRate}
-              onChange={(event) => {
-                setInputRate(event.target.value);
-              }}
+              onChange={(event) => setInputRate(event.target.value)}
             />
           </label>
 
@@ -214,29 +229,46 @@ export function LlmCostCalculator() {
               className={fieldClass}
               inputMode="decimal"
               value={outputRate}
-              onChange={(event) => {
-                setOutputRate(event.target.value);
-              }}
+              onChange={(event) => setOutputRate(event.target.value)}
             />
           </label>
 
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
-            <span>Currency of your entered rates</span>
+            <span>Currency of entered rates</span>
             <select
               className={fieldClass}
-              value={currency}
-              onChange={(event) => {
-                setCurrency(event.target.value);
-              }}
+              value={rateCurrency}
+              onChange={(event) => setRateCurrency(event.target.value)}
             >
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="GBP">GBP</option>
-              <option value="INR">INR</option>
+              {currencies.map((currency) => (
+                <option key={currency} value={currency}>
+                  {currency}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="grid gap-2 text-sm font-semibold text-slate-800 sm:col-span-2">
+            <span>Display results in</span>
+            <select
+              className={fieldClass}
+              value={displayCurrency}
+              onChange={(event) => setDisplayCurrency(event.target.value)}
+            >
+              {currencies.map((currency) => (
+                <option key={currency} value={currency}>
+                  {currency}
+                </option>
+              ))}
             </select>
             <small className="text-xs font-normal leading-5 text-slate-500">
-              No FX conversion. Changing this label does not alter the numeric
-              rates.
+              {rateCurrency === displayCurrency
+                ? 'No FX conversion is needed.'
+                : fx.status === 'ready'
+                  ? `1 ${rateCurrency} = ${fx.rate} ${displayCurrency} · ${fx.source} · ${fx.asOf}`
+                  : fx.status === 'error'
+                    ? 'FX rate is temporarily unavailable. Results are withheld rather than relabeled.'
+                    : 'Loading reference FX rate…'}
             </small>
           </label>
         </div>
@@ -251,14 +283,19 @@ export function LlmCostCalculator() {
             Live economics
           </p>
           <p className="m-0 mt-1 text-sm text-white/70">
-            Exact arithmetic · no provider pricing assumptions
+            Exact arithmetic · explicit currency conversion
           </p>
         </div>
 
         {result === null ? (
           <div className="p-6 text-sm leading-6 text-white/75">
-            Enter non-negative token counts and prices, with at least one
-            request per month.
+            Enter non-negative token counts and prices, with at least one request per month.
+          </div>
+        ) : displayResult === null ? (
+          <div className="p-6 text-sm leading-6 text-white/75">
+            {fx.status === 'error'
+              ? 'Currency conversion is unavailable, so converted totals are intentionally withheld.'
+              : 'Loading currency conversion…'}
           </div>
         ) : (
           <>
@@ -287,22 +324,10 @@ export function LlmCostCalculator() {
 
             <dl className="m-0 grid divide-y divide-white/[0.07] px-5 py-2 sm:px-6">
               {[
-                [
-                  'Monthly input tokens',
-                  result.monthlyInputTokens.toLocaleString('en-US'),
-                ],
-                [
-                  'Monthly output tokens',
-                  result.monthlyOutputTokens.toLocaleString('en-US'),
-                ],
-                [
-                  'Input cost',
-                  `${currency} ${formatDecimal(result.inputCost, 2)}`,
-                ],
-                [
-                  'Output cost',
-                  `${currency} ${formatDecimal(result.outputCost, 2)}`,
-                ],
+                ['Monthly input tokens', result.monthlyInputTokens.toLocaleString('en-US')],
+                ['Monthly output tokens', result.monthlyOutputTokens.toLocaleString('en-US')],
+                ['Input cost', `${displayCurrency} ${formatDecimal(displayResult.inputCost, 2)}`],
+                ['Output cost', `${displayCurrency} ${formatDecimal(displayResult.outputCost, 2)}`],
               ].map(([label, value]) => (
                 <div
                   key={label}
