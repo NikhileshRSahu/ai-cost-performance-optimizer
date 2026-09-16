@@ -107,4 +107,46 @@ describe('Neon Auth reverse proxy', () => {
     expect(rewritten.headers.get('content-length')).toBeNull();
     expect(rewritten.headers.get('content-encoding')).toBeNull();
   });
+  it('rewrites a nested Google authorization URL returned by Neon Auth', async () => {
+    process.env.NEON_AUTH_BASE_URL =
+      'https://example.neonauth.aws.neon.tech/evalomics/auth';
+
+    const request = new Request(
+      'https://evalomics.vercel.app/api/auth/sign-in/social/',
+      { method: 'POST' },
+    );
+    const google = new URL('https://accounts.google.com/o/oauth2/v2/auth');
+    google.searchParams.set(
+      'redirect_uri',
+      'https://example.neonauth.aws.neon.tech/evalomics/auth/callback/google',
+    );
+
+    const response = new Response(
+      JSON.stringify({
+        data: {
+          redirect: true,
+          url: google.toString(),
+        },
+      }),
+      {
+        status: 200,
+        headers: {
+          'content-type': 'application/json; charset=utf-8',
+        },
+      },
+    );
+
+    const rewritten = await rewriteNeonSocialSignInResponse(request, response);
+    const payload = (await rewritten.json()) as {
+      data: { url: string };
+    };
+
+    expect(new URL(payload.data.url).searchParams.get('redirect_uri')).toBe(
+      'https://evalomics.vercel.app/api/auth/callback/google',
+    );
+    expect(rewritten.headers.get('x-evalomics-auth-rewrite')).toBe(
+      'google-callback',
+    );
+  });
+
 });
