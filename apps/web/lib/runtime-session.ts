@@ -5,7 +5,7 @@ import { createDatabase } from '../../../src/persistence/database';
 import { createMembershipRepository } from '../../../src/persistence/repositories/memberships';
 import type { AuthenticatedSession } from '../../../src/workbench/authz';
 import { readBetterAuthIdentity } from './better-auth-session';
-import type { RuntimeIdentity } from './runtime-identity';
+import type { RuntimeIdentity } from '../../../src/auth/better-auth-identity';
 import { resolveWebSession } from './session';
 
 function readTrustedIdentityFromEnvironment(): RuntimeIdentity | null {
