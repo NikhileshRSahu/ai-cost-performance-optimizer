@@ -12,7 +12,7 @@ test('public beta trust path is visible without authentication', async ({
     }),
   ).toBeVisible();
   await expect(page.getByText('Full launch beta · $0')).toBeVisible();
-  await expect(page.getByText('No credit card')).toBeVisible();
+  await expect(page.getByText('No credit card', { exact: true })).toBeVisible();
   await expect(page.getByText('No invented savings')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Research' })).toBeVisible();
   await expect(
