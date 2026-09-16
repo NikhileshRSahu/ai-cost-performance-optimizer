@@ -103,38 +103,6 @@ function rewriteGoogleAuthorizationUrl(
   }
 }
 
-function rewriteGoogleAuthorizationUrls(
-  value: unknown,
-  callbackUrl: string,
-): Readonly<{ value: unknown; changed: boolean }> {
-  if (typeof value === 'string') {
-    return rewriteGoogleAuthorizationUrl(value, callbackUrl);
-  }
-
-  if (Array.isArray(value)) {
-    let changed = false;
-    const next = value.map((item) => {
-      const rewritten = rewriteGoogleAuthorizationUrls(item, callbackUrl);
-      changed = changed || rewritten.changed;
-      return rewritten.value;
-    });
-    return { value: next, changed };
-  }
-
-  if (value !== null && typeof value === 'object') {
-    let changed = false;
-    const next: Record<string, unknown> = {};
-    for (const [key, item] of Object.entries(value)) {
-      const rewritten = rewriteGoogleAuthorizationUrls(item, callbackUrl);
-      changed = changed || rewritten.changed;
-      next[key] = rewritten.value;
-    }
-    return { value: next, changed };
-  }
-
-  return { value, changed: false };
-}
-
 export async function rewriteNeonSocialSignInResponse(
   request: Request,
   response: Response,
