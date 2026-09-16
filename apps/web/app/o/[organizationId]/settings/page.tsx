@@ -15,6 +15,7 @@ import {
   removeMember,
   revokeInvite,
   saveWorkspaceProfile,
+  transferOwnership,
 } from './action';
 
 export const dynamic = 'force-dynamic';
@@ -37,6 +38,8 @@ const errorMessages: Record<string, string> = {
   INVALID_INVITE_EMAIL: 'Enter a valid invitation email.',
   INVALID_INVITE_ROLE: 'Choose OPERATOR or VIEWER for the invitation.',
   INVITE_NOT_PENDING: 'That invitation is no longer pending.',
+  TARGET_ALREADY_OWNER: 'That member is already the owner.',
+  MEMBERSHIP_NOT_FOUND: 'That workspace member no longer exists.',
   UNKNOWN: 'The requested workspace change could not be completed.',
 };
 
@@ -55,6 +58,7 @@ export default async function SettingsPage({
     inviteId?: string;
     inviteRevoked?: string;
     onboarding?: string;
+    ownershipTransferred?: string;
   }>;
 }>) {
   const { organizationId } = await params;
@@ -131,7 +135,8 @@ export default async function SettingsPage({
         query.memberAdded === 'true' ||
         query.memberUpdated === 'true' ||
         query.memberRemoved === 'true' ||
-        query.inviteRevoked === 'true' ? (
+        query.inviteRevoked === 'true' ||
+        query.ownershipTransferred === 'true' ? (
           <div className="success-note" role="status">
             Workspace settings updated.
           </div>
@@ -237,6 +242,21 @@ export default async function SettingsPage({
                       />
                       <button className="danger-button" type="submit">
                         Remove
+                      </button>
+                    </form>
+                    <form action={transferOwnership}>
+                      <input
+                        type="hidden"
+                        name="organizationId"
+                        value={organizationId}
+                      />
+                      <input
+                        type="hidden"
+                        name="userId"
+                        value={member.userId}
+                      />
+                      <button className="secondary-action" type="submit">
+                        Transfer ownership
                       </button>
                     </form>
                   </div>
