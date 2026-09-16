@@ -107,6 +107,7 @@ describe('Neon Auth reverse proxy', () => {
     expect(rewritten.headers.get('content-length')).toBeNull();
     expect(rewritten.headers.get('content-encoding')).toBeNull();
   });
+
   it('rewrites a nested Google authorization URL returned by Neon Auth', async () => {
     process.env.NEON_AUTH_BASE_URL =
       'https://example.neonauth.aws.neon.tech/evalomics/auth';
@@ -207,5 +208,4 @@ describe('Neon Auth reverse proxy', () => {
       'https://evalomics.vercel.app/api/auth/callback/google',
     );
   });
-
 });
