@@ -30,10 +30,11 @@ export default async function PilotPage({
   }
 
   const canRequestInvoice = context.role === 'OWNER';
-  let pendingRequest: Readonly<{
+  let invoiceRequest: Readonly<{
     id: string;
     contactEmail: string;
     companyName: string;
+    status: string;
   }> | null = null;
 
   if (canRequestInvoice) {
@@ -44,18 +45,18 @@ export default async function PilotPage({
           id: pilotInvoiceRequests.id,
           contactEmail: pilotInvoiceRequests.contactEmail,
           companyName: pilotInvoiceRequests.companyName,
+          status: pilotInvoiceRequests.status,
         })
         .from(pilotInvoiceRequests)
         .where(
           and(
             eq(pilotInvoiceRequests.organizationId, organizationId),
             eq(pilotInvoiceRequests.plan, FOUNDING_AUDIT_OFFER.plan),
-            eq(pilotInvoiceRequests.status, 'REQUESTED'),
           ),
         )
         .limit(1);
 
-      pendingRequest = rows[0] ?? null;
+      invoiceRequest = rows[0] ?? null;
     } finally {
       await database.close();
     }
@@ -76,21 +77,29 @@ export default async function PilotPage({
         <span className="quality-chip">USD $299 one-time</span>
       </header>
 
-      {requested === 'true' || pendingRequest !== null ? (
+      {requested === 'true' || invoiceRequest !== null ? (
         <section className="evidence-note" role="status">
-          <strong>Invoice request recorded.</strong>{' '}
-          {pendingRequest === null ? (
+          <strong>
+            {invoiceRequest?.status === 'PAID'
+              ? 'Payment recorded.'
+              : invoiceRequest?.status === 'ISSUED'
+                ? 'Invoice issued.'
+                : invoiceRequest?.status === 'CANCELLED'
+                  ? 'Invoice request cancelled.'
+                  : 'Invoice request recorded.'}
+          </strong>{' '}
+          {invoiceRequest === null ? (
             <>
               Your request is tied to this organization and remains pending
               until the founding-pilot invoice is issued.
             </>
           ) : (
             <>
-              Pending for {pendingRequest.companyName} via{' '}
-              {pendingRequest.contactEmail}. Request ID: {pendingRequest.id}.
+              {invoiceRequest.companyName} · {invoiceRequest.contactEmail} ·
+              status {invoiceRequest.status}. Request ID: {invoiceRequest.id}.
             </>
           )}{' '}
-          No payment has been claimed or collected in-app.
+          Payment is recorded only after the operator confirms it.
         </section>
       ) : null}
 
@@ -125,7 +134,7 @@ export default async function PilotPage({
       </section>
 
       {canRequestInvoice ? (
-        pendingRequest === null ? (
+        invoiceRequest === null || invoiceRequest.status === 'CANCELLED' ? (
           <section className="limitations" aria-labelledby="invoice-title">
             <h2 id="invoice-title">Request the founding-pilot invoice</h2>
             <p>
@@ -170,8 +179,8 @@ export default async function PilotPage({
           <section className="limitations" aria-labelledby="invoice-title">
             <h2 id="invoice-title">Invoice request pending</h2>
             <p>
-              A second request is not needed. The stored request remains pending
-              until it is issued or the organization data is purged.
+              A second request is not needed while this invoice is active. The
+              current status is {invoiceRequest?.status ?? 'REQUESTED'}.
             </p>
           </section>
         )
