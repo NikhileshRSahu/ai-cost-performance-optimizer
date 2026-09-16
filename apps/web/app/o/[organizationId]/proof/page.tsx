@@ -149,7 +149,7 @@ export default async function VerificationPage({
             expecting a verification snapshot or downloadable proof pack.
           </p>
         </section>
-      )
+      )}
 
       <div className="flex flex-wrap gap-2.5">
         <Link
