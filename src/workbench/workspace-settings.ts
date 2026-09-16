@@ -1,6 +1,11 @@
 import { and, eq } from 'drizzle-orm';
 import type { PersistenceDatabase } from '../persistence/database.js';
-import { memberships, organizations, users } from '../persistence/schema.js';
+import {
+  memberships,
+  organizations,
+  supportRequests,
+  users,
+} from '../persistence/schema.js';
 import { authorize, type AuthenticatedSession, type Role } from './authz.js';
 
 export type WorkspaceMember = Readonly<{
@@ -217,10 +222,16 @@ export async function deleteWorkspace(input: {
     throw new Error('WORKSPACE_DELETE_CONFIRMATION_MISMATCH');
   }
 
-  const deleted = await input.db
-    .delete(organizations)
-    .where(eq(organizations.id, input.organizationId))
-    .returning({ id: organizations.id });
+  const deleted = await input.db.transaction(async (tx) => {
+    await tx
+      .delete(supportRequests)
+      .where(eq(supportRequests.organizationId, input.organizationId));
+
+    return tx
+      .delete(organizations)
+      .where(eq(organizations.id, input.organizationId))
+      .returning({ id: organizations.id });
+  });
 
   if (deleted.length !== 1) throw new Error('ORGANIZATION_NOT_FOUND');
 }
