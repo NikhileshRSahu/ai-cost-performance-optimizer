@@ -2808,3 +2808,19 @@ samp,
     padding: 0.9rem;
   }
 }
+
+
+/* Workbench shell layout correction: the React shell owns the fixed sidebar.
+   Prevent the legacy grid rule from collapsing the in-flow content column on desktop. */
+.org-workbench {
+  display: block;
+}
+
+.org-workbench > .lg\:pl-64 {
+  min-width: 0;
+  width: 100%;
+}
+
+.org-workbench > .lg\:pl-64 > div {
+  width: 100%;
+}
