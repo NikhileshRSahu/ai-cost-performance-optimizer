@@ -183,5 +183,4 @@ describe('workspace settings', () => {
     );
     expect(rows.filter((row) => row.role === 'OWNER')).toHaveLength(1);
   });
-
 });

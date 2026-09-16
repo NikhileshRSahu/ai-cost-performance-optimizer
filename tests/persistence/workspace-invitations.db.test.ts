@@ -198,7 +198,6 @@ describe('workspace invitations', () => {
     ]);
   });
 
-
   it('lets the owner revoke a pending invitation', async () => {
     const invite = await createWorkspaceInvitation({
       db: database.db,
@@ -229,5 +228,4 @@ describe('workspace invitations', () => {
       }),
     ).rejects.toThrow('INVITE_NOT_FOUND');
   });
-
 });

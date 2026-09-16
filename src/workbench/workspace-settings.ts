@@ -238,7 +238,6 @@ export async function deleteWorkspace(input: {
   if (deleted.length !== 1) throw new Error('ORGANIZATION_NOT_FOUND');
 }
 
-
 export async function transferWorkspaceOwnership(input: {
   db: PersistenceDatabase;
   session: AuthenticatedSession;

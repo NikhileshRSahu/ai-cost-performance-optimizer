@@ -138,5 +138,4 @@ describe('founding pilot invoice persistence', () => {
       contactEmail: 'new-billing@pilot.example',
     });
   });
-
 });

@@ -136,7 +136,6 @@ export async function acceptWorkspaceInvitation(input: {
   return Object.freeze({ organizationId: invitation.organizationId, role });
 }
 
-
 function stableUserId(provider: string, subject: string): string {
   const digest = createHash('sha256')
     .update(provider + '\n' + subject)
@@ -244,7 +243,6 @@ export async function acceptWorkspaceInvitationForIdentity(input: {
     });
   });
 }
-
 
 export async function listWorkspaceInvitations(input: {
   db: PersistenceDatabase;

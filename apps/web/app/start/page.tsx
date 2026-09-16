@@ -31,9 +31,7 @@ export default async function StartPage() {
       organization.onboardingCompletedAt === null &&
       membership.role === 'OWNER'
     ) {
-      redirect(
-        '/o/' + membership.organizationId + '/settings?onboarding=true',
-      );
+      redirect('/o/' + membership.organizationId + '/settings?onboarding=true');
     }
   } finally {
     await database.close();

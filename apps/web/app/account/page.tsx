@@ -31,7 +31,10 @@ export default async function AccountPage({
         </p>
 
         {workspaceDeleted === 'true' ? (
-          <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900" role="status">
+          <div
+            className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900"
+            role="status"
+          >
             Workspace deleted. You can now keep this account for future use or
             permanently delete the authentication identity below.
           </div>

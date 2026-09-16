@@ -180,7 +180,6 @@ export async function createInvite(formData: FormData): Promise<never> {
   );
 }
 
-
 export async function revokeInvite(formData: FormData): Promise<never> {
   const organizationId = text(formData, 'organizationId');
   const { session, databaseUrl } = await runtime();
@@ -199,7 +198,6 @@ export async function revokeInvite(formData: FormData): Promise<never> {
   }
   redirect('/o/' + organizationId + '/settings?inviteRevoked=true');
 }
-
 
 export async function transferOwnership(formData: FormData): Promise<never> {
   const organizationId = text(formData, 'organizationId');
