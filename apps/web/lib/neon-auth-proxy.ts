@@ -82,24 +82,32 @@ export function rewriteNeonResponseHeaders(
   return headers;
 }
 
+function rewriteGoogleAuthorizationUrl(
+  value: string,
+  callbackUrl: string,
+): Readonly<{ value: string; changed: boolean }> {
+  try {
+    const candidate = new URL(value);
+    if (
+      candidate.hostname !== 'accounts.google.com' ||
+      !candidate.searchParams.has('redirect_uri')
+    ) {
+      return { value, changed: false };
+    }
+
+    candidate.searchParams.set('redirect_uri', callbackUrl);
+    return { value: candidate.toString(), changed: true };
+  } catch {
+    return { value, changed: false };
+  }
+}
+
 function rewriteGoogleAuthorizationUrls(
   value: unknown,
   callbackUrl: string,
 ): Readonly<{ value: unknown; changed: boolean }> {
   if (typeof value === 'string') {
-    try {
-      const candidate = new URL(value);
-      if (candidate.hostname !== 'accounts.google.com') {
-        return { value, changed: false };
-      }
-      if (!candidate.searchParams.has('redirect_uri')) {
-        return { value, changed: false };
-      }
-      candidate.searchParams.set('redirect_uri', callbackUrl);
-      return { value: candidate.toString(), changed: true };
-    } catch {
-      return { value, changed: false };
-    }
+    return rewriteGoogleAuthorizationUrl(value, callbackUrl);
   }
 
   if (Array.isArray(value)) {
@@ -115,59 +123,10 @@ function rewriteGoogleAuthorizationUrls(
   if (value !== null && typeof value === 'object') {
     let changed = false;
     const next: Record<string, unknown> = {};
-    for (const [key, item] of Object.entries(
-      value as Record<string, unknown>,
-    )) {
+    for (const [key, item] of Object.entries(value)) {
       const rewritten = rewriteGoogleAuthorizationUrls(item, callbackUrl);
       changed = changed || rewritten.changed;
       next[key] = rewritten.value;
-    }
-    return { value: next, changed };
-  }
-
-  return { value, changed: false };
-}
-
-function rewriteGoogleAuthorizationUrl(
-  value: string,
-  callbackUrl: string,
-): string {
-  try {
-    const providerUrl = new URL(value);
-    if (providerUrl.hostname !== 'accounts.google.com') return value;
-    providerUrl.searchParams.set('redirect_uri', callbackUrl);
-    return providerUrl.toString();
-  } catch {
-    return value;
-  }
-}
-
-function rewriteGoogleUrlsInJson(
-  value: unknown,
-  callbackUrl: string,
-): { value: unknown; changed: boolean } {
-  if (typeof value === 'string') {
-    const rewritten = rewriteGoogleAuthorizationUrl(value, callbackUrl);
-    return { value: rewritten, changed: rewritten !== value };
-  }
-
-  if (Array.isArray(value)) {
-    let changed = false;
-    const next = value.map((item) => {
-      const result = rewriteGoogleUrlsInJson(item, callbackUrl);
-      changed ||= result.changed;
-      return result.value;
-    });
-    return { value: next, changed };
-  }
-
-  if (value !== null && typeof value === 'object') {
-    let changed = false;
-    const next: Record<string, unknown> = {};
-    for (const [key, item] of Object.entries(value)) {
-      const result = rewriteGoogleUrlsInJson(item, callbackUrl);
-      changed ||= result.changed;
-      next[key] = result.value;
     }
     return { value: next, changed };
   }
@@ -186,18 +145,18 @@ export async function rewriteNeonSocialSignInResponse(
   const callbackUrl = `${incoming.origin}/api/auth/callback/google`;
   const headers = rewriteNeonResponseHeaders(response.headers, incoming.origin);
 
-  const originalLocation = headers.get('location');
-  if (originalLocation !== null) {
-    const rewrittenLocation = rewriteGoogleAuthorizationUrl(
-      originalLocation,
-      callbackUrl,
-    );
-    if (rewrittenLocation !== originalLocation) {
-      headers.set('location', rewrittenLocation);
+  let changed = false;
+  const location = headers.get('location');
+  if (location !== null) {
+    const rewritten = rewriteGoogleAuthorizationUrl(location, callbackUrl);
+    if (rewritten.changed) {
+      headers.set('location', rewritten.value);
+      changed = true;
     }
   }
 
   if (!response.headers.get('content-type')?.includes('application/json')) {
+    if (changed) headers.set('x-evalomics-auth-rewrite', 'google-callback');
     return new Response(response.body, {
       status: response.status,
       statusText: response.statusText,
@@ -212,15 +171,19 @@ export async function rewriteNeonSocialSignInResponse(
     return response;
   }
 
-  const rewritten = rewriteGoogleUrlsInJson(payload, callbackUrl);
-  const locationChanged = originalLocation !== headers.get('location');
+  const rewrittenPayload = rewriteGoogleAuthorizationUrls(
+    payload,
+    callbackUrl,
+  );
+  changed = changed || rewrittenPayload.changed;
 
-  if (!rewritten.changed && !locationChanged) return response;
+  if (!changed) return response;
 
+  headers.set('x-evalomics-auth-rewrite', 'google-callback');
   headers.delete('content-length');
   headers.delete('content-encoding');
 
-  return new Response(JSON.stringify(rewritten.value), {
+  return new Response(JSON.stringify(rewrittenPayload.value), {
     status: response.status,
     statusText: response.statusText,
     headers,
