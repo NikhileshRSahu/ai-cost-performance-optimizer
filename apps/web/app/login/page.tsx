@@ -62,8 +62,9 @@ export default async function LoginPage({
               Start with real evidence.
             </h1>
             <p className="mt-6 text-base leading-7 text-slate-500">
-              Sign in, create your workspace, and upload one usage window.
-              Evalomics will diagnose the strongest supported optimization
+              Sign in, create your free workspace, and upload one usage window.
+              The complete launch-beta workflow is $0 and requires no credit
+              card. Evalomics will diagnose the strongest supported optimization
               before asking you to test a change.
             </p>
           </div>
@@ -89,6 +90,12 @@ export default async function LoginPage({
         </div>
 
         <div className="mt-12 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-medium text-slate-400">
+          <span className="inline-flex items-center gap-1.5">
+            <Check className="size-3" /> Full beta · free
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <Check className="size-3" /> No credit card
+          </span>
           <span className="inline-flex items-center gap-1.5">
             <Check className="size-3" /> CSV-first
           </span>
