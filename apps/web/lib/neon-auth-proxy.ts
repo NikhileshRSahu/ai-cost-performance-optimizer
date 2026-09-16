@@ -141,7 +141,9 @@ export async function rewriteNeonSocialSignInResponse(
   headers.delete('content-encoding');
 
   const body =
-    response.status === 204 || response.status === 205 || response.status === 304
+    response.status === 204 ||
+    response.status === 205 ||
+    response.status === 304
       ? null
       : rewrittenBody;
 
