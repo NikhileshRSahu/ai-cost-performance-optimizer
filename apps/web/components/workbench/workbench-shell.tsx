@@ -10,9 +10,11 @@ import {
   ChevronRight,
   Database,
   FlaskConical,
+  LifeBuoy,
   Menu,
   ShieldCheck,
   Settings,
+  UserRound,
   X,
 } from 'lucide-react';
 import { EvalomicsMark } from '../evalomics-mark';
