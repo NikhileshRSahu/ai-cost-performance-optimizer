@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { ArrowRight, ShieldCheck } from 'lucide-react';
 import { LlmCostCalculator } from '../../../components/llm-cost-calculator';
 
 export const metadata: Metadata = {
@@ -10,47 +11,80 @@ export const metadata: Metadata = {
 
 export default function LlmCostCalculatorPage() {
   return (
-    <div className="landing-stack">
-      <section className="hero hero-wide" aria-labelledby="calculator-title">
-        <p className="eyebrow">Free tool · no login required</p>
-        <h1 id="calculator-title">LLM Cost Calculator</h1>
-        <p className="lede">
-          Estimate your monthly AI inference cost from request volume, average
-          token usage, and the prices you actually pay. We do not hard-code
-          provider prices or silently convert currencies.
+    <div className="grid gap-12 pb-8 sm:gap-14">
+      <section
+        className="max-w-4xl pt-4 sm:pt-8"
+        aria-labelledby="calculator-title"
+      >
+        <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700">
+          Free tool · no login
+        </p>
+        <h1
+          id="calculator-title"
+          className="mt-4 !text-[clamp(3.2rem,7vw,6.4rem)] !leading-[.9] !tracking-[-.07em] text-slate-950"
+        >
+          LLM cost,
+          <span className="block text-slate-400">
+            without hidden assumptions.
+          </span>
+        </h1>
+        <p className="mt-7 max-w-2xl text-base leading-7 text-slate-500">
+          Enter your real request volume, token averages, and token prices.
+          Evalomics performs exact arithmetic in the currency those rates are
+          already denominated in. It never silently performs FX conversion.
         </p>
       </section>
 
       <LlmCostCalculator />
 
-      <section className="landing-grid" aria-labelledby="next-title">
+      <section className="grid gap-7 rounded-[24px] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,.045)] sm:p-8 lg:grid-cols-[.92fr_1.08fr] lg:items-center">
         <div>
-          <p className="eyebrow">The calculator answers “how much?”</p>
-          <h2 id="next-title">The Work MRI answers “what should I change?”</h2>
-        </div>
-        <div>
-          <p className="lede">
-            Cost visibility is only the first step. Evalomics diagnoses
-            supported inefficiencies, proposes bounded changes, tests them
-            against a quality floor, and keeps potential, tested, and verified
-            savings separate.
+          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-700">
+            Cost is only the first question
           </p>
-          <div className="hero-actions">
-            <Link className="primary-action" href="/pricing">
-              Run the free Work MRI
+          <h2 className="mt-3 !text-[clamp(2rem,4vw,3.5rem)] !leading-[.98] !tracking-[-.05em] text-slate-950">
+            The Work MRI answers:
+            <span className="block text-slate-400">
+              “what should I change?”
+            </span>
+          </h2>
+        </div>
+
+        <div>
+          <p className="m-0 max-w-2xl text-sm leading-6 text-slate-600">
+            Cost visibility does not tell you which optimization is safe.
+            Evalomics ranks evidence-backed inefficiencies, benchmarks one
+            bounded change against a quality floor, and keeps Potential, Tested,
+            and Verified states separate.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link
+              href="/login"
+              className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold no-underline transition hover:bg-slate-800"
+              style={{ color: '#ffffff' }}
+            >
+              Continue to the Work MRI <ArrowRight className="size-4" />
             </Link>
-            <Link href="/methodology">See the methodology</Link>
+            <Link
+              href="/methodology"
+              className="inline-flex min-h-11 items-center rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-800 no-underline transition hover:bg-slate-50"
+            >
+              See methodology
+            </Link>
           </div>
         </div>
       </section>
 
-      <section className="evidence-note">
-        <strong>Calculation boundary:</strong> this tool estimates inference
-        cost only from the values you enter. It does not include tool calls,
-        vector databases, infrastructure, taxes, discounts, caching rules, or
-        provider-specific billing behavior unless you incorporate those effects
-        into your entered rates and token averages.
-      </section>
+      <div className="flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
+        <ShieldCheck className="mt-1 size-4 shrink-0 text-slate-500" />
+        <p className="m-0">
+          <strong className="text-slate-900">Calculation boundary:</strong>{' '}
+          inference cost only from the values you enter. Tool calls, vector
+          databases, infrastructure, taxes, discounts, caching rules, and
+          provider-specific billing behavior are excluded unless reflected in
+          your entered rates or token averages.
+        </p>
+      </div>
     </div>
   );
 }

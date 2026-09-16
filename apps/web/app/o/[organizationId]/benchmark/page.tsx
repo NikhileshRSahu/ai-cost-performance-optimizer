@@ -46,15 +46,14 @@ export default async function BenchmarkPage({
 
       <header className="workflow-header">
         <div>
-          <p className="eyebrow">Step 3 · Benchmark</p>
-          <h1>Test the cheaper candidate</h1>
+          <p className="eyebrow">Test</p>
+          <h1>Compare one candidate against your current setup</h1>
           <p className="lede">
-            Upload paired current-versus-candidate measurements. A cheaper
-            candidate only advances when every configured safety constraint is
-            measured and passes.
+            Evalomics only recommends a cheaper option when the same workload
+            clears the quality and reliability constraints you already defined.
           </p>
         </div>
-        <span className="trust-chip">Same workload · same cases</span>
+        <span className="trust-chip">Same cases · same evaluator</span>
       </header>
 
       {selected === undefined ? (
@@ -72,11 +71,10 @@ export default async function BenchmarkPage({
         <section className="workflow-card">
           <div className="benchmark-context">
             <div>
-              <p className="eyebrow">Selected workload</p>
+              <p className="eyebrow">Workload</p>
               <h2>{selected.name}</h2>
               <p>{selected.environment}</p>
             </div>
-            <code>{selected.id}</code>
           </div>
 
           <form action={submitBenchmark} className="benchmark-form">
@@ -110,6 +108,9 @@ export default async function BenchmarkPage({
             <label>
               <span>Evaluator version</span>
               <input name="evaluatorVersion" required defaultValue="eval-v1" />
+              <small>
+                Use the same evaluator for current and candidate runs.
+              </small>
             </label>
             <label>
               <span>Currency</span>
@@ -122,9 +123,7 @@ export default async function BenchmarkPage({
             </label>
             <label className="file-drop benchmark-upload">
               <span>Choose benchmark CSV</span>
-              <small>
-                30 paired cases minimum · two repetitions recommended
-              </small>
+              <small>30 paired cases minimum · matched cases only</small>
               <input
                 name="benchmarkCsv"
                 type="file"

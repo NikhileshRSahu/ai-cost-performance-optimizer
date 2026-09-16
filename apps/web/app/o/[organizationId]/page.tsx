@@ -1,20 +1,30 @@
+import {
+  Activity,
+  CircleDollarSign,
+  FlaskConical,
+  ShieldCheck,
+} from 'lucide-react';
 import { redirect } from 'next/navigation';
-import { buildFounderDashboardView } from '../../../../../src/workbench/dashboard-view';
 import { buildAnalysisDepth } from '../../../../../src/efficiency/analysis-depth';
 import { buildWorkMriSnapshot } from '../../../../../src/efficiency/work-mri';
+import { formatDecimal, rational } from '../../../../../src/economics/exact';
 import { createDatabase } from '../../../../../src/persistence/database';
-import { MetricCard } from '../../../components/metric-card';
+import { buildFounderDashboardView } from '../../../../../src/workbench/dashboard-view';
+import { MetricTile } from '../../../components/metric-tile';
+import {
+  ProofTimeline,
+  type ProofStage,
+} from '../../../components/proof-timeline';
+import { RecommendationCard } from '../../../components/recommendation-card';
+import { SignOutButton } from '../../../components/sign-out-button';
+import { WorkMri } from '../../../components/work-mri';
 import {
   WorkflowProgress,
   type WorkflowStep,
 } from '../../../components/workflow-progress';
-import { RecommendationCard } from '../../../components/recommendation-card';
-import { WorkMri } from '../../../components/work-mri';
-import { DASHBOARD_COPY } from '../../../lib/dashboard-copy';
+import { hasSelfHostedAuthConfiguration } from '../../../lib/auth-config';
 import { loadFounderDashboardEvidence } from '../../../lib/dashboard-data';
-import { hasGoogleAuthConfiguration } from '../../../lib/auth';
 import { resolveRuntimeSession } from '../../../lib/runtime-session';
-import { SignOutButton } from '../../../components/sign-out-button';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,6 +32,20 @@ function moneyLabel(
   value: Readonly<{ amount: string; currency: string }> | null,
 ): string {
   return value === null ? 'Unavailable' : `${value.currency} ${value.amount}`;
+}
+
+function verifiedMoney(
+  value: Readonly<{
+    exactNumerator: string;
+    exactDenominator: string;
+    currency: string;
+  }> | null,
+): string {
+  if (value === null) return 'Not verified';
+  return `${value.currency} ${formatDecimal(
+    rational(BigInt(value.exactNumerator), BigInt(value.exactDenominator)),
+    2,
+  )}`;
 }
 
 export default async function FounderDashboardPage({
@@ -56,10 +80,16 @@ export default async function FounderDashboardPage({
             ? 'workloads'
             : 'import';
 
-  const verified =
-    view.verifiedNetSavings === null
-      ? 'Not verified yet'
-      : `${view.verifiedNetSavings.currency} ${view.verifiedNetSavings.exactNumerator}/${view.verifiedNetSavings.exactDenominator} · ${view.verifiedNetSavings.direction}`;
+  const proofStage: ProofStage =
+    view.verifiedNetSavings !== null
+      ? 'Verified'
+      : view.strongestAction?.state === 'TESTED'
+        ? 'Tested'
+        : view.strongestAction !== null
+          ? 'Opportunity'
+          : view.observedSpend !== null
+            ? 'Observed'
+            : 'Observed';
 
   const analysisDepth = buildAnalysisDepth(
     view.dataQuality === 'NO_DATA' ? [] : ['USAGE_CSV'],
@@ -90,69 +120,145 @@ export default async function FounderDashboardPage({
           },
   });
 
+  const potential =
+    view.strongestAction?.state === 'OPPORTUNITY'
+      ? moneyLabel(view.strongestAction.saving)
+      : 'Not active';
+  const tested =
+    view.strongestAction?.state === 'TESTED' ||
+    view.strongestAction?.state === 'VERIFIED'
+      ? moneyLabel(view.strongestAction.saving)
+      : 'Not tested';
+
   return (
-    <div className="dashboard-stack">
+    <div className="grid gap-6">
       <WorkflowProgress organizationId={organizationId} current={currentStep} />
+
       {view.demoDisclaimer !== null ? (
-        <div className="demo-banner" role="note">
+        <div
+          className="rounded-xl border border-amber-300/20 bg-amber-300/[0.07] px-4 py-3 text-xs font-semibold text-amber-100/75"
+          role="note"
+        >
           {view.demoDisclaimer}
         </div>
       ) : null}
 
-      <header className="dashboard-header">
+      <header className="flex flex-col gap-5 border-b border-white/[0.07] pb-6 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <p className="eyebrow">Founder overview</p>
-          <h1>{view.organizationName}</h1>
-          <p className="lede">
+          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.17em] text-white/28">
+            Work MRI overview
+          </p>
+          <h1 className="m-0 mt-2 !text-[clamp(2.4rem,5vw,4.4rem)] !leading-[.98] !tracking-[-.06em] text-white">
+            {view.organizationName}
+          </h1>
+          <p className="m-0 mt-3 max-w-3xl text-sm leading-6 text-white/38">
             Evidence window: {view.periodLabel}. Potential, tested, and verified
             savings remain separate throughout the workflow.
           </p>
         </div>
-        <div className="dashboard-actions">
-          <span className="quality-chip">
-            {DASHBOARD_COPY.dataQualityLabel}: {view.dataQuality}
+        <div className="flex flex-wrap items-center gap-2.5">
+          <span className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[10px] font-semibold text-white/45">
+            Data quality · {view.dataQuality}
           </span>
-          {hasGoogleAuthConfiguration() ? <SignOutButton /> : null}
+          {hasSelfHostedAuthConfiguration() ? <SignOutButton /> : null}
         </div>
       </header>
 
-      <div className="metrics-grid">
-        <MetricCard
-          label={DASHBOARD_COPY.observedSpendLabel}
+      <section
+        className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4"
+        aria-label="Evidence state metrics"
+      >
+        <MetricTile
+          label="Observed spend"
           value={moneyLabel(view.observedSpend)}
-          detail={
-            view.observedSpend === null
-              ? 'No trustworthy spend total is available for this period.'
-              : 'Same-currency cost included from the selected evidence window.'
-          }
+          detail="Provider/customer evidence in selected window"
+          tone="evidence"
+          icon={<CircleDollarSign className="size-4" />}
         />
-        <MetricCard
-          label={DASHBOARD_COPY.verifiedSavingsLabel}
-          value={verified}
+        <MetricTile
+          label="Potential saving"
+          value={potential}
+          detail="Opportunity only · not counted as achieved"
+          tone="potential"
+          icon={<Activity className="size-4" />}
+        />
+        <MetricTile
+          label="Tested saving"
+          value={tested}
+          detail="Candidate cleared benchmark constraints"
+          tone="neutral"
+          icon={<FlaskConical className="size-4" />}
+        />
+        <MetricTile
+          label="Verified net saving"
+          value={verifiedMoney(view.verifiedNetSavings)}
           detail={
             view.verifiedNetSavings === null
-              ? 'Requires implementation plus comparable post-change evidence.'
+              ? 'Requires comparable post-change evidence'
               : `Formula: ${view.verifiedNetSavings.formulaVersion}`
           }
+          tone="verified"
+          icon={<ShieldCheck className="size-4" />}
         />
-      </div>
+      </section>
 
-      {view.dataQuality === 'NO_DATA' ? null : <WorkMri snapshot={mri} />}
+      <section className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4 sm:p-5">
+        <div className="mb-4 flex items-center justify-between gap-4">
+          <div>
+            <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/28">
+              Evidence progression
+            </p>
+            <p className="m-0 mt-1 text-xs text-white/38">
+              A saving only becomes Verified after implementation and comparable
+              post-change evidence.
+            </p>
+          </div>
+          <span className="hidden rounded-full border border-white/10 bg-white/[0.035] px-3 py-1 text-[10px] font-semibold text-white/40 sm:inline-flex">
+            {proofStage}
+          </span>
+        </div>
+        <ProofTimeline current={proofStage} />
+      </section>
+
+      {view.dataQuality === 'NO_DATA' ? (
+        <section className="rounded-[22px] border border-dashed border-white/12 bg-white/[0.02] p-7">
+          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-blue-200/55">
+            No production evidence yet
+          </p>
+          <h2 className="mt-3 text-2xl font-semibold tracking-[-0.035em] text-white">
+            Give Evalomics one trustworthy evidence window.
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-white/38">
+            Import a usage CSV to unlock cost diagnostics and the first Work
+            MRI. Missing values are never silently treated as zero.
+          </p>
+        </section>
+      ) : (
+        <WorkMri snapshot={mri} />
+      )}
 
       <section aria-labelledby="strongest-action-title">
-        <div className="section-heading">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="eyebrow">{DASHBOARD_COPY.strongestActionLabel}</p>
-            <h2 id="strongest-action-title">What should we test next?</h2>
+            <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/28">
+              Ranked next action
+            </p>
+            <h2
+              id="strongest-action-title"
+              className="m-0 mt-1.5 text-2xl font-semibold tracking-[-0.035em] text-white"
+            >
+              What should we test next?
+            </h2>
           </div>
-          <span className="projection-note">
+          <span className="w-fit rounded-full border border-white/10 bg-white/[0.035] px-3 py-1 text-[10px] font-semibold text-white/40">
             {view.monthlyProjectionAllowed
               ? '30-day projection eligible'
               : '30-day projection withheld'}
           </span>
         </div>
+
         {view.strongestAction === null ? (
-          <div className="empty-state">
+          <div className="rounded-2xl border border-dashed border-white/12 bg-white/[0.02] p-5 text-sm leading-6 text-white/38">
             No rank-1 recommendation is available with enough evidence to claim
             a strongest action.
           </div>
@@ -165,9 +271,20 @@ export default async function FounderDashboardPage({
       </section>
 
       {view.limitations.length > 0 ? (
-        <section className="limitations" aria-labelledby="limitations-title">
-          <h2 id="limitations-title">Evidence limitations</h2>
-          <ul>
+        <section
+          className="rounded-2xl border border-amber-300/12 bg-amber-300/[0.035] p-5"
+          aria-labelledby="limitations-title"
+        >
+          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-200/48">
+            Evidence boundaries
+          </p>
+          <h2
+            id="limitations-title"
+            className="mt-2 text-lg font-semibold text-amber-50/82"
+          >
+            Limitations kept visible
+          </h2>
+          <ul className="mt-3 grid gap-1.5 pl-5 text-xs leading-5 text-amber-50/45">
             {view.limitations.map((limitation) => (
               <li key={limitation}>{limitation}</li>
             ))}
