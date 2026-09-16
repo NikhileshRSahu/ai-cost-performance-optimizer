@@ -1,5 +1,9 @@
 import { betterAuth } from 'better-auth';
+import { APIError } from 'better-auth/api';
+import { and, eq } from 'drizzle-orm';
 import { Pool } from 'pg';
+import { createDatabase } from '../../../src/persistence/database';
+import { memberships, users } from '../../../src/persistence/schema';
 import {
   hasSelfHostedAuthConfiguration,
   requireSelfHostedAuthConfiguration,
@@ -32,6 +36,57 @@ function createWebAuth() {
     },
     account: {
       encryptOAuthTokens: true,
+    },
+    user: {
+      deleteUser: {
+        enabled: true,
+        beforeDelete: async (user) => {
+          const database = createDatabase(configuration.databaseUrl);
+          try {
+            const appUser = (
+              await database.db
+                .select({ id: users.id })
+                .from(users)
+                .where(
+                  and(
+                    eq(users.authProvider, 'better-auth/google'),
+                    eq(users.authSubject, user.id),
+                  ),
+                )
+                .limit(1)
+            ).at(0);
+
+            if (appUser === undefined) return;
+
+            const owned = (
+              await database.db
+                .select({ organizationId: memberships.organizationId })
+                .from(memberships)
+                .where(
+                  and(
+                    eq(memberships.userId, appUser.id),
+                    eq(memberships.role, 'OWNER'),
+                  ),
+                )
+                .limit(1)
+            ).at(0);
+
+            if (owned !== undefined) {
+              throw new APIError('BAD_REQUEST', {
+                message:
+                  'Delete or transfer every owned Evalomics workspace before deleting your account.',
+              });
+            }
+
+            await database.db
+              .delete(memberships)
+              .where(eq(memberships.userId, appUser.id));
+            await database.db.delete(users).where(eq(users.id, appUser.id));
+          } finally {
+            await database.close();
+          }
+        },
+      },
     },
     advanced: {
       database: {
