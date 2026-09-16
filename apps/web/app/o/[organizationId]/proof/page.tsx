@@ -34,7 +34,7 @@ export default async function VerificationPage({
   const strongest = pack.strongestFinding;
 
   return (
-    <div className="workflow-page grid gap-6">
+    <div className="workflow-page proof-page grid gap-6">
       <header className="workflow-header">
         <div>
           <p className="eyebrow">Verify</p>
@@ -120,24 +120,36 @@ export default async function VerificationPage({
         </section>
       ) : null}
 
-      <section className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-5">
-        <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/28">
-          Evidence snapshot
-        </p>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          {pack.diagnosticFacts.slice(0, 6).map((fact) => (
-            <div
-              key={`${fact.label}:${fact.evidenceRef ?? 'none'}`}
-              className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-4"
-            >
-              <p className="m-0 text-xs text-white/35">{fact.label}</p>
-              <p className="m-0 mt-2 font-mono text-sm font-semibold text-white/72">
-                {fact.value}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
+      {pack.diagnosticFacts.length > 0 ? (
+        <section className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-5">
+          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/28">
+            Evidence snapshot
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {pack.diagnosticFacts.slice(0, 6).map((fact) => (
+              <div
+                key={`${fact.label}:${fact.evidenceRef ?? 'none'}`}
+                className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-4"
+              >
+                <p className="m-0 text-xs text-white/35">{fact.label}</p>
+                <p className="m-0 mt-2 font-mono text-sm font-semibold text-white/72">
+                  {fact.value}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : (
+        <section className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
+          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/28">
+            Evidence snapshot
+          </p>
+          <p className="m-0 mt-3 max-w-2xl text-sm leading-6 text-white/55">
+            No diagnostic evidence is available yet. Import usage evidence before
+            expecting a verification snapshot or downloadable proof pack.
+          </p>
+        </section>
+      )
 
       <div className="flex flex-wrap gap-2.5">
         <Link
