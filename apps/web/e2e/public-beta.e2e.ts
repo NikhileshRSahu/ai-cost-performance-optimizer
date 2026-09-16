@@ -100,7 +100,6 @@ test('public CTA foregrounds remain readable on their backgrounds', async ({
   expect(freeStyles.color).not.toBe(freeStyles.backgroundColor);
 });
 
-
 test('public launch surfaces have no serious accessibility blockers', async ({
   page,
 }) => {
