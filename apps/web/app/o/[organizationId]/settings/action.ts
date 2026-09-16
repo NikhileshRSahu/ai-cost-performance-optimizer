@@ -51,6 +51,7 @@ function errorCode(error: unknown): string {
 
 export async function saveWorkspaceProfile(formData: FormData): Promise<never> {
   const organizationId = text(formData, 'organizationId');
+  const onboarding = text(formData, 'onboarding') === 'true';
   const { session, databaseUrl } = await runtime();
   const database = createDatabase(databaseUrl);
   try {
@@ -66,6 +67,9 @@ export async function saveWorkspaceProfile(formData: FormData): Promise<never> {
     redirect('/o/' + organizationId + '/settings?error=' + errorCode(error));
   } finally {
     await database.close();
+  }
+  if (onboarding) {
+    redirect('/o/' + organizationId + '/import');
   }
   redirect('/o/' + organizationId + '/settings?saved=true');
 }
