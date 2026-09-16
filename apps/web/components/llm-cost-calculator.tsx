@@ -262,7 +262,10 @@ export function LlmCostCalculator() {
               className={fieldClass}
               inputMode="decimal"
               value={inputRate}
-              onChange={(event) => setInputRate(event.target.value)}
+              onChange={(event) => {
+                setPricingPreset('manual');
+                setInputRate(event.target.value);
+              }}
             />
           </label>
 
@@ -272,7 +275,10 @@ export function LlmCostCalculator() {
               className={fieldClass}
               inputMode="decimal"
               value={outputRate}
-              onChange={(event) => setOutputRate(event.target.value)}
+              onChange={(event) => {
+                setPricingPreset('manual');
+                setOutputRate(event.target.value);
+              }}
             />
           </label>
 
@@ -281,7 +287,10 @@ export function LlmCostCalculator() {
             <select
               className={fieldClass}
               value={rateCurrency}
-              onChange={(event) => setRateCurrency(event.target.value)}
+              onChange={(event) => {
+                setPricingPreset('manual');
+                setRateCurrency(event.target.value);
+              }}
             >
               {currencies.map((currency) => (
                 <option key={currency} value={currency}>
