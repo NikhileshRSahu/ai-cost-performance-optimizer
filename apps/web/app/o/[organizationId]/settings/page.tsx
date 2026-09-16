@@ -3,10 +3,12 @@ import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
 import { organizations } from '../../../../../../src/persistence/schema';
 import { listWorkspaceMembers } from '../../../../../../src/workbench/workspace-settings';
+import { DeleteAccountButton } from '../../../../components/workbench/delete-account-button';
 import { requireOrganizationContext } from '../../../../lib/organization-context';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
 import {
   addMember,
+  createInvite,
   changeMemberRole,
   permanentlyDeleteWorkspace,
   removeMember,
@@ -28,6 +30,8 @@ const errorMessages: Record<string, string> = {
     'Workspace deletion confirmation did not match.',
   INVALID_REPORTING_CURRENCY: 'Use a three-letter currency code such as USD or INR.',
   INVALID_WORKSPACE_SETTING: 'One of the workspace settings is invalid.',
+  INVALID_INVITE_EMAIL: 'Enter a valid invitation email.',
+  INVALID_INVITE_ROLE: 'Choose OPERATOR or VIEWER for the invitation.',
   UNKNOWN: 'The requested workspace change could not be completed.',
 };
 
@@ -42,6 +46,8 @@ export default async function SettingsPage({
     memberUpdated?: string;
     memberRemoved?: string;
     error?: string;
+    inviteToken?: string;
+    inviteId?: string;
   }>;
 }>) {
   const { organizationId } = await params;
@@ -184,8 +190,45 @@ export default async function SettingsPage({
           </div>
 
           {isOwner ? (
-            <div className="mt-6 border-t pt-6">
-              <h3>Add an existing Evalomics user</h3>
+            <div className="mt-6 grid gap-6 border-t pt-6">
+              <div>
+                <h3>Create invite link</h3>
+                <p className="projection-note">
+                  Generate a seven-day, email-bound invitation. Share the link
+                  privately with the intended teammate.
+                </p>
+                {query.inviteToken ? (
+                  <div className="mri-action">
+                    <strong>Invite link created</strong>
+                    <p className="mt-2 break-all font-mono text-xs">
+                      /invite/{query.inviteToken}
+                    </p>
+                    <p className="mt-2 text-xs opacity-70">
+                      Invite ID: {query.inviteId ?? 'created'}
+                    </p>
+                  </div>
+                ) : null}
+                <form action={createInvite} className="upload-form">
+                  <input type="hidden" name="organizationId" value={organizationId} />
+                  <label>
+                    Invite email
+                    <input name="email" type="email" maxLength={254} required />
+                  </label>
+                  <label>
+                    Role
+                    <select name="role" defaultValue="VIEWER">
+                      <option value="VIEWER">VIEWER — read only</option>
+                      <option value="OPERATOR">OPERATOR — run evidence workflow</option>
+                    </select>
+                  </label>
+                  <button className="primary-button" type="submit">
+                    Generate invite link
+                  </button>
+                </form>
+              </div>
+
+              <div className="border-t pt-6">
+                <h3>Add an existing Evalomics user</h3>
               <p className="projection-note">
                 During beta, the person must sign in to Evalomics once before an
                 OWNER can add their email to this workspace.
@@ -207,8 +250,23 @@ export default async function SettingsPage({
                   Add member
                 </button>
               </form>
+              </div>
             </div>
           ) : null}
+        </section>
+
+        <section className="workflow-card">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Personal account</p>
+              <h2>Delete your Evalomics account</h2>
+            </div>
+          </div>
+          <p>
+            Account deletion is permanent. If you own a workspace, delete that
+            workspace first so shared tenant data is never removed accidentally.
+          </p>
+          <DeleteAccountButton />
         </section>
 
         <section className="workflow-card danger-zone">
