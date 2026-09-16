@@ -95,6 +95,30 @@ function NavLinks({
           })}
         </div>
       </div>
+
+      <div className="mt-7 border-t border-white/[0.06] pt-5">
+        <p className="px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/25">
+          Help & account
+        </p>
+        <div className="mt-2 grid gap-1">
+          <Link
+            href="/account"
+            onClick={onNavigate}
+            className={linkClass('/account')}
+          >
+            <UserRound className="size-4" aria-hidden="true" />
+            <span>Account</span>
+          </Link>
+          <Link
+            href="/support"
+            onClick={onNavigate}
+            className={linkClass('/support')}
+          >
+            <LifeBuoy className="size-4" aria-hidden="true" />
+            <span>Support</span>
+          </Link>
+        </div>
+      </div>
     </>
   );
 }
