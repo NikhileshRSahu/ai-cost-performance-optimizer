@@ -83,6 +83,7 @@ export function rewriteNeonResponseHeaders(
 }
 
 // Keep the OAuth callback on Evalomics so session cookies remain same-origin.
+// Preserve the Evalomics origin across the full social sign-in response.
 export async function rewriteNeonSocialSignInResponse(
   request: Request,
   response: Response,
