@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../../src/persistence/database';
 import { buildOptimizationLabView } from '../../../../../../../src/workbench/lab-view';
+import { formatDecimal, rational } from '../../../../../../../src/economics/exact';
 import { ConstraintRow } from '../../../../../components/constraint-row';
 import { HistoricalReplay } from './historical-replay';
 import { EvidenceDetails } from '../../../../../components/evidence-details';
@@ -74,11 +75,21 @@ export default async function OptimizationLabPage({
     await database.close();
   }
 
-  const netSaving =
-    view.economics.netSavingNumerator === null ||
-    view.economics.netSavingDenominator === null
-      ? 'Unavailable'
-      : `${view.economics.currency} ${view.economics.netSavingNumerator}/${view.economics.netSavingDenominator}`;
+  const hasNetSaving =
+    view.economics.netSavingNumerator !== null &&
+    view.economics.netSavingDenominator !== null;
+  const netSaving = hasNetSaving
+    ? `${view.economics.currency} ${formatDecimal(
+        rational(
+          BigInt(view.economics.netSavingNumerator!),
+          BigInt(view.economics.netSavingDenominator!),
+        ),
+        2,
+      )}`
+    : 'Unavailable';
+  const exactNetSaving = hasNetSaving
+    ? `${view.economics.netSavingNumerator}/${view.economics.netSavingDenominator}`
+    : null;
 
   return (
     <div className="lab-stack">
@@ -201,6 +212,9 @@ export default async function OptimizationLabPage({
           <div className="metric-card">
             <p className="metric-label">Exact net saving</p>
             <p className="metric-value">{netSaving}</p>
+            {exactNetSaving !== null ? (
+              <p className="metric-subtle">Exact calculation: {exactNetSaving}</p>
+            ) : null}
           </div>
           <div className="metric-card">
             <p className="metric-label">Confidence</p>
@@ -222,7 +236,31 @@ export default async function OptimizationLabPage({
       <section className="lab-section" aria-labelledby="evidence-title">
         <p className="eyebrow">{LAB_COPY.evidenceLabel}</p>
         <h2 id="evidence-title">Trace the claim</h2>
-        <EvidenceDetails view={view} />
+        <section className="lab-next-action">
+        <div>
+          <p className="eyebrow">What next?</p>
+          <h2>{view.decision === 'OPTIMIZE' ? 'This candidate passed your safety test.' : 'Review the evidence before changing production.'}</h2>
+          <p>
+            Tested savings are not counted as Verified. Apply the change only
+            when you are ready to collect comparable post-change evidence.
+          </p>
+        </div>
+        <div className="action-row">
+          {view.decision === 'OPTIMIZE' ? (
+            <Link
+              className="primary-action"
+              href={`/o/${organizationId}/implement/${recommendationId}`}
+            >
+              Prepare safe rollout
+            </Link>
+          ) : null}
+          <Link className="secondary-action" href={`/o/${organizationId}/proof`}>
+            View savings status
+          </Link>
+        </div>
+      </section>
+
+      <EvidenceDetails view={view} />
       </section>
     </div>
   );
