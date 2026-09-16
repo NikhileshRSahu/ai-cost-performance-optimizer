@@ -17,17 +17,20 @@ export async function acceptInvite(formData: FormData): Promise<never> {
   if (databaseUrl === undefined) redirect('/unauthorized');
 
   const database = createDatabase(databaseUrl);
+  let organizationId: string;
   try {
     const accepted = await acceptWorkspaceInvitation({
       db: database.db,
       session,
       token,
     });
-    redirect('/o/' + accepted.organizationId);
+    organizationId = accepted.organizationId;
   } catch (error) {
     const code = error instanceof Error ? error.message : 'INVITE_FAILED';
     redirect('/invite/' + token + '?error=' + encodeURIComponent(code));
   } finally {
     await database.close();
   }
+
+  redirect('/o/' + organizationId);
 }
