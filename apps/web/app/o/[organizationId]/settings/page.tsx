@@ -26,7 +26,7 @@ const errorMessages: Record<string, string> = {
   INVALID_MEMBER_EMAIL: 'Enter a valid member email address.',
   INVALID_MEMBER_ROLE: 'Choose OPERATOR or VIEWER.',
   OWNER_ROLE_CANNOT_BE_CHANGED_HERE:
-    'Owner transfer is intentionally disabled in this beta.',
+    'Use the Transfer ownership action to change the workspace owner.',
   OWNER_CANNOT_REMOVE_SELF: 'The workspace owner cannot remove themself.',
   OWNER_CANNOT_BE_REMOVED:
     'Owner removal is intentionally disabled in this beta.',
@@ -156,6 +156,9 @@ export default async function SettingsPage({
                 name="organizationId"
                 value={organizationId}
               />
+              {query.onboarding === 'true' ? (
+                <input type="hidden" name="onboarding" value="true" />
+              ) : null}
               <label>
                 Workspace name
                 <input
