@@ -24,9 +24,9 @@ export default function Page() {
           className="mt-4 !text-[clamp(3.2rem,7vw,6.4rem)] !leading-[.9] !tracking-[-.07em] text-slate-950"
         >
           Agent cost,
-          <span className="block text-slate-400">from calls to tools.</span>
+          <span className="block text-slate-600">from calls to tools.</span>
         </h1>
-        <p className="mt-7 max-w-2xl text-base leading-7 text-slate-500">
+        <p className="mt-7 max-w-2xl text-base leading-7 text-slate-600">
           Estimate model inference plus the per-run tool cost you know today.
           Keep the billing currency separate from the display currency so FX
           conversion is explicit rather than cosmetic.
@@ -42,7 +42,7 @@ export default function Page() {
           </p>
           <h2 className="mt-3 !text-[clamp(2rem,4vw,3.5rem)] !leading-[.98] !tracking-[-.05em] text-slate-950">
             Cost per run is useful.
-            <span className="block text-slate-400">
+            <span className="block text-slate-600">
               Cost per successful run is better.
             </span>
           </h2>
@@ -72,7 +72,7 @@ export default function Page() {
       </section>
 
       <div className="flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
-        <ShieldCheck className="mt-1 size-4 shrink-0 text-slate-500" />
+        <ShieldCheck className="mt-1 size-4 shrink-0 text-slate-600" />
         <p className="m-0">
           <strong className="text-slate-900">Calculation boundary:</strong> this
           is a workload estimate from the assumptions you enter. Unentered
