@@ -17,7 +17,8 @@ function nonEmpty(value: string | undefined): string | null {
 export function resolveAuthDatabaseUrl(
   environment: AuthEnvironment = process.env,
 ): string {
-  const databaseUrl = resolveAuthDatabaseUrl(environment);
+  const databaseUrl = nonEmpty(environment.DATABASE_URL);
+  if (databaseUrl === null) throw new Error('DATABASE_URL_REQUIRED');
 
   const url = new URL(databaseUrl);
   if (
@@ -64,8 +65,7 @@ export function hasSelfHostedAuthConfiguration(
 export function requireSelfHostedAuthConfiguration(
   environment: AuthEnvironment = process.env,
 ): SelfHostedAuthConfiguration {
-  const databaseUrl = nonEmpty(environment.DATABASE_URL);
-  if (databaseUrl === null) throw new Error('DATABASE_URL_REQUIRED');
+  const databaseUrl = resolveAuthDatabaseUrl(environment);
 
   const secret = nonEmpty(environment.BETTER_AUTH_SECRET);
   if (secret === null || secret.length < 32) {
