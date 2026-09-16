@@ -193,7 +193,7 @@ export default async function PilotPage({
             <h2 id="invoice-title">Invoice request pending</h2>
             <p>
               A second request is not needed while this invoice is active. The
-              current status is {invoiceRequest?.status ?? 'REQUESTED'}.
+              current status is {invoiceRequest.status}.
             </p>
           </section>
         )
