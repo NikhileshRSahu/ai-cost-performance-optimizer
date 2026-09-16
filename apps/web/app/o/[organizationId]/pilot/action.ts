@@ -1,7 +1,12 @@
 'use server';
 
+import { randomUUID } from 'node:crypto';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
+import {
+  buildOperationalEvent,
+  publishOperationalEvent,
+} from '../../../../../../src/operations/observability';
 import { requestPilotInvoice } from '../../../../../../src/workbench/pilot-invoice';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
 
@@ -28,6 +33,23 @@ export async function submitPilotInvoiceRequest(
       session,
       input: { organizationId, companyName, contactEmail },
     });
+
+    await publishOperationalEvent(
+      buildOperationalEvent({
+        eventName: 'pilot_invoice_request',
+        requestId: randomUUID(),
+        route: '/o/[organizationId]/pilot',
+        status: 'OK',
+        statusCode: 200,
+        durationMs: 0,
+        organizationId,
+        actorKind: 'SESSION',
+      }),
+      {
+        webhookUrl: process.env.OPS_ALERT_WEBHOOK_URL,
+        signingSecret: process.env.OPS_ALERT_WEBHOOK_SECRET,
+      },
+    );
   } finally {
     await database.close();
   }
