@@ -129,6 +129,7 @@ describe('workspace settings', () => {
       reportingCurrency: 'INR',
       timezone: 'Asia/Kolkata',
     });
+    expect(organization?.onboardingCompletedAt).not.toBeNull();
   });
 
   it('deletes the workspace and cascades memberships', async () => {
