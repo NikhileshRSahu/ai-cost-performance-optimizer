@@ -1,41 +1,33 @@
 import { betterAuth } from 'better-auth';
 import { Pool } from 'pg';
+import {
+  hasSelfHostedAuthConfiguration,
+  requireSelfHostedAuthConfiguration,
+} from './auth-config';
 
 export function hasGoogleAuthConfiguration(): boolean {
-  return [
-    process.env.DATABASE_URL,
-    process.env.BETTER_AUTH_URL,
-    process.env.BETTER_AUTH_SECRET,
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
-  ].every((value) => typeof value === 'string' && value.trim().length > 0);
-}
-
-function requiredEnvironment(name: string): string {
-  const value = process.env[name];
-  if (value === undefined || value.trim().length === 0) {
-    throw new Error(`${name}_REQUIRED`);
-  }
-  return value;
+  return hasSelfHostedAuthConfiguration();
 }
 
 function createWebAuth() {
-  const databaseUrl = requiredEnvironment('DATABASE_URL');
-  const baseURL = requiredEnvironment('BETTER_AUTH_URL');
-  const secret = requiredEnvironment('BETTER_AUTH_SECRET');
-  const clientId = requiredEnvironment('GOOGLE_CLIENT_ID');
-  const clientSecret = requiredEnvironment('GOOGLE_CLIENT_SECRET');
+  const configuration = requireSelfHostedAuthConfiguration();
 
   return betterAuth({
     appName: 'Evalomics',
-    baseURL,
-    secret,
-    database: new Pool({ connectionString: databaseUrl }),
+    baseURL: configuration.baseUrl,
+    secret: configuration.secret,
+    trustedOrigins: [configuration.baseUrl],
+    database: new Pool({
+      connectionString: configuration.databaseUrl,
+      options: '-c search_path=auth',
+    }),
     socialProviders: {
       google: {
-        clientId,
-        clientSecret,
+        clientId: configuration.googleClientId,
+        clientSecret: configuration.googleClientSecret,
+        redirectURI: configuration.googleCallbackUrl,
         prompt: 'select_account',
+        requireEmailVerification: true,
       },
     },
     account: {
