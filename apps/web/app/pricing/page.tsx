@@ -79,6 +79,7 @@ export default function PricingPage() {
           <Link
             href="/login"
             className="mt-8 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white no-underline transition hover:bg-slate-800"
+            style={{ color: '#ffffff' }}
           >
             Run the free Work MRI <ArrowRight className="size-4" />
           </Link>
@@ -124,6 +125,7 @@ export default function PricingPage() {
             <Link
               href="/login"
               className="mt-8 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-semibold text-slate-950 no-underline transition hover:bg-emerald-100"
+              style={{ color: '#0b1017' }}
             >
               Start with your evidence <ArrowRight className="size-4" />
             </Link>
