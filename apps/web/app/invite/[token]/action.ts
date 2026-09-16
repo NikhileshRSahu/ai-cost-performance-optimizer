@@ -1,17 +1,18 @@
 'use server';
 
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../src/persistence/database';
-import { acceptWorkspaceInvitation } from '../../../../../src/workbench/workspace-invitations';
-import { resolveRuntimeSession } from '../../../lib/runtime-session';
+import { acceptWorkspaceInvitationForIdentity } from '../../../../../src/workbench/workspace-invitations';
+import { readBetterAuthIdentity } from '../../../lib/better-auth-session';
 
 export async function acceptInvite(formData: FormData): Promise<never> {
   const tokenValue = formData.get('token');
   const token = typeof tokenValue === 'string' ? tokenValue : '';
-  const session = await resolveRuntimeSession();
+  const identity = await readBetterAuthIdentity(await headers());
   const databaseUrl = process.env.DATABASE_URL;
 
-  if (session === null) {
+  if (identity === null) {
     redirect('/login?returnTo=' + encodeURIComponent('/invite/' + token));
   }
   if (databaseUrl === undefined) redirect('/unauthorized');
@@ -19,9 +20,9 @@ export async function acceptInvite(formData: FormData): Promise<never> {
   const database = createDatabase(databaseUrl);
   let organizationId: string;
   try {
-    const accepted = await acceptWorkspaceInvitation({
+    const accepted = await acceptWorkspaceInvitationForIdentity({
       db: database.db,
-      session,
+      identity: identity.input,
       token,
     });
     organizationId = accepted.organizationId;
