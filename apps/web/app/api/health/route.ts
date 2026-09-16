@@ -36,7 +36,7 @@ async function checkAuthProvider(
         and to_regclass('auth.verification') is not null
       ) as ready
     `);
-    return result.rows[0]?.ready === true ? 'ok' : 'unavailable';
+    return result.rows[0]?.ready ? 'ok' : 'unavailable';
   } catch {
     return 'unavailable';
   }
