@@ -9,6 +9,7 @@ import {
   addExistingWorkspaceMember,
   deleteWorkspace,
   removeWorkspaceMember,
+  transferWorkspaceOwnership,
   updateWorkspaceProfile,
 } from '../../src/workbench/workspace-settings.js';
 
@@ -156,4 +157,31 @@ describe('workspace settings', () => {
     );
     await expect(database.db.select().from(users)).resolves.toHaveLength(2);
   });
+
+  it('transfers ownership atomically to an existing member', async () => {
+    await addExistingWorkspaceMember({
+      db: database.db,
+      session: ownerSession,
+      organizationId: 'org-1',
+      email: 'member@example.com',
+      role: 'VIEWER',
+    });
+
+    await transferWorkspaceOwnership({
+      db: database.db,
+      session: ownerSession,
+      organizationId: 'org-1',
+      targetUserId: 'member-user',
+    });
+
+    const rows = await database.db.select().from(memberships);
+    expect(rows).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ userId: 'owner-user', role: 'OPERATOR' }),
+        expect.objectContaining({ userId: 'member-user', role: 'OWNER' }),
+      ]),
+    );
+    expect(rows.filter((row) => row.role === 'OWNER')).toHaveLength(1);
+  });
+
 });
