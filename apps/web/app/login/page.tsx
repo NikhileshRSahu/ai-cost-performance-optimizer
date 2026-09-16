@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { headers } from 'next/headers';
 import { ArrowLeft, Check, ShieldCheck } from 'lucide-react';
 import { GoogleSignInButton } from '../../components/google-sign-in-button';
-import { hasNeonAuthConfiguration } from '../../lib/neon-auth';
+import { hasSelfHostedAuthConfiguration } from '../../lib/auth-config';
 
 export const metadata: Metadata = {
   title: 'Sign in | Evalomics',
@@ -25,7 +25,7 @@ function authHostAllowed(host: string | null): boolean {
 export default async function LoginPage() {
   const requestHeaders = await headers();
   const host = requestHeaders.get('host');
-  const authConfigured = hasNeonAuthConfiguration();
+  const authConfigured = hasSelfHostedAuthConfiguration();
   const canSignIn = authConfigured && authHostAllowed(host);
 
   return (
