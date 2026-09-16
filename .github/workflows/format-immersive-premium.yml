@@ -1,7 +1,7 @@
-name: Format immersive premium
+name: Format product hardening
 on:
   push:
-    branches: [feat/production-ready-premium-v1]
+    branches: [fix/product-hardening]
 permissions:
   contents: write
 jobs:
@@ -15,12 +15,12 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npx prettier --write apps/web/app/page.tsx apps/web/components/home/efficiency-story.tsx
+      - run: npx prettier --write "apps/web/**/*.{ts,tsx,css,json}" "src/**/*.ts" "tests/**/*.ts" "drizzle/meta/*.json"
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if ! git diff --quiet; then
-            git add apps/web/app/page.tsx apps/web/components/home/efficiency-story.tsx
-            git commit -m "chore: format immersive premium UI"
+            git add apps/web src tests drizzle/meta
+            git commit -m "chore: format product hardening"
             git push
           fi
