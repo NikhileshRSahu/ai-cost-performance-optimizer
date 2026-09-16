@@ -3,24 +3,25 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Privacy | Evalomics',
   description:
-    'How the Evalomics CSV-first pilot handles usage evidence, sanitized AI history, retention, deletion, and connected-source boundaries.',
+    'How the Evalomics free launch beta handles usage evidence, retention, deletion, and connected-source boundaries.',
 };
 
 export default function PrivacyPage() {
   return (
     <div className="landing-stack legal-page">
       <section className="hero hero-wide">
-        <p className="eyebrow">Prelaunch privacy notice</p>
+        <p className="eyebrow">Launch beta privacy notice</p>
         <h1>Use the minimum evidence needed.</h1>
         <p className="lede">
-          Evalomics is designed around progressive access. The CSV-first pilot
+          Evalomics is designed around progressive access. The CSV-first launch beta
           can provide useful analysis without provider admin credentials,
           mailbox access, drive access, or raw prompt content.
         </p>
         <div className="evidence-note">
-          <strong>Legal-review status:</strong> this is the product's current
-          operational privacy notice for beta transparency. It must be reviewed
-          for the final launch jurisdiction before general availability.
+          <strong>Beta transparency:</strong> this notice describes the current
+          product behavior and data boundaries for the free launch beta. Product
+          and legal terms may be updated as Evalomics moves toward general
+          availability.
         </div>
       </section>
 
