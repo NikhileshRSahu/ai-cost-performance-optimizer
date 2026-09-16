@@ -15,10 +15,10 @@ export default async function ImportPage({
   searchParams,
 }: Readonly<{
   params: Promise<{ organizationId: string }>;
-  searchParams: Promise<{ importId?: string; demo?: string }>;
+  searchParams: Promise<{ importId?: string; demo?: string; error?: string }>;
 }>) {
   const { organizationId } = await params;
-  const { importId, demo } = await searchParams;
+  const { importId, demo, error } = await searchParams;
   const session = await resolveRuntimeSession();
   const databaseUrl = process.env.DATABASE_URL;
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
@@ -62,6 +62,12 @@ export default async function ImportPage({
         </div>
         <span className="trust-chip">CSV-first · no provider key required</span>
       </header>
+
+      {error !== undefined ? (
+        <div className="blocking-note import-error-note" role="alert">
+          {error}
+        </div>
+      ) : null}
 
       <section className="workflow-card upload-card">
         <div>
