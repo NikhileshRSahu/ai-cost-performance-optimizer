@@ -2537,3 +2537,274 @@ samp,
   :is(h1, h2, h3, h4, strong, b) {
   color: #0f172a !important;
 }
+
+
+/* Workspace settings polish: launch-quality responsive authenticated UI */
+.workspace-settings-page {
+  --settings-border: rgba(255, 255, 255, 0.09);
+  --settings-panel: #0b1119;
+  --settings-panel-soft: rgba(255, 255, 255, 0.035);
+  --settings-muted: #aeb8c4;
+  --settings-strong: #f3f6fa;
+  display: grid;
+  gap: 1.25rem;
+  max-width: 1080px;
+  margin-inline: auto;
+}
+
+.workspace-settings-page .workflow-header {
+  padding: 0 0 1.25rem;
+}
+
+.workspace-settings-page .workflow-header h1 {
+  max-width: 16ch;
+  font-size: clamp(2.35rem, 5vw, 4.5rem);
+  letter-spacing: -0.055em;
+}
+
+.workspace-settings-page .workflow-header .lede {
+  max-width: 68ch;
+  margin-top: 1rem;
+}
+
+.workspace-settings-page .workflow-card {
+  padding: clamp(1.15rem, 2.5vw, 1.75rem);
+  border: 1px solid var(--settings-border);
+  border-radius: 1.15rem;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(122, 167, 255, 0.045), transparent 34%),
+    var(--settings-panel);
+}
+
+.workspace-settings-page .section-heading {
+  margin-bottom: 1.1rem;
+}
+
+.workspace-settings-page .section-heading h2,
+.workspace-settings-page h3 {
+  margin: 0;
+  color: var(--settings-strong) !important;
+}
+
+.workspace-settings-page .section-heading h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.55rem);
+  letter-spacing: -0.025em;
+}
+
+.workspace-settings-page h3 {
+  font-size: 1rem;
+}
+
+.workspace-settings-page .upload-form {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 0.95rem;
+  align-items: end;
+}
+
+.workspace-settings-page .upload-form > label {
+  grid-column: span 4;
+  display: grid;
+  gap: 0.45rem;
+  min-width: 0;
+  color: #c4ccd6 !important;
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.workspace-settings-page .upload-form > input[type='hidden'] {
+  display: none;
+}
+
+.workspace-settings-page .upload-form > button {
+  grid-column: 1 / -1;
+  width: fit-content;
+  min-width: 160px;
+}
+
+.workspace-settings-page input,
+.workspace-settings-page select,
+.workspace-settings-page textarea {
+  width: 100%;
+  max-width: none;
+  padding: 0.72rem 0.8rem;
+  border-color: rgba(255, 255, 255, 0.13) !important;
+  background: #0f1620 !important;
+  color: #eef2f7 !important;
+}
+
+.workspace-settings-page select option {
+  color: #111827;
+  background: #ffffff;
+}
+
+.workspace-settings-page .primary-button,
+.workspace-settings-page .secondary-action,
+.workspace-settings-page .danger-button {
+  min-height: 44px;
+  border-radius: 0.72rem;
+  padding: 0.68rem 0.95rem;
+  font-weight: 750;
+}
+
+.workspace-settings-page .primary-button {
+  background: #f8fafc !important;
+  color: #0b1017 !important;
+}
+
+.workspace-settings-page .secondary-action {
+  border: 1px solid rgba(255, 255, 255, 0.13) !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: #dbe3ec !important;
+}
+
+.workspace-settings-page .danger-button {
+  border: 1px solid rgba(248, 113, 113, 0.28) !important;
+  background: rgba(248, 113, 113, 0.1) !important;
+  color: #fecaca !important;
+}
+
+.workspace-settings-page .mri-action,
+.org-workbench .workspace-settings-page .mri-action {
+  padding: 1rem 1.05rem;
+  border: 1px solid var(--settings-border);
+  border-radius: 0.9rem;
+  background: var(--settings-panel-soft) !important;
+  color: var(--settings-muted) !important;
+}
+
+.org-workbench .workspace-settings-page .mri-action :is(p, span, small, dt, dd, li, label, code) {
+  color: #b8c2ce !important;
+}
+
+.org-workbench .workspace-settings-page .mri-action :is(strong, b, h1, h2, h3, h4) {
+  color: #f3f6fa !important;
+}
+
+.workspace-settings-page .mri-action strong {
+  overflow-wrap: anywhere;
+}
+
+.workspace-settings-page .projection-note {
+  display: block;
+  width: fit-content;
+  max-width: 72ch;
+  margin: 0.6rem 0 1rem;
+  padding: 0;
+  border: 0 !important;
+  background: transparent !important;
+  color: #aeb8c4 !important;
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.workspace-settings-page .evidence-note,
+.workspace-settings-page .success-note,
+.workspace-settings-page .blocking-note {
+  margin: 0;
+  padding: 0.95rem 1rem;
+  border-radius: 0.85rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.workspace-settings-page .evidence-note {
+  border: 1px solid rgba(122, 167, 255, 0.24);
+  background: rgba(122, 167, 255, 0.08);
+  color: #d8e6ff !important;
+}
+
+.workspace-settings-page .evidence-note strong {
+  color: #ffffff !important;
+}
+
+.workspace-settings-page .success-note {
+  border: 1px solid rgba(110, 231, 183, 0.24);
+  background: rgba(110, 231, 183, 0.08);
+  color: #c8f7e3 !important;
+}
+
+.workspace-settings-page .border-t {
+  border-color: var(--settings-border) !important;
+}
+
+.workspace-settings-page .danger-zone {
+  border-color: rgba(248, 113, 113, 0.18);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(248, 113, 113, 0.05), transparent 34%),
+    #0b1119;
+}
+
+.workspace-settings-page .workflow-card > p {
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+@media (max-width: 820px) {
+  .workspace-settings-page {
+    gap: 1rem;
+  }
+
+  .workspace-settings-page .workflow-header h1 {
+    max-width: 13ch;
+    font-size: clamp(2.15rem, 9vw, 3.5rem);
+  }
+
+  .workspace-settings-page .upload-form {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace-settings-page .upload-form > label,
+  .workspace-settings-page .upload-form > button {
+    grid-column: 1;
+  }
+
+  .workspace-settings-page .upload-form > button {
+    width: 100%;
+  }
+
+  .workspace-settings-page .mri-action .mt-4.flex,
+  .workspace-settings-page .mri-action form.flex {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .workspace-settings-page .mri-action form.flex > * {
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .workspace-settings-page .workflow-card {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+
+  .workspace-settings-page .workflow-header {
+    padding-bottom: 1rem;
+  }
+
+  .workspace-settings-page .workflow-header h1 {
+    font-size: clamp(2rem, 11vw, 3rem);
+  }
+
+  .workspace-settings-page .workflow-header .lede {
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .workspace-settings-page .section-heading {
+    margin-bottom: 0.9rem;
+  }
+
+  .workspace-settings-page .primary-button,
+  .workspace-settings-page .secondary-action,
+  .workspace-settings-page .danger-button {
+    width: 100%;
+  }
+
+  .workspace-settings-page .mri-action {
+    padding: 0.9rem;
+  }
+}
