@@ -83,7 +83,7 @@ export default function HomePage() {
             </span>
           </div>
 
-          <div className="border-b border-white/[0.07] px-5 py-3 text-[10px] leading-5 text-white/35">
+          <div className="border-b border-white/[0.07] px-5 py-3 text-[10px] leading-5 text-white/65">
             Illustrative product walkthrough only. These numbers are synthetic
             and are not a customer result.
           </div>
@@ -98,13 +98,13 @@ export default function HomePage() {
                 key={label}
                 className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4"
               >
-                <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.13em] text-white/30">
+                <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.13em] text-white/65">
                   {label}
                 </p>
                 <p className="m-0 mt-3 font-mono text-2xl font-medium tracking-[-0.04em] text-white">
                   {value}
                 </p>
-                <p className="m-0 mt-1 text-[10px] text-white/28">{detail}</p>
+                <p className="m-0 mt-1 text-[10px] text-white/65">{detail}</p>
               </div>
             ))}
           </div>
@@ -112,7 +112,7 @@ export default function HomePage() {
           <div className="mx-4 mb-4 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 sm:mx-5 sm:mb-5">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-200/55">
+                <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-200/85">
                   Rank #1
                 </p>
                 <h2 className="m-0 mt-2 text-lg font-semibold tracking-[-0.025em] text-white/90">
@@ -130,7 +130,7 @@ export default function HomePage() {
                 ['Projected saving', '$2,190/mo'],
               ].map(([label, value]) => (
                 <div key={label}>
-                  <p className="m-0 text-[9px] uppercase tracking-[0.12em] text-white/25">
+                  <p className="m-0 text-[9px] uppercase tracking-[0.12em] text-white/65">
                     {label}
                   </p>
                   <p className="m-0 mt-1 font-mono text-sm font-semibold text-white/75">
@@ -139,7 +139,7 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <div className="mt-5 flex items-center gap-2 border-t border-white/[0.07] pt-4 text-[11px] font-semibold text-emerald-200/70">
+            <div className="mt-5 flex items-center gap-2 border-t border-white/[0.07] pt-4 text-[11px] font-semibold text-emerald-200/90">
               <CheckCircle2 className="size-4" />
               Next action: benchmark this candidate
             </div>
