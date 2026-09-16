@@ -25,7 +25,10 @@ function createWebAuth() {
     appName: 'Evalomics',
     baseURL: configuration.baseUrl,
     secret: configuration.secret,
-    trustedOrigins: [configuration.baseUrl],
+    trustedOrigins: [
+      new URL(configuration.baseUrl).origin,
+      'https://evalomics.vercel.app',
+    ],
     database: new Pool({
       connectionString: configuration.databaseUrl,
       options: '-c search_path=auth',
