@@ -481,7 +481,6 @@ export const designPartnerPermissions = pgTable(
   ],
 );
 
-
 export const workspaceInvitations = pgTable(
   'workspace_invitations',
   {
@@ -493,10 +492,16 @@ export const workspaceInvitations = pgTable(
     role: roleEnum('role').notNull(),
     tokenHash: text('token_hash').notNull(),
     status: text('status').notNull().default('PENDING'),
-    expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'string' }).notNull(),
+    expiresAt: timestamp('expires_at', {
+      withTimezone: true,
+      mode: 'string',
+    }).notNull(),
     createdByUserId: text('created_by_user_id').notNull(),
     acceptedByUserId: text('accepted_by_user_id'),
-    acceptedAt: timestamp('accepted_at', { withTimezone: true, mode: 'string' }),
+    acceptedAt: timestamp('accepted_at', {
+      withTimezone: true,
+      mode: 'string',
+    }),
     createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
       .notNull()
       .defaultNow(),
@@ -526,5 +531,7 @@ export const supportRequests = pgTable(
       .notNull()
       .defaultNow(),
   },
-  (table) => [index('support_requests_status_idx').on(table.status, table.createdAt)],
+  (table) => [
+    index('support_requests_status_idx').on(table.status, table.createdAt),
+  ],
 );

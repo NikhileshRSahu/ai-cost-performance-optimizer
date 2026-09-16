@@ -25,10 +25,12 @@ const errorMessages: Record<string, string> = {
   OWNER_ROLE_CANNOT_BE_CHANGED_HERE:
     'Owner transfer is intentionally disabled in this beta.',
   OWNER_CANNOT_REMOVE_SELF: 'The workspace owner cannot remove themself.',
-  OWNER_CANNOT_BE_REMOVED: 'Owner removal is intentionally disabled in this beta.',
+  OWNER_CANNOT_BE_REMOVED:
+    'Owner removal is intentionally disabled in this beta.',
   WORKSPACE_DELETE_CONFIRMATION_MISMATCH:
     'Workspace deletion confirmation did not match.',
-  INVALID_REPORTING_CURRENCY: 'Use a three-letter currency code such as USD or INR.',
+  INVALID_REPORTING_CURRENCY:
+    'Use a three-letter currency code such as USD or INR.',
   INVALID_WORKSPACE_SETTING: 'One of the workspace settings is invalid.',
   INVALID_INVITE_EMAIL: 'Enter a valid invitation email.',
   INVALID_INVITE_ROLE: 'Choose OPERATOR or VIEWER for the invitation.',
@@ -94,7 +96,8 @@ export default async function SettingsPage({
             <h1>Manage the company, team, and lifecycle.</h1>
             <p className="lede">
               Keep ownership explicit, use least-privilege roles, and delete the
-              workspace only when you intend to remove all tenant-scoped product data.
+              workspace only when you intend to remove all tenant-scoped product
+              data.
             </p>
           </div>
         </header>
@@ -122,10 +125,19 @@ export default async function SettingsPage({
           </div>
           {isOwner ? (
             <form action={saveWorkspaceProfile} className="upload-form">
-              <input type="hidden" name="organizationId" value={organizationId} />
+              <input
+                type="hidden"
+                name="organizationId"
+                value={organizationId}
+              />
               <label>
                 Workspace name
-                <input name="name" defaultValue={organization.name} maxLength={120} required />
+                <input
+                  name="name"
+                  defaultValue={organization.name}
+                  maxLength={120}
+                  required
+                />
               </label>
               <label>
                 Reporting currency
@@ -138,14 +150,21 @@ export default async function SettingsPage({
               </label>
               <label>
                 Timezone
-                <input name="timezone" defaultValue={organization.timezone} maxLength={80} required />
+                <input
+                  name="timezone"
+                  defaultValue={organization.timezone}
+                  maxLength={80}
+                  required
+                />
               </label>
               <button className="primary-button" type="submit">
                 Save workspace
               </button>
             </form>
           ) : (
-            <p className="blocking-note">Only the OWNER can edit workspace defaults.</p>
+            <p className="blocking-note">
+              Only the OWNER can edit workspace defaults.
+            </p>
           )}
         </section>
 
@@ -166,8 +185,16 @@ export default async function SettingsPage({
                 {isOwner && member.role !== 'OWNER' ? (
                   <div className="mt-4 flex flex-wrap gap-2">
                     <form action={changeMemberRole} className="flex gap-2">
-                      <input type="hidden" name="organizationId" value={organizationId} />
-                      <input type="hidden" name="userId" value={member.userId} />
+                      <input
+                        type="hidden"
+                        name="organizationId"
+                        value={organizationId}
+                      />
+                      <input
+                        type="hidden"
+                        name="userId"
+                        value={member.userId}
+                      />
                       <select name="role" defaultValue={member.role}>
                         <option value="OPERATOR">OPERATOR</option>
                         <option value="VIEWER">VIEWER</option>
@@ -177,8 +204,16 @@ export default async function SettingsPage({
                       </button>
                     </form>
                     <form action={removeMember}>
-                      <input type="hidden" name="organizationId" value={organizationId} />
-                      <input type="hidden" name="userId" value={member.userId} />
+                      <input
+                        type="hidden"
+                        name="organizationId"
+                        value={organizationId}
+                      />
+                      <input
+                        type="hidden"
+                        name="userId"
+                        value={member.userId}
+                      />
                       <button className="danger-button" type="submit">
                         Remove
                       </button>
@@ -209,7 +244,11 @@ export default async function SettingsPage({
                   </div>
                 ) : null}
                 <form action={createInvite} className="upload-form">
-                  <input type="hidden" name="organizationId" value={organizationId} />
+                  <input
+                    type="hidden"
+                    name="organizationId"
+                    value={organizationId}
+                  />
                   <label>
                     Invite email
                     <input name="email" type="email" maxLength={254} required />
@@ -218,7 +257,9 @@ export default async function SettingsPage({
                     Role
                     <select name="role" defaultValue="VIEWER">
                       <option value="VIEWER">VIEWER — read only</option>
-                      <option value="OPERATOR">OPERATOR — run evidence workflow</option>
+                      <option value="OPERATOR">
+                        OPERATOR — run evidence workflow
+                      </option>
                     </select>
                   </label>
                   <button className="primary-button" type="submit">
@@ -229,27 +270,33 @@ export default async function SettingsPage({
 
               <div className="border-t pt-6">
                 <h3>Add an existing Evalomics user</h3>
-              <p className="projection-note">
-                During beta, the person must sign in to Evalomics once before an
-                OWNER can add their email to this workspace.
-              </p>
-              <form action={addMember} className="upload-form">
-                <input type="hidden" name="organizationId" value={organizationId} />
-                <label>
-                  Member email
-                  <input name="email" type="email" maxLength={254} required />
-                </label>
-                <label>
-                  Role
-                  <select name="role" defaultValue="VIEWER">
-                    <option value="VIEWER">VIEWER — read only</option>
-                    <option value="OPERATOR">OPERATOR — run evidence workflow</option>
-                  </select>
-                </label>
-                <button className="primary-button" type="submit">
-                  Add member
-                </button>
-              </form>
+                <p className="projection-note">
+                  During beta, the person must sign in to Evalomics once before
+                  an OWNER can add their email to this workspace.
+                </p>
+                <form action={addMember} className="upload-form">
+                  <input
+                    type="hidden"
+                    name="organizationId"
+                    value={organizationId}
+                  />
+                  <label>
+                    Member email
+                    <input name="email" type="email" maxLength={254} required />
+                  </label>
+                  <label>
+                    Role
+                    <select name="role" defaultValue="VIEWER">
+                      <option value="VIEWER">VIEWER — read only</option>
+                      <option value="OPERATOR">
+                        OPERATOR — run evidence workflow
+                      </option>
+                    </select>
+                  </label>
+                  <button className="primary-button" type="submit">
+                    Add member
+                  </button>
+                </form>
               </div>
             </div>
           ) : null}
@@ -283,17 +330,27 @@ export default async function SettingsPage({
           </p>
           {isOwner ? (
             <form action={permanentlyDeleteWorkspace} className="upload-form">
-              <input type="hidden" name="organizationId" value={organizationId} />
+              <input
+                type="hidden"
+                name="organizationId"
+                value={organizationId}
+              />
               <label>
                 Type <strong>{organizationId}</strong> to confirm
-                <input name="confirmationOrganizationId" autoComplete="off" required />
+                <input
+                  name="confirmationOrganizationId"
+                  autoComplete="off"
+                  required
+                />
               </label>
               <button className="danger-button" type="submit">
                 Permanently delete workspace
               </button>
             </form>
           ) : (
-            <p className="blocking-note">Only the OWNER can delete the workspace.</p>
+            <p className="blocking-note">
+              Only the OWNER can delete the workspace.
+            </p>
           )}
         </section>
       </div>

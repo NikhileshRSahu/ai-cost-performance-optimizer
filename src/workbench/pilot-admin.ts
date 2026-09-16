@@ -2,11 +2,7 @@ import { desc, eq } from 'drizzle-orm';
 import type { PersistenceDatabase } from '../persistence/database.js';
 import { pilotInvoiceRequests } from '../persistence/schema.js';
 
-export type PilotInvoiceStatus =
-  | 'REQUESTED'
-  | 'ISSUED'
-  | 'PAID'
-  | 'CANCELLED';
+export type PilotInvoiceStatus = 'REQUESTED' | 'ISSUED' | 'PAID' | 'CANCELLED';
 
 export async function listPilotInvoiceRequests(
   db: PersistenceDatabase,

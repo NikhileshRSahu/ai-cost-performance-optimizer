@@ -59,8 +59,9 @@ test('public beta trust path is visible without authentication', async ({
   await expect(page.getByText('No guaranteed savings')).toBeVisible();
 });
 
-
-test('public CTA foregrounds remain readable on their backgrounds', async ({ page }) => {
+test('public CTA foregrounds remain readable on their backgrounds', async ({
+  page,
+}) => {
   await page.goto('/');
 
   const heroPrimary = page.getByRole('link', { name: 'Run the Work MRI' });

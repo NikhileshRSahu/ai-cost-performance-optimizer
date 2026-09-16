@@ -122,7 +122,9 @@ export async function removeMember(formData: FormData): Promise<never> {
   redirect('/o/' + organizationId + '/settings?memberRemoved=true');
 }
 
-export async function permanentlyDeleteWorkspace(formData: FormData): Promise<never> {
+export async function permanentlyDeleteWorkspace(
+  formData: FormData,
+): Promise<never> {
   const organizationId = text(formData, 'organizationId');
   const { session, databaseUrl } = await runtime();
   const database = createDatabase(databaseUrl);
@@ -140,7 +142,6 @@ export async function permanentlyDeleteWorkspace(formData: FormData): Promise<ne
   }
   redirect('/');
 }
-
 
 export async function createInvite(formData: FormData): Promise<never> {
   const organizationId = text(formData, 'organizationId');

@@ -4,7 +4,8 @@ import { supportRequests } from '../persistence/schema.js';
 
 function bounded(value: string, max: number): string {
   const v = value.trim();
-  if (v.length === 0 || v.length > max) throw new Error('INVALID_SUPPORT_REQUEST');
+  if (v.length === 0 || v.length > max)
+    throw new Error('INVALID_SUPPORT_REQUEST');
   return v;
 }
 
@@ -17,7 +18,9 @@ export async function createSupportRequest(input: {
   message: string;
 }): Promise<Readonly<{ id: string }>> {
   const category = bounded(input.category, 40).toUpperCase();
-  if (!['SUPPORT', 'BILLING', 'SECURITY', 'PRIVACY', 'BUG'].includes(category)) {
+  if (
+    !['SUPPORT', 'BILLING', 'SECURITY', 'PRIVACY', 'BUG'].includes(category)
+  ) {
     throw new Error('INVALID_SUPPORT_CATEGORY');
   }
   const id = randomUUID();

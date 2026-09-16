@@ -35,14 +35,21 @@ export async function createWorkspaceInvitation(input: {
   role: string;
   now?: Date;
 }): Promise<Readonly<{ id: string; token: string; expiresAt: string }>> {
-  const access = authorize(input.session, input.organizationId, 'MANAGE_MEMBERSHIP');
-  if (!access.allowed || access.role !== 'OWNER') throw new Error('WORKSPACE_OWNER_REQUIRED');
+  const access = authorize(
+    input.session,
+    input.organizationId,
+    'MANAGE_MEMBERSHIP',
+  );
+  if (!access.allowed || access.role !== 'OWNER')
+    throw new Error('WORKSPACE_OWNER_REQUIRED');
 
   const email = normalizeEmail(input.email);
   const role = assignableRole(input.role);
   const token = randomBytes(32).toString('base64url');
   const now = input.now ?? new Date();
-  const expires = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString();
+  const expires = new Date(
+    now.getTime() + 7 * 24 * 60 * 60 * 1000,
+  ).toISOString();
   const id = randomUUID();
 
   await input.db.insert(workspaceInvitations).values({
@@ -70,7 +77,12 @@ export async function acceptWorkspaceInvitation(input: {
     await input.db
       .select()
       .from(workspaceInvitations)
-      .where(and(eq(workspaceInvitations.tokenHash, tokenHash), eq(workspaceInvitations.status, 'PENDING')))
+      .where(
+        and(
+          eq(workspaceInvitations.tokenHash, tokenHash),
+          eq(workspaceInvitations.status, 'PENDING'),
+        ),
+      )
       .limit(1)
   ).at(0);
 
@@ -78,32 +90,46 @@ export async function acceptWorkspaceInvitation(input: {
 
   const now = input.now ?? new Date();
   if (new Date(invitation.expiresAt).getTime() <= now.getTime()) {
-    await input.db.update(workspaceInvitations).set({ status: 'EXPIRED' }).where(eq(workspaceInvitations.id, invitation.id));
+    await input.db
+      .update(workspaceInvitations)
+      .set({ status: 'EXPIRED' })
+      .where(eq(workspaceInvitations.id, invitation.id));
     throw new Error('INVITE_EXPIRED');
   }
 
   const user = (
-    await input.db.select({ id: users.id, email: users.email }).from(users).where(eq(users.id, input.session.userId)).limit(1)
+    await input.db
+      .select({ id: users.id, email: users.email })
+      .from(users)
+      .where(eq(users.id, input.session.userId))
+      .limit(1)
   ).at(0);
   if (user === undefined) throw new Error('USER_NOT_FOUND');
-  if (user.email.toLowerCase() !== invitation.email.toLowerCase()) throw new Error('INVITE_EMAIL_MISMATCH');
+  if (user.email.toLowerCase() !== invitation.email.toLowerCase())
+    throw new Error('INVITE_EMAIL_MISMATCH');
 
   const role = invitation.role === 'OPERATOR' ? 'OPERATOR' : 'VIEWER';
   await input.db.transaction(async (tx) => {
-    await tx.insert(memberships).values({
-      organizationId: invitation.organizationId,
-      userId: input.session.userId,
-      role,
-    }).onConflictDoUpdate({
-      target: [memberships.organizationId, memberships.userId],
-      set: { role },
-    });
+    await tx
+      .insert(memberships)
+      .values({
+        organizationId: invitation.organizationId,
+        userId: input.session.userId,
+        role,
+      })
+      .onConflictDoUpdate({
+        target: [memberships.organizationId, memberships.userId],
+        set: { role },
+      });
 
-    await tx.update(workspaceInvitations).set({
-      status: 'ACCEPTED',
-      acceptedByUserId: input.session.userId,
-      acceptedAt: now.toISOString(),
-    }).where(eq(workspaceInvitations.id, invitation.id));
+    await tx
+      .update(workspaceInvitations)
+      .set({
+        status: 'ACCEPTED',
+        acceptedByUserId: input.session.userId,
+        acceptedAt: now.toISOString(),
+      })
+      .where(eq(workspaceInvitations.id, invitation.id));
   });
 
   return Object.freeze({ organizationId: invitation.organizationId, role });

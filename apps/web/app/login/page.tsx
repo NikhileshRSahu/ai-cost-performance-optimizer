@@ -34,7 +34,9 @@ export default async function LoginPage({
 }>) {
   const { returnTo } = await searchParams;
   const callbackPath =
-    typeof returnTo === 'string' && returnTo.startsWith('/') && !returnTo.startsWith('//')
+    typeof returnTo === 'string' &&
+    returnTo.startsWith('/') &&
+    !returnTo.startsWith('//')
       ? returnTo
       : '/start';
   const requestHeaders = await headers();

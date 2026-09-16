@@ -159,7 +159,8 @@ export async function changeWorkspaceMemberRole(input: {
   ).at(0);
 
   if (existing === undefined) throw new Error('MEMBERSHIP_NOT_FOUND');
-  if (existing.role === 'OWNER') throw new Error('OWNER_ROLE_CANNOT_BE_CHANGED_HERE');
+  if (existing.role === 'OWNER')
+    throw new Error('OWNER_ROLE_CANNOT_BE_CHANGED_HERE');
 
   await input.db
     .update(memberships)

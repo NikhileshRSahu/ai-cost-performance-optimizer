@@ -48,13 +48,18 @@ export default async function SupportAdminPage({
             </div>
           ) : (
             requests.map((request) => (
-              <article key={request.id} className="rounded-2xl border border-slate-200 bg-white p-5">
+              <article
+                key={request.id}
+                className="rounded-2xl border border-slate-200 bg-white p-5"
+              >
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <p className="m-0 text-xs font-semibold uppercase tracking-[0.14em] text-emerald-700">
                       {request.category}
                     </p>
-                    <h2 className="mt-2 text-lg font-semibold">{request.subject}</h2>
+                    <h2 className="mt-2 text-lg font-semibold">
+                      {request.subject}
+                    </h2>
                     <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-600">
                       {request.message}
                     </p>
@@ -63,15 +68,25 @@ export default async function SupportAdminPage({
                     {request.status}
                   </span>
                 </div>
-                <form action={updateSupportStatus} className="mt-5 flex flex-wrap gap-2">
+                <form
+                  action={updateSupportStatus}
+                  className="mt-5 flex flex-wrap gap-2"
+                >
                   <input type="hidden" name="id" value={request.id} />
-                  <select name="status" defaultValue={request.status} className="min-h-10 rounded-lg border border-slate-200 px-3 text-sm">
+                  <select
+                    name="status"
+                    defaultValue={request.status}
+                    className="min-h-10 rounded-lg border border-slate-200 px-3 text-sm"
+                  >
                     <option value="OPEN">OPEN</option>
                     <option value="IN_PROGRESS">IN_PROGRESS</option>
                     <option value="RESOLVED">RESOLVED</option>
                     <option value="CLOSED">CLOSED</option>
                   </select>
-                  <button type="submit" className="min-h-10 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white">
+                  <button
+                    type="submit"
+                    className="min-h-10 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white"
+                  >
                     Update
                   </button>
                 </form>

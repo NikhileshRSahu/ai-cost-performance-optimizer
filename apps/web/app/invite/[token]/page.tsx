@@ -4,9 +4,12 @@ import { acceptInvite } from './action';
 
 const messages: Record<string, string> = {
   INVITE_NOT_FOUND: 'This invitation is invalid or has already been used.',
-  INVITE_EXPIRED: 'This invitation has expired. Ask the workspace owner for a new link.',
-  INVITE_EMAIL_MISMATCH: 'This invitation was issued to a different email address.',
-  USER_NOT_FOUND: 'Your Evalomics profile is not ready yet. Sign out and sign in again.',
+  INVITE_EXPIRED:
+    'This invitation has expired. Ask the workspace owner for a new link.',
+  INVITE_EMAIL_MISMATCH:
+    'This invitation was issued to a different email address.',
+  USER_NOT_FOUND:
+    'Your Evalomics profile is not ready yet. Sign out and sign in again.',
   INVITE_FAILED: 'This invitation could not be accepted.',
 };
 
@@ -35,11 +38,14 @@ export default async function InvitePage({
           Join this Evalomics workspace
         </h1>
         <p className="mt-4 text-sm leading-6 text-slate-600">
-          Accepting this invitation adds your signed-in Evalomics identity to the
-          workspace with the role chosen by its owner.
+          Accepting this invitation adds your signed-in Evalomics identity to
+          the workspace with the role chosen by its owner.
         </p>
         {error ? (
-          <p className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800" role="alert">
+          <p
+            className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800"
+            role="alert"
+          >
             {messages[error] ?? messages.INVITE_FAILED}
           </p>
         ) : null}

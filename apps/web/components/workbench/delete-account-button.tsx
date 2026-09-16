@@ -9,13 +9,22 @@ export function DeleteAccountButton() {
 
   return (
     <div>
-      {error ? <p className="blocking-note" role="alert">{error}</p> : null}
+      {error ? (
+        <p className="blocking-note" role="alert">
+          {error}
+        </p>
+      ) : null}
       <button
         type="button"
         className="danger-button"
         disabled={busy}
         onClick={async () => {
-          if (!window.confirm('Permanently delete your Evalomics account? Owned workspaces must be deleted first.')) return;
+          if (
+            !window.confirm(
+              'Permanently delete your Evalomics account? Owned workspaces must be deleted first.',
+            )
+          )
+            return;
           setBusy(true);
           setError(null);
           const result = await authClient.deleteUser({ callbackURL: '/' });

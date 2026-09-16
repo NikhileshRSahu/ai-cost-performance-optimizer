@@ -56,7 +56,9 @@ export default async function PilotRequestsAdminPage({
               >
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <h2 className="m-0 text-lg font-semibold">{request.companyName}</h2>
+                    <h2 className="m-0 text-lg font-semibold">
+                      {request.companyName}
+                    </h2>
                     <p className="m-0 mt-1 text-sm text-slate-500">
                       {request.contactEmail}
                     </p>
@@ -66,13 +68,19 @@ export default async function PilotRequestsAdminPage({
                   </div>
                   <div className="text-right">
                     <strong className="font-mono text-xl">
-                      {request.currency} {(request.amountCents / 100).toFixed(0)}
+                      {request.currency}{' '}
+                      {(request.amountCents / 100).toFixed(0)}
                     </strong>
-                    <p className="m-0 mt-1 text-xs text-slate-500">{request.status}</p>
+                    <p className="m-0 mt-1 text-xs text-slate-500">
+                      {request.status}
+                    </p>
                   </div>
                 </div>
 
-                <form action={updatePilotInvoiceStatus} className="mt-5 flex flex-wrap gap-2">
+                <form
+                  action={updatePilotInvoiceStatus}
+                  className="mt-5 flex flex-wrap gap-2"
+                >
                   <input type="hidden" name="id" value={request.id} />
                   <select
                     name="status"

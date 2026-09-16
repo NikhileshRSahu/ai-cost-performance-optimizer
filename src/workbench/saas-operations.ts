@@ -1,6 +1,9 @@
 import { desc, eq } from 'drizzle-orm';
 import type { PersistenceDatabase } from '../persistence/database.js';
-import { pilotInvoiceRequests, supportRequests } from '../persistence/schema.js';
+import {
+  pilotInvoiceRequests,
+  supportRequests,
+} from '../persistence/schema.js';
 
 export type OrganizationEntitlement = Readonly<{
   tier: 'FREE_BETA' | 'FOUNDING_AUDIT_PAID';

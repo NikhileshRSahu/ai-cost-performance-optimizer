@@ -147,8 +147,12 @@ describe('workspace settings', () => {
       confirmationOrganizationId: 'org-1',
     });
 
-    await expect(database.db.select().from(organizations)).resolves.toHaveLength(0);
-    await expect(database.db.select().from(memberships)).resolves.toHaveLength(0);
+    await expect(
+      database.db.select().from(organizations),
+    ).resolves.toHaveLength(0);
+    await expect(database.db.select().from(memberships)).resolves.toHaveLength(
+      0,
+    );
     await expect(database.db.select().from(users)).resolves.toHaveLength(2);
   });
 });
