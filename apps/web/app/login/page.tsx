@@ -12,6 +12,11 @@ export const metadata: Metadata = {
 };
 
 function authHostAllowed(host: string | null): boolean {
+  const vercelEnvironment = process.env.VERCEL_ENV?.toLowerCase();
+
+  if (vercelEnvironment === 'production') return true;
+  if (vercelEnvironment === 'preview') return false;
+
   if (host === null) return false;
   const normalized = host.split(':')[0]?.toLowerCase() ?? '';
   return (
