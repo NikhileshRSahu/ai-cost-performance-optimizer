@@ -61,7 +61,7 @@ export default function HomePage() {
             <h2 className="mt-4 text-[clamp(2.5rem,5vw,5rem)] font-semibold leading-[.94] tracking-[-.06em] text-slate-950">
               The interface becomes the evidence.
             </h2>
-            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-slate-500">
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-slate-600">
               Watch the Work MRI move from observed spend to one ranked change
               and a verification-ready decision surface.
             </p>
@@ -71,7 +71,7 @@ export default function HomePage() {
         <div className="overflow-hidden rounded-[24px] border border-white/10 bg-[#0b1119] shadow-[0_30px_90px_rgba(0,0,0,.35)]">
           <div className="flex items-center justify-between border-b border-white/[0.07] px-5 py-4">
             <div>
-              <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/30">
+              <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/70">
                 Work MRI
               </p>
               <p className="m-0 mt-1 text-sm font-semibold text-white/85">
@@ -149,13 +149,13 @@ export default function HomePage() {
 
       <section className="grid gap-10 lg:grid-cols-[.76fr_1.24fr] lg:items-start">
         <div className="max-w-xl">
-          <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+          <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-600">
             One operating loop
           </p>
           <h2 className="mt-4 max-w-[11ch] text-[clamp(2.7rem,5vw,5rem)] font-semibold leading-[.94] tracking-[-.06em] text-slate-950">
             From spend to a decision you can defend.
           </h2>
-          <p className="mt-5 max-w-lg text-base leading-7 text-slate-500">
+          <p className="mt-5 max-w-lg text-base leading-7 text-slate-600">
             No generic optimization feed. Evalomics advances one claim through
             evidence, testing, implementation, and proof.
           </p>
@@ -167,13 +167,13 @@ export default function HomePage() {
               key={title}
               className="grid gap-3 border-b border-slate-100 p-5 last:border-0 sm:grid-cols-[52px_120px_1fr] sm:items-center sm:p-6"
             >
-              <span className="font-mono text-[11px] font-semibold text-slate-400">
+              <span className="font-mono text-[11px] font-semibold text-slate-600">
                 {index}
               </span>
               <strong className="text-sm font-semibold text-slate-950">
                 {title}
               </strong>
-              <span className="text-sm leading-6 text-slate-500">{body}</span>
+              <span className="text-sm leading-6 text-slate-600">{body}</span>
             </div>
           ))}
         </div>
@@ -190,7 +190,7 @@ export default function HomePage() {
           </h2>
         </div>
         <div>
-          <p className="m-0 text-sm leading-6 text-slate-500">
+          <p className="m-0 text-sm leading-6 text-slate-600">
             Potential, Tested, and Verified remain separate states. Savings only
             become Verified after comparable post-change production evidence
             confirms the impact.
