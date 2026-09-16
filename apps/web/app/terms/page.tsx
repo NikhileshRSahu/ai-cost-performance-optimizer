@@ -2,8 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Terms | Evalomics',
-  description:
-    'Usage boundaries for the Evalomics free launch beta.',
+  description: 'Usage boundaries for the Evalomics free launch beta.',
 };
 
 export default function TermsPage() {

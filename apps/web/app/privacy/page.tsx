@@ -13,8 +13,8 @@ export default function PrivacyPage() {
         <p className="eyebrow">Launch beta privacy notice</p>
         <h1>Use the minimum evidence needed.</h1>
         <p className="lede">
-          Evalomics is designed around progressive access. The CSV-first launch beta
-          can provide useful analysis without provider admin credentials,
+          Evalomics is designed around progressive access. The CSV-first launch
+          beta can provide useful analysis without provider admin credentials,
           mailbox access, drive access, or raw prompt content.
         </p>
         <div className="evidence-note">

@@ -78,10 +78,7 @@ export default async function PilotPage({
         >
           Upload your first CSV
         </Link>
-        <Link
-          className="secondary-action"
-          href={'/o/' + organizationId}
-        >
+        <Link className="secondary-action" href={'/o/' + organizationId}>
           Open Work MRI
         </Link>
       </div>

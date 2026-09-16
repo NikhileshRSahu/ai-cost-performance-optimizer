@@ -77,7 +77,8 @@ export default function PricingPage() {
         <div className="mt-5 flex items-start gap-2.5 rounded-xl border border-white/10 bg-white/[0.035] p-4 text-xs leading-5 text-white/52">
           <ShieldCheck className="mt-0.5 size-4 shrink-0 text-emerald-200/70" />
           Evalomics does not require prompt content for the CSV workflow, and
-          Potential, Tested, and Verified savings remain separate evidence states.
+          Potential, Tested, and Verified savings remain separate evidence
+          states.
         </div>
       </section>
 
