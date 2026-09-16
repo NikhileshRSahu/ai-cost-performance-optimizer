@@ -2505,17 +2505,18 @@ samp,
   color: #334155 !important;
 }
 
-/* Light recovery/report surfaces must keep dark foregrounds inside the dark workbench. */
-.org-workbench .empty-state,
+/* Light report surfaces must keep dark foregrounds inside the dark workbench. */
+.org-workbench .report-cover,
 .org-workbench .report-section,
+.org-workbench .report-disclaimer,
 .org-workbench
-  :is(.empty-state, .report-section)
+  :is(.report-cover, .report-section, .report-disclaimer)
   :is(p, span, small, dt, dd, li, th, td, label, legend, summary, code) {
   color: #334155 !important;
 }
 
 .org-workbench
-  :is(.empty-state, .report-section)
+  :is(.report-cover, .report-section, .report-disclaimer)
   :is(h1, h2, h3, h4, strong, b) {
   color: #0f172a !important;
 }
