@@ -223,7 +223,10 @@ export function CostPerOutcomeCalculator() {
               ].map(([label, value, Icon]) => {
                 const MetricIcon = Icon as typeof Target;
                 return (
-                  <article key={label as string} className="min-w-0 bg-[#071019] p-5">
+                  <article
+                    key={label as string}
+                    className="min-w-0 bg-[#071019] p-5"
+                  >
                     <MetricIcon className="size-4 text-emerald-200/75" />
                     <p className="m-0 mt-6 text-[9px] font-semibold uppercase tracking-[0.13em] text-white/65">
                       {label as string}

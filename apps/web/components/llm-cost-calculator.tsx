@@ -110,7 +110,9 @@ export function LlmCostCalculator() {
   const [rateCurrency, setRateCurrency] = useState('USD');
   const [displayCurrency, setDisplayCurrency] = useState('USD');
   const [pricingPreset, setPricingPreset] = useState('manual');
-  const selectedPreset = providerPricingPresets.find((preset) => preset.id === pricingPreset) ?? null;
+  const selectedPreset =
+    providerPricingPresets.find((preset) => preset.id === pricingPreset) ??
+    null;
   const fx = useFxRate(rateCurrency, displayCurrency);
 
   const result = useMemo(
@@ -190,7 +192,9 @@ export function LlmCostCalculator() {
               onChange={(event) => {
                 const id = event.target.value;
                 setPricingPreset(id);
-                const preset = providerPricingPresets.find((item) => item.id === id);
+                const preset = providerPricingPresets.find(
+                  (item) => item.id === id,
+                );
                 if (preset !== undefined) {
                   setInputRate(preset.inputPerMillionUsd);
                   setOutputRate(preset.outputPerMillionUsd);
@@ -231,7 +235,10 @@ export function LlmCostCalculator() {
               onChange={(event) => setRequests(event.target.value)}
               aria-describedby="requests-help"
             />
-            <small id="requests-help" className="text-xs font-normal text-slate-500">
+            <small
+              id="requests-help"
+              className="text-xs font-normal text-slate-500"
+            >
               Whole requests, no commas.
             </small>
           </label>
@@ -341,7 +348,8 @@ export function LlmCostCalculator() {
 
         {result === null ? (
           <div className="p-6 text-sm leading-6 text-white/75">
-            Enter non-negative token counts and prices, with at least one request per month.
+            Enter non-negative token counts and prices, with at least one
+            request per month.
           </div>
         ) : displayResult === null ? (
           <div className="p-6 text-sm leading-6 text-white/75">
@@ -376,10 +384,22 @@ export function LlmCostCalculator() {
 
             <dl className="m-0 grid divide-y divide-white/[0.07] px-5 py-2 sm:px-6">
               {[
-                ['Monthly input tokens', result.monthlyInputTokens.toLocaleString('en-US')],
-                ['Monthly output tokens', result.monthlyOutputTokens.toLocaleString('en-US')],
-                ['Input cost', `${displayCurrency} ${formatDecimal(displayResult.inputCost, 2)}`],
-                ['Output cost', `${displayCurrency} ${formatDecimal(displayResult.outputCost, 2)}`],
+                [
+                  'Monthly input tokens',
+                  result.monthlyInputTokens.toLocaleString('en-US'),
+                ],
+                [
+                  'Monthly output tokens',
+                  result.monthlyOutputTokens.toLocaleString('en-US'),
+                ],
+                [
+                  'Input cost',
+                  `${displayCurrency} ${formatDecimal(displayResult.inputCost, 2)}`,
+                ],
+                [
+                  'Output cost',
+                  `${displayCurrency} ${formatDecimal(displayResult.outputCost, 2)}`,
+                ],
               ].map(([label, value]) => (
                 <div
                   key={label}

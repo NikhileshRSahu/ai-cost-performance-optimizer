@@ -62,7 +62,8 @@ export default function HomePage() {
           </div>
 
           <div className="border-b border-white/[0.07] px-5 py-3 text-[10px] leading-5 text-white/35">
-            Illustrative product walkthrough only. These numbers are synthetic and are not a customer result.
+            Illustrative product walkthrough only. These numbers are synthetic
+            and are not a customer result.
           </div>
 
           <div className="grid gap-2.5 p-4 sm:grid-cols-3 sm:p-5">

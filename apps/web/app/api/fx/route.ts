@@ -5,8 +5,12 @@ const SUPPORTED = new Set(['USD', 'EUR', 'GBP', 'INR']);
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
-  const base = (request.nextUrl.searchParams.get('base') ?? 'USD').toUpperCase();
-  const quote = (request.nextUrl.searchParams.get('quote') ?? 'USD').toUpperCase();
+  const base = (
+    request.nextUrl.searchParams.get('base') ?? 'USD'
+  ).toUpperCase();
+  const quote = (
+    request.nextUrl.searchParams.get('quote') ?? 'USD'
+  ).toUpperCase();
 
   if (!SUPPORTED.has(base) || !SUPPORTED.has(quote)) {
     return NextResponse.json(
@@ -61,9 +65,6 @@ export async function GET(request: NextRequest) {
       source: 'Frankfurter',
     });
   } catch {
-    return NextResponse.json(
-      { error: 'FX_UNAVAILABLE' },
-      { status: 503 },
-    );
+    return NextResponse.json({ error: 'FX_UNAVAILABLE' }, { status: 503 });
   }
 }

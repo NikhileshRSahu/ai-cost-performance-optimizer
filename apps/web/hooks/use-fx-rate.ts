@@ -3,7 +3,12 @@
 import { useEffect, useState } from 'react';
 
 export type FxState =
-  | Readonly<{ status: 'identity'; rate: '1'; asOf: string; source: 'identity' }>
+  | Readonly<{
+      status: 'identity';
+      rate: '1';
+      asOf: string;
+      source: 'identity';
+    }>
   | Readonly<{ status: 'loading' }>
   | Readonly<{ status: 'ready'; rate: string; asOf: string; source: string }>
   | Readonly<{ status: 'error' }>;
@@ -11,7 +16,12 @@ export type FxState =
 export function useFxRate(base: string, quote: string): FxState {
   const [state, setState] = useState<FxState>(() =>
     base === quote
-      ? { status: 'identity', rate: '1', asOf: new Date().toISOString(), source: 'identity' }
+      ? {
+          status: 'identity',
+          rate: '1',
+          asOf: new Date().toISOString(),
+          source: 'identity',
+        }
       : { status: 'loading' },
   );
 
@@ -50,7 +60,8 @@ export function useFxRate(base: string, quote: string): FxState {
         });
       })
       .catch((error: unknown) => {
-        if (error instanceof DOMException && error.name === 'AbortError') return;
+        if (error instanceof DOMException && error.name === 'AbortError')
+          return;
         setState({ status: 'error' });
       });
 

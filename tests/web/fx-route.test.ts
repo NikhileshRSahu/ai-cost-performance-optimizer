@@ -65,7 +65,10 @@ describe('FX reference endpoint', () => {
   });
 
   it('fails closed when the FX source is unavailable', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network down')));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockRejectedValue(new Error('network down')),
+    );
 
     const response = await GET(
       new NextRequest('http://localhost/api/fx?base=USD&quote=INR'),

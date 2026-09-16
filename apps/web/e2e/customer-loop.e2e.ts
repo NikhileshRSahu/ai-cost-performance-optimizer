@@ -170,7 +170,6 @@ test('hard customer journey reaches verified savings', async ({ page }) => {
   ).toBeVisible();
 });
 
-
 test('non-demo customer path reaches verified savings without demo provenance', async ({
   page,
 }) => {
@@ -182,7 +181,9 @@ test('non-demo customer path reaches verified savings without demo provenance', 
   }
 
   await page.goto('/o/journey-live-org');
-  await expect(page.locator('.state-badge.state-verified').first()).toBeVisible();
+  await expect(
+    page.locator('.state-badge.state-verified').first(),
+  ).toBeVisible();
   await expect(
     page.getByText('Synthetic demo data — not a customer result.'),
   ).toHaveCount(0);

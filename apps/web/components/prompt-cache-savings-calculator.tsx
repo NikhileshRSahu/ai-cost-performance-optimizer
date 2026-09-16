@@ -132,37 +132,78 @@ export function PromptCacheSavingsCalculator() {
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
             <span>Requests per month</span>
-            <input className={fieldClass} inputMode="numeric" value={requests} onChange={(e) => setRequests(e.target.value)} />
+            <input
+              className={fieldClass}
+              inputMode="numeric"
+              value={requests}
+              onChange={(e) => setRequests(e.target.value)}
+            />
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
             <span>Cacheable input tokens / request</span>
-            <input className={fieldClass} inputMode="numeric" value={cacheableTokens} onChange={(e) => setCacheableTokens(e.target.value)} />
+            <input
+              className={fieldClass}
+              inputMode="numeric"
+              value={cacheableTokens}
+              onChange={(e) => setCacheableTokens(e.target.value)}
+            />
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
             <span>Uncached input price / 1M tokens</span>
-            <input className={fieldClass} inputMode="decimal" value={uncachedRate} onChange={(e) => setUncachedRate(e.target.value)} />
+            <input
+              className={fieldClass}
+              inputMode="decimal"
+              value={uncachedRate}
+              onChange={(e) => setUncachedRate(e.target.value)}
+            />
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
             <span>Cached input price / 1M tokens</span>
-            <input className={fieldClass} inputMode="decimal" value={cachedRate} onChange={(e) => setCachedRate(e.target.value)} />
+            <input
+              className={fieldClass}
+              inputMode="decimal"
+              value={cachedRate}
+              onChange={(e) => setCachedRate(e.target.value)}
+            />
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
             <span>Cache hit rate (%)</span>
-            <input className={fieldClass} inputMode="decimal" value={hitRate} onChange={(e) => setHitRate(e.target.value)} />
+            <input
+              className={fieldClass}
+              inputMode="decimal"
+              value={hitRate}
+              onChange={(e) => setHitRate(e.target.value)}
+            />
             <small className="text-xs font-normal text-slate-500">
               Must be between 0 and 100.
             </small>
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
             <span>Currency of entered rates</span>
-            <select className={fieldClass} value={rateCurrency} onChange={(e) => setRateCurrency(e.target.value)}>
-              {currencies.map((currency) => <option key={currency} value={currency}>{currency}</option>)}
+            <select
+              className={fieldClass}
+              value={rateCurrency}
+              onChange={(e) => setRateCurrency(e.target.value)}
+            >
+              {currencies.map((currency) => (
+                <option key={currency} value={currency}>
+                  {currency}
+                </option>
+              ))}
             </select>
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-800 sm:col-span-2">
             <span>Display results in</span>
-            <select className={fieldClass} value={displayCurrency} onChange={(e) => setDisplayCurrency(e.target.value)}>
-              {currencies.map((currency) => <option key={currency} value={currency}>{currency}</option>)}
+            <select
+              className={fieldClass}
+              value={displayCurrency}
+              onChange={(e) => setDisplayCurrency(e.target.value)}
+            >
+              {currencies.map((currency) => (
+                <option key={currency} value={currency}>
+                  {currency}
+                </option>
+              ))}
             </select>
             <small className="text-xs font-normal leading-5 text-slate-500">
               {rateCurrency === displayCurrency
@@ -251,7 +292,9 @@ export function PromptCacheSavingsCalculator() {
                 </dd>
               </div>
               <div className="flex items-center justify-between gap-5 py-3.5 text-sm">
-                <dt className="text-white/65">Cacheable input tokens / month</dt>
+                <dt className="text-white/65">
+                  Cacheable input tokens / month
+                </dt>
                 <dd className="m-0 font-mono font-semibold text-white/90">
                   {converted.totalTokens.toLocaleString('en-US')}
                 </dd>
