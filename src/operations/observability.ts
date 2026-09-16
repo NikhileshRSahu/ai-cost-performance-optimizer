@@ -10,7 +10,8 @@ export type OperationalEvent = Readonly<{
     | 'telemetry_ingest'
     | 'telemetry_auth'
     | 'telemetry_rate_limit'
-    | 'pilot_invoice_request';
+    | 'pilot_invoice_request'
+    | 'support_request';
   requestId: string;
   route: string;
   status: OperationalStatus;
@@ -108,6 +109,9 @@ export function classifyOperationalAlert(
     return 'WARNING';
   }
   if (event.eventName === 'pilot_invoice_request' && event.status === 'OK') {
+    return 'WARNING';
+  }
+  if (event.eventName === 'support_request' && event.status === 'OK') {
     return 'WARNING';
   }
   return null;
