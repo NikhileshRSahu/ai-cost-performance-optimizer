@@ -8,9 +8,11 @@ import {
   pilotInvoiceRequests,
   ledgerEvents,
   recommendations,
+  supportRequests,
   usageRecords,
   verificationWindows,
   workloads,
+  workspaceInvitations,
 } from '../persistence/schema.js';
 import { requireOrganizationAccess } from '../persistence/tenant.js';
 import type { AuthenticatedSession } from './authz.js';
@@ -30,6 +32,8 @@ export type OrganizationEvidenceExport = Readonly<{
     verificationWindows: readonly unknown[];
     jobs: readonly unknown[];
     pilotInvoiceRequests: readonly unknown[];
+    workspaceInvitations: readonly unknown[];
+    supportRequests: readonly unknown[];
   }>;
 }>;
 
@@ -58,6 +62,8 @@ export async function exportOrganizationEvidence(
     verificationRows,
     jobRows,
     pilotInvoiceRows,
+    invitationRows,
+    supportRows,
   ] = await Promise.all([
     input.db
       .select()
@@ -99,6 +105,14 @@ export async function exportOrganizationEvidence(
       .select()
       .from(pilotInvoiceRequests)
       .where(eq(pilotInvoiceRequests.organizationId, input.organizationId)),
+    input.db
+      .select()
+      .from(workspaceInvitations)
+      .where(eq(workspaceInvitations.organizationId, input.organizationId)),
+    input.db
+      .select()
+      .from(supportRequests)
+      .where(eq(supportRequests.organizationId, input.organizationId)),
   ]);
 
   return Object.freeze({
@@ -116,6 +130,8 @@ export async function exportOrganizationEvidence(
       verificationWindows: Object.freeze(verificationRows),
       jobs: Object.freeze(jobRows),
       pilotInvoiceRequests: Object.freeze(pilotInvoiceRows),
+      workspaceInvitations: Object.freeze(invitationRows),
+      supportRequests: Object.freeze(supportRows),
     }),
   });
 }
