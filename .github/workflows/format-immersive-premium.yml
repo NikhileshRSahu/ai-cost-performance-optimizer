@@ -1,7 +1,7 @@
-name: Format immersive premium
+name: Format predeploy audit
 on:
   push:
-    branches: [feat/production-ready-premium-v1]
+    branches: [fix/product-hardening]
 permissions:
   contents: write
 jobs:
@@ -15,12 +15,12 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npx prettier --write apps/web/app/page.tsx apps/web/components/home/efficiency-story.tsx
+      - run: npx prettier --write "apps/web/app/o/[organizationId]/data/page.tsx" "apps/web/app/privacy/page.tsx" "apps/web/app/terms/page.tsx" "apps/web/e2e/public-beta.e2e.ts"
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if ! git diff --quiet; then
-            git add apps/web/app/page.tsx apps/web/components/home/efficiency-story.tsx
-            git commit -m "chore: format immersive premium UI"
+            git add apps/web
+            git commit -m "chore: format predeploy audit"
             git push
           fi
