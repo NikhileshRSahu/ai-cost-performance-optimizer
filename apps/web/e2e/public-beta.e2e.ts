@@ -10,6 +10,8 @@ test('public beta trust path is visible without authentication', async ({
       name: 'Find AI waste. Prove the fix.',
     }),
   ).toBeVisible();
+  await expect(page.getByText('Full launch beta · $0')).toBeVisible();
+  await expect(page.getByText('No credit card')).toBeVisible();
   await expect(page.getByText('No invented savings')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Research' })).toBeVisible();
   await expect(
@@ -40,7 +42,7 @@ test('public beta trust path is visible without authentication', async ({
   await expect(
     page.getByRole('heading', { name: 'Use the minimum evidence needed.' }),
   ).toBeVisible();
-  await expect(page.getByText('Legal-review status:')).toBeVisible();
+  await expect(page.getByText('Beta transparency:')).toBeVisible();
 
   await page.getByRole('link', { name: 'Security' }).click();
   await expect(
@@ -64,7 +66,9 @@ test('public CTA foregrounds remain readable on their backgrounds', async ({
 }) => {
   await page.goto('/');
 
-  const heroPrimary = page.getByRole('link', { name: 'Run the Work MRI' });
+  const heroPrimary = page.getByRole('link', {
+    name: 'Start free — run the Work MRI',
+  });
   await expect(heroPrimary).toBeVisible();
   const heroStyles = await heroPrimary.evaluate((element) => {
     const style = getComputedStyle(element);
@@ -72,17 +76,23 @@ test('public CTA foregrounds remain readable on their backgrounds', async ({
   });
   expect(heroStyles.color).not.toBe(heroStyles.backgroundColor);
 
+  const calculatorCta = page.getByRole('link', { name: 'Free cost calculator' });
+  await expect(calculatorCta).toBeVisible();
+  const calculatorStyles = await calculatorCta.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { color: style.color, backgroundColor: style.backgroundColor };
+  });
+  expect(calculatorStyles.color).not.toBe(calculatorStyles.backgroundColor);
+
   await page.goto('/pricing');
 
-  const freeCta = page.getByRole('link', { name: 'Run the free Work MRI' });
-  const paidCta = page.getByRole('link', { name: 'Start with your evidence' });
-
-  for (const cta of [freeCta, paidCta]) {
-    await expect(cta).toBeVisible();
-    const styles = await cta.evaluate((element) => {
-      const style = getComputedStyle(element);
-      return { color: style.color, backgroundColor: style.backgroundColor };
-    });
-    expect(styles.color).not.toBe(styles.backgroundColor);
-  }
+  const freeCta = page.getByRole('link', {
+    name: 'Start free with your data',
+  });
+  await expect(freeCta).toBeVisible();
+  const freeStyles = await freeCta.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { color: style.color, backgroundColor: style.backgroundColor };
+  });
+  expect(freeStyles.color).not.toBe(freeStyles.backgroundColor);
 });
