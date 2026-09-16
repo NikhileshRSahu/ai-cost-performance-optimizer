@@ -2,7 +2,6 @@
 -- PostgreSQL database dump
 --
 
-\restrict Wmoim2vAAtNWHfvetAdBmDobXlJgZYOge0xMmQBAukheFT5IOAyPKbtJetkTyUX
 
 -- Dumped from database version 16.15 (Debian 16.15-1.pgdg13+2)
 -- Dumped by pg_dump version 16.15 (Ubuntu 16.15-1.pgdg24.04+2)
@@ -184,5 +183,4 @@ ALTER TABLE ONLY auth.session
 -- PostgreSQL database dump complete
 --
 
-\unrestrict Wmoim2vAAtNWHfvetAdBmDobXlJgZYOge0xMmQBAukheFT5IOAyPKbtJetkTyUX
 
