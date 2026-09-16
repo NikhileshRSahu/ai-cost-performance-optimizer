@@ -18,11 +18,13 @@ export async function requireAdminAccess(
   const allowed = configuredAdminEmails();
   if (allowed.size === 0) throw new Error('ADMIN_ACCESS_NOT_CONFIGURED');
 
-  const [user] = await db
-    .select({ email: users.email })
-    .from(users)
-    .where(eq(users.id, userId))
-    .limit(1);
+  const user = (
+    await db
+      .select({ email: users.email })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1)
+  ).at(0);
 
   if (user === undefined || !allowed.has(user.email.toLowerCase())) {
     throw new Error('ADMIN_ACCESS_REQUIRED');
