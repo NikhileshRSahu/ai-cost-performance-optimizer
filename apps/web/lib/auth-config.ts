@@ -36,11 +36,11 @@ export function hasSelfHostedAuthConfiguration(
   const secret = nonEmpty(environment.BETTER_AUTH_SECRET);
   return Boolean(
     nonEmpty(environment.DATABASE_URL) &&
-      secret !== null &&
-      secret.length >= 32 &&
-      nonEmpty(environment.BETTER_AUTH_URL) &&
-      nonEmpty(environment.GOOGLE_CLIENT_ID) &&
-      nonEmpty(environment.GOOGLE_CLIENT_SECRET),
+    secret !== null &&
+    secret.length >= 32 &&
+    nonEmpty(environment.BETTER_AUTH_URL) &&
+    nonEmpty(environment.GOOGLE_CLIENT_ID) &&
+    nonEmpty(environment.GOOGLE_CLIENT_SECRET),
   );
 }
 

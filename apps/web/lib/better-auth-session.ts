@@ -13,7 +13,9 @@ export type BetterAuthSessionReader = (
   requestHeaders: Headers,
 ) => Promise<BetterAuthSession>;
 
-async function readSession(requestHeaders: Headers): Promise<BetterAuthSession> {
+async function readSession(
+  requestHeaders: Headers,
+): Promise<BetterAuthSession> {
   return getWebAuth().api.getSession({ headers: requestHeaders });
 }
 

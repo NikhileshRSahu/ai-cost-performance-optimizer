@@ -32,7 +32,8 @@ describe('self-hosted Better Auth configuration', () => {
   });
 
   it('reports configured only when the self-hosted server inputs exist', () => {
-    process.env.DATABASE_URL = 'postgresql://user:pass@localhost:5432/evalomics';
+    process.env.DATABASE_URL =
+      'postgresql://user:pass@localhost:5432/evalomics';
     process.env.BETTER_AUTH_SECRET = 'x'.repeat(32);
     process.env.BETTER_AUTH_URL = 'https://evalomics.vercel.app';
     process.env.GOOGLE_CLIENT_ID = 'google-client';
