@@ -71,9 +71,19 @@ export default async function ImportPage({
             Required fields: timestamps, provider, model, requests, total cost,
             and currency. Maximum 10 MiB and 50,000 rows.
           </p>
-          <Link className="text-link" href="/usage-template.csv">
-            Download CSV template
-          </Link>
+          <div className="flex flex-wrap gap-4">
+            <Link className="text-link" href="/usage-template.csv">
+              Download CSV template
+            </Link>
+            <Link className="text-link" href="/demo-usage.csv">
+              Download synthetic demo CSV
+            </Link>
+          </div>
+          <p className="mt-3 text-xs opacity-70">
+            New here? Download the synthetic demo, upload it below, and check
+            “This file is synthetic demo data” to see the workflow before using
+            customer evidence.
+          </p>
         </div>
         <form action={uploadUsageCsv} className="upload-form">
           <input type="hidden" name="organizationId" value={organizationId} />
