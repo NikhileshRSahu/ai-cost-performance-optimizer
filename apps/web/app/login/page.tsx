@@ -141,7 +141,7 @@ export default async function LoginPage({
                 key={title}
                 className="grid grid-cols-[36px_1fr] gap-3 border-b border-white/[0.07] pb-5 last:border-0"
               >
-                <span className="font-mono text-[10px] text-blue-300/45">
+                <span className="font-mono text-[10px] text-blue-200/90">
                   {n}
                 </span>
                 <div>
