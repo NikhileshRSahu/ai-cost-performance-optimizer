@@ -83,26 +83,6 @@ export function rewriteNeonResponseHeaders(
 }
 
 // Keep the OAuth callback on Evalomics so session cookies remain same-origin.
-function rewriteGoogleAuthorizationUrl(
-  value: string,
-  callbackUrl: string,
-): Readonly<{ value: string; changed: boolean }> {
-  try {
-    const candidate = new URL(value);
-    if (
-      candidate.hostname !== 'accounts.google.com' ||
-      !candidate.searchParams.has('redirect_uri')
-    ) {
-      return { value, changed: false };
-    }
-
-    candidate.searchParams.set('redirect_uri', callbackUrl);
-    return { value: candidate.toString(), changed: true };
-  } catch {
-    return { value, changed: false };
-  }
-}
-
 export async function rewriteNeonSocialSignInResponse(
   request: Request,
   response: Response,
