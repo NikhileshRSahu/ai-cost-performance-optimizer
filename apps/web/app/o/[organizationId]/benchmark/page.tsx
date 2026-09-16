@@ -15,10 +15,10 @@ export default async function BenchmarkPage({
   searchParams,
 }: Readonly<{
   params: Promise<{ organizationId: string }>;
-  searchParams: Promise<{ workloadId?: string }>;
+  searchParams: Promise<{ workloadId?: string; error?: string }>;
 }>) {
   const { organizationId } = await params;
-  const { workloadId: selectedId } = await searchParams;
+  const { workloadId: selectedId, error } = await searchParams;
   const session = await resolveRuntimeSession();
   const databaseUrl = process.env.DATABASE_URL;
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
@@ -55,6 +55,12 @@ export default async function BenchmarkPage({
         </div>
         <span className="trust-chip">Same cases · same evaluator</span>
       </header>
+
+      {error !== undefined ? (
+        <div className="blocking-note import-error-note" role="alert">
+          {error}
+        </div>
+      ) : null}
 
       {selected === undefined ? (
         <section className="workflow-card empty-state">
