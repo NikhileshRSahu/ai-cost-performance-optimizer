@@ -2492,9 +2492,8 @@ samp,
   color: #0b1017 !important;
 }
 
-.org-workbench .recovery-primary-action {
-  background: #f8fafc !important;
-  color: #0b1017 !important;
+.org-workbench .recovery-state .primary-action {
+  color: #ffffff !important;
 }
 
 .org-workbench .mri-panel,
