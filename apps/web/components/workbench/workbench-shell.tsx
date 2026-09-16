@@ -22,10 +22,10 @@ import { cn } from '../../lib/utils';
 
 const journey = [
   { slug: '', label: 'Overview', icon: Activity },
-  { slug: '/import', label: 'Evidence', icon: Database },
-  { slug: '/workloads', label: 'Constraints', icon: BrainCircuit },
-  { slug: '/benchmark', label: 'Test', icon: FlaskConical },
-  { slug: '/proof', label: 'Verify', icon: ShieldCheck },
+  { slug: '/import', label: 'Data', icon: Database },
+  { slug: '/workloads', label: 'Safety', icon: BrainCircuit },
+  { slug: '/benchmark', label: 'Tests', icon: FlaskConical },
+  { slug: '/proof', label: 'Savings', icon: ShieldCheck },
 ] as const;
 
 const utility = [
