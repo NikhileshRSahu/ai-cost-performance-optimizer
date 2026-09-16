@@ -76,7 +76,9 @@ test('public CTA foregrounds remain readable on their backgrounds', async ({
   });
   expect(heroStyles.color).not.toBe(heroStyles.backgroundColor);
 
-  const calculatorCta = page.getByRole('link', { name: 'Free cost calculator' });
+  const calculatorCta = page.getByRole('link', {
+    name: 'Free cost calculator',
+  });
   await expect(calculatorCta).toBeVisible();
   const calculatorStyles = await calculatorCta.evaluate((element) => {
     const style = getComputedStyle(element);
