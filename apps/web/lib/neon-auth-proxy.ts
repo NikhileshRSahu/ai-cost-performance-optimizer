@@ -143,45 +143,56 @@ export async function rewriteNeonSocialSignInResponse(
   const path = incoming.pathname.replace(/\/+$/, '');
   if (path !== '/api/auth/sign-in/social' || !response.ok) return response;
 
-  const callbackUrl = `${incoming.origin}/api/auth/callback/google`;
+  const appCallback = `${incoming.origin}/api/auth/callback/google`;
+  const neonCallback = `${neonAuthBaseUrl()}/callback/google`;
   const headers = rewriteNeonResponseHeaders(response.headers, incoming.origin);
 
   let changed = false;
+
   const location = headers.get('location');
   if (location !== null) {
-    const rewritten = rewriteGoogleAuthorizationUrl(location, callbackUrl);
-    if (rewritten.changed) {
-      headers.set('location', rewritten.value);
+    const rewrittenLocation = location
+      .split(neonCallback)
+      .join(appCallback)
+      .split(encodeURIComponent(neonCallback))
+      .join(encodeURIComponent(appCallback));
+
+    if (rewrittenLocation !== location) {
+      headers.set('location', rewrittenLocation);
       changed = true;
     }
   }
 
-  if (!response.headers.get('content-type')?.includes('application/json')) {
-    if (changed) headers.set('x-evalomics-auth-rewrite', 'google-callback');
-    return new Response(response.body, {
-      status: response.status,
-      statusText: response.statusText,
-      headers,
-    });
-  }
-
-  let payload: unknown;
+  let bodyText: string;
   try {
-    payload = await response.clone().json();
+    bodyText = await response.clone().text();
   } catch {
     return response;
   }
 
-  const rewrittenPayload = rewriteGoogleAuthorizationUrls(payload, callbackUrl);
-  changed = changed || rewrittenPayload.changed;
+  const rewrittenBody = bodyText
+    .split(neonCallback)
+    .join(appCallback)
+    .split(encodeURIComponent(neonCallback))
+    .join(encodeURIComponent(appCallback));
 
-  if (!changed) return response;
+  changed = changed || rewrittenBody !== bodyText;
+
+  if (!changed) {
+    console.warn('NEON_AUTH_CALLBACK_REWRITE_MISSED', {
+      path,
+      status: response.status,
+      contentType: response.headers.get('content-type'),
+      bodyLength: bodyText.length,
+    });
+    return response;
+  }
 
   headers.set('x-evalomics-auth-rewrite', 'google-callback');
   headers.delete('content-length');
   headers.delete('content-encoding');
 
-  return new Response(JSON.stringify(rewrittenPayload.value), {
+  return new Response(rewrittenBody, {
     status: response.status,
     statusText: response.statusText,
     headers,
