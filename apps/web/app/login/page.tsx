@@ -50,7 +50,7 @@ export default async function LoginPage({
         <div>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 no-underline hover:text-slate-900"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 no-underline hover:text-slate-900"
           >
             <ArrowLeft className="size-3.5" /> Back to Evalomics
           </Link>
@@ -61,7 +61,7 @@ export default async function LoginPage({
             <h1 className="mt-4 text-[clamp(3rem,6vw,5.3rem)] font-semibold leading-[.92] tracking-[-.065em] text-slate-950">
               Start with real evidence.
             </h1>
-            <p className="mt-6 text-base leading-7 text-slate-500">
+            <p className="mt-6 text-base leading-7 text-slate-600">
               Sign in, create your free workspace, and upload one usage window.
               The complete launch-beta workflow is $0 and requires no credit
               card. Evalomics will diagnose the strongest supported optimization
@@ -89,7 +89,7 @@ export default async function LoginPage({
           </div>
         </div>
 
-        <div className="mt-12 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-medium text-slate-400">
+        <div className="mt-12 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-medium text-slate-600">
           <span className="inline-flex items-center gap-1.5">
             <Check className="size-3" /> Full beta · free
           </span>
@@ -111,7 +111,7 @@ export default async function LoginPage({
       <section className="relative flex items-center bg-[#070a0f] p-7 text-white sm:p-10 lg:p-12">
         <div>
           <ShieldCheck className="size-5 text-emerald-200/70" />
-          <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/30">
+          <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/70">
             After sign-in
           </p>
           <div className="mt-6 grid gap-5">
@@ -148,7 +148,7 @@ export default async function LoginPage({
                   <p className="m-0 text-sm font-semibold text-white/85">
                     {title}
                   </p>
-                  <p className="m-0 mt-1 text-xs leading-5 text-white/40">
+                  <p className="m-0 mt-1 text-xs leading-5 text-white/70">
                     {body}
                   </p>
                 </div>
