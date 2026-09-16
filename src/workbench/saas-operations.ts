@@ -14,15 +14,6 @@ export async function resolveOrganizationEntitlement(
   db: PersistenceDatabase,
   organizationId: string,
 ): Promise<OrganizationEntitlement> {
-  const paid = (
-    await db
-      .select({ id: pilotInvoiceRequests.id })
-      .from(pilotInvoiceRequests)
-      .where(eq(pilotInvoiceRequests.organizationId, organizationId))
-      .orderBy(desc(pilotInvoiceRequests.createdAt))
-      .limit(1)
-  ).at(0);
-
   const latest = (
     await db
       .select({ status: pilotInvoiceRequests.status })
@@ -32,7 +23,7 @@ export async function resolveOrganizationEntitlement(
       .limit(1)
   ).at(0);
 
-  const paidAudit = paid !== undefined && latest?.status === 'PAID';
+  const paidAudit = latest?.status === 'PAID';
   return Object.freeze({
     tier: paidAudit ? 'FOUNDING_AUDIT_PAID' : 'FREE_BETA',
     paidAudit,
