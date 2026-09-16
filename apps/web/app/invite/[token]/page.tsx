@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { readBetterAuthIdentity } from '../../lib/better-auth-session';
+import { readBetterAuthIdentity } from '../../../lib/better-auth-session';
 import { acceptInvite } from './action';
 
 const messages: Record<string, string> = {
