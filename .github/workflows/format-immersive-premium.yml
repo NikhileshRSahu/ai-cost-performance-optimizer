@@ -1,7 +1,7 @@
-name: Format launch beta
+name: Format immersive premium
 on:
   push:
-    branches: [fix/product-hardening]
+    branches: [feat/production-ready-premium-v1]
 permissions:
   contents: write
 jobs:
@@ -15,12 +15,12 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npx prettier --write "apps/web/app/o/[organizationId]/pilot/page.tsx" "apps/web/app/pricing/page.tsx" "apps/web/app/privacy/page.tsx" "apps/web/app/terms/page.tsx" "tests/persistence/workspace-invitations.db.test.ts" "apps/web/app/o/[organizationId]/import/page.tsx" "apps/web/components/site-chrome.tsx" "apps/web/app/o/[organizationId]/settings/action.ts" "apps/web/app/o/[organizationId]/settings/page.tsx" "apps/web/app/login/page.tsx" "apps/web/app/page.tsx"
+      - run: npx prettier --write apps/web/app/page.tsx apps/web/components/home/efficiency-story.tsx
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if ! git diff --quiet; then
-            git add apps/web tests
-            git commit -m "chore: format launch beta"
+            git add apps/web/app/page.tsx apps/web/components/home/efficiency-story.tsx
+            git commit -m "chore: format immersive premium UI"
             git push
           fi
