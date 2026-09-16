@@ -2,6 +2,7 @@ import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
 import { organizations } from '../../../../../../src/persistence/schema';
+import { listWorkspaceInvitations } from '../../../../../../src/workbench/workspace-invitations';
 import { listWorkspaceMembers } from '../../../../../../src/workbench/workspace-settings';
 import { DeleteAccountButton } from '../../../../components/workbench/delete-account-button';
 import { requireOrganizationContext } from '../../../../lib/organization-context';
@@ -12,6 +13,7 @@ import {
   changeMemberRole,
   permanentlyDeleteWorkspace,
   removeMember,
+  revokeInvite,
   saveWorkspaceProfile,
 } from './action';
 
@@ -34,6 +36,7 @@ const errorMessages: Record<string, string> = {
   INVALID_WORKSPACE_SETTING: 'One of the workspace settings is invalid.',
   INVALID_INVITE_EMAIL: 'Enter a valid invitation email.',
   INVALID_INVITE_ROLE: 'Choose OPERATOR or VIEWER for the invitation.',
+  INVITE_NOT_PENDING: 'That invitation is no longer pending.',
   UNKNOWN: 'The requested workspace change could not be completed.',
 };
 
@@ -50,6 +53,8 @@ export default async function SettingsPage({
     error?: string;
     inviteToken?: string;
     inviteId?: string;
+    inviteRevoked?: string;
+    onboarding?: string;
   }>;
 }>) {
   const { organizationId } = await params;
@@ -87,6 +92,13 @@ export default async function SettingsPage({
       organizationId,
     });
     const isOwner = context.role === 'OWNER';
+    const invitations = isOwner
+      ? await listWorkspaceInvitations({
+          db: database.db,
+          session,
+          organizationId,
+        })
+      : [];
 
     return (
       <div className="workflow-page">
@@ -102,6 +114,14 @@ export default async function SettingsPage({
           </div>
         </header>
 
+        {query.onboarding === 'true' ? (
+          <div className="evidence-note" role="status">
+            <strong>Finish workspace setup.</strong> Confirm your company name,
+            reporting currency, and timezone before importing production
+            evidence.
+          </div>
+        ) : null}
+
         {query.error ? (
           <div className="blocking-note" role="alert">
             {errorMessages[query.error] ?? errorMessages.UNKNOWN}
@@ -110,7 +130,8 @@ export default async function SettingsPage({
         {query.saved === 'true' ||
         query.memberAdded === 'true' ||
         query.memberUpdated === 'true' ||
-        query.memberRemoved === 'true' ? (
+        query.memberRemoved === 'true' ||
+        query.inviteRevoked === 'true' ? (
           <div className="success-note" role="status">
             Workspace settings updated.
           </div>
@@ -266,6 +287,40 @@ export default async function SettingsPage({
                     Generate invite link
                   </button>
                 </form>
+
+                {invitations.length > 0 ? (
+                  <div className="mt-6 grid gap-2">
+                    <p className="eyebrow">Invitation history</p>
+                    {invitations.map((invite) => (
+                      <article key={invite.id} className="mri-action">
+                        <div>
+                          <strong>{invite.email}</strong>
+                          <p className="m-0 mt-1 text-xs opacity-70">
+                            {invite.role} · {invite.status} · expires{' '}
+                            {new Date(invite.expiresAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                        {invite.status === 'PENDING' ? (
+                          <form action={revokeInvite} className="mt-3">
+                            <input
+                              type="hidden"
+                              name="organizationId"
+                              value={organizationId}
+                            />
+                            <input
+                              type="hidden"
+                              name="invitationId"
+                              value={invite.id}
+                            />
+                            <button className="danger-button" type="submit">
+                              Revoke invite
+                            </button>
+                          </form>
+                        ) : null}
+                      </article>
+                    ))}
+                  </div>
+                ) : null}
               </div>
 
               <div className="border-t pt-6">
