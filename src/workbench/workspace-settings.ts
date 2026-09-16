@@ -237,3 +237,55 @@ export async function deleteWorkspace(input: {
 
   if (deleted.length !== 1) throw new Error('ORGANIZATION_NOT_FOUND');
 }
+
+
+export async function transferWorkspaceOwnership(input: {
+  db: PersistenceDatabase;
+  session: AuthenticatedSession;
+  organizationId: string;
+  targetUserId: string;
+}): Promise<void> {
+  requireOwner(input.session, input.organizationId);
+
+  if (input.targetUserId === input.session.userId) {
+    throw new Error('TARGET_ALREADY_OWNER');
+  }
+
+  await input.db.transaction(async (tx) => {
+    const target = (
+      await tx
+        .select({ role: memberships.role })
+        .from(memberships)
+        .where(
+          and(
+            eq(memberships.organizationId, input.organizationId),
+            eq(memberships.userId, input.targetUserId),
+          ),
+        )
+        .limit(1)
+    ).at(0);
+
+    if (target === undefined) throw new Error('MEMBERSHIP_NOT_FOUND');
+    if (target.role === 'OWNER') throw new Error('TARGET_ALREADY_OWNER');
+
+    await tx
+      .update(memberships)
+      .set({ role: 'OWNER' })
+      .where(
+        and(
+          eq(memberships.organizationId, input.organizationId),
+          eq(memberships.userId, input.targetUserId),
+        ),
+      );
+
+    await tx
+      .update(memberships)
+      .set({ role: 'OPERATOR' })
+      .where(
+        and(
+          eq(memberships.organizationId, input.organizationId),
+          eq(memberships.userId, input.session.userId),
+        ),
+      );
+  });
+}
