@@ -39,8 +39,10 @@ body {
   min-height: 100vh;
 }
 
-a {
-  color: inherit;
+@layer base {
+  a {
+    color: inherit;
+  }
 }
 
 .skip-link {
