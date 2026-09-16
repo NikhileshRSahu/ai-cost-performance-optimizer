@@ -24,11 +24,11 @@ export default function LlmCostCalculatorPage() {
           className="mt-4 !text-[clamp(3.2rem,7vw,6.4rem)] !leading-[.9] !tracking-[-.07em] text-slate-950"
         >
           LLM cost,
-          <span className="block text-slate-400">
+          <span className="block text-slate-600">
             without hidden assumptions.
           </span>
         </h1>
-        <p className="mt-7 max-w-2xl text-base leading-7 text-slate-500">
+        <p className="mt-7 max-w-2xl text-base leading-7 text-slate-600">
           Enter your real request volume, token averages, and token prices, or
           start from a dated first-party provider preset. Keep the billing
           currency separate from the display currency: when they differ,
@@ -45,7 +45,7 @@ export default function LlmCostCalculatorPage() {
           </p>
           <h2 className="mt-3 !text-[clamp(2rem,4vw,3.5rem)] !leading-[.98] !tracking-[-.05em] text-slate-950">
             The Work MRI answers:
-            <span className="block text-slate-400">
+            <span className="block text-slate-600">
               “what should I change?”
             </span>
           </h2>
@@ -77,7 +77,7 @@ export default function LlmCostCalculatorPage() {
       </section>
 
       <div className="flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
-        <ShieldCheck className="mt-1 size-4 shrink-0 text-slate-500" />
+        <ShieldCheck className="mt-1 size-4 shrink-0 text-slate-600" />
         <p className="m-0">
           <strong className="text-slate-900">Calculation boundary:</strong>{' '}
           inference cost only from the values you enter. Tool calls, vector
