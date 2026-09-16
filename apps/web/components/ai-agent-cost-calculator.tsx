@@ -1,5 +1,6 @@
 'use client';
 
+import { Bot, CircleDollarSign, Wrench } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import {
   add,
@@ -10,6 +11,11 @@ import {
   rational,
   type Rational,
 } from '../../../src/economics/exact';
+import { useFxRate } from '../hooks/use-fx-rate';
+
+const currencies = ['USD', 'EUR', 'GBP', 'INR'] as const;
+const fieldClass =
+  'min-h-12 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm font-semibold text-slate-950 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100';
 
 function parseCount(value: string): bigint | null {
   if (!/^(0|[1-9]\d{0,17})$/.test(value)) return null;
@@ -33,7 +39,9 @@ export function AiAgentCostCalculator() {
   const [inputRate, setInputRate] = useState('1');
   const [outputRate, setOutputRate] = useState('4');
   const [toolCostPerRun, setToolCostPerRun] = useState('0');
-  const [currency, setCurrency] = useState('USD');
+  const [rateCurrency, setRateCurrency] = useState('USD');
+  const [displayCurrency, setDisplayCurrency] = useState('USD');
+  const fx = useFxRate(rateCurrency, displayCurrency);
 
   const result = useMemo(() => {
     const runCount = parseCount(runs);
@@ -88,152 +96,175 @@ export function AiAgentCostCalculator() {
     toolCostPerRun,
   ]);
 
+  const fxRate = useMemo(() => {
+    if (fx.status !== 'ready' && fx.status !== 'identity') return null;
+    return parseNonNegative(fx.rate);
+  }, [fx]);
+
+  const converted = useMemo(() => {
+    if (result === null || fxRate === null) return null;
+    return {
+      ...result,
+      modelCost: multiply(result.modelCost, fxRate),
+      monthlyToolCost: multiply(result.monthlyToolCost, fxRate),
+      monthlyCost: multiply(result.monthlyCost, fxRate),
+      costPerRun: multiply(result.costPerRun, fxRate),
+      annualCost: multiply(result.annualCost, fxRate),
+    };
+  }, [result, fxRate]);
+
   return (
-    <div className="calculator-shell">
+    <section className="grid gap-5 lg:grid-cols-[.94fr_1.06fr] lg:items-start">
       <form
-        className="calculator-form"
-        onSubmit={(event) => {
-          event.preventDefault();
-        }}
+        className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_24px_70px_rgba(15,23,42,.055)] sm:p-6"
+        onSubmit={(event) => event.preventDefault()}
       >
-        <label>
-          <span>Agent runs per month</span>
-          <input
-            inputMode="numeric"
-            value={runs}
-            onChange={(event) => {
-              setRuns(event.target.value);
-            }}
-          />
-        </label>
-        <label>
-          <span>Model calls per agent run</span>
-          <input
-            inputMode="numeric"
-            value={callsPerRun}
-            onChange={(event) => {
-              setCallsPerRun(event.target.value);
-            }}
-          />
-        </label>
-        <label>
-          <span>Input tokens per model call</span>
-          <input
-            inputMode="numeric"
-            value={inputTokens}
-            onChange={(event) => {
-              setInputTokens(event.target.value);
-            }}
-          />
-        </label>
-        <label>
-          <span>Output tokens per model call</span>
-          <input
-            inputMode="numeric"
-            value={outputTokens}
-            onChange={(event) => {
-              setOutputTokens(event.target.value);
-            }}
-          />
-        </label>
-        <label>
-          <span>Input price per 1M tokens</span>
-          <input
-            inputMode="decimal"
-            value={inputRate}
-            onChange={(event) => {
-              setInputRate(event.target.value);
-            }}
-          />
-        </label>
-        <label>
-          <span>Output price per 1M tokens</span>
-          <input
-            inputMode="decimal"
-            value={outputRate}
-            onChange={(event) => {
-              setOutputRate(event.target.value);
-            }}
-          />
-        </label>
-        <label>
-          <span>Other tool cost per run</span>
-          <input
-            inputMode="decimal"
-            value={toolCostPerRun}
-            onChange={(event) => {
-              setToolCostPerRun(event.target.value);
-            }}
-          />
-        </label>
-        <label>
-          <span>Display currency</span>
-          <select
-            value={currency}
-            onChange={(event) => {
-              setCurrency(event.target.value);
-            }}
-          >
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-            <option value="GBP">GBP</option>
-            <option value="INR">INR</option>
-          </select>
-          <small>No FX conversion is performed.</small>
-        </label>
+        <div className="mb-6 flex items-center justify-between gap-4 border-b border-slate-100 pb-5">
+          <div>
+            <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-700">
+              Agent workload inputs
+            </p>
+            <h2 className="mt-1 text-lg font-semibold tracking-[-0.025em] text-slate-950">
+              Model calls plus tool cost
+            </h2>
+          </div>
+          <div className="grid size-10 place-items-center rounded-xl bg-slate-950 text-white">
+            <Bot className="size-4" />
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+            <span>Agent runs per month</span>
+            <input className={fieldClass} inputMode="numeric" value={runs} onChange={(e) => setRuns(e.target.value)} />
+          </label>
+          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+            <span>Model calls per agent run</span>
+            <input className={fieldClass} inputMode="numeric" value={callsPerRun} onChange={(e) => setCallsPerRun(e.target.value)} />
+          </label>
+          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+            <span>Input tokens per model call</span>
+            <input className={fieldClass} inputMode="numeric" value={inputTokens} onChange={(e) => setInputTokens(e.target.value)} />
+          </label>
+          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+            <span>Output tokens per model call</span>
+            <input className={fieldClass} inputMode="numeric" value={outputTokens} onChange={(e) => setOutputTokens(e.target.value)} />
+          </label>
+          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+            <span>Input price / 1M tokens</span>
+            <input className={fieldClass} inputMode="decimal" value={inputRate} onChange={(e) => setInputRate(e.target.value)} />
+          </label>
+          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+            <span>Output price / 1M tokens</span>
+            <input className={fieldClass} inputMode="decimal" value={outputRate} onChange={(e) => setOutputRate(e.target.value)} />
+          </label>
+          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+            <span>Other tool cost per run</span>
+            <input className={fieldClass} inputMode="decimal" value={toolCostPerRun} onChange={(e) => setToolCostPerRun(e.target.value)} />
+          </label>
+          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+            <span>Currency of entered rates</span>
+            <select className={fieldClass} value={rateCurrency} onChange={(e) => setRateCurrency(e.target.value)}>
+              {currencies.map((currency) => <option key={currency} value={currency}>{currency}</option>)}
+            </select>
+          </label>
+          <label className="grid gap-2 text-sm font-semibold text-slate-800 sm:col-span-2">
+            <span>Display results in</span>
+            <select className={fieldClass} value={displayCurrency} onChange={(e) => setDisplayCurrency(e.target.value)}>
+              {currencies.map((currency) => <option key={currency} value={currency}>{currency}</option>)}
+            </select>
+            <small className="text-xs font-normal leading-5 text-slate-500">
+              {rateCurrency === displayCurrency
+                ? 'No FX conversion is needed.'
+                : fx.status === 'ready'
+                  ? `1 ${rateCurrency} = ${fx.rate} ${displayCurrency} · ${fx.source} · ${fx.asOf}`
+                  : fx.status === 'error'
+                    ? 'FX rate is temporarily unavailable. Converted results are withheld.'
+                    : 'Loading reference FX rate…'}
+            </small>
+          </label>
+        </div>
       </form>
 
-      <section className="calculator-results" aria-live="polite">
-        {result === null ? (
-          <p>
-            Enter at least one agent run and non-negative token, price, and
-            tool-cost values.
+      <section
+        className="overflow-hidden rounded-[24px] border border-white/10 bg-[#071019] text-white shadow-[0_30px_90px_rgba(15,23,42,.16)]"
+        aria-live="polite"
+      >
+        <div className="border-b border-white/[0.07] px-5 py-4 sm:px-6">
+          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-200/70">
+            Agent economics
           </p>
+          <p className="m-0 mt-1 text-sm text-white/70">
+            Model inference and entered tool costs only
+          </p>
+        </div>
+
+        {result === null ? (
+          <div className="p-6 text-sm leading-6 text-white/75">
+            Enter at least one agent run and non-negative token, price, and tool-cost values.
+          </div>
+        ) : converted === null ? (
+          <div className="p-6 text-sm leading-6 text-white/75">
+            {fx.status === 'error'
+              ? 'Currency conversion is unavailable, so converted totals are intentionally withheld.'
+              : 'Loading currency conversion…'}
+          </div>
         ) : (
           <>
-            <div className="metrics-grid">
-              <article className="metric-card">
-                <span className="metric-label">
+            <div className="grid gap-px bg-white/[0.07] sm:grid-cols-3">
+              <article className="min-w-0 bg-[#071019] p-5">
+                <CircleDollarSign className="size-4 text-emerald-200/75" />
+                <p className="m-0 mt-6 text-[9px] font-semibold uppercase tracking-[0.13em] text-white/65">
                   Estimated monthly agent cost
-                </span>
-                <strong className="metric-value">
-                  {currency} {formatDecimal(result.monthlyCost, 2)}
+                </p>
+                <strong className="mt-2 block font-mono text-[clamp(1.45rem,2.1vw,2rem)] font-medium leading-none tracking-[-0.045em] text-white">
+                  {displayCurrency} {formatDecimal(converted.monthlyCost, 2)}
                 </strong>
               </article>
-              <article className="metric-card">
-                <span className="metric-label">Cost per agent run</span>
-                <strong className="metric-value">
-                  {currency} {formatDecimal(result.costPerRun, 4)}
+              <article className="min-w-0 bg-[#071019] p-5">
+                <Bot className="size-4 text-emerald-200/75" />
+                <p className="m-0 mt-6 text-[9px] font-semibold uppercase tracking-[0.13em] text-white/65">
+                  Cost per agent run
+                </p>
+                <strong className="mt-2 block font-mono text-[clamp(1.45rem,2.1vw,2rem)] font-medium leading-none tracking-[-0.045em] text-white">
+                  {displayCurrency} {formatDecimal(converted.costPerRun, 4)}
                 </strong>
               </article>
-              <article className="metric-card">
-                <span className="metric-label">Annualized run rate</span>
-                <strong className="metric-value">
-                  {currency} {formatDecimal(result.annualCost, 2)}
+              <article className="min-w-0 bg-[#071019] p-5">
+                <CircleDollarSign className="size-4 text-emerald-200/75" />
+                <p className="m-0 mt-6 text-[9px] font-semibold uppercase tracking-[0.13em] text-white/65">
+                  Annualized run rate
+                </p>
+                <strong className="mt-2 block font-mono text-[clamp(1.45rem,2.1vw,2rem)] font-medium leading-none tracking-[-0.045em] text-white">
+                  {displayCurrency} {formatDecimal(converted.annualCost, 2)}
                 </strong>
               </article>
             </div>
-            <dl className="calculator-breakdown">
-              <div>
-                <dt>Model calls / month</dt>
-                <dd>{result.modelRequests.toLocaleString('en-US')}</dd>
-              </div>
-              <div>
-                <dt>Model inference cost</dt>
-                <dd>
-                  {currency} {formatDecimal(result.modelCost, 2)}
+            <dl className="m-0 grid divide-y divide-white/[0.07] px-5 py-2 sm:px-6">
+              <div className="flex items-center justify-between gap-5 py-3.5 text-sm">
+                <dt className="text-white/65">Model calls / month</dt>
+                <dd className="m-0 font-mono font-semibold text-white/90">
+                  {converted.modelRequests.toLocaleString('en-US')}
                 </dd>
               </div>
-              <div>
-                <dt>Other tool cost</dt>
-                <dd>
-                  {currency} {formatDecimal(result.monthlyToolCost, 2)}
+              <div className="flex items-center justify-between gap-5 py-3.5 text-sm">
+                <dt className="text-white/65">Model inference cost</dt>
+                <dd className="m-0 font-mono font-semibold text-white/90">
+                  {displayCurrency} {formatDecimal(converted.modelCost, 2)}
+                </dd>
+              </div>
+              <div className="flex items-center justify-between gap-5 py-3.5 text-sm">
+                <dt className="inline-flex items-center gap-2 text-white/65">
+                  <Wrench className="size-3.5" /> Other tool cost
+                </dt>
+                <dd className="m-0 font-mono font-semibold text-white/90">
+                  {displayCurrency} {formatDecimal(converted.monthlyToolCost, 2)}
                 </dd>
               </div>
             </dl>
           </>
         )}
       </section>
-    </div>
+    </section>
   );
 }
