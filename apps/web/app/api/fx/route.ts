@@ -4,13 +4,10 @@ const SUPPORTED = new Set(['USD', 'EUR', 'GBP', 'INR']);
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: NextRequest) {
-  const base = (
-    request.nextUrl.searchParams.get('base') ?? 'USD'
-  ).toUpperCase();
-  const quote = (
-    request.nextUrl.searchParams.get('quote') ?? 'USD'
-  ).toUpperCase();
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const base = (url.searchParams.get('base') ?? 'USD').toUpperCase();
+  const quote = (url.searchParams.get('quote') ?? 'USD').toUpperCase();
 
   if (!SUPPORTED.has(base) || !SUPPORTED.has(quote)) {
     return NextResponse.json(
