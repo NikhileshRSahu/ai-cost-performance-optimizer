@@ -14,6 +14,23 @@ function nonEmpty(value: string | undefined): string | null {
   return normalized ? normalized : null;
 }
 
+export function resolveAuthDatabaseUrl(
+  environment: AuthEnvironment = process.env,
+): string {
+  const databaseUrl = nonEmpty(environment.DATABASE_URL);
+  if (databaseUrl === null) throw new Error('DATABASE_URL_REQUIRED');
+
+  const url = new URL(databaseUrl);
+  if (
+    url.hostname.endsWith('.neon.tech') &&
+    url.hostname.includes('-pooler.')
+  ) {
+    url.hostname = url.hostname.replace('-pooler.', '.');
+  }
+
+  return url.toString();
+}
+
 export function resolveAuthBaseUrl(
   environment: AuthEnvironment = process.env,
 ): string {
@@ -48,8 +65,7 @@ export function hasSelfHostedAuthConfiguration(
 export function requireSelfHostedAuthConfiguration(
   environment: AuthEnvironment = process.env,
 ): SelfHostedAuthConfiguration {
-  const databaseUrl = nonEmpty(environment.DATABASE_URL);
-  if (databaseUrl === null) throw new Error('DATABASE_URL_REQUIRED');
+  const databaseUrl = resolveAuthDatabaseUrl(environment);
 
   const secret = nonEmpty(environment.BETTER_AUTH_SECRET);
   if (secret === null || secret.length < 32) {

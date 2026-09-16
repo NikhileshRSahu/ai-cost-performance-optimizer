@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import {
   hasSelfHostedAuthConfiguration,
   resolveAuthBaseUrl,
+  resolveAuthDatabaseUrl,
   resolveGoogleCallbackUrl,
 } from '../../apps/web/lib/auth-config.js';
 
@@ -28,6 +29,29 @@ describe('self-hosted Better Auth configuration', () => {
 
     expect(resolveGoogleCallbackUrl()).toBe(
       'https://evalomics.vercel.app/api/auth/callback/google',
+    );
+  });
+
+  it('uses an unpooled Neon endpoint for Better Auth schema selection', () => {
+    process.env.DATABASE_URL =
+      'postgresql://user:pass@ep-example-pooler.us-east-2.aws.neon.tech/evalomics?sslmode=require';
+
+    expect(resolveAuthDatabaseUrl()).toBe(
+      'postgresql://user:pass@ep-example.us-east-2.aws.neon.tech/evalomics?sslmode=require',
+    );
+  });
+
+  it('leaves non-Neon and already-direct database URLs unchanged', () => {
+    process.env.DATABASE_URL =
+      'postgresql://user:pass@localhost:5432/evalomics';
+    expect(resolveAuthDatabaseUrl()).toBe(
+      'postgresql://user:pass@localhost:5432/evalomics',
+    );
+
+    process.env.DATABASE_URL =
+      'postgresql://user:pass@ep-example.us-east-2.aws.neon.tech/evalomics';
+    expect(resolveAuthDatabaseUrl()).toBe(
+      'postgresql://user:pass@ep-example.us-east-2.aws.neon.tech/evalomics',
     );
   });
 
