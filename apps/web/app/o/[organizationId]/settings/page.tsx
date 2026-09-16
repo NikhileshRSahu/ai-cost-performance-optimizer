@@ -105,7 +105,7 @@ export default async function SettingsPage({
       : [];
 
     return (
-      <div className="workflow-page">
+      <div className="workflow-page workspace-settings-page">
         <header className="workflow-header">
           <div>
             <p className="eyebrow">Workspace settings</p>
