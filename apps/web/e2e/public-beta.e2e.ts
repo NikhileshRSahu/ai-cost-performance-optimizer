@@ -123,10 +123,9 @@ test('public launch surfaces have no serious accessibility blockers', async ({
       (violation) =>
         violation.impact === 'critical' || violation.impact === 'serious',
     );
-    expect(
-      blocking,
-      route + '\n' + JSON.stringify(blocking, null, 2),
-    ).toEqual([]);
+    expect(blocking, route + '\n' + JSON.stringify(blocking, null, 2)).toEqual(
+      [],
+    );
   }
 });
 

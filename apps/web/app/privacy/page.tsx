@@ -39,8 +39,9 @@ export default function PrivacyPage() {
           <h2>What is not required to start</h2>
           <p>
             Evalomics does not require provider admin keys, Gmail, Google Drive,
-            Slack, or other workspace connectors for the CSV-first launch beta. Those
-            integrations remain gated and must not be represented as available.
+            Slack, or other workspace connectors for the CSV-first launch beta.
+            Those integrations remain gated and must not be represented as
+            available.
           </p>
         </article>
         <article>
@@ -92,9 +93,9 @@ export default function PrivacyPage() {
           <h2>Connected sources</h2>
           <p>
             Workspace connectors and provider-admin credentials remain outside
-            the launch beta until least-privilege authorization, encrypted secret
-            storage, revocation, rotation, deletion controls, and connector
-            threat-model reviews pass their release gates.
+            the launch beta until least-privilege authorization, encrypted
+            secret storage, revocation, rotation, deletion controls, and
+            connector threat-model reviews pass their release gates.
           </p>
         </article>
       </section>

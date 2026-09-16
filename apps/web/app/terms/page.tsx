@@ -75,8 +75,8 @@ export default function TermsPage() {
         <article>
           <h2>Availability</h2>
           <p>
-            This is a free public beta product. Features may evolve,
-            and Evalomics should not be represented as generally available
+            This is a free public beta product. Features may evolve, and
+            Evalomics should not be represented as generally available
             enterprise infrastructure until its release gates are closed.
           </p>
         </article>
