@@ -23,9 +23,9 @@ export default function PricingPage() {
         </p>
         <h1 className="mt-4 !text-[clamp(3.2rem,7vw,6.8rem)] !leading-[.9] !tracking-[-.07em] text-slate-950">
           Everything is free.
-          <span className="block text-slate-400">Use real data. No card.</span>
+          <span className="block text-slate-600">Use real data. No card.</span>
         </h1>
-        <p className="mt-7 max-w-2xl text-base leading-7 text-slate-500">
+        <p className="mt-7 max-w-2xl text-base leading-7 text-slate-600">
           During the Evalomics launch beta, the complete product workflow is
           available for $0. Create a workspace, upload a usage CSV, diagnose AI
           waste, test a candidate, and verify the result without entering
@@ -50,7 +50,7 @@ export default function PricingPage() {
             <strong className="font-mono text-5xl font-medium tracking-[-0.06em] text-white">
               $0
             </strong>
-            <p className="m-0 mt-1 text-xs text-white/42">no credit card</p>
+            <p className="m-0 mt-1 text-xs text-white/65">no credit card</p>
           </div>
         </div>
 
