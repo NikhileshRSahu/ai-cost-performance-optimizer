@@ -33,7 +33,9 @@ test('free tools hub exposes exact-arithmetic acquisition calculators', async ({
 
   await page.goto('/tools/ai-agent-cost');
   await expect(page.getByRole('heading', { name: 'Agent cost,' })).toBeVisible();
-  await expect(page.getByText('USD 54.00')).toBeVisible();
+  await expect(
+    page.getByRole('strong').filter({ hasText: 'USD 54.00' }).first(),
+  ).toBeVisible();
   await expect(page.getByText('USD 0.0108')).toBeVisible();
   await expect(page.getByText('USD 648.00')).toBeVisible();
 });
