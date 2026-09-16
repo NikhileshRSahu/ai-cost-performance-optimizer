@@ -24,6 +24,7 @@ export async function submitSupportRequest(formData: FormData): Promise<never> {
   const category = text(formData, 'category');
 
   const database = createDatabase(databaseUrl);
+  let requestId: string;
   try {
     const request = await createSupportRequest({
       db: database.db,
@@ -33,6 +34,7 @@ export async function submitSupportRequest(formData: FormData): Promise<never> {
       subject: text(formData, 'subject'),
       message: text(formData, 'message'),
     });
+    requestId = request.id;
 
     await publishOperationalEvent(
       buildOperationalEvent({
@@ -51,11 +53,11 @@ export async function submitSupportRequest(formData: FormData): Promise<never> {
         signingSecret: process.env.OPS_ALERT_WEBHOOK_SECRET,
       },
     );
-
-    redirect('/support?submitted=' + encodeURIComponent(request.id));
   } catch {
     redirect('/support?error=INVALID');
   } finally {
     await database.close();
   }
+
+  redirect('/support?submitted=' + encodeURIComponent(requestId));
 }
