@@ -80,7 +80,9 @@ describe('workspace invitations', () => {
       now: new Date('2026-09-16T00:00:00Z'),
     });
 
-    const [stored] = await database.db.select().from(workspaceInvitations);
+    const stored = (await database.db.select().from(workspaceInvitations)).at(0);
+    expect(stored).toBeDefined();
+    if (stored === undefined) throw new Error('EXPECTED_INVITE');
     expect(stored.tokenHash).not.toBe(invite.token);
     expect(stored.status).toBe('PENDING');
 
@@ -217,7 +219,9 @@ describe('workspace invitations', () => {
       invitationId: invite.id,
     });
 
-    const [stored] = await database.db.select().from(workspaceInvitations);
+    const stored = (await database.db.select().from(workspaceInvitations)).at(0);
+    expect(stored).toBeDefined();
+    if (stored === undefined) throw new Error('EXPECTED_REVOKED_INVITE');
     expect(stored.status).toBe('REVOKED');
 
     await expect(
