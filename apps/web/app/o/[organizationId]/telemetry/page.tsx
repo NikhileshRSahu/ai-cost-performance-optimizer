@@ -22,7 +22,7 @@ export default async function TelemetryPage({
   const isOwner = context.role === 'OWNER';
 
   return (
-    <div className="workflow-page">
+    <div className="workflow-page telemetry-page">
       <header className="workflow-header">
         <div>
           <p className="eyebrow">Production telemetry</p>
@@ -54,13 +54,26 @@ export default async function TelemetryPage({
             <h2>POST production telemetry</h2>
           </div>
         </div>
-        <p>
-          Send a bearer token to{' '}
-          <code>/o/{organizationId}/telemetry/ingest</code>. The endpoint is
-          bounded to 120 requests per minute per credential and returns HTTP 429
-          with <code>Retry-After</code> when the shared PostgreSQL rate window
-          is exceeded.
-        </p>
+        <div className="telemetry-endpoint">
+          <div>
+            <span className="telemetry-endpoint-label">Endpoint</span>
+            <code>POST /o/{organizationId}/telemetry/ingest</code>
+          </div>
+          <div className="telemetry-endpoint-grid">
+            <div>
+              <span>Authentication</span>
+              <strong>Bearer token</strong>
+            </div>
+            <div>
+              <span>Rate limit</span>
+              <strong>120 req/min · per credential</strong>
+            </div>
+            <div>
+              <span>Backoff</span>
+              <strong>HTTP 429 · Retry-After</strong>
+            </div>
+          </div>
+        </div>
         <p className="projection-note">
           Authorization headers, raw request bodies, prompts, responses, and
           tokens are never written to operational logs.
