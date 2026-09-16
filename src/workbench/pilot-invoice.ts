@@ -122,7 +122,10 @@ export async function requestPilotInvoice(args: {
     });
   }
 
-  await args.db.insert(pilotInvoiceRequests).values(record);
+  await args.db
+    .insert(pilotInvoiceRequests)
+    .values(record)
+    .onConflictDoNothing();
 
   const persisted = await args.db
     .select()
