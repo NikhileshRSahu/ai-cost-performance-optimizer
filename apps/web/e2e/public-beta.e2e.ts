@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
 test('public beta trust path is visible without authentication', async ({
@@ -97,4 +98,53 @@ test('public CTA foregrounds remain readable on their backgrounds', async ({
     return { color: style.color, backgroundColor: style.backgroundColor };
   });
   expect(freeStyles.color).not.toBe(freeStyles.backgroundColor);
+});
+
+
+test('public launch surfaces have no serious accessibility blockers', async ({
+  page,
+}) => {
+  const routes = [
+    '/',
+    '/pricing',
+    '/tools',
+    '/login',
+    '/privacy',
+    '/security',
+    '/terms',
+    '/support',
+  ] as const;
+
+  for (const route of routes) {
+    await page.goto(route);
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+      .analyze();
+    const blocking = results.violations.filter(
+      (violation) =>
+        violation.impact === 'critical' || violation.impact === 'serious',
+    );
+    expect(
+      blocking,
+      route + '\n' + JSON.stringify(blocking, null, 2),
+    ).toEqual([]);
+  }
+});
+
+test('public acquisition pages fit a phone viewport without horizontal overflow', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+
+  for (const route of ['/', '/pricing', '/login', '/tools'] as const) {
+    await page.goto(route);
+    const dimensions = await page.evaluate(() => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      innerWidth: window.innerWidth,
+    }));
+    expect(
+      dimensions.scrollWidth,
+      route + ' overflows the mobile viewport',
+    ).toBeLessThanOrEqual(dimensions.innerWidth + 1);
+  }
 });
