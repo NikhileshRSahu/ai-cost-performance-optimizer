@@ -3,14 +3,14 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Terms | Evalomics',
   description:
-    'Prelaunch terms and usage boundaries for the Evalomics CSV-first pilot.',
+    'Usage boundaries for the Evalomics free launch beta.',
 };
 
 export default function TermsPage() {
   return (
     <div className="landing-stack legal-page">
       <section className="hero hero-wide">
-        <p className="eyebrow">Prelaunch pilot terms</p>
+        <p className="eyebrow">Launch beta terms</p>
         <h1>A decision-support tool, not an automatic production operator.</h1>
         <p className="lede">
           Evalomics helps customers analyze AI evidence, test bounded
@@ -18,9 +18,9 @@ export default function TermsPage() {
           post-change impact.
         </p>
         <div className="evidence-note">
-          <strong>Legal-review status:</strong> these pilot terms document the
-          intended product and commercial boundaries. Final enforceable terms
-          require launch-jurisdiction review before general availability.
+          <strong>Beta transparency:</strong> these terms describe the current
+          product boundaries for the free launch beta. They may be updated as
+          Evalomics moves toward general availability.
         </div>
       </section>
 
@@ -65,11 +65,12 @@ export default function TermsPage() {
           </p>
         </article>
         <article>
-          <h2>Pricing and scoped services</h2>
+          <h2>Launch beta access</h2>
           <p>
-            Public pilot pricing describes the current service scope. A
-            fixed-price Optimization Audit and any larger implementation sprint
-            remain subject to the scope shown before invoicing or acceptance.
+            The current Evalomics launch beta is free and does not require a
+            credit card or subscription. Paid plans or services, if introduced
+            later, will be presented separately with clear terms before any
+            charge or commitment.
           </p>
         </article>
         <article>
