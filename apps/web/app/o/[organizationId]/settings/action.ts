@@ -7,6 +7,7 @@ import {
   changeWorkspaceMemberRole,
   deleteWorkspace,
   removeWorkspaceMember,
+  transferWorkspaceOwnership,
   updateWorkspaceProfile,
 } from '../../../../../../src/workbench/workspace-settings';
 import {
@@ -42,6 +43,8 @@ function errorCode(error: unknown): string {
     'INVALID_INVITE_EMAIL',
     'INVALID_INVITE_ROLE',
     'INVITE_NOT_PENDING',
+    'TARGET_ALREADY_OWNER',
+    'MEMBERSHIP_NOT_FOUND',
   ]);
   return allowed.has(error.message) ? error.message : 'UNKNOWN';
 }
@@ -195,4 +198,25 @@ export async function revokeInvite(formData: FormData): Promise<never> {
     await database.close();
   }
   redirect('/o/' + organizationId + '/settings?inviteRevoked=true');
+}
+
+
+export async function transferOwnership(formData: FormData): Promise<never> {
+  const organizationId = text(formData, 'organizationId');
+  const { session, databaseUrl } = await runtime();
+  const database = createDatabase(databaseUrl);
+  try {
+    await transferWorkspaceOwnership({
+      db: database.db,
+      session,
+      organizationId,
+      targetUserId: text(formData, 'userId'),
+    });
+  } catch (error) {
+    redirect('/o/' + organizationId + '/settings?error=' + errorCode(error));
+  } finally {
+    await database.close();
+  }
+
+  redirect('/o/' + organizationId + '/settings?ownershipTransferred=true');
 }
