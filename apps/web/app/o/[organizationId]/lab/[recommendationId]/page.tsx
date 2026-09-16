@@ -56,7 +56,7 @@ export default async function OptimizationLabPage({
             </p>
             <div className="action-row">
               <Link
-                className="primary-action recovery-primary-action"
+                className="primary-action"
                 href={`/o/${organizationId}/benchmark`}
               >
                 Return to benchmark
