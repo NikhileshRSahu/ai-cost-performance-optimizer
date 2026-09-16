@@ -74,7 +74,7 @@ export default function PricingPage() {
           Start free with your data <ArrowRight className="size-4" />
         </Link>
 
-        <div className="mt-5 flex items-start gap-2.5 rounded-xl border border-white/10 bg-white/[0.035] p-4 text-xs leading-5 text-white/52">
+        <div className="mt-5 flex items-start gap-2.5 rounded-xl border border-white/10 bg-white/[0.035] p-4 text-xs leading-5 text-white/75">
           <ShieldCheck className="mt-0.5 size-4 shrink-0 text-emerald-200/70" />
           Evalomics does not require prompt content for the CSV workflow, and
           Potential, Tested, and Verified savings remain separate evidence
@@ -83,7 +83,7 @@ export default function PricingPage() {
       </section>
 
       <section className="max-w-3xl rounded-[24px] border border-slate-200 bg-slate-50 p-6 sm:p-8">
-        <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500">
+        <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-600">
           Why free right now
         </p>
         <h2 className="mt-3 text-2xl font-semibold tracking-[-0.035em] text-slate-950">
