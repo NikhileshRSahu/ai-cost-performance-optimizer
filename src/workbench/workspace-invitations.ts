@@ -244,3 +244,75 @@ export async function acceptWorkspaceInvitationForIdentity(input: {
     });
   });
 }
+
+
+export async function listWorkspaceInvitations(input: {
+  db: PersistenceDatabase;
+  session: AuthenticatedSession;
+  organizationId: string;
+}): Promise<
+  readonly Readonly<{
+    id: string;
+    email: string;
+    role: 'OWNER' | 'OPERATOR' | 'VIEWER';
+    status: string;
+    expiresAt: string;
+    createdAt: string;
+  }>[]
+> {
+  const access = authorize(
+    input.session,
+    input.organizationId,
+    'MANAGE_MEMBERSHIP',
+  );
+  if (!access.allowed || access.role !== 'OWNER') {
+    throw new Error('WORKSPACE_OWNER_REQUIRED');
+  }
+
+  const rows = await input.db
+    .select({
+      id: workspaceInvitations.id,
+      email: workspaceInvitations.email,
+      role: workspaceInvitations.role,
+      status: workspaceInvitations.status,
+      expiresAt: workspaceInvitations.expiresAt,
+      createdAt: workspaceInvitations.createdAt,
+    })
+    .from(workspaceInvitations)
+    .where(eq(workspaceInvitations.organizationId, input.organizationId))
+    .orderBy(workspaceInvitations.createdAt);
+
+  return Object.freeze(rows.map((row) => Object.freeze(row)));
+}
+
+export async function revokeWorkspaceInvitation(input: {
+  db: PersistenceDatabase;
+  session: AuthenticatedSession;
+  organizationId: string;
+  invitationId: string;
+}): Promise<void> {
+  const access = authorize(
+    input.session,
+    input.organizationId,
+    'MANAGE_MEMBERSHIP',
+  );
+  if (!access.allowed || access.role !== 'OWNER') {
+    throw new Error('WORKSPACE_OWNER_REQUIRED');
+  }
+
+  const updated = await input.db
+    .update(workspaceInvitations)
+    .set({ status: 'REVOKED' })
+    .where(
+      and(
+        eq(workspaceInvitations.id, input.invitationId),
+        eq(workspaceInvitations.organizationId, input.organizationId),
+        eq(workspaceInvitations.status, 'PENDING'),
+      ),
+    )
+    .returning({ id: workspaceInvitations.id });
+
+  if (updated.length !== 1) {
+    throw new Error('INVITE_NOT_PENDING');
+  }
+}
