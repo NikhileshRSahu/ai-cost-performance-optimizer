@@ -204,7 +204,8 @@ describe('Neon Auth reverse proxy', () => {
     const rewritten = await rewriteNeonSocialSignInResponse(request, response);
     const location = rewritten.headers.get('location');
     expect(location).not.toBeNull();
-    expect(new URL(location!).searchParams.get('redirect_uri')).toBe(
+    if (location === null) throw new Error('LOCATION_REQUIRED');
+    expect(new URL(location).searchParams.get('redirect_uri')).toBe(
       'https://evalomics.vercel.app/api/auth/callback/google',
     );
   });
