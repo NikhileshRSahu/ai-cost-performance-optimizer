@@ -89,7 +89,7 @@ export default async function OptimizationReportPage({
           </p>
           <div className="action-row">
             <Link
-              className="primary-action"
+              className="primary-action recovery-primary-action"
               href={`/o/${organizationId}/benchmark`}
             >
               Return to benchmark
