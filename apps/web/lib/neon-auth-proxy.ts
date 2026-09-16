@@ -128,17 +128,81 @@ function rewriteGoogleAuthorizationUrls(
   return { value, changed: false };
 }
 
+function rewriteGoogleAuthorizationUrl(
+  value: string,
+  callbackUrl: string,
+): string {
+  try {
+    const providerUrl = new URL(value);
+    if (providerUrl.hostname !== 'accounts.google.com') return value;
+    providerUrl.searchParams.set('redirect_uri', callbackUrl);
+    return providerUrl.toString();
+  } catch {
+    return value;
+  }
+}
+
+function rewriteGoogleUrlsInJson(
+  value: unknown,
+  callbackUrl: string,
+): { value: unknown; changed: boolean } {
+  if (typeof value === 'string') {
+    const rewritten = rewriteGoogleAuthorizationUrl(value, callbackUrl);
+    return { value: rewritten, changed: rewritten !== value };
+  }
+
+  if (Array.isArray(value)) {
+    let changed = false;
+    const next = value.map((item) => {
+      const result = rewriteGoogleUrlsInJson(item, callbackUrl);
+      changed ||= result.changed;
+      return result.value;
+    });
+    return { value: next, changed };
+  }
+
+  if (value !== null && typeof value === 'object') {
+    let changed = false;
+    const next: Record<string, unknown> = {};
+    for (const [key, item] of Object.entries(value)) {
+      const result = rewriteGoogleUrlsInJson(item, callbackUrl);
+      changed ||= result.changed;
+      next[key] = result.value;
+    }
+    return { value: next, changed };
+  }
+
+  return { value, changed: false };
+}
+
 export async function rewriteNeonSocialSignInResponse(
   request: Request,
   response: Response,
 ): Promise<Response> {
-  const path = new URL(request.url).pathname.replace(/\/+$/, '');
-  if (
-    path !== '/api/auth/sign-in/social' ||
-    !response.ok ||
-    !response.headers.get('content-type')?.includes('application/json')
-  ) {
-    return response;
+  const incoming = new URL(request.url);
+  const path = incoming.pathname.replace(/\/+$/, '');
+  if (path !== '/api/auth/sign-in/social' || !response.ok) return response;
+
+  const callbackUrl = `${incoming.origin}/api/auth/callback/google`;
+  const headers = rewriteNeonResponseHeaders(response.headers, incoming.origin);
+
+  const originalLocation = headers.get('location');
+  if (originalLocation !== null) {
+    const rewrittenLocation = rewriteGoogleAuthorizationUrl(
+      originalLocation,
+      callbackUrl,
+    );
+    if (rewrittenLocation !== originalLocation) {
+      headers.set('location', rewrittenLocation);
+    }
+  }
+
+  if (!response.headers.get('content-type')?.includes('application/json')) {
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    });
   }
 
   let payload: unknown;
@@ -148,20 +212,13 @@ export async function rewriteNeonSocialSignInResponse(
     return response;
   }
 
-  const incoming = new URL(request.url);
-  const rewritten = rewriteGoogleAuthorizationUrls(
-    payload,
-    `${incoming.origin}/api/auth/callback/google`,
-  );
-  if (!rewritten.changed) return response;
+  const rewritten = rewriteGoogleUrlsInJson(payload, callbackUrl);
+  const locationChanged = originalLocation !== headers.get('location');
 
-  const headers = rewriteNeonResponseHeaders(
-    response.headers,
-    incoming.origin,
-  );
+  if (!rewritten.changed && !locationChanged) return response;
+
   headers.delete('content-length');
   headers.delete('content-encoding');
-  headers.set('x-evalomics-auth-rewrite', 'google-callback');
 
   return new Response(JSON.stringify(rewritten.value), {
     status: response.status,
