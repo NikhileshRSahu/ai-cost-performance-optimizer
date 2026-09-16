@@ -1,74 +1,68 @@
 # Google sign-in deployment
 
-Evalomics production identity uses **Neon Auth** with Google OAuth. Neon Auth owns the authenticated identity/session. Evalomics keeps its existing `public.users`, `public.organizations`, and `public.memberships` tables for application authorization, tenancy, and product ownership.
+Evalomics production identity is self-hosted with Better Auth inside the Next.js application. Neon provides PostgreSQL storage only; managed Neon Auth is not in the browser OAuth or session path.
 
 ## Required environment
 
 - `DATABASE_URL`
-- `NEON_AUTH_BASE_URL`
+- `BETTER_AUTH_URL=https://evalomics.vercel.app`
+- `BETTER_AUTH_SECRET` with at least 32 random characters
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
 
-The production application does not require Google client credentials in the Vercel runtime. Google credentials are configured in Neon Auth.
+`NEON_AUTH_BASE_URL` is not used by the application after this cutover.
 
 ## Google Cloud configuration
-
-Create a Web OAuth client for Evalomics.
 
 Authorized JavaScript origin:
 
 `https://evalomics.vercel.app`
 
-Production callback:
+Authorized redirect URI:
 
 `https://evalomics.vercel.app/api/auth/callback/google`
 
-The callback intentionally returns through the Evalomics origin. The app then proxies the OAuth callback to Neon Auth and rewrites the resulting session cookie for the Evalomics origin.
+Better Auth is configured with the same explicit callback, so Google never receives a Neon-hosted redirect URI.
 
-## Neon Auth configuration
+## Database
 
-Production Neon Auth must use the custom/standard Google OAuth provider, not shared development keys.
+Better Auth uses the existing Neon PostgreSQL database through `DATABASE_URL`, but its core tables are isolated under the `auth` schema.
 
-Trusted origins include:
+The existing Evalomics application tables in `public` remain the source of truth for users, organizations, memberships, evidence, recommendations, and verification.
 
-- `https://evalomics.vercel.app`
-- the Vercel production alias when required
-
-The application proxy strips forwarding headers that would make Neon Auth infer the wrong host.
+Run the committed Better Auth schema migration before production cutover.
 
 ## Session and workspace flow
 
 1. Browser starts Google sign-in at `/api/auth/sign-in/social`.
-2. Evalomics proxies the request to Neon Auth.
-3. Google returns to `/api/auth/callback/google` on the Evalomics origin.
-4. Evalomics proxies the callback to Neon Auth.
-5. Neon Auth session cookies are rewritten without the Neon domain and with `Path=/`.
-6. The browser lands on `/start`.
-7. `resolveRuntimeSession` reads the Neon Auth session server-side.
-8. First access transactionally creates or reuses one Evalomics application user, one private organization, and one OWNER membership.
+2. Evalomics Better Auth constructs the Google authorization request.
+3. Google returns directly to `/api/auth/callback/google` on `evalomics.vercel.app`.
+4. Better Auth exchanges the code and writes its own same-origin session cookie.
+5. The browser lands on `/start`.
+6. `resolveRuntimeSession` reads the Better Auth session server-side.
+7. Only a verified Google identity is mapped into the existing Evalomics tenant/RBAC system.
+8. First authenticated access transactionally creates or reuses one application user, one private organization, and one OWNER membership.
 9. Repeated access is idempotent and redirects to the existing workspace.
 
 ## Security model
 
-- OAuth/provider secrets remain in Neon Auth.
-- Evalomics does not persist plaintext provider OAuth credentials.
-- Sign-in requests only identity access; AI-provider/workspace connectors are separately authorized.
-- Verified Neon Auth identity is mapped into the existing Evalomics tenant/RBAC system.
-- First authenticated access provisions one private workspace with OWNER membership.
-- Repeated logins are idempotent.
-- Same-email/different-identity conflicts are rejected rather than silently linked.
-- Cross-tenant URL access remains denied by the existing organization authorization layer.
-- Session/proxy errors must never log OAuth credentials or session-cookie values.
+- OAuth client secrets stay in Vercel server environment variables.
+- Provider tokens are encrypted at rest by Better Auth.
+- Better Auth tables are isolated in the `auth` schema.
+- Google sign-in requires the provider email to be verified before a session is accepted.
+- Evalomics never rewrites OAuth URLs or authentication cookies.
+- Existing cross-tenant authorization remains unchanged.
+- Authentication errors must never log OAuth credentials, authorization codes, passwords, or session-cookie values.
 
-## Launch checklist
+## Production checklist
 
-Before declaring production authentication ready:
-
-1. Confirm the Google OAuth client has the exact Evalomics callback URI.
-2. Confirm Neon Auth reports Google as a custom/standard provider.
-3. Confirm `NEON_AUTH_BASE_URL` is set in Vercel production.
-4. Complete a real Google sign-in.
-5. Verify the browser returns through `/api/auth/callback/google` and then `/start`.
-6. Verify exactly one application user, primary organization, and OWNER membership exist.
-7. Repeat login and confirm those rows are not duplicated.
-8. Verify sign-out and expired-session behavior.
-9. Verify cross-tenant denial.
-10. Confirm no Google Drive/Gmail scopes appear in consent.
+1. Create/apply the `auth` schema migration.
+2. Set all five required Vercel production environment variables.
+3. Confirm Google Cloud has the exact Evalomics callback URI.
+4. Deploy a commit with fully green CI.
+5. Verify `/api/health` returns database and auth `ok`.
+6. Complete a real Google sign-in.
+7. Verify `/api/auth/callback/google` reaches Evalomics and redirects to `/start`.
+8. Refresh and confirm the session persists.
+9. Verify exactly one application user, primary organization, and OWNER membership exist.
+10. Verify sign-out and cross-tenant denial.
