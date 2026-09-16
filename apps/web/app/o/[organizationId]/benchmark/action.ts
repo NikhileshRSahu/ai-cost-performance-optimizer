@@ -44,6 +44,15 @@ export async function submitBenchmark(formData: FormData): Promise<never> {
       isDemo: formData.get('isDemo') === 'true',
     });
     recommendationId = result.recommendationId;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'BENCHMARK_FAILED';
+    const safeError =
+      message === 'BENCHMARK_HEADER_MISMATCH'
+        ? 'Benchmark CSV columns do not match the required format. Download the benchmark template and keep its header unchanged.'
+        : 'The benchmark could not be evaluated. Check the paired-case CSV, configuration IDs, evaluator version, and constraints.';
+    redirect(
+      `/o/${organizationId}/benchmark?workloadId=${encodeURIComponent(workloadId)}&error=${encodeURIComponent(safeError)}`,
+    );
   } finally {
     await database.close();
   }
