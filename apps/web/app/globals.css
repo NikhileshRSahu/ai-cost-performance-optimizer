@@ -2492,7 +2492,7 @@ samp,
   color: #0b1017 !important;
 }
 
-.org-workbench .empty-state .primary-action {
+.org-workbench .recovery-primary-action {
   background: #f8fafc !important;
   color: #0b1017 !important;
 }
