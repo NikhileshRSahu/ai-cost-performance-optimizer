@@ -17,7 +17,7 @@ export default async function SupportPage({
           Reach the Evalomics operator.
         </h1>
         <p className="mt-6 max-w-2xl text-base leading-7 text-slate-600">
-          Product, billing, privacy, bug, and security reports are persisted and
+          Product, account, privacy, bug, and security reports are persisted and
           routed into the operations alert channel when configured.
         </p>
       </section>
@@ -50,7 +50,7 @@ export default async function SupportPage({
             >
               <option value="SUPPORT">Product support</option>
               <option value="BUG">Bug report</option>
-              <option value="BILLING">Billing</option>
+              <option value="BILLING">Account / future billing</option>
               <option value="PRIVACY">Privacy request</option>
               <option value="SECURITY">Security report</option>
             </select>
