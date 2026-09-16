@@ -58,3 +58,30 @@ test('public beta trust path is visible without authentication', async ({
   ).toBeVisible();
   await expect(page.getByText('No guaranteed savings')).toBeVisible();
 });
+
+
+test('public CTA foregrounds remain readable on their backgrounds', async ({ page }) => {
+  await page.goto('/');
+
+  const heroPrimary = page.getByRole('link', { name: 'Run the Work MRI' });
+  await expect(heroPrimary).toBeVisible();
+  const heroStyles = await heroPrimary.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { color: style.color, backgroundColor: style.backgroundColor };
+  });
+  expect(heroStyles.color).not.toBe(heroStyles.backgroundColor);
+
+  await page.goto('/pricing');
+
+  const freeCta = page.getByRole('link', { name: 'Run the free Work MRI' });
+  const paidCta = page.getByRole('link', { name: 'Start with your evidence' });
+
+  for (const cta of [freeCta, paidCta]) {
+    await expect(cta).toBeVisible();
+    const styles = await cta.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return { color: style.color, backgroundColor: style.backgroundColor };
+    });
+    expect(styles.color).not.toBe(styles.backgroundColor);
+  }
+});
