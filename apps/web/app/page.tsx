@@ -32,7 +32,7 @@ export default function HomePage() {
               className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 no-underline transition hover:bg-emerald-100"
               style={{ color: '#0b1017' }}
             >
-              Run the Work MRI <ArrowRight className="size-4" />
+              Start free — run the Work MRI <ArrowRight className="size-4" />
             </Link>
             <Link
               href="/tools/llm-cost-calculator"
@@ -43,6 +43,8 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[11px] text-white/55">
+            <span>Full launch beta · $0</span>
+            <span>No credit card</span>
             <span>CSV-first</span>
             <span>No prompt content required</span>
             <span>No invented savings</span>
