@@ -29,9 +29,10 @@ export default function LlmCostCalculatorPage() {
           </span>
         </h1>
         <p className="mt-7 max-w-2xl text-base leading-7 text-slate-500">
-          Enter your real request volume, token averages, and token prices.
-          Evalomics performs exact arithmetic in the currency those rates are
-          already denominated in. It never silently performs FX conversion.
+          Enter your real request volume, token averages, and token prices, or
+          start from a dated first-party provider preset. Keep the billing
+          currency separate from the display currency: when they differ,
+          Evalomics shows the timestamped reference FX rate used for conversion.
         </p>
       </section>
 
