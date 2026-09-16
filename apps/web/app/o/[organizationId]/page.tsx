@@ -22,7 +22,7 @@ import {
   WorkflowProgress,
   type WorkflowStep,
 } from '../../../components/workflow-progress';
-import { hasNeonAuthConfiguration } from '../../../lib/neon-auth';
+import { hasSelfHostedAuthConfiguration } from '../../../lib/auth-config';
 import { loadFounderDashboardEvidence } from '../../../lib/dashboard-data';
 import { resolveRuntimeSession } from '../../../lib/runtime-session';
 
@@ -160,7 +160,7 @@ export default async function FounderDashboardPage({
           <span className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[10px] font-semibold text-white/45">
             Data quality · {view.dataQuality}
           </span>
-          {hasNeonAuthConfiguration() ? <SignOutButton /> : null}
+          {hasSelfHostedAuthConfiguration() ? <SignOutButton /> : null}
         </div>
       </header>
 
