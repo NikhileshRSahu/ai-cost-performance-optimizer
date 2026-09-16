@@ -96,7 +96,7 @@ export default async function DataPage({
           The export includes workloads, imports, canonical usage evidence,
           recommendations, savings-state events, implementation records,
           verification windows, background-job metadata, and founding-pilot
-          invoice requests.
+          invoice requests, workspace invitations, and support requests.
         </p>
         {isOwner ? (
           <Link
