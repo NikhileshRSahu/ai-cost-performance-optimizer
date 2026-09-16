@@ -9,7 +9,8 @@ export type OperationalEvent = Readonly<{
     | 'health_check'
     | 'telemetry_ingest'
     | 'telemetry_auth'
-    | 'telemetry_rate_limit';
+    | 'telemetry_rate_limit'
+    | 'pilot_invoice_request';
   requestId: string;
   route: string;
   status: OperationalStatus;
@@ -104,6 +105,9 @@ export function classifyOperationalAlert(
     event.eventName === 'telemetry_rate_limit' &&
     event.status === 'RATE_LIMITED'
   ) {
+    return 'WARNING';
+  }
+  if (event.eventName === 'pilot_invoice_request' && event.status === 'OK') {
     return 'WARNING';
   }
   return null;
