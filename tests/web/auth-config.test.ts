@@ -3,7 +3,7 @@ import {
   hasSelfHostedAuthConfiguration,
   resolveAuthBaseUrl,
   resolveGoogleCallbackUrl,
-} from '../../apps/web/lib/auth-config';
+} from '../../apps/web/lib/auth-config.js';
 
 const originalEnv = { ...process.env };
 
