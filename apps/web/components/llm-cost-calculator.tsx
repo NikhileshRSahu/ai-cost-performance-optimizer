@@ -18,6 +18,7 @@ import {
   type Rational,
 } from '../../../src/economics/exact';
 import { useFxRate } from '../hooks/use-fx-rate';
+import { providerPricingPresets } from '../lib/provider-pricing';
 
 type CalculatorResult = Readonly<{
   monthlyInputTokens: bigint;
@@ -108,6 +109,8 @@ export function LlmCostCalculator() {
   const [outputRate, setOutputRate] = useState('4');
   const [rateCurrency, setRateCurrency] = useState('USD');
   const [displayCurrency, setDisplayCurrency] = useState('USD');
+  const [pricingPreset, setPricingPreset] = useState('manual');
+  const selectedPreset = providerPricingPresets.find((preset) => preset.id === pricingPreset) ?? null;
   const fx = useFxRate(rateCurrency, displayCurrency);
 
   const result = useMemo(
@@ -179,6 +182,46 @@ export function LlmCostCalculator() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
+          <label className="grid gap-2 text-sm font-semibold text-slate-800 sm:col-span-2">
+            <span>Provider/model pricing preset</span>
+            <select
+              className={fieldClass}
+              value={pricingPreset}
+              onChange={(event) => {
+                const id = event.target.value;
+                setPricingPreset(id);
+                const preset = providerPricingPresets.find((item) => item.id === id);
+                if (preset !== undefined) {
+                  setInputRate(preset.inputPerMillionUsd);
+                  setOutputRate(preset.outputPerMillionUsd);
+                  setRateCurrency('USD');
+                }
+              }}
+            >
+              <option value="manual">Manual rates</option>
+              {providerPricingPresets.map((preset) => (
+                <option key={preset.id} value={preset.id}>
+                  {preset.label}
+                </option>
+              ))}
+            </select>
+            <small className="text-xs font-normal leading-5 text-slate-500">
+              {selectedPreset === null
+                ? 'Manual rates are authoritative for your own contract.'
+                : `${selectedPreset.provider} source checked ${selectedPreset.asOf}. ${selectedPreset.note}`}
+            </small>
+            {selectedPreset !== null ? (
+              <a
+                className="w-fit text-xs font-semibold text-blue-700 underline underline-offset-4"
+                href={selectedPreset.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open official pricing source
+              </a>
+            ) : null}
+          </label>
+
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
             <span>Requests per month</span>
             <input
