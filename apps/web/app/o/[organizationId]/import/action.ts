@@ -47,6 +47,14 @@ export async function uploadUsageCsv(formData: FormData): Promise<never> {
         importId,
       });
     }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'IMPORT_FAILED';
+    const safeError = message.startsWith('UNSUPPORTED_COLUMN:')
+      ? `Unsupported CSV column: ${message.slice('UNSUPPORTED_COLUMN:'.length)}. Use the Evalomics CSV template or synthetic demo format.`
+      : 'The CSV could not be imported. Check the required columns and numeric formats, then try again.';
+    redirect(
+      `/o/${organizationId}/import?error=${encodeURIComponent(safeError)}`,
+    );
   } finally {
     await database.close();
   }
