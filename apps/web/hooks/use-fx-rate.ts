@@ -65,7 +65,9 @@ export function useFxRate(base: string, quote: string): FxState {
         setState({ status: 'error' });
       });
 
-    return () => controller.abort();
+    return () => {
+      controller.abort();
+    };
   }, [base, quote]);
 
   return state;

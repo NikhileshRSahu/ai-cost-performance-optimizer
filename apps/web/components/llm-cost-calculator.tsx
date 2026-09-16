@@ -232,7 +232,9 @@ export function LlmCostCalculator() {
               className={fieldClass}
               inputMode="numeric"
               value={requests}
-              onChange={(event) => setRequests(event.target.value)}
+              onChange={(event) => {
+                setRequests(event.target.value);
+              }}
               aria-describedby="requests-help"
             />
             <small
@@ -249,7 +251,9 @@ export function LlmCostCalculator() {
               className={fieldClass}
               inputMode="numeric"
               value={inputTokens}
-              onChange={(event) => setInputTokens(event.target.value)}
+              onChange={(event) => {
+                setInputTokens(event.target.value);
+              }}
             />
           </label>
 
@@ -259,7 +263,9 @@ export function LlmCostCalculator() {
               className={fieldClass}
               inputMode="numeric"
               value={outputTokens}
-              onChange={(event) => setOutputTokens(event.target.value)}
+              onChange={(event) => {
+                setOutputTokens(event.target.value);
+              }}
             />
           </label>
 
@@ -312,7 +318,9 @@ export function LlmCostCalculator() {
             <select
               className={fieldClass}
               value={displayCurrency}
-              onChange={(event) => setDisplayCurrency(event.target.value)}
+              onChange={(event) => {
+                setDisplayCurrency(event.target.value);
+              }}
             >
               {currencies.map((currency) => (
                 <option key={currency} value={currency}>

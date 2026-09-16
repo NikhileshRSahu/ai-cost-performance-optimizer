@@ -86,7 +86,9 @@ export function CostPerOutcomeCalculator() {
     <section className="grid gap-5 lg:grid-cols-[.94fr_1.06fr] lg:items-start">
       <form
         className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_24px_70px_rgba(15,23,42,.055)] sm:p-6"
-        onSubmit={(event) => event.preventDefault()}
+        onSubmit={(event) => {
+          event.preventDefault();
+        }}
       >
         <div className="mb-6 flex items-center justify-between gap-4 border-b border-slate-100 pb-5">
           <div>
@@ -109,7 +111,9 @@ export function CostPerOutcomeCalculator() {
               className={fieldClass}
               inputMode="decimal"
               value={monthlyCost}
-              onChange={(event) => setMonthlyCost(event.target.value)}
+              onChange={(event) => {
+                setMonthlyCost(event.target.value);
+              }}
             />
           </label>
 
@@ -119,7 +123,9 @@ export function CostPerOutcomeCalculator() {
               className={fieldClass}
               inputMode="numeric"
               value={requests}
-              onChange={(event) => setRequests(event.target.value)}
+              onChange={(event) => {
+                setRequests(event.target.value);
+              }}
             />
           </label>
 
@@ -129,7 +135,9 @@ export function CostPerOutcomeCalculator() {
               className={fieldClass}
               inputMode="decimal"
               value={successRate}
-              onChange={(event) => setSuccessRate(event.target.value)}
+              onChange={(event) => {
+                setSuccessRate(event.target.value);
+              }}
             />
             <small className="text-xs font-normal text-slate-500">
               Must be above 0 and at most 100.
@@ -141,7 +149,9 @@ export function CostPerOutcomeCalculator() {
             <select
               className={fieldClass}
               value={inputCurrency}
-              onChange={(event) => setInputCurrency(event.target.value)}
+              onChange={(event) => {
+                setInputCurrency(event.target.value);
+              }}
             >
               {currencies.map((currency) => (
                 <option key={currency} value={currency}>
@@ -156,7 +166,9 @@ export function CostPerOutcomeCalculator() {
             <select
               className={fieldClass}
               value={displayCurrency}
-              onChange={(event) => setDisplayCurrency(event.target.value)}
+              onChange={(event) => {
+                setDisplayCurrency(event.target.value);
+              }}
             >
               {currencies.map((currency) => (
                 <option key={currency} value={currency}>

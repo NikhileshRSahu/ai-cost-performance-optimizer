@@ -113,7 +113,9 @@ export function PromptCacheSavingsCalculator() {
     <section className="grid gap-5 lg:grid-cols-[.94fr_1.06fr] lg:items-start">
       <form
         className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_24px_70px_rgba(15,23,42,.055)] sm:p-6"
-        onSubmit={(event) => event.preventDefault()}
+        onSubmit={(event) => {
+          event.preventDefault();
+        }}
       >
         <div className="mb-6 flex items-center justify-between gap-4 border-b border-slate-100 pb-5">
           <div>
@@ -136,7 +138,9 @@ export function PromptCacheSavingsCalculator() {
               className={fieldClass}
               inputMode="numeric"
               value={requests}
-              onChange={(e) => setRequests(e.target.value)}
+              onChange={(e) => {
+                setRequests(e.target.value);
+              }}
             />
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
@@ -145,7 +149,9 @@ export function PromptCacheSavingsCalculator() {
               className={fieldClass}
               inputMode="numeric"
               value={cacheableTokens}
-              onChange={(e) => setCacheableTokens(e.target.value)}
+              onChange={(e) => {
+                setCacheableTokens(e.target.value);
+              }}
             />
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
@@ -154,7 +160,9 @@ export function PromptCacheSavingsCalculator() {
               className={fieldClass}
               inputMode="decimal"
               value={uncachedRate}
-              onChange={(e) => setUncachedRate(e.target.value)}
+              onChange={(e) => {
+                setUncachedRate(e.target.value);
+              }}
             />
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
@@ -163,7 +171,9 @@ export function PromptCacheSavingsCalculator() {
               className={fieldClass}
               inputMode="decimal"
               value={cachedRate}
-              onChange={(e) => setCachedRate(e.target.value)}
+              onChange={(e) => {
+                setCachedRate(e.target.value);
+              }}
             />
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
@@ -172,7 +182,9 @@ export function PromptCacheSavingsCalculator() {
               className={fieldClass}
               inputMode="decimal"
               value={hitRate}
-              onChange={(e) => setHitRate(e.target.value)}
+              onChange={(e) => {
+                setHitRate(e.target.value);
+              }}
             />
             <small className="text-xs font-normal text-slate-500">
               Must be between 0 and 100.
@@ -183,7 +195,9 @@ export function PromptCacheSavingsCalculator() {
             <select
               className={fieldClass}
               value={rateCurrency}
-              onChange={(e) => setRateCurrency(e.target.value)}
+              onChange={(e) => {
+                setRateCurrency(e.target.value);
+              }}
             >
               {currencies.map((currency) => (
                 <option key={currency} value={currency}>
@@ -197,7 +211,9 @@ export function PromptCacheSavingsCalculator() {
             <select
               className={fieldClass}
               value={displayCurrency}
-              onChange={(e) => setDisplayCurrency(e.target.value)}
+              onChange={(e) => {
+                setDisplayCurrency(e.target.value);
+              }}
             >
               {currencies.map((currency) => (
                 <option key={currency} value={currency}>

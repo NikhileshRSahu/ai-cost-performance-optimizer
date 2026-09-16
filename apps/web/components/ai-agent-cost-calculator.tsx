@@ -117,7 +117,9 @@ export function AiAgentCostCalculator() {
     <section className="grid gap-5 lg:grid-cols-[.94fr_1.06fr] lg:items-start">
       <form
         className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_24px_70px_rgba(15,23,42,.055)] sm:p-6"
-        onSubmit={(event) => event.preventDefault()}
+        onSubmit={(event) => {
+          event.preventDefault();
+        }}
       >
         <div className="mb-6 flex items-center justify-between gap-4 border-b border-slate-100 pb-5">
           <div>
@@ -140,7 +142,9 @@ export function AiAgentCostCalculator() {
               className={fieldClass}
               inputMode="numeric"
               value={runs}
-              onChange={(e) => setRuns(e.target.value)}
+              onChange={(e) => {
+                setRuns(e.target.value);
+              }}
             />
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
@@ -149,7 +153,9 @@ export function AiAgentCostCalculator() {
               className={fieldClass}
               inputMode="numeric"
               value={callsPerRun}
-              onChange={(e) => setCallsPerRun(e.target.value)}
+              onChange={(e) => {
+                setCallsPerRun(e.target.value);
+              }}
             />
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
@@ -158,7 +164,9 @@ export function AiAgentCostCalculator() {
               className={fieldClass}
               inputMode="numeric"
               value={inputTokens}
-              onChange={(e) => setInputTokens(e.target.value)}
+              onChange={(e) => {
+                setInputTokens(e.target.value);
+              }}
             />
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
@@ -167,7 +175,9 @@ export function AiAgentCostCalculator() {
               className={fieldClass}
               inputMode="numeric"
               value={outputTokens}
-              onChange={(e) => setOutputTokens(e.target.value)}
+              onChange={(e) => {
+                setOutputTokens(e.target.value);
+              }}
             />
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
@@ -176,7 +186,9 @@ export function AiAgentCostCalculator() {
               className={fieldClass}
               inputMode="decimal"
               value={inputRate}
-              onChange={(e) => setInputRate(e.target.value)}
+              onChange={(e) => {
+                setInputRate(e.target.value);
+              }}
             />
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
@@ -185,7 +197,9 @@ export function AiAgentCostCalculator() {
               className={fieldClass}
               inputMode="decimal"
               value={outputRate}
-              onChange={(e) => setOutputRate(e.target.value)}
+              onChange={(e) => {
+                setOutputRate(e.target.value);
+              }}
             />
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
@@ -194,7 +208,9 @@ export function AiAgentCostCalculator() {
               className={fieldClass}
               inputMode="decimal"
               value={toolCostPerRun}
-              onChange={(e) => setToolCostPerRun(e.target.value)}
+              onChange={(e) => {
+                setToolCostPerRun(e.target.value);
+              }}
             />
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-800">
@@ -202,7 +218,9 @@ export function AiAgentCostCalculator() {
             <select
               className={fieldClass}
               value={rateCurrency}
-              onChange={(e) => setRateCurrency(e.target.value)}
+              onChange={(e) => {
+                setRateCurrency(e.target.value);
+              }}
             >
               {currencies.map((currency) => (
                 <option key={currency} value={currency}>
@@ -216,7 +234,9 @@ export function AiAgentCostCalculator() {
             <select
               className={fieldClass}
               value={displayCurrency}
-              onChange={(e) => setDisplayCurrency(e.target.value)}
+              onChange={(e) => {
+                setDisplayCurrency(e.target.value);
+              }}
             >
               {currencies.map((currency) => (
                 <option key={currency} value={currency}>
