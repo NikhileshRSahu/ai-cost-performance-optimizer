@@ -1,36 +1,4 @@
---
--- PostgreSQL database dump
---
-
-
--- Dumped from database version 16.15 (Debian 16.15-1.pgdg13+2)
--- Dumped by pg_dump version 16.15 (Ubuntu 16.15-1.pgdg24.04+2)
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
---
--- Name: auth; Type: SCHEMA; Schema: -; Owner: -
---
-
 CREATE SCHEMA auth;
-
-
-SET default_tablespace = '';
-
-SET default_table_access_method = heap;
-
---
--- Name: account; Type: TABLE; Schema: auth; Owner: -
---
 
 CREATE TABLE auth.account (
     id text NOT NULL,
@@ -48,11 +16,6 @@ CREATE TABLE auth.account (
     "updatedAt" timestamp with time zone NOT NULL
 );
 
-
---
--- Name: session; Type: TABLE; Schema: auth; Owner: -
---
-
 CREATE TABLE auth.session (
     id text NOT NULL,
     "expiresAt" timestamp with time zone NOT NULL,
@@ -64,11 +27,6 @@ CREATE TABLE auth.session (
     "userId" text NOT NULL
 );
 
-
---
--- Name: user; Type: TABLE; Schema: auth; Owner: -
---
-
 CREATE TABLE auth."user" (
     id text NOT NULL,
     name text NOT NULL,
@@ -79,11 +37,6 @@ CREATE TABLE auth."user" (
     "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-
---
--- Name: verification; Type: TABLE; Schema: auth; Owner: -
---
-
 CREATE TABLE auth.verification (
     id text NOT NULL,
     identifier text NOT NULL,
@@ -93,94 +46,34 @@ CREATE TABLE auth.verification (
     "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-
---
--- Name: account account_pkey; Type: CONSTRAINT; Schema: auth; Owner: -
---
-
 ALTER TABLE ONLY auth.account
     ADD CONSTRAINT account_pkey PRIMARY KEY (id);
-
-
---
--- Name: session session_pkey; Type: CONSTRAINT; Schema: auth; Owner: -
---
 
 ALTER TABLE ONLY auth.session
     ADD CONSTRAINT session_pkey PRIMARY KEY (id);
 
-
---
--- Name: session session_token_key; Type: CONSTRAINT; Schema: auth; Owner: -
---
-
 ALTER TABLE ONLY auth.session
     ADD CONSTRAINT session_token_key UNIQUE (token);
-
-
---
--- Name: user user_email_key; Type: CONSTRAINT; Schema: auth; Owner: -
---
 
 ALTER TABLE ONLY auth."user"
     ADD CONSTRAINT user_email_key UNIQUE (email);
 
-
---
--- Name: user user_pkey; Type: CONSTRAINT; Schema: auth; Owner: -
---
-
 ALTER TABLE ONLY auth."user"
     ADD CONSTRAINT user_pkey PRIMARY KEY (id);
-
-
---
--- Name: verification verification_pkey; Type: CONSTRAINT; Schema: auth; Owner: -
---
 
 ALTER TABLE ONLY auth.verification
     ADD CONSTRAINT verification_pkey PRIMARY KEY (id);
 
-
---
--- Name: account_userId_idx; Type: INDEX; Schema: auth; Owner: -
---
-
 CREATE INDEX "account_userId_idx" ON auth.account USING btree ("userId");
-
-
---
--- Name: session_userId_idx; Type: INDEX; Schema: auth; Owner: -
---
 
 CREATE INDEX "session_userId_idx" ON auth.session USING btree ("userId");
 
-
---
--- Name: verification_identifier_idx; Type: INDEX; Schema: auth; Owner: -
---
-
 CREATE INDEX verification_identifier_idx ON auth.verification USING btree (identifier);
 
-
---
--- Name: account account_userId_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: -
---
-
 ALTER TABLE ONLY auth.account
-    ADD CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES auth."user"(id) ON DELETE CASCADE;
-
-
---
--- Name: session session_userId_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: -
---
+    ADD CONSTRAINT "account_userId_fkey"
+    FOREIGN KEY ("userId") REFERENCES auth."user"(id) ON DELETE CASCADE;
 
 ALTER TABLE ONLY auth.session
-    ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId") REFERENCES auth."user"(id) ON DELETE CASCADE;
-
-
---
--- PostgreSQL database dump complete
---
-
-
+    ADD CONSTRAINT "session_userId_fkey"
+    FOREIGN KEY ("userId") REFERENCES auth."user"(id) ON DELETE CASCADE;
