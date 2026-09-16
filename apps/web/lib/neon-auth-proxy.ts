@@ -82,6 +82,7 @@ export function rewriteNeonResponseHeaders(
   return headers;
 }
 
+// Keep the OAuth callback on Evalomics so session cookies remain same-origin.
 function rewriteGoogleAuthorizationUrl(
   value: string,
   callbackUrl: string,
