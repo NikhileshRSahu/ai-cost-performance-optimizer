@@ -18,9 +18,9 @@ export default function HomePage() {
           </p>
           <h1 className="mt-5 text-[clamp(3.2rem,7vw,6.5rem)] font-semibold leading-[.9] tracking-[-.07em] text-white">
             Find AI waste.
-            <span className="block text-white/45">Prove the fix.</span>
+            <span className="block text-white/68">Prove the fix.</span>
           </h1>
-          <p className="mt-7 max-w-lg text-base leading-7 text-white/55 sm:text-lg">
+          <p className="mt-7 max-w-lg text-base leading-7 text-white/70 sm:text-lg">
             Evalomics turns real usage evidence into one ranked optimization,
             tests it against your quality floor, and verifies what actually
             improved.
@@ -39,7 +39,7 @@ export default function HomePage() {
               Free cost calculator
             </Link>
           </div>
-          <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[11px] text-white/35">
+          <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[11px] text-white/55">
             <span>CSV-first</span>
             <span>No prompt content required</span>
             <span>No invented savings</span>
