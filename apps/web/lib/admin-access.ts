@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
-import type { PersistenceDatabase } from '../../../../../src/persistence/database.js';
-import { users } from '../../../../../src/persistence/schema.js';
+import type { PersistenceDatabase } from '../../../src/persistence/database.js';
+import { users } from '../../../src/persistence/schema.js';
 
 function configuredAdminEmails(): ReadonlySet<string> {
   return new Set(
