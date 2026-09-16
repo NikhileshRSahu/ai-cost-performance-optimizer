@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
 import { pilotInvoiceRequests } from '../../../../../../src/persistence/schema';
@@ -54,6 +54,7 @@ export default async function PilotPage({
             eq(pilotInvoiceRequests.plan, FOUNDING_AUDIT_OFFER.plan),
           ),
         )
+        .orderBy(desc(pilotInvoiceRequests.createdAt))
         .limit(1);
 
       invoiceRequest = rows[0] ?? null;
