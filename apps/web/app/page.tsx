@@ -42,7 +42,7 @@ export default function HomePage() {
               Free cost calculator
             </Link>
           </div>
-          <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[11px] text-white/55">
+          <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[11px] text-white/70">
             <span>Full launch beta · $0</span>
             <span>No credit card</span>
             <span>CSV-first</span>
