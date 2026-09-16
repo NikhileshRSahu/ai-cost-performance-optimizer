@@ -1,5 +1,6 @@
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { resolveRuntimeSession } from '../../lib/runtime-session';
+import { readBetterAuthIdentity } from '../../lib/better-auth-session';
 import { acceptInvite } from './action';
 
 const messages: Record<string, string> = {
@@ -22,9 +23,9 @@ export default async function InvitePage({
 }>) {
   const { token } = await params;
   const { error } = await searchParams;
-  const session = await resolveRuntimeSession();
+  const identity = await readBetterAuthIdentity(await headers());
 
-  if (session === null) {
+  if (identity === null) {
     redirect('/login?returnTo=' + encodeURIComponent('/invite/' + token));
   }
 
