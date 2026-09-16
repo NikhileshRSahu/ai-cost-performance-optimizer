@@ -1,11 +1,11 @@
-name: Format immersive premium
+name: Fix product hardening lint
 on:
   push:
-    branches: [feat/production-ready-premium-v1]
+    branches: [fix/product-hardening]
 permissions:
   contents: write
 jobs:
-  format:
+  fix:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
@@ -15,12 +15,29 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npx prettier --write apps/web/app/page.tsx apps/web/components/home/efficiency-story.tsx
+      - run: >-
+          npx eslint --fix
+          apps/web/components/ai-agent-cost-calculator.tsx
+          apps/web/components/cost-per-outcome-calculator.tsx
+          apps/web/components/llm-cost-calculator.tsx
+          apps/web/components/prompt-cache-savings-calculator.tsx
+          apps/web/hooks/use-fx-rate.ts
+          apps/web/app/api/fx/route.ts
+          tests/web/fx-route.test.ts
+      - run: >-
+          npx prettier --write
+          apps/web/components/ai-agent-cost-calculator.tsx
+          apps/web/components/cost-per-outcome-calculator.tsx
+          apps/web/components/llm-cost-calculator.tsx
+          apps/web/components/prompt-cache-savings-calculator.tsx
+          apps/web/hooks/use-fx-rate.ts
+          apps/web/app/api/fx/route.ts
+          tests/web/fx-route.test.ts
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if ! git diff --quiet; then
-            git add apps/web/app/page.tsx apps/web/components/home/efficiency-story.tsx
-            git commit -m "chore: format immersive premium UI"
+            git add .
+            git commit -m "chore: apply product hardening lint fixes"
             git push
           fi
