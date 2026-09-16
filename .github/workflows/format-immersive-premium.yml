@@ -23,7 +23,6 @@ jobs:
           apps/web/components/prompt-cache-savings-calculator.tsx
           apps/web/hooks/use-fx-rate.ts
           apps/web/app/api/fx/route.ts
-          tests/web/fx-route.test.ts
       - run: >-
           npx prettier --write
           apps/web/components/ai-agent-cost-calculator.tsx
@@ -32,7 +31,6 @@ jobs:
           apps/web/components/prompt-cache-savings-calculator.tsx
           apps/web/hooks/use-fx-rate.ts
           apps/web/app/api/fx/route.ts
-          tests/web/fx-route.test.ts
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
