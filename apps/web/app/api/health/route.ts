@@ -5,7 +5,11 @@ import {
   publishOperationalEvent,
   resolveRequestId,
 } from '../../../../../src/operations/observability';
-import { createDatabase } from '../../../../../src/persistence/database';
+import {
+  createDatabase,
+  type DatabaseHandle,
+} from '../../../../../src/persistence/database';
+import { hasSelfHostedAuthConfiguration } from '../../../lib/auth-config';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,19 +22,21 @@ async function publishHealthEvent(
   });
 }
 
-async function checkAuthProvider(): Promise<
-  'ok' | 'not_configured' | 'unavailable'
-> {
-  const base = process.env.NEON_AUTH_BASE_URL?.replace(/\/+$/, '');
-  if (base === undefined || base.length === 0) return 'not_configured';
+async function checkAuthProvider(
+  database: DatabaseHandle,
+): Promise<'ok' | 'not_configured' | 'unavailable'> {
+  if (!hasSelfHostedAuthConfiguration()) return 'not_configured';
 
   try {
-    const response = await fetch(`${base}/.well-known/jwks.json`, {
-      method: 'GET',
-      headers: { accept: 'application/json' },
-      cache: 'no-store',
-    });
-    return response.ok ? 'ok' : 'unavailable';
+    const result = await database.pool.query<{ ready: boolean }>(`
+      select (
+        to_regclass('auth.user') is not null
+        and to_regclass('auth.session') is not null
+        and to_regclass('auth.account') is not null
+        and to_regclass('auth.verification') is not null
+      ) as ready
+    `);
+    return result.rows[0]?.ready === true ? 'ok' : 'unavailable';
   } catch {
     return 'unavailable';
   }
@@ -59,7 +65,7 @@ export async function GET(request: Request) {
         status: 'not_ready',
         checks: {
           database: 'not_configured',
-          auth: await checkAuthProvider(),
+          auth: 'not_configured',
         },
       },
       { status: 503, headers: { 'x-request-id': requestId } },
@@ -68,16 +74,17 @@ export async function GET(request: Request) {
 
   const database = createDatabase(databaseUrl);
   let databaseStatus: 'ok' | 'unavailable' = 'ok';
+  let authStatus: 'ok' | 'not_configured' | 'unavailable' = 'unavailable';
 
   try {
     await database.pool.query('select 1');
+    authStatus = await checkAuthProvider(database);
   } catch {
     databaseStatus = 'unavailable';
   } finally {
     await database.close();
   }
 
-  const authStatus = await checkAuthProvider();
   const ready = databaseStatus === 'ok' && authStatus === 'ok';
 
   await publishHealthEvent(
