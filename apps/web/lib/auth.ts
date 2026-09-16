@@ -3,7 +3,12 @@ import { APIError } from 'better-auth/api';
 import { and, eq } from 'drizzle-orm';
 import { Pool } from 'pg';
 import { createDatabase } from '../../../src/persistence/database';
-import { memberships, users } from '../../../src/persistence/schema';
+import {
+  memberships,
+  supportRequests,
+  users,
+  workspaceInvitations,
+} from '../../../src/persistence/schema';
 import {
   hasSelfHostedAuthConfiguration,
   requireSelfHostedAuthConfiguration,
@@ -78,10 +83,22 @@ function createWebAuth() {
               });
             }
 
-            await database.db
-              .delete(memberships)
-              .where(eq(memberships.userId, appUser.id));
-            await database.db.delete(users).where(eq(users.id, appUser.id));
+            await database.db.transaction(async (tx) => {
+              await tx
+                .update(supportRequests)
+                .set({ userId: null })
+                .where(eq(supportRequests.userId, appUser.id));
+
+              await tx
+                .update(workspaceInvitations)
+                .set({ acceptedByUserId: null })
+                .where(eq(workspaceInvitations.acceptedByUserId, appUser.id));
+
+              await tx
+                .delete(memberships)
+                .where(eq(memberships.userId, appUser.id));
+              await tx.delete(users).where(eq(users.id, appUser.id));
+            });
           } finally {
             await database.close();
           }
