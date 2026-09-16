@@ -1,5 +1,4 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { NextRequest } from 'next/server';
 import { GET } from '../../apps/web/app/api/fx/route.js';
 
 afterEach(() => {
@@ -12,7 +11,7 @@ describe('FX reference endpoint', () => {
     vi.stubGlobal('fetch', fetchSpy);
 
     const response = await GET(
-      new NextRequest('http://localhost/api/fx?base=USD&quote=USD'),
+      new Request('http://localhost/api/fx?base=USD&quote=USD'),
     );
     const body = (await response.json()) as { rate: string; source: string };
 
@@ -39,7 +38,7 @@ describe('FX reference endpoint', () => {
     );
 
     const response = await GET(
-      new NextRequest('http://localhost/api/fx?base=USD&quote=INR'),
+      new Request('http://localhost/api/fx?base=USD&quote=INR'),
     );
     const body = (await response.json()) as {
       rate: string;
@@ -55,7 +54,7 @@ describe('FX reference endpoint', () => {
 
   it('rejects unsupported currencies', async () => {
     const response = await GET(
-      new NextRequest('http://localhost/api/fx?base=USD&quote=XYZ'),
+      new Request('http://localhost/api/fx?base=USD&quote=XYZ'),
     );
 
     expect(response.status).toBe(400);
@@ -71,7 +70,7 @@ describe('FX reference endpoint', () => {
     );
 
     const response = await GET(
-      new NextRequest('http://localhost/api/fx?base=USD&quote=INR'),
+      new Request('http://localhost/api/fx?base=USD&quote=INR'),
     );
 
     expect(response.status).toBe(503);
