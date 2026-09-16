@@ -89,8 +89,8 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
                 style={{ color: '#ffffff' }}
                 href="/login"
               >
-              Start free
-            </Link>
+                Start free
+              </Link>
             </nav>
           </details>
         </div>
