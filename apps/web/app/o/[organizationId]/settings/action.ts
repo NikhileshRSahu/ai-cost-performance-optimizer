@@ -140,7 +140,7 @@ export async function permanentlyDeleteWorkspace(
   } finally {
     await database.close();
   }
-  redirect('/');
+  redirect('/account?workspaceDeleted=true');
 }
 
 export async function createInvite(formData: FormData): Promise<never> {
