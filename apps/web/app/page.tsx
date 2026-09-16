@@ -29,12 +29,14 @@ export default function HomePage() {
             <Link
               href="/login"
               className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 no-underline transition hover:bg-emerald-100"
+              style={{ color: '#0b1017' }}
             >
               Run the Work MRI <ArrowRight className="size-4" />
             </Link>
             <Link
               href="/tools/llm-cost-calculator"
               className="inline-flex min-h-12 items-center rounded-xl border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white no-underline transition hover:bg-white/[0.08]"
+              style={{ color: '#ffffff' }}
             >
               Free cost calculator
             </Link>
