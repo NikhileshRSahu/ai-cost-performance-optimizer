@@ -12,6 +12,7 @@ import {
   FlaskConical,
   Menu,
   ShieldCheck,
+  Settings,
   X,
 } from 'lucide-react';
 import { EvalomicsMark } from '../evalomics-mark';
@@ -27,6 +28,7 @@ const journey = [
 
 const utility = [
   { slug: '/telemetry', label: 'Telemetry', icon: BarChart3 },
+  { slug: '/settings', label: 'Settings', icon: Settings },
 ] as const;
 
 function NavLinks({
