@@ -11,6 +11,7 @@ import {
   acceptWorkspaceInvitation,
   acceptWorkspaceInvitationForIdentity,
   createWorkspaceInvitation,
+  revokeWorkspaceInvitation,
 } from '../../src/workbench/workspace-invitations.js';
 
 const databaseUrl = process.env.DATABASE_URL;
@@ -195,6 +196,38 @@ describe('workspace invitations', () => {
         role: 'OPERATOR',
       }),
     ]);
+  });
+
+
+  it('lets the owner revoke a pending invitation', async () => {
+    const invite = await createWorkspaceInvitation({
+      db: database.db,
+      session: ownerSession,
+      organizationId: 'org-1',
+      email: 'member@example.com',
+      role: 'VIEWER',
+    });
+
+    await revokeWorkspaceInvitation({
+      db: database.db,
+      session: ownerSession,
+      organizationId: 'org-1',
+      invitationId: invite.id,
+    });
+
+    const [stored] = await database.db.select().from(workspaceInvitations);
+    expect(stored.status).toBe('REVOKED');
+
+    await expect(
+      acceptWorkspaceInvitation({
+        db: database.db,
+        session: Object.freeze({
+          userId: 'member-user',
+          memberships: Object.freeze([]),
+        }),
+        token: invite.token,
+      }),
+    ).rejects.toThrow('INVITE_NOT_FOUND');
   });
 
 });
