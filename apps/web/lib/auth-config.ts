@@ -21,6 +21,7 @@ export function resolveAuthBaseUrl(
   return (configured ?? 'http://localhost:3000').replace(/\/+$/, '');
 }
 
+// Google must always return to the Evalomics-owned callback.
 export function resolveGoogleCallbackUrl(
   environment: AuthEnvironment = process.env,
 ): string {
