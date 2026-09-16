@@ -2492,6 +2492,11 @@ samp,
   color: #0b1017 !important;
 }
 
+.org-workbench .empty-state .primary-action {
+  background: #f8fafc !important;
+  color: #0b1017 !important;
+}
+
 .org-workbench .mri-panel,
 .org-workbench .mri-panel :is(p, span, small, dt, dd, li, th, td, label) {
   color: #334155 !important;
