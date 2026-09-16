@@ -34,10 +34,13 @@ async function expectAccessible(page: Page) {
 async function reachVerification(
   page: Page,
   organizationId: string,
+  demo = true,
 ): Promise<'READY' | 'ALREADY_VERIFIED'> {
   await page.goto(`/o/${organizationId}/import`);
   await page.locator('input[name="usageCsv"]').setInputFiles(baselineCsv);
-  await page.locator('input[name="isDemo"]').check();
+  if (demo) {
+    await page.locator('input[name="isDemo"]').check();
+  }
   await page.getByRole('button', { name: 'Validate and import' }).click();
   await expect(page.getByRole('heading', { name: 'PARTIAL' })).toBeVisible();
   const importSummary = page.getByLabel('Import evidence summary');
@@ -61,7 +64,9 @@ async function reachVerification(
     }),
   ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
   await page.locator('input[name="benchmarkCsv"]').setInputFiles(benchmarkCsv);
-  await page.locator('input[name="isDemo"]').check();
+  if (demo) {
+    await page.locator('input[name="isDemo"]').check();
+  }
   await page.getByRole('button', { name: 'Evaluate candidate' }).click();
 
   await expect(
@@ -163,6 +168,25 @@ test('hard customer journey reaches verified savings', async ({ page }) => {
   await expect(
     page.getByText('Verified net saving', { exact: true }),
   ).toBeVisible();
+});
+
+test('non-demo customer path reaches verified savings without demo provenance', async ({
+  page,
+}) => {
+  test.setTimeout(90_000);
+  const state = await reachVerification(page, 'journey-live-org', false);
+  if (state === 'READY') {
+    await submitPostChange(page, '0.93');
+    await expect(page.getByRole('heading', { name: 'VERIFIED' })).toBeVisible();
+  }
+
+  await page.goto('/o/journey-live-org');
+  await expect(
+    page.locator('.state-badge.state-verified').first(),
+  ).toBeVisible();
+  await expect(
+    page.getByText('Synthetic demo data — not a customer result.'),
+  ).toHaveCount(0);
 });
 
 test('failed post-change quality never becomes verified', async ({ page }) => {

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Security | Evalomics',
   description:
-    'Security model and release boundaries for the Evalomics CSV-first pilot.',
+    'Security model and release boundaries for the Evalomics free launch beta.',
 };
 
 export default function SecurityPage() {
@@ -13,7 +14,7 @@ export default function SecurityPage() {
         <p className="eyebrow">Security model</p>
         <h1>Trust is a release gate, not a marketing claim.</h1>
         <p className="lede">
-          Evalomics keeps the CSV-first pilot deliberately narrower than the
+          Evalomics keeps the free launch beta deliberately narrower than the
           long-term connector roadmap. Features that require deeper credentials
           stay disabled until their controls pass review.
         </p>
@@ -43,7 +44,7 @@ export default function SecurityPage() {
           <p>
             Google authentication tokens are configured for encrypted storage.
             Provider-admin and workspace-connector secrets are not collected in
-            the CSV pilot.
+            the launch beta.
           </p>
         </article>
         <article>
@@ -75,10 +76,15 @@ export default function SecurityPage() {
       </section>
 
       <section className="evidence-note">
-        <strong>Reporting:</strong> until a dedicated security mailbox is live,
-        security reporting uses the current founder/support route published with
-        the beta deployment. Do not publish an address that is not actively
-        monitored.
+        <strong>Reporting:</strong> security, privacy, billing, and product
+        issues can be submitted through the persisted support route. Requests
+        receive a reference ID and are routed to the configured operations alert
+        channel.
+        <div className="mt-4">
+          <Link className="primary-action" href="/support">
+            Open support & security
+          </Link>
+        </div>
       </section>
     </div>
   );

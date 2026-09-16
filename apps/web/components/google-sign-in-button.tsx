@@ -4,7 +4,9 @@ import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { authClient } from '../lib/auth-client';
 
-export function GoogleSignInButton() {
+export function GoogleSignInButton({
+  callbackPath = '/start',
+}: Readonly<{ callbackPath?: string }>) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -15,7 +17,7 @@ export function GoogleSignInButton() {
       const origin = window.location.origin;
       const result = await authClient.signIn.social({
         provider: 'google',
-        callbackURL: `${origin}/start`,
+        callbackURL: `${origin}${callbackPath}`,
         errorCallbackURL: `${origin}/login?error=auth`,
       });
       if (result.error !== null) {

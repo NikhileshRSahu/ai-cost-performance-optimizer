@@ -36,6 +36,20 @@
       "when": 1789420200000,
       "tag": "0004_design_partner_permission",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1789557000000,
+      "tag": "0005_saas_operations",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1789558200000,
+      "tag": "0006_workspace_onboarding",
+      "breakpoints": true
     }
   ]
 }

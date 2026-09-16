@@ -77,7 +77,7 @@ export default function ResearchPage() {
 
       <div className="hero-actions">
         <Link href="/methodology">Read the claim methodology</Link>
-        <Link href="/pricing">See the founding-pilot offer</Link>
+        <Link href="/pricing">See the free launch beta</Link>
       </div>
     </div>
   );

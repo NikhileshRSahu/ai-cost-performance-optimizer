@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { ArrowRight, ShieldCheck } from 'lucide-react';
 import { CostPerOutcomeCalculator } from '../../../components/cost-per-outcome-calculator';
 
 export const metadata: Metadata = {
@@ -10,29 +11,76 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <div className="landing-stack">
-      <section className="hero hero-wide">
-        <p className="eyebrow">Free tool · no login required</p>
-        <h1>Cost per Successful Outcome Calculator</h1>
-        <p className="lede">
-          Estimate the economic cost of a successful AI outcome from monthly
-          cost, request volume, and your measured success rate.
+    <div className="grid gap-12 pb-8 sm:gap-14">
+      <section
+        className="max-w-4xl pt-4 sm:pt-8"
+        aria-labelledby="calculator-title"
+      >
+        <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700">
+          Free tool · no login
+        </p>
+        <h1
+          id="calculator-title"
+          className="mt-4 !text-[clamp(3.2rem,7vw,6.4rem)] !leading-[.9] !tracking-[-.07em] text-slate-950"
+        >
+          Cost per outcome,
+          <span className="block text-slate-600">
+            not just cost per request.
+          </span>
+        </h1>
+        <p className="mt-7 max-w-2xl text-base leading-7 text-slate-600">
+          Use your measured success rate to see what one successful AI outcome
+          actually costs. Currency conversion is explicit, timestamped, and
+          withheld if a reference rate cannot be loaded.
         </p>
       </section>
 
       <CostPerOutcomeCalculator />
 
-      <section className="evidence-note">
-        <strong>Calculation boundary:</strong> the unsuccessful-request spend
-        assumes cost is distributed evenly across requests. It is a diagnostic
-        estimate, not a verified waste claim.
+      <section className="grid gap-7 rounded-[24px] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,.045)] sm:p-8 lg:grid-cols-[.92fr_1.08fr] lg:items-center">
+        <div>
+          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-700">
+            Reliability changes economics
+          </p>
+          <h2 className="mt-3 !text-[clamp(2rem,4vw,3.5rem)] !leading-[.98] !tracking-[-.05em] text-slate-950">
+            A cheaper request
+            <span className="block text-slate-600">
+              can still be a worse outcome.
+            </span>
+          </h2>
+        </div>
+        <div>
+          <p className="m-0 max-w-2xl text-sm leading-6 text-slate-600">
+            Evalomics separates observed cost from outcome quality, then uses
+            benchmark and post-change evidence before any saving can become
+            Verified.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link
+              href="/login"
+              className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold no-underline transition hover:bg-slate-800"
+              style={{ color: '#ffffff' }}
+            >
+              Continue to the Work MRI <ArrowRight className="size-4" />
+            </Link>
+            <Link
+              href="/tools"
+              className="inline-flex min-h-11 items-center rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-800 no-underline transition hover:bg-slate-50"
+            >
+              Explore free tools
+            </Link>
+          </div>
+        </div>
       </section>
 
-      <div className="hero-actions">
-        <Link className="primary-action" href="/login">
-          Run the free Work MRI
-        </Link>
-        <Link href="/tools">Explore all free tools</Link>
+      <div className="flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
+        <ShieldCheck className="mt-1 size-4 shrink-0 text-slate-600" />
+        <p className="m-0">
+          <strong className="text-slate-900">Calculation boundary:</strong>{' '}
+          implied unsuccessful-request spend assumes cost is distributed evenly
+          across requests. It is a diagnostic estimate, not a verified waste
+          claim.
+        </p>
       </div>
     </div>
   );

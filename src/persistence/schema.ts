@@ -49,6 +49,10 @@ export const organizations = pgTable('organizations', {
     withTimezone: true,
     mode: 'string',
   }),
+  onboardingCompletedAt: timestamp('onboarding_completed_at', {
+    withTimezone: true,
+    mode: 'string',
+  }),
   isDemo: boolean('is_demo').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
     .notNull()
@@ -478,5 +482,60 @@ export const designPartnerPermissions = pgTable(
       table.organizationId,
       table.status,
     ),
+  ],
+);
+
+export const workspaceInvitations = pgTable(
+  'workspace_invitations',
+  {
+    id: text('id').primaryKey(),
+    organizationId: text('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+    email: text('email').notNull(),
+    role: roleEnum('role').notNull(),
+    tokenHash: text('token_hash').notNull(),
+    status: text('status').notNull().default('PENDING'),
+    expiresAt: timestamp('expires_at', {
+      withTimezone: true,
+      mode: 'string',
+    }).notNull(),
+    createdByUserId: text('created_by_user_id').notNull(),
+    acceptedByUserId: text('accepted_by_user_id'),
+    acceptedAt: timestamp('accepted_at', {
+      withTimezone: true,
+      mode: 'string',
+    }),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    uniqueIndex('workspace_invitations_token_hash_uq').on(table.tokenHash),
+    index('workspace_invitations_org_status_idx').on(
+      table.organizationId,
+      table.status,
+    ),
+  ],
+);
+
+export const supportRequests = pgTable(
+  'support_requests',
+  {
+    id: text('id').primaryKey(),
+    organizationId: text('organization_id').references(() => organizations.id, {
+      onDelete: 'set null',
+    }),
+    userId: text('user_id'),
+    category: text('category').notNull(),
+    subject: text('subject').notNull(),
+    message: text('message').notNull(),
+    status: text('status').notNull().default('OPEN'),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index('support_requests_status_idx').on(table.status, table.createdAt),
   ],
 );

@@ -15,6 +15,9 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
 
   return (
     <>
+      <div className="bg-slate-950 px-4 py-2 text-center text-[11px] font-semibold text-white">
+        Launch beta · Full workflow free · No credit card
+      </div>
       <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/85 backdrop-blur-xl">
         <div className="mx-auto flex min-h-16 w-[min(1320px,calc(100%-2rem))] items-center justify-between gap-6">
           <Link
@@ -49,7 +52,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
               style={{ color: '#ffffff' }}
               href="/login"
             >
-              Sign in
+              Start free
             </Link>
           </nav>
           <details className="relative md:hidden">
@@ -86,7 +89,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
                 style={{ color: '#ffffff' }}
                 href="/login"
               >
-                Sign in
+                Start free
               </Link>
             </nav>
           </details>

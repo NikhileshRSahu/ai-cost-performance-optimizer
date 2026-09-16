@@ -37,6 +37,7 @@ try {
       ('demo-org', 'Demo Optimizer Co', 'USD', 'UTC', '10', true),
       ('journey-org', 'Journey Demo Co', 'USD', 'UTC', '10', true),
       ('journey-bad-org', 'Journey Guardrail Co', 'USD', 'UTC', '10', true),
+      ('journey-live-org', 'Journey Production Path Co', 'USD', 'UTC', '10', false),
       ('other-org', 'Other Org Secret', 'USD', 'UTC', '10', false)`,
   );
 
@@ -51,7 +52,8 @@ try {
      VALUES
        ('demo-org', 'founder-user', 'OWNER'),
        ('journey-org', 'founder-user', 'OWNER'),
-       ('journey-bad-org', 'founder-user', 'OWNER')`,
+       ('journey-bad-org', 'founder-user', 'OWNER'),
+       ('journey-live-org', 'founder-user', 'OWNER')`,
   );
 
   await client.query(

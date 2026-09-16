@@ -85,21 +85,39 @@ export async function requestPilotInvoice(args: {
       and(
         eq(pilotInvoiceRequests.organizationId, record.organizationId),
         eq(pilotInvoiceRequests.plan, record.plan),
-        eq(pilotInvoiceRequests.status, 'REQUESTED'),
       ),
     )
     .limit(1);
 
   if (existing[0] !== undefined) {
+    const updated = (
+      await args.db
+        .update(pilotInvoiceRequests)
+        .set({
+          amountCents: record.amountCents,
+          currency: record.currency,
+          contactEmail: record.contactEmail,
+          companyName: record.companyName,
+          requestedByUserId: record.requestedByUserId,
+          status: 'REQUESTED',
+        })
+        .where(eq(pilotInvoiceRequests.id, existing[0].id))
+        .returning()
+    ).at(0);
+
+    if (updated === undefined) {
+      throw new Error('PILOT_INVOICE_PERSISTENCE_FAILED');
+    }
+
     return Object.freeze({
-      id: existing[0].id,
-      organizationId: existing[0].organizationId,
-      plan: existing[0].plan,
-      amountCents: existing[0].amountCents,
-      currency: existing[0].currency,
-      contactEmail: existing[0].contactEmail,
-      companyName: existing[0].companyName,
-      requestedByUserId: existing[0].requestedByUserId,
+      id: updated.id,
+      organizationId: updated.organizationId,
+      plan: updated.plan,
+      amountCents: updated.amountCents,
+      currency: updated.currency,
+      contactEmail: updated.contactEmail,
+      companyName: updated.companyName,
+      requestedByUserId: updated.requestedByUserId,
       status: 'REQUESTED' as const,
     });
   }

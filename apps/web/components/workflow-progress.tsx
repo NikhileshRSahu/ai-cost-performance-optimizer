@@ -46,7 +46,7 @@ export function WorkflowProgress({
                     ? 'bg-white/[0.085] text-white'
                     : state === 'complete'
                       ? 'text-emerald-200/70 hover:bg-white/[0.04]'
-                      : 'text-white/30 hover:bg-white/[0.04] hover:text-white/55')
+                      : 'text-white/70 hover:bg-white/[0.04] hover:text-white/90')
                 }
               >
                 <span

@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { eq } from 'drizzle-orm';
 import { createDatabase } from '../../src/persistence/database.js';
 import {
   memberships,
@@ -100,5 +101,41 @@ describe('founding pilot invoice persistence', () => {
     expect(rows).toHaveLength(1);
     expect(first.id).toBe(second.id);
     expect(rows[0]?.id).toBe(first.id);
+  });
+
+  it('reuses the same billing record after a cancelled request is retried', async () => {
+    const first = await requestPilotInvoice({
+      db: database.db,
+      session: owner,
+      input: {
+        organizationId: 'pilot-org',
+        companyName: 'Pilot Company',
+        contactEmail: 'billing@pilot.example',
+      },
+    });
+
+    await database.db
+      .update(pilotInvoiceRequests)
+      .set({ status: 'CANCELLED' })
+      .where(eq(pilotInvoiceRequests.id, first.id));
+
+    const retried = await requestPilotInvoice({
+      db: database.db,
+      session: owner,
+      input: {
+        organizationId: 'pilot-org',
+        companyName: 'Pilot Company 2',
+        contactEmail: 'new-billing@pilot.example',
+      },
+    });
+
+    const rows = await database.db.select().from(pilotInvoiceRequests);
+    expect(rows).toHaveLength(1);
+    expect(retried.id).toBe(first.id);
+    expect(rows[0]).toMatchObject({
+      status: 'REQUESTED',
+      companyName: 'Pilot Company 2',
+      contactEmail: 'new-billing@pilot.example',
+    });
   });
 });

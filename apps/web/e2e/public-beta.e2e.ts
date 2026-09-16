@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
 test('public beta trust path is visible without authentication', async ({
@@ -10,6 +11,8 @@ test('public beta trust path is visible without authentication', async ({
       name: 'Find AI waste. Prove the fix.',
     }),
   ).toBeVisible();
+  await expect(page.getByText('Full launch beta · $0')).toBeVisible();
+  await expect(page.getByText('No credit card', { exact: true })).toBeVisible();
   await expect(page.getByText('No invented savings')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Research' })).toBeVisible();
   await expect(
@@ -40,7 +43,7 @@ test('public beta trust path is visible without authentication', async ({
   await expect(
     page.getByRole('heading', { name: 'Use the minimum evidence needed.' }),
   ).toBeVisible();
-  await expect(page.getByText('Legal-review status:')).toBeVisible();
+  await expect(page.getByText('Beta transparency:')).toBeVisible();
 
   await page.getByRole('link', { name: 'Security' }).click();
   await expect(
@@ -57,4 +60,89 @@ test('public beta trust path is visible without authentication', async ({
     }),
   ).toBeVisible();
   await expect(page.getByText('No guaranteed savings')).toBeVisible();
+});
+
+test('public CTA foregrounds remain readable on their backgrounds', async ({
+  page,
+}) => {
+  await page.goto('/');
+
+  const heroPrimary = page.getByRole('link', {
+    name: 'Start free — run the Work MRI',
+  });
+  await expect(heroPrimary).toBeVisible();
+  const heroStyles = await heroPrimary.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { color: style.color, backgroundColor: style.backgroundColor };
+  });
+  expect(heroStyles.color).not.toBe(heroStyles.backgroundColor);
+
+  const calculatorCta = page.getByRole('link', {
+    name: 'Free cost calculator',
+  });
+  await expect(calculatorCta).toBeVisible();
+  const calculatorStyles = await calculatorCta.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { color: style.color, backgroundColor: style.backgroundColor };
+  });
+  expect(calculatorStyles.color).not.toBe(calculatorStyles.backgroundColor);
+
+  await page.goto('/pricing');
+
+  const freeCta = page.getByRole('link', {
+    name: 'Start free with your data',
+  });
+  await expect(freeCta).toBeVisible();
+  const freeStyles = await freeCta.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { color: style.color, backgroundColor: style.backgroundColor };
+  });
+  expect(freeStyles.color).not.toBe(freeStyles.backgroundColor);
+});
+
+test('public launch surfaces have no serious accessibility blockers', async ({
+  page,
+}) => {
+  const routes = [
+    '/',
+    '/pricing',
+    '/tools',
+    '/login',
+    '/privacy',
+    '/security',
+    '/terms',
+    '/support',
+  ] as const;
+
+  for (const route of routes) {
+    await page.goto(route);
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+      .analyze();
+    const blocking = results.violations.filter(
+      (violation) =>
+        violation.impact === 'critical' || violation.impact === 'serious',
+    );
+    expect(blocking, route + '\n' + JSON.stringify(blocking, null, 2)).toEqual(
+      [],
+    );
+  }
+});
+
+test('public acquisition pages fit a phone viewport without horizontal overflow', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+
+  for (const route of ['/', '/pricing', '/login', '/tools'] as const) {
+    await page.goto(route);
+    const dimensions = await page.evaluate(() => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      innerWidth: window.innerWidth,
+    }));
+    expect(
+      dimensions.scrollWidth,
+      route + ' overflows the mobile viewport',
+    ).toBeLessThanOrEqual(dimensions.innerWidth + 1);
+  }
 });

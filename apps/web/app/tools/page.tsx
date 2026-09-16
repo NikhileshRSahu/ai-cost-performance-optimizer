@@ -48,9 +48,9 @@ export default function ToolsPage() {
         </p>
         <h1 className="mt-4 !text-[clamp(3.2rem,7vw,6.6rem)] !leading-[.9] !tracking-[-.07em] text-slate-950">
           Measure one thing
-          <span className="block text-slate-400">before you optimize it.</span>
+          <span className="block text-slate-600">before you optimize it.</span>
         </h1>
-        <p className="mt-7 max-w-2xl text-base leading-7 text-slate-500">
+        <p className="mt-7 max-w-2xl text-base leading-7 text-slate-600">
           These are small exact-arithmetic tools, not the main product. They
           help you understand one economic question before the Work MRI
           diagnoses what is actually worth changing.
@@ -68,14 +68,14 @@ export default function ToolsPage() {
               <div className="grid size-10 place-items-center rounded-xl border border-slate-200 bg-slate-50 text-slate-600 transition group-hover:border-slate-300 group-hover:text-slate-950">
                 <Icon className="size-4.5" />
               </div>
-              <span className="font-mono text-[10px] font-semibold text-slate-400">
+              <span className="font-mono text-[10px] font-semibold text-slate-600">
                 0{index + 1}
               </span>
             </div>
             <h2 className="mt-12 text-xl font-semibold tracking-[-0.03em] text-slate-950">
               {label}
             </h2>
-            <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
+            <p className="mt-2 max-w-md text-sm leading-6 text-slate-600">
               {description}
             </p>
             <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-slate-900">
@@ -88,13 +88,13 @@ export default function ToolsPage() {
 
       <section className="grid gap-6 rounded-[24px] border border-slate-200 bg-slate-950 p-6 text-white sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
-          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-emerald-300/60">
+          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-emerald-200/90">
             From calculator to diagnosis
           </p>
           <h2 className="mt-3 text-2xl font-semibold tracking-[-0.035em] text-white sm:text-3xl">
             Know the cost? Now find the waste.
           </h2>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-white/48">
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-white/75">
             The Work MRI ranks evidence-backed inefficiencies and tells you
             which bounded change is worth benchmarking next.
           </p>
@@ -102,6 +102,7 @@ export default function ToolsPage() {
         <Link
           href="/login"
           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 no-underline transition hover:bg-emerald-100"
+          style={{ color: '#0b1017' }}
         >
           Run the free Work MRI <ArrowRight className="size-4" />
         </Link>
