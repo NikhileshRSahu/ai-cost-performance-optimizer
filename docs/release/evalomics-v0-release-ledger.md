@@ -1,7 +1,9 @@
 # Evalomics V0 Release Ledger
 
-**Release branch:** `fix/recovery-ui-backend`  
-**Release PR:** #32  
+**Release branch:** `fix/recovery-ui-backend`
+
+**Release PR:** #32
+
 **Recorded:** 2026-09-16
 
 ## Candidate
@@ -17,29 +19,25 @@
 
 ## Automated release gates
 
-| Gate | Result | Evidence |
-|---|---|---|
-| npm ci | PASS | CI run 35058289299 |
-| npm run check | PASS | CI run 35058289299 |
-| web build | PASS | CI run 35058289299 |
-| DB tests | PASS | CI run 35058289299 |
-| DB backup/restore drill | PASS | CI run 35058289299 |
-| Playwright install | PASS | CI run 35058289299 |
-| Full web E2E | PASS | CI run 35058289299 |
-| Accessibility assertions | PASS | Included in passing Playwright E2E |
-| npm audit --audit-level=high | PASS | CI run 35058289299 |
-| Docker build | PASS | CI run 35058289299 |
-| gitleaks | PASS | CI run 35058289299 |
+- npm ci: PASS — CI run `35058289299`
+- npm run check: PASS — CI run `35058289299`
+- web build: PASS — CI run `35058289299`
+- DB tests: PASS — CI run `35058289299`
+- DB backup/restore drill: PASS — CI run `35058289299`
+- Playwright install: PASS — CI run `35058289299`
+- Full web E2E: PASS — CI run `35058289299`
+- Accessibility assertions: PASS — included in passing Playwright E2E
+- npm audit --audit-level=high: PASS — CI run `35058289299`
+- Docker build: PASS — CI run `35058289299`
+- gitleaks: PASS — CI run `35058289299`
 
 ## Preview runtime verification
 
-| Gate | Result | Evidence |
-|---|---|---|
-| Fresh deployment from candidate SHA | PASS | dpl_Hd1XGpYGewGcU1VqkF2BqRhx6xsW |
-| Preview state READY | PASS | Vercel deployment metadata |
-| Preview /api/health | BLOCKED | 503: database=not_configured, auth=not_configured |
-| Preview DB runtime | BLOCKED | Preview environment has no DATABASE_URL |
-| Preview auth runtime | BLOCKED | Preview environment has no NEON_AUTH_BASE_URL |
+- Fresh deployment from candidate SHA: PASS — `dpl_Hd1XGpYGewGcU1VqkF2BqRhx6xsW`
+- Preview state: PASS — READY
+- Preview `/api/health`: BLOCKED — 503 with `database=not_configured` and `auth=not_configured`
+- Preview DB runtime: BLOCKED — preview environment has no `DATABASE_URL`
+- Preview auth runtime: BLOCKED — preview environment has no `NEON_AUTH_BASE_URL`
 
 The preview runtime failure is configuration-specific. It is not an application build failure: the exact candidate built successfully in GitHub CI and Vercel, and the deployment is READY.
 
