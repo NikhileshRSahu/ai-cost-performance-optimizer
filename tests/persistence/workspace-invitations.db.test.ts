@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { eq } from 'drizzle-orm';
 import { createDatabase } from '../../src/persistence/database.js';
 import {
   memberships,
@@ -8,6 +9,7 @@ import {
 } from '../../src/persistence/schema.js';
 import {
   acceptWorkspaceInvitation,
+  acceptWorkspaceInvitationForIdentity,
   createWorkspaceInvitation,
 } from '../../src/workbench/workspace-invitations.js';
 
@@ -146,4 +148,53 @@ describe('workspace invitations', () => {
       }),
     ).rejects.toThrow('INVITE_EXPIRED');
   });
+
+  it('accepts a first-time auth identity without creating a personal workspace', async () => {
+    const invite = await createWorkspaceInvitation({
+      db: database.db,
+      session: ownerSession,
+      organizationId: 'org-1',
+      email: 'fresh@example.com',
+      role: 'OPERATOR',
+      now: new Date('2026-09-16T00:00:00Z'),
+    });
+
+    const result = await acceptWorkspaceInvitationForIdentity({
+      db: database.db,
+      identity: {
+        provider: 'better-auth/google',
+        subject: 'fresh-auth-user',
+        email: 'fresh@example.com',
+        emailVerified: true,
+      },
+      token: invite.token,
+      now: new Date('2026-09-16T01:00:00Z'),
+    });
+
+    expect(result).toEqual({ organizationId: 'org-1', role: 'OPERATOR' });
+
+    const allOrganizations = await database.db.select().from(organizations);
+    expect(allOrganizations).toHaveLength(1);
+
+    const freshUser = (
+      await database.db
+        .select()
+        .from(users)
+        .where(eq(users.email, 'fresh@example.com'))
+        .limit(1)
+    ).at(0);
+    expect(freshUser).toBeDefined();
+
+    const freshMemberships = await database.db
+      .select()
+      .from(memberships)
+      .where(eq(memberships.userId, freshUser!.id));
+    expect(freshMemberships).toEqual([
+      expect.objectContaining({
+        organizationId: 'org-1',
+        role: 'OPERATOR',
+      }),
+    ]);
+  });
+
 });
