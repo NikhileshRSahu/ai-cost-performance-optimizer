@@ -185,11 +185,14 @@ describe('workspace invitations', () => {
         .limit(1)
     ).at(0);
     expect(freshUser).toBeDefined();
+    if (freshUser === undefined) {
+      throw new Error('EXPECTED_FRESH_USER');
+    }
 
     const freshMemberships = await database.db
       .select()
       .from(memberships)
-      .where(eq(memberships.userId, freshUser!.id));
+      .where(eq(memberships.userId, freshUser.id));
     expect(freshMemberships).toEqual([
       expect.objectContaining({
         organizationId: 'org-1',
