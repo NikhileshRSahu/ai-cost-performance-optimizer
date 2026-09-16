@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 const SUPPORTED = new Set(['USD', 'EUR', 'GBP', 'INR']);
 
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
     );
 
     if (!response.ok) {
-      throw new Error(`FX_UPSTREAM_${response.status}`);
+      throw new Error(`FX_UPSTREAM_${String(response.status)}`);
     }
 
     const payload = (await response.json()) as {
