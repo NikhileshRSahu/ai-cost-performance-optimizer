@@ -31,7 +31,9 @@ test('free tools hub exposes exact-arithmetic acquisition calculators', async ({
   await expect(page.getByText('USD 10.00')).toBeVisible();
   await expect(page.getByText('USD 2.80')).toBeVisible();
 
-  await page.getByLabel('Cached input price / 1M tokens', { exact: true }).fill('2');
+  await page
+    .getByLabel('Cached input price / 1M tokens', { exact: true })
+    .fill('2');
   await expect(page.getByText('Estimated monthly cache premium')).toBeVisible();
   await expect(page.getByText('USD 8.00')).toBeVisible();
 
