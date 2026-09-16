@@ -146,25 +146,28 @@ export async function createInvite(formData: FormData): Promise<never> {
   const organizationId = text(formData, 'organizationId');
   const { session, databaseUrl } = await runtime();
   const database = createDatabase(databaseUrl);
+  let invite: Readonly<{ id: string; token: string; expiresAt: string }>;
+
   try {
-    const invite = await createWorkspaceInvitation({
+    invite = await createWorkspaceInvitation({
       db: database.db,
       session,
       organizationId,
       email: text(formData, 'email'),
       role: text(formData, 'role'),
     });
-    redirect(
-      '/o/' +
-        organizationId +
-        '/settings?inviteToken=' +
-        encodeURIComponent(invite.token) +
-        '&inviteId=' +
-        encodeURIComponent(invite.id),
-    );
   } catch (error) {
     redirect('/o/' + organizationId + '/settings?error=' + errorCode(error));
   } finally {
     await database.close();
   }
+
+  redirect(
+    '/o/' +
+      organizationId +
+      '/settings?inviteToken=' +
+      encodeURIComponent(invite.token) +
+      '&inviteId=' +
+      encodeURIComponent(invite.id),
+  );
 }
