@@ -14,6 +14,22 @@ function nonEmpty(value: string | undefined): string | null {
   return normalized ? normalized : null;
 }
 
+export function resolveAuthDatabaseUrl(
+  environment: AuthEnvironment = process.env,
+): string {
+  const databaseUrl = resolveAuthDatabaseUrl(environment);
+
+  const url = new URL(databaseUrl);
+  if (
+    url.hostname.endsWith('.neon.tech') &&
+    url.hostname.includes('-pooler.')
+  ) {
+    url.hostname = url.hostname.replace('-pooler.', '.');
+  }
+
+  return url.toString();
+}
+
 export function resolveAuthBaseUrl(
   environment: AuthEnvironment = process.env,
 ): string {
