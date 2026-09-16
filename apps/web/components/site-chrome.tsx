@@ -52,7 +52,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
               style={{ color: '#ffffff' }}
               href="/login"
             >
-              Sign in
+              Start free
             </Link>
           </nav>
           <details className="relative md:hidden">
@@ -89,8 +89,8 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
                 style={{ color: '#ffffff' }}
                 href="/login"
               >
-                Sign in
-              </Link>
+              Start free
+            </Link>
             </nav>
           </details>
         </div>
