@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
 import { pilotInvoiceRequests } from '../../../../../../src/persistence/schema';
 import { FOUNDING_AUDIT_OFFER } from '../../../../../../src/workbench/pilot-invoice';
+import { resolveOrganizationEntitlement } from '../../../../../../src/workbench/saas-operations';
 import { requireOrganizationContext } from '../../../../lib/organization-context';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
 import { submitPilotInvoiceRequest } from './action';
@@ -36,6 +37,7 @@ export default async function PilotPage({
     companyName: string;
     status: string;
   }> | null = null;
+  let entitlement: 'FREE_BETA' | 'FOUNDING_AUDIT_PAID' = 'FREE_BETA';
 
   if (canRequestInvoice) {
     const database = createDatabase(databaseUrl);
@@ -58,6 +60,9 @@ export default async function PilotPage({
         .limit(1);
 
       invoiceRequest = rows[0] ?? null;
+      entitlement = (
+        await resolveOrganizationEntitlement(database.db, organizationId)
+      ).tier;
     } finally {
       await database.close();
     }
@@ -75,7 +80,14 @@ export default async function PilotPage({
             implementation plan, and a decision-ready report.
           </p>
         </div>
-        <span className="quality-chip">USD $299 one-time</span>
+        <div className="flex flex-wrap gap-2">
+          <span className="quality-chip">USD $299 one-time</span>
+          <span className="quality-chip">
+            {entitlement === 'FOUNDING_AUDIT_PAID'
+              ? 'Founding audit · paid'
+              : 'Free beta'}
+          </span>
+        </div>
       </header>
 
       {requested === 'true' || invoiceRequest !== null ? (
