@@ -1,6 +1,11 @@
 export default function OrganizationLoading() {
   return (
-    <section className="recovery-state" aria-live="polite" aria-busy="true">
+    <section
+      className="recovery-state workbench-loading"
+      aria-live="polite"
+      aria-busy="true"
+    >
+      <div className="workbench-loading-pulse" aria-hidden="true" />
       <p className="eyebrow">Workbench loading</p>
       <h1>Loading organization evidence…</h1>
       <p className="lede">
