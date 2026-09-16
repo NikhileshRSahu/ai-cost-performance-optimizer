@@ -1,4 +1,5 @@
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
+import { parseTrustedPasswordlessIdentity } from '../auth/contracts.js';
 import { and, eq } from 'drizzle-orm';
 import type { PersistenceDatabase } from '../persistence/database.js';
 import {
@@ -133,4 +134,113 @@ export async function acceptWorkspaceInvitation(input: {
   });
 
   return Object.freeze({ organizationId: invitation.organizationId, role });
+}
+
+
+function stableUserId(provider: string, subject: string): string {
+  const digest = createHash('sha256')
+    .update(provider + '\n' + subject)
+    .digest('hex')
+    .slice(0, 24);
+  return 'usr_' + digest;
+}
+
+export async function acceptWorkspaceInvitationForIdentity(input: {
+  db: PersistenceDatabase;
+  identity: unknown;
+  token: string;
+  now?: Date;
+}): Promise<Readonly<{ organizationId: string; role: 'OPERATOR' | 'VIEWER' }>> {
+  const identity = parseTrustedPasswordlessIdentity(input.identity);
+  const tokenHash = hashToken(input.token.trim());
+  const now = input.now ?? new Date();
+
+  return input.db.transaction(async (tx) => {
+    const invitation = (
+      await tx
+        .select()
+        .from(workspaceInvitations)
+        .where(
+          and(
+            eq(workspaceInvitations.tokenHash, tokenHash),
+            eq(workspaceInvitations.status, 'PENDING'),
+          ),
+        )
+        .limit(1)
+    ).at(0);
+
+    if (invitation === undefined) throw new Error('INVITE_NOT_FOUND');
+    if (new Date(invitation.expiresAt).getTime() <= now.getTime()) {
+      await tx
+        .update(workspaceInvitations)
+        .set({ status: 'EXPIRED' })
+        .where(eq(workspaceInvitations.id, invitation.id));
+      throw new Error('INVITE_EXPIRED');
+    }
+    if (identity.email.toLowerCase() !== invitation.email.toLowerCase()) {
+      throw new Error('INVITE_EMAIL_MISMATCH');
+    }
+
+    let user = (
+      await tx
+        .select({ id: users.id, email: users.email })
+        .from(users)
+        .where(
+          and(
+            eq(users.authProvider, identity.provider),
+            eq(users.authSubject, identity.subject),
+          ),
+        )
+        .limit(1)
+    ).at(0);
+
+    if (user === undefined) {
+      const emailOwner = (
+        await tx
+          .select({ id: users.id })
+          .from(users)
+          .where(eq(users.email, identity.email))
+          .limit(1)
+      ).at(0);
+      if (emailOwner !== undefined) {
+        throw new Error('AUTH_EMAIL_IDENTITY_CONFLICT');
+      }
+
+      const id = stableUserId(identity.provider, identity.subject);
+      await tx.insert(users).values({
+        id,
+        email: identity.email,
+        authProvider: identity.provider,
+        authSubject: identity.subject,
+      });
+      user = { id, email: identity.email };
+    }
+
+    const role = invitation.role === 'OPERATOR' ? 'OPERATOR' : 'VIEWER';
+    await tx
+      .insert(memberships)
+      .values({
+        organizationId: invitation.organizationId,
+        userId: user.id,
+        role,
+      })
+      .onConflictDoUpdate({
+        target: [memberships.organizationId, memberships.userId],
+        set: { role },
+      });
+
+    await tx
+      .update(workspaceInvitations)
+      .set({
+        status: 'ACCEPTED',
+        acceptedByUserId: user.id,
+        acceptedAt: now.toISOString(),
+      })
+      .where(eq(workspaceInvitations.id, invitation.id));
+
+    return Object.freeze({
+      organizationId: invitation.organizationId,
+      role,
+    });
+  });
 }
