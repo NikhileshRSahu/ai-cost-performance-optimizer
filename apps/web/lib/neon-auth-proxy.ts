@@ -171,10 +171,7 @@ export async function rewriteNeonSocialSignInResponse(
     return response;
   }
 
-  const rewrittenPayload = rewriteGoogleAuthorizationUrls(
-    payload,
-    callbackUrl,
-  );
+  const rewrittenPayload = rewriteGoogleAuthorizationUrls(payload, callbackUrl);
   changed = changed || rewrittenPayload.changed;
 
   if (!changed) return response;
