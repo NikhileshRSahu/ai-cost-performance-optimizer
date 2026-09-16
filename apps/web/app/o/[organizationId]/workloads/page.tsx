@@ -72,6 +72,9 @@ export default async function WorkloadsPage({
             <span>Maximum p95 latency (ms)</span>
             <input
               name="maxP95LatencyMs"
+              type="number"
+              min="0"
+              step="any"
               inputMode="decimal"
               placeholder="1000"
             />
@@ -80,6 +83,10 @@ export default async function WorkloadsPage({
             <span>Maximum failure rate</span>
             <input
               name="maxFailureRate"
+              type="number"
+              min="0"
+              max="1"
+              step="any"
               inputMode="decimal"
               placeholder="0.02"
             />
