@@ -149,4 +149,63 @@ describe('Neon Auth reverse proxy', () => {
     );
   });
 
+  it('rewrites nested Google authorization URLs and tolerates a trailing slash', async () => {
+    process.env.NEON_AUTH_BASE_URL =
+      'https://example.neonauth.aws.neon.tech/evalomics/auth';
+
+    const request = new Request(
+      'https://evalomics.vercel.app/api/auth/sign-in/social/',
+      { method: 'POST' },
+    );
+    const google = new URL('https://accounts.google.com/o/oauth2/v2/auth');
+    google.searchParams.set(
+      'redirect_uri',
+      'https://example.neonauth.aws.neon.tech/evalomics/auth/callback/google',
+    );
+
+    const response = new Response(
+      JSON.stringify({ data: { redirect: { url: google.toString() } } }),
+      {
+        status: 200,
+        headers: { 'content-type': 'application/json; charset=utf-8' },
+      },
+    );
+
+    const rewritten = await rewriteNeonSocialSignInResponse(request, response);
+    const payload = (await rewritten.json()) as {
+      data: { redirect: { url: string } };
+    };
+
+    expect(
+      new URL(payload.data.redirect.url).searchParams.get('redirect_uri'),
+    ).toBe('https://evalomics.vercel.app/api/auth/callback/google');
+  });
+
+  it('rewrites Google authorization URLs returned in Location headers', async () => {
+    process.env.NEON_AUTH_BASE_URL =
+      'https://example.neonauth.aws.neon.tech/evalomics/auth';
+
+    const request = new Request(
+      'https://evalomics.vercel.app/api/auth/sign-in/social',
+      { method: 'POST' },
+    );
+    const google = new URL('https://accounts.google.com/o/oauth2/v2/auth');
+    google.searchParams.set(
+      'redirect_uri',
+      'https://example.neonauth.aws.neon.tech/evalomics/auth/callback/google',
+    );
+
+    const response = new Response(null, {
+      status: 204,
+      headers: { location: google.toString() },
+    });
+
+    const rewritten = await rewriteNeonSocialSignInResponse(request, response);
+    const location = rewritten.headers.get('location');
+    expect(location).not.toBeNull();
+    expect(new URL(location!).searchParams.get('redirect_uri')).toBe(
+      'https://evalomics.vercel.app/api/auth/callback/google',
+    );
+  });
+
 });
