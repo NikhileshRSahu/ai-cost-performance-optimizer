@@ -1,7 +1,7 @@
-name: Format product hardening
+name: Format immersive premium
 on:
   push:
-    branches: [fix/product-hardening]
+    branches: [feat/production-ready-premium-v1]
 permissions:
   contents: write
 jobs:
@@ -15,26 +15,12 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: >-
-          npx prettier --write
-          apps/web/app/api/fx/route.ts
-          apps/web/app/page.tsx
-          apps/web/app/tools/ai-agent-cost/page.tsx
-          apps/web/app/tools/cost-per-outcome/page.tsx
-          apps/web/app/tools/prompt-cache-savings/page.tsx
-          apps/web/components/ai-agent-cost-calculator.tsx
-          apps/web/components/cost-per-outcome-calculator.tsx
-          apps/web/components/llm-cost-calculator.tsx
-          apps/web/components/prompt-cache-savings-calculator.tsx
-          apps/web/e2e/customer-loop.e2e.ts
-          apps/web/e2e/free-tools.e2e.ts
-          apps/web/hooks/use-fx-rate.ts
-          tests/web/fx-route.test.ts
+      - run: npx prettier --write apps/web/app/page.tsx apps/web/components/home/efficiency-story.tsx
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if ! git diff --quiet; then
-            git add .
-            git commit -m "chore: format product hardening"
+            git add apps/web/app/page.tsx apps/web/components/home/efficiency-story.tsx
+            git commit -m "chore: format immersive premium UI"
             git push
           fi
