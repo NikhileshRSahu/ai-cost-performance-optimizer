@@ -82,11 +82,57 @@ export function rewriteNeonResponseHeaders(
   return headers;
 }
 
+function rewriteGoogleAuthorizationUrls(
+  value: unknown,
+  callbackUrl: string,
+): Readonly<{ value: unknown; changed: boolean }> {
+  if (typeof value === 'string') {
+    try {
+      const candidate = new URL(value);
+      if (candidate.hostname !== 'accounts.google.com') {
+        return { value, changed: false };
+      }
+      if (!candidate.searchParams.has('redirect_uri')) {
+        return { value, changed: false };
+      }
+      candidate.searchParams.set('redirect_uri', callbackUrl);
+      return { value: candidate.toString(), changed: true };
+    } catch {
+      return { value, changed: false };
+    }
+  }
+
+  if (Array.isArray(value)) {
+    let changed = false;
+    const next = value.map((item) => {
+      const rewritten = rewriteGoogleAuthorizationUrls(item, callbackUrl);
+      changed = changed || rewritten.changed;
+      return rewritten.value;
+    });
+    return { value: next, changed };
+  }
+
+  if (value !== null && typeof value === 'object') {
+    let changed = false;
+    const next: Record<string, unknown> = {};
+    for (const [key, item] of Object.entries(
+      value as Record<string, unknown>,
+    )) {
+      const rewritten = rewriteGoogleAuthorizationUrls(item, callbackUrl);
+      changed = changed || rewritten.changed;
+      next[key] = rewritten.value;
+    }
+    return { value: next, changed };
+  }
+
+  return { value, changed: false };
+}
+
 export async function rewriteNeonSocialSignInResponse(
   request: Request,
   response: Response,
 ): Promise<Response> {
-  const path = new URL(request.url).pathname;
+  const path = new URL(request.url).pathname.replace(/\/+$/, '');
   if (
     path !== '/api/auth/sign-in/social' ||
     !response.ok ||
@@ -102,34 +148,24 @@ export async function rewriteNeonSocialSignInResponse(
     return response;
   }
 
-  if (payload === null || typeof payload !== 'object') return response;
-  const record = payload as Record<string, unknown>;
-  if (typeof record.url !== 'string') return response;
+  const incoming = new URL(request.url);
+  const rewritten = rewriteGoogleAuthorizationUrls(
+    payload,
+    `${incoming.origin}/api/auth/callback/google`,
+  );
+  if (!rewritten.changed) return response;
 
-  try {
-    const providerUrl = new URL(record.url);
-    if (providerUrl.hostname !== 'accounts.google.com') return response;
+  const headers = rewriteNeonResponseHeaders(
+    response.headers,
+    incoming.origin,
+  );
+  headers.delete('content-length');
+  headers.delete('content-encoding');
+  headers.set('x-evalomics-auth-rewrite', 'google-callback');
 
-    const incoming = new URL(request.url);
-    providerUrl.searchParams.set(
-      'redirect_uri',
-      `${incoming.origin}/api/auth/callback/google`,
-    );
-    record.url = providerUrl.toString();
-
-    const headers = rewriteNeonResponseHeaders(
-      response.headers,
-      incoming.origin,
-    );
-    headers.delete('content-length');
-    headers.delete('content-encoding');
-
-    return new Response(JSON.stringify(record), {
-      status: response.status,
-      statusText: response.statusText,
-      headers,
-    });
-  } catch {
-    return response;
-  }
+  return new Response(JSON.stringify(rewritten.value), {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
 }
