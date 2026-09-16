@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { ContainerScroll } from '../components/ui/container-scroll-animation';
 
 const steps = [
   ['01', 'Observe', 'Load one real usage window.'],
@@ -11,16 +12,16 @@ const steps = [
 export default function HomePage() {
   return (
     <div className="grid gap-20 pb-10 md:gap-28">
-      <section className="grid min-h-[680px] items-center gap-12 rounded-[30px] border border-slate-800 bg-[#070a0f] px-6 py-12 text-white shadow-[0_40px_120px_rgba(2,6,23,.18)] sm:px-10 lg:grid-cols-[.86fr_1.14fr] lg:px-12">
-        <div className="max-w-xl">
+      <section className="rounded-[30px] border border-slate-800 bg-[#070a0f] px-6 py-16 text-white shadow-[0_40px_120px_rgba(2,6,23,.18)] sm:px-10 sm:py-20 lg:px-12 lg:py-24">
+        <div className="max-w-3xl">
           <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-300/70">
             AI Efficiency Intelligence
           </p>
-          <h1 className="mt-5 text-[clamp(3.2rem,7vw,6.5rem)] font-semibold leading-[.9] tracking-[-.07em] text-white">
+          <h1 className="mt-5 text-[clamp(3.5rem,8vw,7.5rem)] font-semibold leading-[.88] tracking-[-.075em] text-white">
             Find AI waste.
             <span className="block text-white/68">Prove the fix.</span>
           </h1>
-          <p className="mt-7 max-w-lg text-base leading-7 text-white/70 sm:text-lg">
+          <p className="mt-7 max-w-2xl text-base leading-7 text-white/70 sm:text-lg">
             Evalomics turns real usage evidence into one ranked optimization,
             tests it against your quality floor, and verifies what actually
             improved.
@@ -47,7 +48,24 @@ export default function HomePage() {
             <span>No invented savings</span>
           </div>
         </div>
+      </section>
 
+      <ContainerScroll
+        titleComponent={
+          <div>
+            <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+              Scroll through the proof loop
+            </p>
+            <h2 className="mt-4 text-[clamp(2.5rem,5vw,5rem)] font-semibold leading-[.94] tracking-[-.06em] text-slate-950">
+              The interface becomes the evidence.
+            </h2>
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-slate-500">
+              Watch the Work MRI move from observed spend to one ranked change
+              and a verification-ready decision surface.
+            </p>
+          </div>
+        }
+      >
         <div className="overflow-hidden rounded-[24px] border border-white/10 bg-[#0b1119] shadow-[0_30px_90px_rgba(0,0,0,.35)]">
           <div className="flex items-center justify-between border-b border-white/[0.07] px-5 py-4">
             <div>
@@ -125,7 +143,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </ContainerScroll>
 
       <section className="grid gap-10 lg:grid-cols-[.76fr_1.24fr] lg:items-start">
         <div className="max-w-xl">
