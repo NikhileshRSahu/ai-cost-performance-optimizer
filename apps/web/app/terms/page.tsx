@@ -23,7 +23,7 @@ export default function TermsPage() {
         </div>
       </section>
 
-      <section className="legal-sections" aria-label="Pilot terms">
+      <section className="legal-sections" aria-label="Launch beta terms">
         <article>
           <h2>Customer responsibility</h2>
           <p>
@@ -35,7 +35,7 @@ export default function TermsPage() {
         <article>
           <h2>No automatic production changes</h2>
           <p>
-            The CSV-first pilot does not automatically mutate production model,
+            The free launch beta does not automatically mutate production model,
             prompt, routing, infrastructure, or provider configuration.
           </p>
         </article>
@@ -56,7 +56,7 @@ export default function TermsPage() {
           </p>
         </article>
         <article>
-          <h2>Pilot scope</h2>
+          <h2>Launch beta scope</h2>
           <p>
             The launch mode is CSV-first. Gated workspace connectors,
             provider-admin credentials, and automatic production mutation are
@@ -75,7 +75,7 @@ export default function TermsPage() {
         <article>
           <h2>Availability</h2>
           <p>
-            This is a public beta / founding-pilot product. Features may evolve,
+            This is a free public beta product. Features may evolve,
             and Evalomics should not be represented as generally available
             enterprise infrastructure until its release gates are closed.
           </p>
