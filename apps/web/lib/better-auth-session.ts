@@ -37,7 +37,7 @@ export async function readBetterAuthIdentity(
     user.id.length === 0 ||
     typeof user.email !== 'string' ||
     user.email.length === 0 ||
-    user.emailVerified !== true
+    !user.emailVerified
   ) {
     return null;
   }
