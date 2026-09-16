@@ -9,6 +9,7 @@ import {
   removeWorkspaceMember,
   updateWorkspaceProfile,
 } from '../../../../../../src/workbench/workspace-settings';
+import { createWorkspaceInvitation } from '../../../../../../src/workbench/workspace-invitations';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
 
 function text(formData: FormData, key: string): string {
@@ -35,6 +36,8 @@ function errorCode(error: unknown): string {
     'WORKSPACE_DELETE_CONFIRMATION_MISMATCH',
     'INVALID_REPORTING_CURRENCY',
     'INVALID_WORKSPACE_SETTING',
+    'INVALID_INVITE_EMAIL',
+    'INVALID_INVITE_ROLE',
   ]);
   return allowed.has(error.message) ? error.message : 'UNKNOWN';
 }
@@ -136,4 +139,32 @@ export async function permanentlyDeleteWorkspace(formData: FormData): Promise<ne
     await database.close();
   }
   redirect('/');
+}
+
+
+export async function createInvite(formData: FormData): Promise<never> {
+  const organizationId = text(formData, 'organizationId');
+  const { session, databaseUrl } = await runtime();
+  const database = createDatabase(databaseUrl);
+  try {
+    const invite = await createWorkspaceInvitation({
+      db: database.db,
+      session,
+      organizationId,
+      email: text(formData, 'email'),
+      role: text(formData, 'role'),
+    });
+    redirect(
+      '/o/' +
+        organizationId +
+        '/settings?inviteToken=' +
+        encodeURIComponent(invite.token) +
+        '&inviteId=' +
+        encodeURIComponent(invite.id),
+    );
+  } catch (error) {
+    redirect('/o/' + organizationId + '/settings?error=' + errorCode(error));
+  } finally {
+    await database.close();
+  }
 }
