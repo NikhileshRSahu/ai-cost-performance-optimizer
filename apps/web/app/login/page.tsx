@@ -27,7 +27,16 @@ function authHostAllowed(host: string | null): boolean {
   );
 }
 
-export default async function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: Readonly<{
+  searchParams: Promise<{ returnTo?: string }>;
+}>) {
+  const { returnTo } = await searchParams;
+  const callbackPath =
+    typeof returnTo === 'string' && returnTo.startsWith('/') && !returnTo.startsWith('//')
+      ? returnTo
+      : '/start';
   const requestHeaders = await headers();
   const host = requestHeaders.get('host');
   const authConfigured = hasSelfHostedAuthConfiguration();
@@ -59,7 +68,7 @@ export default async function LoginPage() {
 
           <div className="mt-9 max-w-md">
             {canSignIn ? (
-              <GoogleSignInButton />
+              <GoogleSignInButton callbackPath={callbackPath} />
             ) : (
               <div
                 className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900"
