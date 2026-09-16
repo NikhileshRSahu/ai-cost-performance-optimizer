@@ -90,6 +90,7 @@ export async function updateWorkspaceProfile(input: {
       name: bounded(input.name, 120),
       reportingCurrency,
       timezone: bounded(input.timezone, 80),
+      onboardingCompletedAt: new Date().toISOString(),
     })
     .where(eq(organizations.id, input.organizationId))
     .returning({ id: organizations.id });
