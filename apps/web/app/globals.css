@@ -2824,3 +2824,155 @@ samp,
 .org-workbench > .lg\:pl-64 > div {
   width: 100%;
 }
+
+
+/* Final authenticated-surface polish */
+.proof-page a[href*='/proof/download'] {
+  color: #0b1017 !important;
+}
+
+.proof-page a[href*='/proof/download'] :is(svg, span) {
+  color: #0b1017 !important;
+}
+
+.telemetry-page .telemetry-endpoint {
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.4rem;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.telemetry-page .telemetry-endpoint > div:first-child {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.telemetry-page .telemetry-endpoint-label {
+  color: #8ea0b3 !important;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.telemetry-page .telemetry-endpoint code {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid rgba(122, 167, 255, 0.14);
+  border-radius: 0.75rem;
+  background: #080d13;
+  color: #c7d9ff !important;
+  font-size: 0.84rem;
+  white-space: nowrap;
+}
+
+.telemetry-page .telemetry-endpoint-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.telemetry-page .telemetry-endpoint-grid > div {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.telemetry-page .telemetry-endpoint-grid span {
+  color: #8ea0b3 !important;
+  font-size: 0.72rem;
+}
+
+.telemetry-page .telemetry-endpoint-grid strong {
+  color: #edf2f7 !important;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.workbench-loading {
+  position: relative;
+  overflow: hidden;
+  max-width: 880px;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.2rem;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(122, 167, 255, 0.08), transparent 34%),
+    #0a0f16;
+  color: #eef3f8;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.18);
+}
+
+.workbench-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.025) 45%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  animation: workbench-loading-shimmer 1.8s ease-in-out infinite;
+}
+
+.workbench-loading .eyebrow {
+  color: #91a4b8 !important;
+}
+
+.workbench-loading h1 {
+  max-width: 14ch;
+  color: #f3f6fa !important;
+  font-size: clamp(2.3rem, 5vw, 4.4rem);
+  line-height: 0.98;
+}
+
+.workbench-loading .lede {
+  max-width: 56ch;
+  margin-top: 1rem;
+  color: #aeb8c4 !important;
+  font-size: 0.95rem;
+}
+
+.workbench-loading-pulse {
+  width: 2.2rem;
+  height: 0.3rem;
+  margin-bottom: 1.3rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7aa7ff, #6ee7b7);
+  box-shadow: 0 0 24px rgba(122, 167, 255, 0.24);
+  animation: workbench-loading-pulse 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes workbench-loading-pulse {
+  from { opacity: 0.45; transform: scaleX(0.65); transform-origin: left; }
+  to { opacity: 1; transform: scaleX(1); transform-origin: left; }
+}
+
+@keyframes workbench-loading-shimmer {
+  to { transform: translateX(100%); }
+}
+
+@media (max-width: 720px) {
+  .telemetry-page .telemetry-endpoint-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .workbench-loading {
+    min-height: 230px;
+  }
+}
