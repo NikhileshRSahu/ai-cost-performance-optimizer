@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Security | Evalomics',
@@ -75,10 +76,15 @@ export default function SecurityPage() {
       </section>
 
       <section className="evidence-note">
-        <strong>Reporting:</strong> until a dedicated security mailbox is live,
-        security reporting uses the current founder/support route published with
-        the beta deployment. Do not publish an address that is not actively
-        monitored.
+        <strong>Reporting:</strong> security, privacy, billing, and product
+        issues can be submitted through the persisted support route. Requests
+        receive a reference ID and are routed to the configured operations alert
+        channel.
+        <div className="mt-4">
+          <Link className="primary-action" href="/support">
+            Open support & security
+          </Link>
+        </div>
       </section>
     </div>
   );
