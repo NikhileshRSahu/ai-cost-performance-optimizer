@@ -2505,7 +2505,6 @@ samp,
   color: #334155 !important;
 }
 
-
 /* Light recovery/report surfaces must keep dark foregrounds inside the dark workbench. */
 .org-workbench .empty-state,
 .org-workbench .report-section,
