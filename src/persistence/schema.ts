@@ -49,6 +49,10 @@ export const organizations = pgTable('organizations', {
     withTimezone: true,
     mode: 'string',
   }),
+  onboardingCompletedAt: timestamp('onboarding_completed_at', {
+    withTimezone: true,
+    mode: 'string',
+  }),
   isDemo: boolean('is_demo').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
     .notNull()
