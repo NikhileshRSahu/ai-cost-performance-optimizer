@@ -316,10 +316,12 @@ export async function loadFounderDashboardEvidence(
     .where(eq(recommendations.organizationId, organizationId))
     .orderBy(desc(recommendations.createdAt))
     .limit(100);
-  const latestImportRows = recentRecommendationRows.filter(
-    (row) => evidenceString(row.evidence, 'sourceImportId') === latestUsable.id,
-  );
-  const rankedRows = latestImportRows
+  const currentEvidenceRows = recentRecommendationRows.filter((row) => {
+    const sourceImportId = evidenceString(row.evidence, 'sourceImportId');
+    if (sourceImportId !== null) return sourceImportId === latestUsable.id;
+    return row.createdAt >= latestUsable.receivedAt;
+  });
+  const rankedRows = currentEvidenceRows
     .map((row) => ({ row, rank: evidenceRank(row.evidence) }))
     .filter(
       (
@@ -333,7 +335,7 @@ export async function loadFounderDashboardEvidence(
     )
     .slice(0, 3);
 
-  if (rankedRows.length === 0 && latestImportRows.length > 0) {
+  if (rankedRows.length === 0 && currentEvidenceRows.length > 0) {
     limitations.push(
       'Recommendation rank metadata is unavailable, so no strongest action is claimed.',
     );
