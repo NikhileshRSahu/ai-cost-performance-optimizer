@@ -61,8 +61,10 @@ export async function connectProviderAccount(
     await database.close();
   }
 
+  const usageRows = String(result.usageRows);
+  const costRows = String(result.costRows);
   redirect(
-    `/o/${organizationId}/import?providerConnected=${result.provider}&usageRows=${result.usageRows}&costRows=${result.costRows}`,
+    `/o/${organizationId}/import?providerConnected=${result.provider}&usageRows=${usageRows}&costRows=${costRows}`,
   );
 }
 
