@@ -20,8 +20,13 @@ function model(input: unknown): ScenarioResult | null {
       modelOpportunityScenario?: (value: unknown) => ScenarioResult | null;
     }
   ).modelOpportunityScenario;
-  expect(candidate).toBeTypeOf('function');
-  return candidate!(input);
+
+  if (typeof candidate !== 'function') {
+    expect(candidate).toBeTypeOf('function');
+    return null;
+  }
+
+  return candidate(input);
 }
 
 const common = {
