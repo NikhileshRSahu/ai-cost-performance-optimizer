@@ -7,11 +7,15 @@ function scenario(
   base: string,
   high: string,
   overlapGroup: string | null,
+  currency = 'USD',
+  horizon: 'OBSERVED_PERIOD' | 'THIRTY_DAY_PROJECTION' = 'OBSERVED_PERIOD',
 ) {
   return {
     recommendationId,
     range: { low, base, high },
     overlapGroup,
+    currency,
+    horizon,
   } as const;
 }
 
@@ -58,5 +62,31 @@ describe('nonOverlappingScenarioTotal', () => {
     expect(nonOverlappingScenarioTotal(first)).toEqual(
       nonOverlappingScenarioTotal(second),
     );
+  });
+
+  it('rejects totals across different currencies', () => {
+    expect(() =>
+      nonOverlappingScenarioTotal([
+        scenario('usd', '10', '20', '30', null, 'USD'),
+        scenario('eur', '10', '20', '30', null, 'EUR'),
+      ]),
+    ).toThrowError('MIXED_SCENARIO_CURRENCY');
+  });
+
+  it('rejects totals across different horizons', () => {
+    expect(() =>
+      nonOverlappingScenarioTotal([
+        scenario('observed', '10', '20', '30', null),
+        scenario(
+          'projected',
+          '10',
+          '20',
+          '30',
+          null,
+          'USD',
+          'THIRTY_DAY_PROJECTION',
+        ),
+      ]),
+    ).toThrowError('MIXED_SCENARIO_HORIZON');
   });
 });
