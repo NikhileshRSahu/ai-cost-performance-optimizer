@@ -1,4 +1,11 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+} from 'vitest';
 import { loadFounderDashboardEvidence } from '../../apps/web/lib/dashboard-data.js';
 import { createDatabase } from '../../src/persistence/database.js';
 import { providerEvidenceSnapshots } from '../../src/persistence/provider-evidence-schema.js';
@@ -173,17 +180,19 @@ describe('founder dashboard data loading', () => {
       'org-a',
     );
 
-    expect(evidence.recommendations?.map((item) => item.recommendationId)).toEqual([
-      'current-rank-1',
-      'current-rank-2',
-      'current-rank-3',
-    ]);
+    expect(
+      evidence.recommendations?.map((item) => item.recommendationId),
+    ).toEqual(['current-rank-1', 'current-rank-2', 'current-rank-3']);
     expect(evidence.strongestAction?.recommendationId).toBe('current-rank-1');
     expect(evidence.recommendations?.[0]).toMatchObject({
       priorityRank: 1,
       detectionConfidence: 'HIGH',
       savingsConfidence: 'UNMEASURED',
     });
-    expect(evidence.recommendations?.some((item) => item.recommendationId === 'stale-rank-1')).toBe(false);
+    expect(
+      evidence.recommendations?.some(
+        (item) => item.recommendationId === 'stale-rank-1',
+      ),
+    ).toBe(false);
   });
 });
