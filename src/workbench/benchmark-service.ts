@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, desc, eq, or } from 'drizzle-orm';
 import { z } from 'zod';
 import { parseBenchmarkCsv } from '../benchmarks/csv.js';
 import {
@@ -8,7 +8,11 @@ import {
 import { formatDecimal, rational } from '../economics/exact.js';
 import { createEvidenceRepository } from '../persistence/repositories/evidence.js';
 import type { PersistenceDatabase } from '../persistence/database.js';
-import { recommendations, workloads } from '../persistence/schema.js';
+import {
+  importRuns,
+  recommendations,
+  workloads,
+} from '../persistence/schema.js';
 import { requireOrganizationAccess } from '../persistence/tenant.js';
 import { sha256Bytes } from '../usage/fingerprint.js';
 import type { AuthenticatedSession } from './authz.js';
@@ -83,6 +87,23 @@ export async function evaluateAndPersistBenchmark(
       .limit(1)
   ).at(0);
   if (workload === undefined) throw new Error('WORKLOAD_NOT_FOUND');
+
+  const sourceImport = (
+    await input.db
+      .select({ id: importRuns.id })
+      .from(importRuns)
+      .where(
+        and(
+          eq(importRuns.organizationId, input.organizationId),
+          or(
+            eq(importRuns.status, 'COMPLETED'),
+            eq(importRuns.status, 'PARTIAL'),
+          ),
+        ),
+      )
+      .orderBy(desc(importRuns.receivedAt))
+      .limit(1)
+  ).at(0);
 
   const constraints = constraintSetSchema.parse(workload.constraintSet);
   const cases = parseBenchmarkCsv(input.bytes);
@@ -172,6 +193,7 @@ export async function evaluateAndPersistBenchmark(
 
   const evidenceRef = `benchmark:${id}`;
   const evidence = {
+    sourceImportId: sourceImport?.id ?? null,
     priorityRank: 1,
     title: `Evaluate ${input.candidateConfigurationId} for ${workload.name}`,
     measuredFact: `${String(evaluation.pairedValidCases)} paired benchmark cases were evaluated.`,
