@@ -346,7 +346,7 @@ export async function loadFounderDashboardEvidence(
     ),
   );
   const strongestAction = recommendationViews[0] ?? null;
-  const rankOne = rankedRows[0]?.row;
+  const rankOne = rankedRows.at(0)?.row;
 
   let verifiedNetSavings: DashboardEvidence['verifiedNetSavings'] = null;
   if (rankOne !== undefined) {
