@@ -123,16 +123,18 @@ describe('automatic usage analysis service', () => {
       importId: imported.importId,
     });
 
-    expect(first.recommendations.every((item) => item.reused === false)).toBe(
-      true,
-    );
-    expect(second.recommendations.every((item) => item.reused === true)).toBe(
-      true,
-    );
+    expect(first.recommendations.every((item) => !item.reused)).toBe(true);
+    expect(second.recommendations.every((item) => item.reused)).toBe(true);
     expect(
-      second.recommendations.map(({ reused: _reused, ...item }) => item),
+      second.recommendations.map(({ reused, ...item }) => {
+        void reused;
+        return item;
+      }),
     ).toEqual(
-      first.recommendations.map(({ reused: _reused, ...item }) => item),
+      first.recommendations.map(({ reused, ...item }) => {
+        void reused;
+        return item;
+      }),
     );
     expect(await database.db.select().from(recommendations)).toHaveLength(
       first.recommendations.length,
