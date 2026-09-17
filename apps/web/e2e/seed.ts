@@ -38,6 +38,7 @@ try {
       ('journey-org', 'Journey Demo Co', 'USD', 'UTC', '10', true),
       ('journey-bad-org', 'Journey Guardrail Co', 'USD', 'UTC', '10', true),
       ('journey-live-org', 'Journey Production Path Co', 'USD', 'UTC', '10', false),
+      ('mri-org', 'MRI Isolation Co', 'USD', 'UTC', '10', true),
       ('other-org', 'Other Org Secret', 'USD', 'UTC', '10', false)`,
   );
 
@@ -53,7 +54,8 @@ try {
        ('demo-org', 'founder-user', 'OWNER'),
        ('journey-org', 'founder-user', 'OWNER'),
        ('journey-bad-org', 'founder-user', 'OWNER'),
-       ('journey-live-org', 'founder-user', 'OWNER')`,
+       ('journey-live-org', 'founder-user', 'OWNER'),
+       ('mri-org', 'founder-user', 'OWNER')`,
   );
 
   await client.query(
