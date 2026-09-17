@@ -56,8 +56,16 @@ describe('provider credential encryption', () => {
       decryptProviderCredential(ciphertext, new Uint8Array(31)),
     ).toThrow('PROVIDER_CREDENTIAL_KEY_INVALID');
 
-    const tampered =
-      ciphertext.slice(0, -1) + (ciphertext.endsWith('A') ? 'B' : 'A');
+    const [version, iv, tag, encodedCiphertext] = ciphertext.split(':');
+    const tamperedBytes = Buffer.from(encodedCiphertext ?? '', 'base64url');
+    tamperedBytes[0] = (tamperedBytes[0] ?? 0) ^ 1;
+    const tampered = [
+      version,
+      iv,
+      tag,
+      tamperedBytes.toString('base64url'),
+    ].join(':');
+
     expect(() => decryptProviderCredential(tampered, key)).toThrow(
       'PROVIDER_CREDENTIAL_DECRYPT_FAILED',
     );
