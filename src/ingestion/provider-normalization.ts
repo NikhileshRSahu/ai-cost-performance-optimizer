@@ -8,7 +8,9 @@ import type {
 } from './provider-evidence.js';
 
 function fingerprint(value: Readonly<Record<string, unknown>>): string {
-  return createHash('sha256').update(JSON.stringify(value), 'utf8').digest('hex');
+  return createHash('sha256')
+    .update(JSON.stringify(value), 'utf8')
+    .digest('hex');
 }
 
 function requireOrganizationId(organizationId: string): void {
