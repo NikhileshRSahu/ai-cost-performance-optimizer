@@ -57,6 +57,13 @@
       "when": 1789665600000,
       "tag": "0007_provider_connections",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1789666800000,
+      "tag": "0008_provider_evidence_snapshots",
+      "breakpoints": true
     }
   ]
 }
