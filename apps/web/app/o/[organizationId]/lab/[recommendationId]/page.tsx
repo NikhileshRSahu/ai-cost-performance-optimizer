@@ -318,3 +318,7 @@ export default async function OptimizationLabPage({
         </section>
 
         <EvidenceDetails view={view} />
+      </section>
+    </div>
+  );
+}
