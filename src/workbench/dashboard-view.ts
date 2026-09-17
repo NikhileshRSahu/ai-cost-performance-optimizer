@@ -30,6 +30,8 @@ export type ModeledSavingsRange = Readonly<{
   high: string;
   evidenceRef: string;
   formulaVersion: string;
+  formula: string;
+  assumptions: Readonly<Record<string, string>>;
   pricingRef: string | null;
   overlapGroup: string | null;
 }>;
@@ -145,6 +147,16 @@ function savingsConfidence(
     : 'MODELED';
 }
 
+function freezeModeledRange(
+  value: ModeledSavingsRange | null,
+): ModeledSavingsRange | null {
+  if (value === null) return null;
+  return Object.freeze({
+    ...value,
+    assumptions: Object.freeze({ ...value.assumptions }),
+  });
+}
+
 function recommendationView(
   recommendation: DashboardRecommendationEvidence,
   fallbackRank: number,
@@ -158,8 +170,7 @@ function recommendationView(
   return Object.freeze({
     ...recommendation,
     priorityRank: recommendation.priorityRank ?? fallbackRank,
-    modeledRange:
-      modeledRange === null ? null : Object.freeze({ ...modeledRange }),
+    modeledRange: freezeModeledRange(modeledRange),
     detectionConfidence,
     savingsConfidence: savingsConfidence(recommendation),
     confidenceBand: detectionConfidence,
@@ -225,10 +236,7 @@ export function buildFounderDashboardView(
         : Object.freeze({ ...input.observedSpend }),
     recommendations,
     bestFirstMove,
-    nonOverlappingModeledTotal:
-      nonOverlappingModeledTotal === null
-        ? null
-        : Object.freeze({ ...nonOverlappingModeledTotal }),
+    nonOverlappingModeledTotal: freezeModeledRange(nonOverlappingModeledTotal),
     strongestAction: bestFirstMove,
     verifiedNetSavings: verifiedImpactView(input.verifiedNetSavings),
     diagnosticFacts: Object.freeze(
