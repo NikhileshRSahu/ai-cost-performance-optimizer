@@ -41,14 +41,19 @@ async function reachVerification(
   if (demo) {
     await page.locator('input[name="isDemo"]').check();
   }
-  await page.getByRole('button', { name: 'Validate and import' }).click();
-  await expect(page.getByRole('heading', { name: 'PARTIAL' })).toBeVisible();
+  await page.getByRole('button', { name: 'Analyze this usage' }).click();
+  await expect(
+    page.getByRole('heading', { name: 'Your AI usage data is ready' }),
+  ).toBeVisible();
+  await page.getByText('See import details').click();
   const importSummary = page.getByLabel('Import evidence summary');
   await expect(importSummary).toContainText('28');
   await expect(importSummary).toContainText('5');
   await expectAccessible(page);
 
-  await page.getByRole('link', { name: 'Define workload constraints' }).click();
+  await page
+    .getByRole('link', { name: 'Advanced: configure safety rules' })
+    .click();
   await page.getByLabel('Workload name').fill('classification');
   await page.getByLabel('Environment').fill('production');
   await page.getByLabel('Minimum quality').fill('0.90');
@@ -100,7 +105,7 @@ async function reachVerification(
   }
 
   await expect(page.locator('.state-badge.state-tested').first()).toBeVisible();
-  await page.getByRole('link', { name: 'Implement tested change' }).click();
+  await page.getByRole('link', { name: 'Prepare safe rollout' }).click();
 
   const implementedAt = page.getByLabel('Implemented at (UTC)');
   const continueLink = page.getByRole('link', {
