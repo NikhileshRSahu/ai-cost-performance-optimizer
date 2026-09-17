@@ -29,7 +29,9 @@ describe('provider credential encryption', () => {
   });
 
   it('parses exactly 32 bytes of base64url key material from the environment', () => {
-    const encoded = Buffer.from(new Uint8Array(32).fill(5)).toString('base64url');
+    const encoded = Buffer.from(new Uint8Array(32).fill(5)).toString(
+      'base64url',
+    );
     const parsed = providerCredentialKeyFromEnv(encoded);
 
     expect(parsed).toHaveLength(32);
