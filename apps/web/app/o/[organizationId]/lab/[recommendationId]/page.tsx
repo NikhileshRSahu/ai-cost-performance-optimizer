@@ -40,7 +40,10 @@ export default async function OptimizationLabPage({
     );
     view = buildOptimizationLabView(evidence);
   } catch (error) {
-    if (error instanceof Error && error.message === 'LAB_EVIDENCE_INCOMPLETE') {
+    if (
+      error instanceof Error &&
+      error.message === 'LAB_EVIDENCE_INCOMPLETE'
+    ) {
       return (
         <div className="lab-stack">
           <section
@@ -97,7 +100,10 @@ export default async function OptimizationLabPage({
       );
     }
 
-    if (error instanceof Error && error.message === 'RECOMMENDATION_NOT_FOUND') {
+    if (
+      error instanceof Error &&
+      error.message === 'RECOMMENDATION_NOT_FOUND'
+    ) {
       return (
         <div className="lab-stack">
           <section
