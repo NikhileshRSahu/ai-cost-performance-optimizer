@@ -210,4 +210,89 @@ describe('founder dashboard data loading', () => {
       ),
     ).toBe(false);
   });
+
+  it('keeps baseline recommendations visible when the latest import is their post-change verification evidence', async () => {
+    await database.db.insert(recommendations).values([
+      {
+        id: 'verified-rec',
+        organizationId: 'org-a',
+        decision: 'OPTIMIZE',
+        savingState: 'VERIFIED',
+        confidenceBand: 'HIGH',
+        netSavingNumerator: '25',
+        netSavingDenominator: '1',
+        currency: 'USD',
+        evidence: {
+          priorityRank: 1,
+          title: 'Verified baseline recommendation',
+          sourceImportId: 'import-old',
+          nextAction: 'Keep monitoring the verified change.',
+          detectionConfidence: 'HIGH',
+          savingsConfidence: 'VERIFIED',
+        },
+      },
+      {
+        id: 'blocked-rec',
+        organizationId: 'org-a',
+        decision: 'OPTIMIZE',
+        savingState: 'TESTED',
+        confidenceBand: 'HIGH',
+        evidence: {
+          priorityRank: 2,
+          title: 'Tested baseline recommendation',
+          sourceImportId: 'import-old',
+          nextAction: 'Review the blocked post-change evidence.',
+          detectionConfidence: 'HIGH',
+          savingsConfidence: 'TESTED',
+        },
+      },
+    ]);
+    await database.db.insert(verificationWindows).values([
+      {
+        id: 'verification-verified',
+        organizationId: 'org-a',
+        recommendationId: 'verified-rec',
+        status: 'VERIFIED',
+        baselineStart: '2026-09-01T00:00:00.000Z',
+        baselineEnd: '2026-09-08T00:00:00.000Z',
+        postStart: '2026-09-10T00:00:00.000Z',
+        postEnd: '2026-09-17T00:00:00.000Z',
+        netImpactNumerator: '25',
+        netImpactDenominator: '1',
+        formulaVersion: 'economics-v1',
+        evidence: {
+          baselineImportId: 'import-old',
+          postImportId: 'import-new',
+        },
+      },
+      {
+        id: 'verification-blocked',
+        organizationId: 'org-a',
+        recommendationId: 'blocked-rec',
+        status: 'BLOCKED',
+        baselineStart: '2026-09-01T00:00:00.000Z',
+        baselineEnd: '2026-09-08T00:00:00.000Z',
+        postStart: '2026-09-10T00:00:00.000Z',
+        postEnd: '2026-09-17T00:00:00.000Z',
+        netImpactNumerator: null,
+        netImpactDenominator: null,
+        formulaVersion: 'economics-v1',
+        evidence: {
+          baselineImportId: 'import-old',
+          postImportId: 'import-new',
+        },
+      },
+    ]);
+
+    const evidence = await loadDashboard(database.db, owner, 'org-a');
+
+    expect(
+      evidence.recommendations?.map((item) => item.recommendationId),
+    ).toEqual(['verified-rec', 'blocked-rec']);
+    expect(evidence.verifiedNetSavings).toMatchObject({
+      numerator: '25',
+      denominator: '1',
+      currency: 'USD',
+    });
+  });
 });
