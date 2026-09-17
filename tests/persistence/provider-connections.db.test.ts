@@ -1,11 +1,4 @@
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-} from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { createDatabase } from '../../src/persistence/database.js';
 import { providerConnections } from '../../src/persistence/provider-connections-schema.js';
 import {
@@ -133,9 +126,9 @@ describe('provider connection persistence', () => {
       connectedAt: '2026-09-17T16:30:00.000Z',
     });
 
-    expect(
-      await database.db.select().from(providerConnections),
-    ).toHaveLength(1);
+    expect(await database.db.select().from(providerConnections)).toHaveLength(
+      1,
+    );
 
     await revokeProviderConnection({
       db: database.db,
