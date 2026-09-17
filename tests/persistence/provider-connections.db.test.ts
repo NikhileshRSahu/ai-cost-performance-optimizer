@@ -1,14 +1,19 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { createDatabase } from '../../src/persistence/database.js';
 import {
-  organizations,
-  providerConnections,
-} from '../../src/persistence/schema.js';
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+} from 'vitest';
+import { createDatabase } from '../../src/persistence/database.js';
+import { providerConnections } from '../../src/persistence/provider-connections-schema.js';
 import {
   listProviderConnections,
   revokeProviderConnection,
   saveProviderConnection,
 } from '../../src/persistence/repositories/provider-connections.js';
+import { organizations } from '../../src/persistence/schema.js';
 import type { AuthenticatedSession } from '../../src/workbench/authz.js';
 
 const databaseUrl = process.env.DATABASE_URL;
@@ -110,7 +115,7 @@ describe('provider connection persistence', () => {
     ).rejects.toThrow('ACTION_NOT_ALLOWED');
   });
 
-  it('replaces a provider credential without creating duplicate active rows and revokes explicitly', async () => {
+  it('replaces a credential without duplicates and revokes explicitly', async () => {
     await saveProviderConnection({
       db: database.db,
       session: owner,
@@ -128,7 +133,9 @@ describe('provider connection persistence', () => {
       connectedAt: '2026-09-17T16:30:00.000Z',
     });
 
-    expect(await database.db.select().from(providerConnections)).toHaveLength(1);
+    expect(
+      await database.db.select().from(providerConnections),
+    ).toHaveLength(1);
 
     await revokeProviderConnection({
       db: database.db,
