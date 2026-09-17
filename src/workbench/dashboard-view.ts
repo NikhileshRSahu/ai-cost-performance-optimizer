@@ -44,7 +44,7 @@ export type DashboardRecommendationEvidence = Readonly<{
   modeledRange?: ModeledSavingsRange | null;
   detectionConfidence?: ConfidenceBand;
   savingsConfidence?: SavingsConfidence;
-  /** @deprecated Use detectionConfidence. Kept while legacy consumers migrate. */
+  // Compatibility field retained while legacy consumers migrate.
   confidenceBand?: ConfidenceBand;
   principalLimitation: string | null;
   nextAction: string;
@@ -73,7 +73,7 @@ export type DashboardEvidence = Readonly<{
   completeCalendarDays: number;
   recommendations?: readonly DashboardRecommendationEvidence[];
   nonOverlappingModeledTotal?: ModeledSavingsRange | null;
-  /** @deprecated Use recommendations. Kept while dashboard loading migrates. */
+  // Compatibility field retained while dashboard loading migrates.
   strongestAction?: DashboardRecommendationEvidence | null;
   verifiedNetSavings: VerifiedNetSavingsEvidence | null;
   diagnosticFacts: readonly DashboardDiagnosticFact[];
@@ -109,7 +109,7 @@ export type FounderDashboardView = Readonly<{
   recommendations: readonly DashboardRecommendationView[];
   bestFirstMove: DashboardRecommendationView | null;
   nonOverlappingModeledTotal: ModeledSavingsRange | null;
-  /** @deprecated Use bestFirstMove. Kept while UI consumers migrate. */
+  // Compatibility field retained while UI consumers migrate.
   strongestAction: DashboardRecommendationView | null;
   verifiedNetSavings: VerifiedNetSavingsView | null;
   diagnosticFacts: readonly DashboardDiagnosticFact[];
