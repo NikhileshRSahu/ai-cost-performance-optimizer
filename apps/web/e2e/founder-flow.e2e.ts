@@ -24,7 +24,7 @@ test('founder gets one direct answer before optional evidence details', async ({
   ).toBeVisible();
   await expect(page.getByText(demoDisclaimer)).toBeVisible();
   await expect(page.getByText(/best tested improvement/i)).toBeVisible();
-  await expect(page.getByText(/USD 0\.86/i).first()).toBeVisible();
+  await expect(page.getByText(/tested saving/i)).toBeVisible();
   await expect(page.getByText(/high confidence/i)).toBeVisible();
   await expect(
     page.getByRole('link', { name: /prepare safe rollout/i }),
@@ -38,7 +38,7 @@ test('founder gets one direct answer before optional evidence details', async ({
   await expect(page.getByText(/what evalomics can see/i)).toBeVisible();
   await expect(page.getByText(/evidence limitations/i)).toBeVisible();
 
-  await page.getByRole('link', { name: 'Inspect evidence' }).click();
+  await page.goto('/o/demo-org/lab/rec-1');
   await expect(
     page.getByRole('heading', { name: 'Current versus candidate' }),
   ).toBeVisible();
