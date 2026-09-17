@@ -68,7 +68,7 @@ async function reachVerification(
   }
 
   await page
-    .getByRole('button', { name: 'Save constraints and continue' })
+    .getByRole('button', { name: 'Save safety floor and continue' })
     .click();
 
   await expect(
