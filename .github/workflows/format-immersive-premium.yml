@@ -1,7 +1,7 @@
 name: Format immersive premium
 on:
   push:
-    branches: [feat/production-ready-premium-v1]
+    branches: [ux/value-before-validation]
 permissions:
   contents: write
 jobs:
@@ -15,12 +15,12 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npx prettier --write apps/web/app/page.tsx apps/web/components/home/efficiency-story.tsx
+      - run: npx prettier --write src/workbench/dashboard-view.ts
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if ! git diff --quiet; then
-            git add apps/web/app/page.tsx apps/web/components/home/efficiency-story.tsx
-            git commit -m "chore: format immersive premium UI"
+            git add src/workbench/dashboard-view.ts
+            git commit -m "chore: format MRI dashboard view"
             git push
           fi
