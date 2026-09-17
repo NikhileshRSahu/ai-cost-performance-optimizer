@@ -15,6 +15,17 @@ import { resolveRuntimeSession } from '../../../../../lib/runtime-session';
 
 export const dynamic = 'force-dynamic';
 
+const VALIDATION_COPY = {
+  intro:
+    'Evalomics found a usage-backed optimization opportunity, but it does not yet have enough current-versus-candidate evidence to claim a saving or recommend a production change.',
+  known:
+    'The opportunity came from measured usage evidence. It remains Potential until a candidate is tested against the same cases and safety requirements.',
+  needed:
+    'Provide paired current-versus-candidate test cases and the quality or performance floor that must not get worse. Evalomics will then compare cost and safety before upgrading the claim.',
+  note:
+    'Advanced paired-case benchmarking remains available here; it is validation evidence, not a required step before Evalomics can show your initial analysis.',
+} as const;
+
 function metric(value: string | null): string {
   return value ?? 'Unavailable';
 }
@@ -52,30 +63,18 @@ export default async function OptimizationLabPage({
           >
             <p className="eyebrow">Validation</p>
             <h1 id="lab-validation-title">Validate this opportunity</h1>
-            <p>
-              Evalomics found a usage-backed optimization opportunity, but it
-              does not yet have enough current-versus-candidate evidence to
-              claim a saving or recommend a production change.
-            </p>
+            <p>{VALIDATION_COPY.intro}</p>
 
             <div className="comparison-grid">
               <article className="configuration-card">
                 <p className="eyebrow">What we already know</p>
                 <h2>There is a supported optimization hypothesis</h2>
-                <p>
-                  The opportunity came from measured usage evidence. It remains
-                  Potential until a candidate is tested against the same cases
-                  and safety requirements.
-                </p>
+                <p>{VALIDATION_COPY.known}</p>
               </article>
               <article className="configuration-card">
                 <p className="eyebrow">What is still needed</p>
                 <h2>Comparable validation evidence</h2>
-                <p>
-                  Provide paired current-versus-candidate test cases and the
-                  quality or performance floor that must not get worse. Evalomics
-                  will then compare cost and safety before upgrading the claim.
-                </p>
+                <p>{VALIDATION_COPY.needed}</p>
               </article>
             </div>
 
@@ -90,11 +89,7 @@ export default async function OptimizationLabPage({
                 Back to overview
               </Link>
             </div>
-            <p className="metric-subtle">
-              Advanced paired-case benchmarking remains available here; it is
-              validation evidence, not a required step before Evalomics can show
-              your initial analysis.
-            </p>
+            <p className="metric-subtle">{VALIDATION_COPY.note}</p>
           </section>
         </div>
       );
