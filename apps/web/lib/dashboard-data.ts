@@ -322,7 +322,9 @@ export async function loadFounderDashboardEvidence(
   const rankedRows = latestImportRows
     .map((row) => ({ row, rank: evidenceRank(row.evidence) }))
     .filter(
-      (item): item is { row: typeof recommendations.$inferSelect; rank: number } =>
+      (
+        item,
+      ): item is { row: typeof recommendations.$inferSelect; rank: number } =>
         item.rank !== null,
     )
     .sort(
