@@ -37,7 +37,7 @@ export default async function WorkloadsPage({
           .orderBy(desc(usageRecords.intervalEnd))
           .limit(1)
       ).at(0);
-      const workloadFromUsage = latestUsage?.canonical?.workload;
+      const workloadFromUsage = latestUsage?.canonical.workload;
       return {
         existing: existingRows,
         inferredWorkload:
