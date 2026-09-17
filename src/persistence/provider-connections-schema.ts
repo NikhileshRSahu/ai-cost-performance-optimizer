@@ -1,4 +1,10 @@
-import { index, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core';
+import {
+  index,
+  pgTable,
+  primaryKey,
+  text,
+  timestamp,
+} from 'drizzle-orm/pg-core';
 import { organizations } from './schema.js';
 
 export const providerConnections = pgTable(
