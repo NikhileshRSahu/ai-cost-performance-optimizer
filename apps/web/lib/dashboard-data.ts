@@ -70,6 +70,16 @@ function stateRank(value: string): number {
   return 2;
 }
 
+function timestampAtOrAfter(value: string, baseline: string): boolean {
+  const valueMs = Date.parse(value);
+  const baselineMs = Date.parse(baseline);
+  return (
+    Number.isFinite(valueMs) &&
+    Number.isFinite(baselineMs) &&
+    valueMs >= baselineMs
+  );
+}
+
 function normalizedConfidence(
   value: string | null,
 ): DashboardRecommendationEvidence['confidenceBand'] {
@@ -325,7 +335,7 @@ export async function loadFounderDashboardEvidence(
   const currentEvidenceRows = recentRecommendationRows.filter((row) => {
     const sourceImportId = evidenceString(row.evidence, 'sourceImportId');
     if (sourceImportId !== null) return sourceImportId === latestUsable.id;
-    return row.createdAt >= latestUsable.receivedAt;
+    return timestampAtOrAfter(row.createdAt, latestUsable.receivedAt);
   });
   const rankedRows = currentEvidenceRows
     .map((row) => ({ row, rank: evidenceRank(row.evidence) }))
@@ -339,7 +349,7 @@ export async function loadFounderDashboardEvidence(
       (left, right) =>
         stateRank(left.row.savingState) - stateRank(right.row.savingState) ||
         left.rank - right.rank ||
-        right.row.createdAt.localeCompare(left.row.createdAt) ||
+        Date.parse(right.row.createdAt) - Date.parse(left.row.createdAt) ||
         left.row.id.localeCompare(right.row.id),
     )
     .slice(0, 3);
