@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   decryptProviderCredential,
   encryptProviderCredential,
+  providerCredentialKeyFromEnv,
 } from '../../src/security/provider-credentials.js';
 
 describe('provider credential encryption', () => {
@@ -25,6 +26,20 @@ describe('provider credential encryption', () => {
     expect(first).not.toBe(second);
     expect(decryptProviderCredential(first, key)).toBe('same-secret');
     expect(decryptProviderCredential(second, key)).toBe('same-secret');
+  });
+
+  it('parses exactly 32 bytes of base64url key material from the environment', () => {
+    const encoded = Buffer.from(new Uint8Array(32).fill(5)).toString('base64url');
+    const parsed = providerCredentialKeyFromEnv(encoded);
+
+    expect(parsed).toHaveLength(32);
+    expect(Array.from(parsed)).toEqual(Array.from(new Uint8Array(32).fill(5)));
+    expect(() => providerCredentialKeyFromEnv(undefined)).toThrow(
+      'PROVIDER_CREDENTIAL_KEY_REQUIRED',
+    );
+    expect(() => providerCredentialKeyFromEnv('too-short')).toThrow(
+      'PROVIDER_CREDENTIAL_KEY_INVALID',
+    );
   });
 
   it('rejects invalid keys and tampered ciphertext safely', () => {
