@@ -6,7 +6,7 @@ export type DashboardSavingsState = 'OPPORTUNITY' | 'TESTED' | 'VERIFIED';
 export type DashboardDecision =
   'OPTIMIZE' | 'DO_NOT_CHANGE' | 'INSUFFICIENT_EVIDENCE';
 
-export type ConfidenceBand = 'LOW' | 'MEDIUM' | 'HIGH';
+export type DashboardConfidenceBand = 'LOW' | 'MEDIUM' | 'HIGH';
 
 export type SavingsConfidence =
   'UNMEASURED' | 'MODELED' | 'TESTED' | 'VERIFIED';
@@ -42,10 +42,10 @@ export type DashboardRecommendationEvidence = Readonly<{
   decision: DashboardDecision;
   saving: DashboardSavingEvidence | null;
   modeledRange?: ModeledSavingsRange | null;
-  detectionConfidence?: ConfidenceBand;
+  detectionConfidence?: DashboardConfidenceBand;
   savingsConfidence?: SavingsConfidence;
   // Compatibility field retained while legacy consumers migrate.
-  confidenceBand?: ConfidenceBand;
+  confidenceBand?: DashboardConfidenceBand;
   principalLimitation: string | null;
   nextAction: string;
 }>;
@@ -85,9 +85,9 @@ export type DashboardRecommendationView = Readonly<
   DashboardRecommendationEvidence & {
     priorityRank: number;
     modeledRange: ModeledSavingsRange | null;
-    detectionConfidence: ConfidenceBand;
+    detectionConfidence: DashboardConfidenceBand;
     savingsConfidence: SavingsConfidence;
-    confidenceBand: ConfidenceBand;
+    confidenceBand: DashboardConfidenceBand;
     stateLabel: 'Potential saving' | 'Tested saving' | 'Verified saving';
   }
 >;
