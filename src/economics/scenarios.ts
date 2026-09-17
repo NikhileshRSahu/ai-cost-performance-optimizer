@@ -19,9 +19,7 @@ export type ScenarioKind =
   | 'OUTPUT_BUDGET'
   | 'RETRY_POLICY';
 
-export type ScenarioHorizon =
-  | 'OBSERVED_PERIOD'
-  | 'THIRTY_DAY_PROJECTION';
+export type ScenarioHorizon = 'OBSERVED_PERIOD' | 'THIRTY_DAY_PROJECTION';
 
 type ScenarioCommon = Readonly<{
   currency: string;
