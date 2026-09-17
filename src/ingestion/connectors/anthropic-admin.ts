@@ -140,7 +140,7 @@ async function getJson(
   });
 
   if (!response.ok) {
-    throw new Error(`ANTHROPIC_ADMIN_API_${response.status}`);
+    throw new Error('ANTHROPIC_ADMIN_API_' + String(response.status));
   }
 
   return response.json();
