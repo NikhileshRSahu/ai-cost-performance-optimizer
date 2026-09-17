@@ -1,4 +1,10 @@
-import { add, compare, formatDecimal, parseDecimal, rational } from './exact.js';
+import {
+  add,
+  compare,
+  formatDecimal,
+  parseDecimal,
+  rational,
+} from './exact.js';
 import type { ScenarioBand } from './scenarios.js';
 
 export type ScenarioWithOverlap = Readonly<{
