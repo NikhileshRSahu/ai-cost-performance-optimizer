@@ -42,12 +42,18 @@ async function reachVerification(
     await page.locator('input[name="isDemo"]').check();
   }
   await page.getByRole('button', { name: 'Analyze this usage' }).click();
-  await expect(page).toHaveURL(new RegExp(`/o/${organizationId}\\?source=import`));
+  await expect(page).toHaveURL(
+    new RegExp(`/o/${organizationId}\\?source=import`),
+  );
   await expect(
     page.getByRole('heading', { name: 'We analyzed your AI usage' }),
   ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
-  await expect(page.getByText('Savings estimate', { exact: true })).toBeVisible();
-  await expect(page.getByText('Needs validation', { exact: true })).toBeVisible();
+  await expect(
+    page.getByText('Savings estimate', { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText('Needs validation', { exact: true }),
+  ).toBeVisible();
   await expect(
     page.getByRole('link', { name: 'Validate this opportunity' }),
   ).toBeVisible();
