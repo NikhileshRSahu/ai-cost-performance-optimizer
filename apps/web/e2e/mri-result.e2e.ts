@@ -10,7 +10,7 @@ const JOURNEY_STATE_TIMEOUT_MS = 15_000;
 test('usage analysis opens with an AI Efficiency MRI and split confidence', async ({
   page,
 }) => {
-  const organizationId = 'journey-org';
+  const organizationId = 'mri-org';
 
   await page.goto(`/o/${organizationId}/import`);
   await page.locator('input[name="usageCsv"]').setInputFiles(baselineCsv);
