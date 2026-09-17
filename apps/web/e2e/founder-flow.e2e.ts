@@ -25,13 +25,16 @@ test('founder gets one direct answer before optional evidence details', async ({
   await expect(page.getByText(demoDisclaimer)).toBeVisible();
   await expect(page.getByText(/best tested improvement/i)).toBeVisible();
   await expect(page.getByText(/tested saving/i)).toBeVisible();
-  await expect(
-    page.getByText('Detection confidence', { exact: true }),
-  ).toBeVisible();
+
+  const detectionConfidence = page.getByText('Detection confidence', {
+    exact: true,
+  });
+  const savingsConfidence = page.getByText('Savings confidence', {
+    exact: true,
+  });
+  await expect(detectionConfidence).toBeVisible();
   await expect(page.getByText('HIGH', { exact: true })).toBeVisible();
-  await expect(
-    page.getByText('Savings confidence', { exact: true }),
-  ).toBeVisible();
+  await expect(savingsConfidence).toBeVisible();
   await expect(page.getByText('TESTED', { exact: true })).toBeVisible();
   await expect(
     page.getByRole('link', { name: /prepare safe rollout/i }),
