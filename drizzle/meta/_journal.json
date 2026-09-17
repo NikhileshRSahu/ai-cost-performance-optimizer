@@ -50,6 +50,13 @@
       "when": 1789558200000,
       "tag": "0006_workspace_onboarding",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1789665600000,
+      "tag": "0007_provider_connections",
+      "breakpoints": true
     }
   ]
 }
