@@ -2,7 +2,10 @@ import { asc, desc, eq } from 'drizzle-orm';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
-import { recommendations, workloads } from '../../../../../../src/persistence/schema';
+import {
+  recommendations,
+  workloads,
+} from '../../../../../../src/persistence/schema';
 import { requireOrganizationAccess } from '../../../../../../src/persistence/tenant';
 import { WorkflowProgress } from '../../../../components/workflow-progress';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
@@ -32,14 +35,15 @@ export default async function BenchmarkPage({
         .from(workloads)
         .where(eq(workloads.organizationId, organizationId))
         .orderBy(asc(workloads.name));
-      const latest = (
-        await database.db
-          .select()
-          .from(recommendations)
-          .where(eq(recommendations.organizationId, organizationId))
-          .orderBy(desc(recommendations.createdAt))
-          .limit(1)
-      ).at(0) ?? null;
+      const latest =
+        (
+          await database.db
+            .select()
+            .from(recommendations)
+            .where(eq(recommendations.organizationId, organizationId))
+            .orderBy(desc(recommendations.createdAt))
+            .limit(1)
+        ).at(0) ?? null;
       return { available: availableWorkloads, latestRecommendation: latest };
     } finally {
       await database.close();
@@ -75,7 +79,11 @@ export default async function BenchmarkPage({
         <section className="latest-test-card">
           <div>
             <p className="eyebrow">Latest test</p>
-            <h2>{latestRecommendation.savingState === 'TESTED' ? '✓ Candidate passed the test' : 'Previous test result available'}</h2>
+            <h2>
+              {latestRecommendation.savingState === 'TESTED'
+                ? '✓ Candidate passed the test'
+                : 'Previous test result available'}
+            </h2>
             <p>
               Decision: <strong>{latestRecommendation.decision}</strong> ·
               Confidence: {latestRecommendation.confidenceBand ?? 'Unavailable'}
@@ -109,12 +117,16 @@ export default async function BenchmarkPage({
               <h2>{selected.name}</h2>
               <p>
                 Upload paired test cases. The advanced identifiers below are
-                prefilled and can be changed only when your file uses different values.
+                prefilled and can be changed only when your file uses different
+                values.
               </p>
             </div>
           </div>
 
-          <form action={submitBenchmark} className="benchmark-form simplified-benchmark-form">
+          <form
+            action={submitBenchmark}
+            className="benchmark-form simplified-benchmark-form"
+          >
             <input type="hidden" name="organizationId" value={organizationId} />
             <label>
               <span>Workload</span>
@@ -128,7 +140,9 @@ export default async function BenchmarkPage({
             </label>
             <label className="file-drop benchmark-upload">
               <span>Upload paired test cases</span>
-              <small>30 paired cases minimum · same cases for both setups</small>
+              <small>
+                30 paired cases minimum · same cases for both setups
+              </small>
               <input
                 name="benchmarkCsv"
                 type="file"
@@ -158,7 +172,11 @@ export default async function BenchmarkPage({
                 </label>
                 <label>
                   <span>Evaluator version</span>
-                  <input name="evaluatorVersion" required defaultValue="eval-v1" />
+                  <input
+                    name="evaluatorVersion"
+                    required
+                    defaultValue="eval-v1"
+                  />
                 </label>
                 <label>
                   <span>Currency</span>

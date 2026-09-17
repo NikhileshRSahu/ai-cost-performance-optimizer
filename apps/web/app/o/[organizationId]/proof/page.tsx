@@ -145,8 +145,8 @@ export default async function VerificationPage({
             Evidence snapshot
           </p>
           <p className="m-0 mt-3 max-w-2xl text-sm leading-6 text-white/55">
-            No diagnostic evidence is available yet. Import usage evidence before
-            expecting a verification snapshot or downloadable proof pack.
+            No diagnostic evidence is available yet. Import usage evidence
+            before expecting a verification snapshot or downloadable proof pack.
           </p>
         </section>
       )}

@@ -2,7 +2,10 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../../src/persistence/database';
 import { buildOptimizationLabView } from '../../../../../../../src/workbench/lab-view';
-import { formatDecimal, rational } from '../../../../../../../src/economics/exact';
+import {
+  formatDecimal,
+  rational,
+} from '../../../../../../../src/economics/exact';
 import { ConstraintRow } from '../../../../../components/constraint-row';
 import { HistoricalReplay } from './historical-replay';
 import { EvidenceDetails } from '../../../../../components/evidence-details';
@@ -11,6 +14,16 @@ import { loadOptimizationLabEvidence } from '../../../../../lib/lab-data';
 import { resolveRuntimeSession } from '../../../../../lib/runtime-session';
 
 export const dynamic = 'force-dynamic';
+
+const VALIDATION_COPY = {
+  intro:
+    'Evalomics found a usage-backed optimization opportunity, but it does not yet have enough current-versus-candidate evidence to claim a saving or recommend a production change.',
+  known:
+    'The opportunity came from measured usage evidence. It remains Potential until a candidate is tested against the same cases and safety requirements.',
+  needed:
+    'Provide paired current-versus-candidate test cases and the quality or performance floor that must not get worse. Evalomics will then compare cost and safety before upgrading the claim.',
+  note: 'Advanced paired-case benchmarking remains available here; it is validation evidence, not a required step before Evalomics can show your initial analysis.',
+} as const;
 
 function metric(value: string | null): string {
   return value ?? 'Unavailable';
@@ -37,10 +50,50 @@ export default async function OptimizationLabPage({
     );
     view = buildOptimizationLabView(evidence);
   } catch (error) {
+    if (error instanceof Error && error.message === 'LAB_EVIDENCE_INCOMPLETE') {
+      return (
+        <div className="lab-stack">
+          <section
+            className="empty-state"
+            aria-labelledby="lab-validation-title"
+          >
+            <p className="eyebrow">Validation</p>
+            <h1 id="lab-validation-title">Validate this opportunity</h1>
+            <p>{VALIDATION_COPY.intro}</p>
+
+            <div className="comparison-grid">
+              <article className="configuration-card">
+                <p className="eyebrow">What we already know</p>
+                <h2>There is a supported optimization hypothesis</h2>
+                <p>{VALIDATION_COPY.known}</p>
+              </article>
+              <article className="configuration-card">
+                <p className="eyebrow">What is still needed</p>
+                <h2>Comparable validation evidence</h2>
+                <p>{VALIDATION_COPY.needed}</p>
+              </article>
+            </div>
+
+            <div className="action-row">
+              <Link
+                className="primary-action"
+                href={`/o/${organizationId}/benchmark`}
+              >
+                Add validation evidence
+              </Link>
+              <Link className="secondary-action" href={`/o/${organizationId}`}>
+                Back to overview
+              </Link>
+            </div>
+            <p className="metric-subtle">{VALIDATION_COPY.note}</p>
+          </section>
+        </div>
+      );
+    }
+
     if (
       error instanceof Error &&
-      (error.message === 'LAB_EVIDENCE_INCOMPLETE' ||
-        error.message === 'RECOMMENDATION_NOT_FOUND')
+      error.message === 'RECOMMENDATION_NOT_FOUND'
     ) {
       return (
         <div className="lab-stack">
@@ -51,9 +104,8 @@ export default async function OptimizationLabPage({
             <p className="eyebrow">{LAB_COPY.heading}</p>
             <h1 id="lab-unavailable-title">Insufficient benchmark evidence</h1>
             <p>
-              This recommendation does not have the complete
-              current-versus-candidate evidence required for the Optimization
-              Lab.
+              This recommendation could not be found. Return to your analysis or
+              benchmark workspace to choose an available recommendation.
             </p>
             <div className="action-row">
               <Link
@@ -75,21 +127,17 @@ export default async function OptimizationLabPage({
     await database.close();
   }
 
-  const hasNetSaving =
-    view.economics.netSavingNumerator !== null &&
-    view.economics.netSavingDenominator !== null;
-  const netSaving = hasNetSaving
-    ? `${view.economics.currency} ${formatDecimal(
-        rational(
-          BigInt(view.economics.netSavingNumerator!),
-          BigInt(view.economics.netSavingDenominator!),
-        ),
-        2,
-      )}`
-    : 'Unavailable';
-  const exactNetSaving = hasNetSaving
-    ? `${view.economics.netSavingNumerator}/${view.economics.netSavingDenominator}`
-    : null;
+  const netSavingNumerator = view.economics.netSavingNumerator;
+  const netSavingDenominator = view.economics.netSavingDenominator;
+  let netSaving = 'Unavailable';
+  let exactNetSaving: string | null = null;
+  if (netSavingNumerator !== null && netSavingDenominator !== null) {
+    netSaving = `${view.economics.currency} ${formatDecimal(
+      rational(BigInt(netSavingNumerator), BigInt(netSavingDenominator)),
+      2,
+    )}`;
+    exactNetSaving = `${netSavingNumerator}/${netSavingDenominator}`;
+  }
 
   return (
     <div className="lab-stack">
@@ -213,7 +261,9 @@ export default async function OptimizationLabPage({
             <p className="metric-label">Exact net saving</p>
             <p className="metric-value">{netSaving}</p>
             {exactNetSaving !== null ? (
-              <p className="metric-subtle">Exact calculation: {exactNetSaving}</p>
+              <p className="metric-subtle">
+                Exact calculation: {exactNetSaving}
+              </p>
             ) : null}
           </div>
           <div className="metric-card">
@@ -237,30 +287,37 @@ export default async function OptimizationLabPage({
         <p className="eyebrow">{LAB_COPY.evidenceLabel}</p>
         <h2 id="evidence-title">Trace the claim</h2>
         <section className="lab-next-action">
-        <div>
-          <p className="eyebrow">What next?</p>
-          <h2>{view.decision === 'OPTIMIZE' ? 'This candidate passed your safety test.' : 'Review the evidence before changing production.'}</h2>
-          <p>
-            Tested savings are not counted as Verified. Apply the change only
-            when you are ready to collect comparable post-change evidence.
-          </p>
-        </div>
-        <div className="action-row">
-          {view.decision === 'OPTIMIZE' ? (
+          <div>
+            <p className="eyebrow">What next?</p>
+            <h2>
+              {view.decision === 'OPTIMIZE'
+                ? 'This candidate passed your safety test.'
+                : 'Review the evidence before changing production.'}
+            </h2>
+            <p>
+              Tested savings are not counted as Verified. Apply the change only
+              when you are ready to collect comparable post-change evidence.
+            </p>
+          </div>
+          <div className="action-row">
+            {view.decision === 'OPTIMIZE' ? (
+              <Link
+                className="primary-action"
+                href={`/o/${organizationId}/implement/${recommendationId}`}
+              >
+                Prepare safe rollout
+              </Link>
+            ) : null}
             <Link
-              className="primary-action"
-              href={`/o/${organizationId}/implement/${recommendationId}`}
+              className="secondary-action"
+              href={`/o/${organizationId}/proof`}
             >
-              Prepare safe rollout
+              View savings status
             </Link>
-          ) : null}
-          <Link className="secondary-action" href={`/o/${organizationId}/proof`}>
-            View savings status
-          </Link>
-        </div>
-      </section>
+          </div>
+        </section>
 
-      <EvidenceDetails view={view} />
+        <EvidenceDetails view={view} />
       </section>
     </div>
   );

@@ -83,6 +83,24 @@ describe('benchmark decision engine', () => {
     });
   });
 
+  it('supports a quality-only safety floor without invalid confidence coverage', () => {
+    const result = evaluateBenchmark({
+      cases: cases(10),
+      currentConfigurationId: 'current',
+      candidateConfigurationId: 'candidate',
+      evaluatorVersion: 'eval-v1',
+      constraints: {
+        requiredQuality: '0.9',
+        maxP95LatencyMs: null,
+        maxFailureRate: null,
+        targetCases: 10,
+      },
+    });
+
+    expect(result.decision).toBe('OPTIMIZE');
+    expect(result.confidence.components.dataCompleteness).toBe(1);
+  });
+
   it('gives measured failure precedence over inadequate samples', () => {
     const result = evaluateBenchmark({
       cases: cases(1, { candidateQuality: '0.8' }),

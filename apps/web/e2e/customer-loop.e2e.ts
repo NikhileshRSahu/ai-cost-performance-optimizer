@@ -41,33 +41,53 @@ async function reachVerification(
   if (demo) {
     await page.locator('input[name="isDemo"]').check();
   }
-  await page.getByRole('button', { name: 'Validate and import' }).click();
-  await expect(page.getByRole('heading', { name: 'PARTIAL' })).toBeVisible();
-  const importSummary = page.getByLabel('Import evidence summary');
-  await expect(importSummary).toContainText('28');
-  await expect(importSummary).toContainText('5');
+  await page.getByRole('button', { name: 'Analyze this usage' }).click();
+  await expect(page).toHaveURL(
+    new RegExp(`/o/${organizationId}\\?source=import`),
+  );
+  await expect(
+    page.getByRole('heading', { name: 'We analyzed your AI usage' }),
+  ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
+  await expect(
+    page.getByText('Savings estimate', { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText('Needs validation', { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'Validate this opportunity' }),
+  ).toBeVisible();
   await expectAccessible(page);
 
-  await page.getByRole('link', { name: 'Define workload constraints' }).click();
+  // Advanced validation remains available without being the default customer path.
+  await page.goto(`/o/${organizationId}/workloads`);
   await page.getByLabel('Workload name').fill('classification');
   await page.getByLabel('Environment').fill('production');
   await page.getByLabel('Minimum quality').fill('0.90');
-  await page.getByLabel('Maximum p95 latency (ms)').fill('1000');
-  await page.getByLabel('Maximum failure rate').fill('0.05');
+
+  const latencyField = page.getByLabel('Maximum p95 latency (ms)');
+  if (await latencyField.isVisible()) {
+    await latencyField.fill('1000');
+  }
+  const failureRateField = page.getByLabel('Maximum failure rate');
+  if (await failureRateField.isVisible()) {
+    await failureRateField.fill('0.05');
+  }
+
   await page
-    .getByRole('button', { name: 'Save constraints and continue' })
+    .getByRole('button', { name: 'Save safety floor and continue' })
     .click();
 
   await expect(
     page.getByRole('heading', {
-      name: 'Compare one candidate against your current setup',
+      name: 'Test whether a cheaper setup is safe',
     }),
   ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
   await page.locator('input[name="benchmarkCsv"]').setInputFiles(benchmarkCsv);
   if (demo) {
     await page.locator('input[name="isDemo"]').check();
   }
-  await page.getByRole('button', { name: 'Evaluate candidate' }).click();
+  await page.getByRole('button', { name: 'Run safety test' }).click();
 
   await expect(
     page.getByRole('heading', { name: 'Current versus candidate' }),
@@ -100,7 +120,7 @@ async function reachVerification(
   }
 
   await expect(page.locator('.state-badge.state-tested').first()).toBeVisible();
-  await page.getByRole('link', { name: 'Implement tested change' }).click();
+  await page.getByRole('link', { name: 'Prepare safe rollout' }).click();
 
   const implementedAt = page.getByLabel('Implemented at (UTC)');
   const continueLink = page.getByRole('link', {

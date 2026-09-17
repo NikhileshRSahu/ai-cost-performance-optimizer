@@ -20,15 +20,15 @@ import {
 import { EvalomicsMark } from '../evalomics-mark';
 import { cn } from '../../lib/utils';
 
-const journey = [
+const primary = [
   { slug: '', label: 'Overview', icon: Activity },
   { slug: '/import', label: 'Data', icon: Database },
-  { slug: '/workloads', label: 'Safety', icon: BrainCircuit },
-  { slug: '/benchmark', label: 'Tests', icon: FlaskConical },
   { slug: '/proof', label: 'Savings', icon: ShieldCheck },
 ] as const;
 
-const utility = [
+const advanced = [
+  { slug: '/workloads', label: 'Safety', icon: BrainCircuit },
+  { slug: '/benchmark', label: 'Tests', icon: FlaskConical },
   { slug: '/telemetry', label: 'Telemetry', icon: BarChart3 },
   { slug: '/settings', label: 'Settings', icon: Settings },
 ] as const;
@@ -56,7 +56,7 @@ function NavLinks({
   return (
     <>
       <div className="grid gap-1">
-        {journey.map(({ slug, label, icon: Icon }) => {
+        {primary.map(({ slug, label, icon: Icon }) => {
           const href = base + slug;
           return (
             <Link
@@ -78,10 +78,10 @@ function NavLinks({
 
       <div className="mt-7 border-t border-white/[0.06] pt-5">
         <p className="px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/25">
-          Connection
+          Advanced
         </p>
         <div className="mt-2 grid gap-1">
-          {utility.map(({ slug, label, icon: Icon }) => {
+          {advanced.map(({ slug, label, icon: Icon }) => {
             const href = base + slug;
             return (
               <Link
@@ -159,17 +159,6 @@ export function WorkbenchShell({
         >
           <NavLinks organizationId={organizationId} />
         </nav>
-
-        <div className="border-t border-white/[0.07] p-4">
-          <div className="rounded-xl border border-emerald-300/10 bg-emerald-300/[0.04] p-3">
-            <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.13em] text-emerald-200/55">
-              Evidence rule
-            </p>
-            <p className="m-0 mt-1.5 text-xs leading-5 text-white/38">
-              A saving is only Verified after comparable production evidence.
-            </p>
-          </div>
-        </div>
       </aside>
 
       <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-white/[0.07] bg-[#090d13]/92 px-4 backdrop-blur-xl lg:hidden">

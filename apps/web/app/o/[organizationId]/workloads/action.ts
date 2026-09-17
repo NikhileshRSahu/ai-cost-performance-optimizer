@@ -51,11 +51,7 @@ export async function saveWorkload(formData: FormData): Promise<never> {
         name: textEntry(formData, 'name'),
         environment: textEntry(formData, 'environment'),
         requiredQuality: textEntry(formData, 'requiredQuality'),
-        maxP95LatencyMs: optionalNumber(
-          formData,
-          'maxP95LatencyMs',
-          'ms',
-        ),
+        maxP95LatencyMs: optionalNumber(formData, 'maxP95LatencyMs', 'ms'),
         maxFailureRate: optionalNumber(formData, 'maxFailureRate'),
       },
     });

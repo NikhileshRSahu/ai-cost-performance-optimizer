@@ -214,7 +214,7 @@ export function evaluateBenchmark(
   const availableMeasurements =
     1 +
     (candidateQuality === null ? 0 : 1) +
-    (input.constraints.maxP95LatencyMs === null || candidateP95Latency !== null
+    (input.constraints.maxP95LatencyMs !== null && candidateP95Latency !== null
       ? 1
       : 0);
   const measurementCoverage = availableMeasurements / configuredMeasurements;
