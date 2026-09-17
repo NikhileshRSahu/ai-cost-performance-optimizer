@@ -6,6 +6,11 @@ export type DashboardSavingsState = 'OPPORTUNITY' | 'TESTED' | 'VERIFIED';
 export type DashboardDecision =
   'OPTIMIZE' | 'DO_NOT_CHANGE' | 'INSUFFICIENT_EVIDENCE';
 
+export type DashboardConfidenceBand = 'LOW' | 'MEDIUM' | 'HIGH';
+
+export type SavingsConfidence =
+  'UNMEASURED' | 'MODELED' | 'TESTED' | 'VERIFIED';
+
 export type DisplayMoneyEvidence = Readonly<{
   amount: string;
   currency: string;
@@ -17,13 +22,32 @@ export type DashboardSavingEvidence = DisplayMoneyEvidence &
     horizon: 'OBSERVED_PERIOD' | 'THIRTY_DAY_PROJECTION';
   }>;
 
+export type ModeledSavingsRange = Readonly<{
+  currency: string;
+  horizon: 'OBSERVED_PERIOD' | 'THIRTY_DAY_PROJECTION';
+  low: string;
+  base: string;
+  high: string;
+  evidenceRef: string;
+  formulaVersion: string;
+  formula: string;
+  assumptions: Readonly<Record<string, string>>;
+  pricingRef: string | null;
+  overlapGroup: string | null;
+}>;
+
 export type DashboardRecommendationEvidence = Readonly<{
   recommendationId: string;
+  priorityRank?: number;
   title: string;
   state: DashboardSavingsState;
   decision: DashboardDecision;
   saving: DashboardSavingEvidence | null;
-  confidenceBand: 'LOW' | 'MEDIUM' | 'HIGH';
+  modeledRange?: ModeledSavingsRange | null;
+  detectionConfidence?: DashboardConfidenceBand;
+  savingsConfidence?: SavingsConfidence;
+  // Compatibility field retained while legacy consumers migrate.
+  confidenceBand?: DashboardConfidenceBand;
   principalLimitation: string | null;
   nextAction: string;
 }>;
@@ -49,7 +73,10 @@ export type DashboardEvidence = Readonly<{
   dataQuality: DashboardDataQuality;
   observedSpend: DisplayMoneyEvidence | null;
   completeCalendarDays: number;
-  strongestAction: DashboardRecommendationEvidence | null;
+  recommendations?: readonly DashboardRecommendationEvidence[];
+  nonOverlappingModeledTotal?: ModeledSavingsRange | null;
+  // Compatibility field retained while dashboard loading migrates.
+  strongestAction?: DashboardRecommendationEvidence | null;
   verifiedNetSavings: VerifiedNetSavingsEvidence | null;
   diagnosticFacts: readonly DashboardDiagnosticFact[];
   isDemo: boolean;
@@ -58,6 +85,11 @@ export type DashboardEvidence = Readonly<{
 
 export type DashboardRecommendationView = Readonly<
   DashboardRecommendationEvidence & {
+    priorityRank: number;
+    modeledRange: ModeledSavingsRange | null;
+    detectionConfidence: DashboardConfidenceBand;
+    savingsConfidence: SavingsConfidence;
+    confidenceBand: DashboardConfidenceBand;
     stateLabel: 'Potential saving' | 'Tested saving' | 'Verified saving';
   }
 >;
@@ -76,6 +108,10 @@ export type FounderDashboardView = Readonly<{
   periodLabel: string;
   dataQuality: DashboardDataQuality;
   observedSpend: DisplayMoneyEvidence | null;
+  recommendations: readonly DashboardRecommendationView[];
+  bestFirstMove: DashboardRecommendationView | null;
+  nonOverlappingModeledTotal: ModeledSavingsRange | null;
+  // Compatibility field retained while UI consumers migrate.
   strongestAction: DashboardRecommendationView | null;
   verifiedNetSavings: VerifiedNetSavingsView | null;
   diagnosticFacts: readonly DashboardDiagnosticFact[];
@@ -95,6 +131,51 @@ function savingsStateLabel(
     case 'VERIFIED':
       return 'Verified saving';
   }
+}
+
+function savingsConfidence(
+  recommendation: DashboardRecommendationEvidence,
+): SavingsConfidence {
+  if (recommendation.savingsConfidence !== undefined) {
+    return recommendation.savingsConfidence;
+  }
+  if (recommendation.state === 'VERIFIED') return 'VERIFIED';
+  if (recommendation.state === 'TESTED') return 'TESTED';
+  return recommendation.modeledRange === undefined ||
+    recommendation.modeledRange === null
+    ? 'UNMEASURED'
+    : 'MODELED';
+}
+
+function freezeModeledRange(
+  value: ModeledSavingsRange | null,
+): ModeledSavingsRange | null {
+  if (value === null) return null;
+  return Object.freeze({
+    ...value,
+    assumptions: Object.freeze({ ...value.assumptions }),
+  });
+}
+
+function recommendationView(
+  recommendation: DashboardRecommendationEvidence,
+  fallbackRank: number,
+): DashboardRecommendationView {
+  const detectionConfidence =
+    recommendation.detectionConfidence ??
+    recommendation.confidenceBand ??
+    'LOW';
+  const modeledRange = recommendation.modeledRange ?? null;
+
+  return Object.freeze({
+    ...recommendation,
+    priorityRank: recommendation.priorityRank ?? fallbackRank,
+    modeledRange: freezeModeledRange(modeledRange),
+    detectionConfidence,
+    savingsConfidence: savingsConfidence(recommendation),
+    confidenceBand: detectionConfidence,
+    stateLabel: savingsStateLabel(recommendation.state),
+  });
 }
 
 function verifiedImpactView(
@@ -124,13 +205,26 @@ function verifiedImpactView(
 export function buildFounderDashboardView(
   input: DashboardEvidence,
 ): FounderDashboardView {
-  const strongestAction =
-    input.strongestAction === null
-      ? null
-      : Object.freeze({
-          ...input.strongestAction,
-          stateLabel: savingsStateLabel(input.strongestAction.state),
-        });
+  const recommendationEvidence =
+    input.recommendations ??
+    (input.strongestAction === undefined || input.strongestAction === null
+      ? []
+      : [input.strongestAction]);
+
+  const recommendations = Object.freeze(
+    recommendationEvidence
+      .map((recommendation, index) =>
+        recommendationView(recommendation, index + 1),
+      )
+      .sort(
+        (left, right) =>
+          left.priorityRank - right.priorityRank ||
+          left.recommendationId.localeCompare(right.recommendationId),
+      )
+      .slice(0, 3),
+  );
+  const bestFirstMove = recommendations[0] ?? null;
+  const nonOverlappingModeledTotal = input.nonOverlappingModeledTotal ?? null;
 
   return Object.freeze({
     organizationName: input.organizationName,
@@ -140,7 +234,10 @@ export function buildFounderDashboardView(
       input.observedSpend === null
         ? null
         : Object.freeze({ ...input.observedSpend }),
-    strongestAction,
+    recommendations,
+    bestFirstMove,
+    nonOverlappingModeledTotal: freezeModeledRange(nonOverlappingModeledTotal),
+    strongestAction: bestFirstMove,
     verifiedNetSavings: verifiedImpactView(input.verifiedNetSavings),
     diagnosticFacts: Object.freeze(
       input.diagnosticFacts.map((fact) =>

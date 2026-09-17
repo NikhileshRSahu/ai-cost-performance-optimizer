@@ -49,13 +49,14 @@ async function reachVerification(
     page.getByRole('heading', { name: 'We analyzed your AI usage' }),
   ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
   await expect(
-    page.getByText('Savings estimate', { exact: true }),
+    page.getByText('Recommended action', { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText('Savings amount', { exact: true })).toBeVisible();
+  await expect(
+    page.getByText('Not measured yet', { exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByText('Needs validation', { exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole('link', { name: 'Validate this opportunity' }),
+    page.getByRole('link', { name: 'Measure exact savings (optional)' }),
   ).toBeVisible();
   await expectAccessible(page);
 

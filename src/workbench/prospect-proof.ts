@@ -48,12 +48,13 @@ export type ProspectProofPack = Readonly<{
 export function buildProspectProofPack(
   view: FounderDashboardView,
 ): ProspectProofPack {
+  const strongestFinding = view.bestFirstMove;
   const classification: ProspectProofClassification =
     view.demoDisclaimer !== null
       ? 'SYNTHETIC_DEMO'
       : view.dataQuality !== 'READY' ||
           view.observedSpend === null ||
-          view.strongestAction === null
+          strongestFinding === null
         ? 'INSUFFICIENT_EVIDENCE'
         : 'SANITIZED_PROSPECT_EVIDENCE';
 
@@ -79,18 +80,18 @@ export function buildProspectProofPack(
         ? null
         : Object.freeze({ ...view.observedSpend }),
     strongestFinding:
-      view.strongestAction === null
+      strongestFinding === null
         ? null
         : Object.freeze({
-            title: view.strongestAction.title,
-            state: view.strongestAction.state,
-            stateLabel: view.strongestAction.stateLabel,
-            confidenceBand: view.strongestAction.confidenceBand,
+            title: strongestFinding.title,
+            state: strongestFinding.state,
+            stateLabel: strongestFinding.stateLabel,
+            confidenceBand: strongestFinding.detectionConfidence,
             saving:
-              view.strongestAction.saving === null
+              strongestFinding.saving === null
                 ? null
-                : Object.freeze({ ...view.strongestAction.saving }),
-            nextAction: view.strongestAction.nextAction,
+                : Object.freeze({ ...strongestFinding.saving }),
+            nextAction: strongestFinding.nextAction,
           }),
     verifiedNetSavings:
       view.verifiedNetSavings === null
