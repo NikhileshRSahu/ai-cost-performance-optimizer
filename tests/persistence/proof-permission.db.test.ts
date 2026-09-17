@@ -108,7 +108,9 @@ describe('design partner proof permission persistence', () => {
       status: 'REVOKED',
       writtenPermissionRef: 'email-thread:permission-1',
       scopes: ['PUBLIC_CASE_STUDY'],
-      revokedAt: '2026-09-14T13:00:00.000Z',
     });
+    expect(new Date(row?.revokedAt ?? '').toISOString()).toBe(
+      '2026-09-14T13:00:00.000Z',
+    );
   });
 });
