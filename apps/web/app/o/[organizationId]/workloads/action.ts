@@ -15,25 +15,22 @@ function optional(formData: FormData, key: string): string | null {
   return value.length === 0 ? null : value;
 }
 
-function optionalNumber(formData: FormData, key: string, unitSuffix?: string): string | null {
+function optionalNumber(
+  formData: FormData,
+  key: string,
+  unitSuffix?: string,
+): string | null {
   const raw = optional(formData, key);
   if (raw === null) return null;
+
   let normalized = raw.replaceAll(',', '').trim();
   if (unitSuffix !== undefined) {
-    normalized = normalized.replace(new RegExp(`\\s*${unitSuffix}\\s*'use server';
-
-import { redirect } from 'next/navigation';
-import { createDatabase } from '../../../../../../src/persistence/database';
-import { saveWorkloadConstraints } from '../../../../../../src/workbench/workload-service';
-import { resolveRuntimeSession } from '../../../../lib/runtime-session';
-
-function textEntry(formData: FormData, key: string, fallback = ''): string {
-  const value = formData.get(key);
-  return typeof value === 'string' ? value : fallback;
-}
-
-, 'i'), '');
+    normalized = normalized.replace(
+      new RegExp(`\\s*${unitSuffix}\\s*$`, 'i'),
+      '',
+    );
   }
+
   return normalized;
 }
 
@@ -54,7 +51,11 @@ export async function saveWorkload(formData: FormData): Promise<never> {
         name: textEntry(formData, 'name'),
         environment: textEntry(formData, 'environment'),
         requiredQuality: textEntry(formData, 'requiredQuality'),
-        maxP95LatencyMs: optionalNumber(formData, 'maxP95LatencyMs', 'ms'),
+        maxP95LatencyMs: optionalNumber(
+          formData,
+          'maxP95LatencyMs',
+          'ms',
+        ),
         maxFailureRate: optionalNumber(formData, 'maxFailureRate'),
       },
     });
