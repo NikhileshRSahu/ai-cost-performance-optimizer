@@ -6,6 +6,10 @@ import {
   fetchOpenAIAdminSnapshot,
   type OpenAIAdminFetch,
 } from '../ingestion/connectors/openai-admin.js';
+import {
+  normalizeAnthropicAdminSnapshot,
+  normalizeOpenAIAdminSnapshot,
+} from '../ingestion/provider-normalization.js';
 import type { PersistenceDatabase } from '../persistence/database.js';
 import {
   markProviderConnectionSync,
@@ -18,6 +22,7 @@ import {
   providerCredentialKeyFromEnv,
 } from '../security/provider-credentials.js';
 import type { AuthenticatedSession } from './authz.js';
+import { persistProviderEvidenceSnapshot } from './provider-evidence-service.js';
 
 const VALIDATION_WINDOW_DAYS = 7;
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -27,6 +32,7 @@ export type ProviderConnectionResult = Readonly<{
   syncedAt: string;
   usageRows: number;
   costRows: number;
+  snapshotId: string;
 }>;
 
 export function providerConnectionSafeError(error: unknown): string {
@@ -66,10 +72,12 @@ export async function connectAndValidateProvider(
     throw new Error('PROVIDER_SYNC_TIME_INVALID');
   }
   const startMs = endMs - VALIDATION_WINDOW_DAYS * DAY_MS;
+  const intervalStart = new Date(startMs).toISOString();
   const syncedAt = now.toISOString();
 
   let usageRows = 0;
   let costRows = 0;
+  let snapshotId: string;
   if (input.provider === 'OPENAI') {
     const snapshot = await fetchOpenAIAdminSnapshot({
       adminKey: input.adminKey,
@@ -77,17 +85,49 @@ export async function connectAndValidateProvider(
       endTime: Math.floor(endMs / 1000),
       fetcher: input.openAIFetcher,
     });
-    usageRows = snapshot.usage.length;
-    costRows = snapshot.costs.length;
+    const evidence = normalizeOpenAIAdminSnapshot({
+      organizationId: input.organizationId,
+      snapshot,
+    });
+    usageRows = evidence.usage.length;
+    costRows = evidence.costs.length;
+    snapshotId = (
+      await persistProviderEvidenceSnapshot({
+        db: input.db,
+        session: input.session,
+        organizationId: input.organizationId,
+        source: 'OPENAI_ADMIN_API',
+        intervalStart,
+        intervalEnd: syncedAt,
+        receivedAt: syncedAt,
+        evidence,
+      })
+    ).snapshotId;
   } else {
     const snapshot = await fetchAnthropicAdminSnapshot({
       adminKey: input.adminKey,
-      startingAt: new Date(startMs).toISOString(),
+      startingAt: intervalStart,
       endingAt: syncedAt,
       fetcher: input.anthropicFetcher,
     });
-    usageRows = snapshot.usage.length;
-    costRows = snapshot.costs.length;
+    const evidence = normalizeAnthropicAdminSnapshot({
+      organizationId: input.organizationId,
+      snapshot,
+    });
+    usageRows = evidence.usage.length;
+    costRows = evidence.costs.length;
+    snapshotId = (
+      await persistProviderEvidenceSnapshot({
+        db: input.db,
+        session: input.session,
+        organizationId: input.organizationId,
+        source: 'ANTHROPIC_ADMIN_API',
+        intervalStart,
+        intervalEnd: syncedAt,
+        receivedAt: syncedAt,
+        evidence,
+      })
+    ).snapshotId;
   }
 
   const encryptionKey = providerCredentialKeyFromEnv(input.encryptionKeyEnv);
@@ -117,6 +157,7 @@ export async function connectAndValidateProvider(
     syncedAt,
     usageRows,
     costRows,
+    snapshotId,
   });
 }
 
