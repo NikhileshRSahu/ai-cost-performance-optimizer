@@ -133,6 +133,17 @@ function savingsStateLabel(
   }
 }
 
+function savingsStateRank(state: DashboardSavingsState): number {
+  switch (state) {
+    case 'VERIFIED':
+      return 0;
+    case 'TESTED':
+      return 1;
+    case 'OPPORTUNITY':
+      return 2;
+  }
+}
+
 function savingsConfidence(
   recommendation: DashboardRecommendationEvidence,
 ): SavingsConfidence {
@@ -218,6 +229,7 @@ export function buildFounderDashboardView(
       )
       .sort(
         (left, right) =>
+          savingsStateRank(left.state) - savingsStateRank(right.state) ||
           left.priorityRank - right.priorityRank ||
           left.recommendationId.localeCompare(right.recommendationId),
       )
