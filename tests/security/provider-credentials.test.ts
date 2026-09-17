@@ -5,42 +5,36 @@ import {
 } from '../../src/security/provider-credentials.js';
 
 describe('provider credential encryption', () => {
-  it(
-    'round-trips a provider credential with AES-256-GCM without exposing plaintext',
-    () => {
-      const key = new Uint8Array(32).fill(7);
-      const plaintext = 'sk-admin-super-secret';
+  it('round-trips a provider credential with AES-256-GCM without exposing plaintext', () => {
+    const key = new Uint8Array(32).fill(7);
+    const plaintext = 'sk-admin-super-secret';
 
-      const ciphertext = encryptProviderCredential(plaintext, key);
+    const ciphertext = encryptProviderCredential(plaintext, key);
 
-      expect(ciphertext).toMatch(/^v1:/);
-      expect(ciphertext).not.toContain(plaintext);
-      expect(decryptProviderCredential(ciphertext, key)).toBe(plaintext);
-    },
-  );
+    expect(ciphertext).toMatch(/^v1:/);
+    expect(ciphertext).not.toContain(plaintext);
+    expect(decryptProviderCredential(ciphertext, key)).toBe(plaintext);
+  });
 
-  it(
-    'uses a random nonce so the same credential encrypts differently each time',
-    () => {
-      const key = new Uint8Array(32).fill(9);
+  it('uses a random nonce so the same credential encrypts differently each time', () => {
+    const key = new Uint8Array(32).fill(9);
 
-      const first = encryptProviderCredential('same-secret', key);
-      const second = encryptProviderCredential('same-secret', key);
+    const first = encryptProviderCredential('same-secret', key);
+    const second = encryptProviderCredential('same-secret', key);
 
-      expect(first).not.toBe(second);
-      expect(decryptProviderCredential(first, key)).toBe('same-secret');
-      expect(decryptProviderCredential(second, key)).toBe('same-secret');
-    },
-  );
+    expect(first).not.toBe(second);
+    expect(decryptProviderCredential(first, key)).toBe('same-secret');
+    expect(decryptProviderCredential(second, key)).toBe('same-secret');
+  });
 
   it('rejects invalid keys and tampered ciphertext safely', () => {
     const key = new Uint8Array(32).fill(3);
     const secret = 'anthropic-admin-secret';
     const ciphertext = encryptProviderCredential(secret, key);
 
-    expect(() =>
-      encryptProviderCredential(secret, new Uint8Array(31)),
-    ).toThrow('PROVIDER_CREDENTIAL_KEY_INVALID');
+    expect(() => encryptProviderCredential(secret, new Uint8Array(31))).toThrow(
+      'PROVIDER_CREDENTIAL_KEY_INVALID',
+    );
     expect(() =>
       decryptProviderCredential(ciphertext, new Uint8Array(31)),
     ).toThrow('PROVIDER_CREDENTIAL_KEY_INVALID');
