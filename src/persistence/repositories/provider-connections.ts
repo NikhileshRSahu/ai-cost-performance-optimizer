@@ -5,6 +5,7 @@ import { providerConnections } from '../provider-connections-schema.js';
 import { requireOrganizationAccess } from '../tenant.js';
 
 export type ProviderConnectionProvider = 'OPENAI' | 'ANTHROPIC';
+export type ProviderSyncStatus = 'NEVER' | 'READY' | 'FAILED' | 'REVOKED';
 
 export type ProviderConnectionSummary = Readonly<{
   organizationId: string;
@@ -161,6 +162,41 @@ export async function getProviderCredentialCiphertext(
     return null;
   }
   return row.credentialCiphertext;
+}
+
+export async function markProviderConnectionSync(
+  input: Readonly<{
+    db: PersistenceDatabase;
+    session: AuthenticatedSession;
+    organizationId: string;
+    provider: ProviderConnectionProvider;
+    syncedAt: string;
+    status: Exclude<ProviderSyncStatus, 'NEVER' | 'REVOKED'>;
+    safeErrorCategory?: string | null;
+  }>,
+): Promise<void> {
+  requireOrganizationAccess({
+    session: input.session,
+    organizationId: input.organizationId,
+    action: 'MANAGE_CREDENTIAL_REFERENCE',
+  });
+  requireProvider(input.provider);
+  requireIso(input.syncedAt, 'PROVIDER_CONNECTION_SYNCED_AT_INVALID');
+
+  await input.db
+    .update(providerConnections)
+    .set({
+      lastSyncAt: input.syncedAt,
+      lastSyncStatus: input.status,
+      safeErrorCategory: input.safeErrorCategory ?? null,
+      updatedAt: input.syncedAt,
+    })
+    .where(
+      and(
+        eq(providerConnections.organizationId, input.organizationId),
+        eq(providerConnections.provider, input.provider),
+      ),
+    );
 }
 
 export async function revokeProviderConnection(
