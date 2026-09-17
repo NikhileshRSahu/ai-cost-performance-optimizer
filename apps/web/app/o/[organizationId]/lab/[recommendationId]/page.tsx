@@ -40,11 +40,64 @@ export default async function OptimizationLabPage({
     );
     view = buildOptimizationLabView(evidence);
   } catch (error) {
-    if (
-      error instanceof Error &&
-      (error.message === 'LAB_EVIDENCE_INCOMPLETE' ||
-        error.message === 'RECOMMENDATION_NOT_FOUND')
-    ) {
+    if (error instanceof Error && error.message === 'LAB_EVIDENCE_INCOMPLETE') {
+      return (
+        <div className="lab-stack">
+          <section
+            className="empty-state"
+            aria-labelledby="lab-validation-title"
+          >
+            <p className="eyebrow">Validation</p>
+            <h1 id="lab-validation-title">Validate this opportunity</h1>
+            <p>
+              Evalomics found a usage-backed optimization opportunity, but it
+              does not yet have enough current-versus-candidate evidence to
+              claim a saving or recommend a production change.
+            </p>
+
+            <div className="comparison-grid">
+              <article className="configuration-card">
+                <p className="eyebrow">What we already know</p>
+                <h2>There is a supported optimization hypothesis</h2>
+                <p>
+                  The opportunity came from measured usage evidence. It remains
+                  Potential until a candidate is tested against the same cases
+                  and safety requirements.
+                </p>
+              </article>
+              <article className="configuration-card">
+                <p className="eyebrow">What is still needed</p>
+                <h2>Comparable validation evidence</h2>
+                <p>
+                  Provide paired current-versus-candidate test cases and the
+                  quality or performance floor that must not get worse. Evalomics
+                  will then compare cost and safety before upgrading the claim.
+                </p>
+              </article>
+            </div>
+
+            <div className="action-row">
+              <Link
+                className="primary-action"
+                href={`/o/${organizationId}/benchmark`}
+              >
+                Add validation evidence
+              </Link>
+              <Link className="secondary-action" href={`/o/${organizationId}`}>
+                Back to overview
+              </Link>
+            </div>
+            <p className="metric-subtle">
+              Advanced paired-case benchmarking remains available here; it is
+              validation evidence, not a required step before Evalomics can show
+              your initial analysis.
+            </p>
+          </section>
+        </div>
+      );
+    }
+
+    if (error instanceof Error && error.message === 'RECOMMENDATION_NOT_FOUND') {
       return (
         <div className="lab-stack">
           <section
@@ -54,9 +107,8 @@ export default async function OptimizationLabPage({
             <p className="eyebrow">{LAB_COPY.heading}</p>
             <h1 id="lab-unavailable-title">Insufficient benchmark evidence</h1>
             <p>
-              This recommendation does not have the complete
-              current-versus-candidate evidence required for the Optimization
-              Lab.
+              This recommendation could not be found. Return to your analysis or
+              benchmark workspace to choose an available recommendation.
             </p>
             <div className="action-row">
               <Link
