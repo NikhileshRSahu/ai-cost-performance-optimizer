@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { loadFounderDashboardEvidence } from '../../apps/web/lib/dashboard-data.js';
 import { createDatabase } from '../../src/persistence/database.js';
+import type { PersistenceDatabase } from '../../src/persistence/database.js';
 import { providerEvidenceSnapshots } from '../../src/persistence/provider-evidence-schema.js';
 import {
   importRuns,
@@ -10,6 +10,7 @@ import {
   verificationWindows,
 } from '../../src/persistence/schema.js';
 import type { AuthenticatedSession } from '../../src/workbench/authz.js';
+import type { DashboardEvidence } from '../../src/workbench/dashboard-view.js';
 
 const databaseUrl = process.env.DATABASE_URL;
 if (databaseUrl === undefined) {
@@ -21,6 +22,31 @@ const owner: AuthenticatedSession = {
   userId: 'owner',
   memberships: [{ organizationId: 'org-a', role: 'OWNER' }],
 };
+
+type DashboardLoader = (
+  db: PersistenceDatabase,
+  session: AuthenticatedSession,
+  organizationId: string,
+) => Promise<DashboardEvidence>;
+
+async function loadDashboard(
+  db: PersistenceDatabase,
+  session: AuthenticatedSession,
+  organizationId: string,
+): Promise<DashboardEvidence> {
+  const moduleUrl = new URL(
+    '../../apps/web/lib/dashboard-data.ts',
+    import.meta.url,
+  ).href;
+  const dashboardModule = (await import(moduleUrl)) as Readonly<{
+    loadFounderDashboardEvidence: DashboardLoader;
+  }>;
+  return dashboardModule.loadFounderDashboardEvidence(
+    db,
+    session,
+    organizationId,
+  );
+}
 
 function canonicalRecord(importId: string) {
   return {
@@ -151,27 +177,23 @@ describe('founder dashboard data loading', () => {
         },
       },
       ...[4, 2, 1, 3].map((priorityRank) => ({
-        id: `current-rank-${priorityRank}`,
+        id: `current-rank-${String(priorityRank)}`,
         organizationId: 'org-a',
         decision: 'INSUFFICIENT_EVIDENCE',
         savingState: 'OPPORTUNITY' as const,
         confidenceBand: priorityRank === 1 ? 'HIGH' : 'MEDIUM',
         evidence: {
           priorityRank,
-          title: `Current recommendation ${priorityRank}`,
+          title: `Current recommendation ${String(priorityRank)}`,
           sourceImportId: 'import-new',
-          nextAction: `Action ${priorityRank}`,
+          nextAction: `Action ${String(priorityRank)}`,
           detectionConfidence: priorityRank === 1 ? 'HIGH' : 'MEDIUM',
           savingsConfidence: 'UNMEASURED',
         },
       })),
     ]);
 
-    const evidence = await loadFounderDashboardEvidence(
-      database.db,
-      owner,
-      'org-a',
-    );
+    const evidence = await loadDashboard(database.db, owner, 'org-a');
 
     expect(
       evidence.recommendations?.map((item) => item.recommendationId),
