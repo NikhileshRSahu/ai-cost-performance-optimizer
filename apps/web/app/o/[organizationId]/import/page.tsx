@@ -155,7 +155,10 @@ export default async function ImportPage({
                 >
                   Try another CSV
                 </Link>
-                <Link className="secondary-action" href={`/o/${organizationId}`}>
+                <Link
+                  className="secondary-action"
+                  href={`/o/${organizationId}`}
+                >
                   Return to overview
                 </Link>
               </div>
