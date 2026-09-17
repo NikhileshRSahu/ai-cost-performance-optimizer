@@ -78,21 +78,17 @@ export default async function OptimizationLabPage({
     await database.close();
   }
 
-  const hasNetSaving =
-    view.economics.netSavingNumerator !== null &&
-    view.economics.netSavingDenominator !== null;
-  const netSaving = hasNetSaving
-    ? `${view.economics.currency} ${formatDecimal(
-        rational(
-          BigInt(view.economics.netSavingNumerator!),
-          BigInt(view.economics.netSavingDenominator!),
-        ),
-        2,
-      )}`
-    : 'Unavailable';
-  const exactNetSaving = hasNetSaving
-    ? `${view.economics.netSavingNumerator}/${view.economics.netSavingDenominator}`
-    : null;
+  const netSavingNumerator = view.economics.netSavingNumerator;
+  const netSavingDenominator = view.economics.netSavingDenominator;
+  let netSaving = 'Unavailable';
+  let exactNetSaving: string | null = null;
+  if (netSavingNumerator !== null && netSavingDenominator !== null) {
+    netSaving = `${view.economics.currency} ${formatDecimal(
+      rational(BigInt(netSavingNumerator), BigInt(netSavingDenominator)),
+      2,
+    )}`;
+    exactNetSaving = `${netSavingNumerator}/${netSavingDenominator}`;
+  }
 
   return (
     <div className="lab-stack">
