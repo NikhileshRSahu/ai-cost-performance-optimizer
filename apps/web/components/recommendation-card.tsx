@@ -32,6 +32,15 @@ export function RecommendationCard({
 
   return (
     <article className="mt-2 overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.018]">
+      <div className="border-b border-white/[0.07] px-5 py-4 sm:px-6">
+        <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-200/60">
+          Best first move
+        </p>
+        <h2 className="m-0 mt-1 text-xl font-semibold tracking-[-0.035em] text-white">
+          AI Efficiency MRI
+        </h2>
+      </div>
+
       <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.35fr_.65fr]">
         <div>
           <div className="flex flex-wrap items-center gap-2.5">
@@ -45,9 +54,9 @@ export function RecommendationCard({
             </span>
           </div>
 
-          <h2 className="mt-4 max-w-3xl text-2xl font-semibold leading-tight tracking-[-0.04em] text-white sm:text-3xl">
+          <h3 className="mt-4 max-w-3xl text-2xl font-semibold leading-tight tracking-[-0.04em] text-white sm:text-3xl">
             {recommendation.title}
-          </h2>
+          </h3>
 
           {isOpportunity ? (
             <div className="mt-5 rounded-xl border border-emerald-300/10 bg-emerald-300/[0.035] p-4">
@@ -89,9 +98,24 @@ export function RecommendationCard({
           <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/50">
             <Gauge className="size-3.5" /> Evidence confidence
           </div>
-          <p className="m-0 mt-2 text-lg font-semibold text-white/82">
-            {recommendation.confidenceBand} confidence
-          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+            <div>
+              <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/40">
+                Detection confidence
+              </p>
+              <p className="m-0 mt-1 text-lg font-semibold text-white/82">
+                {recommendation.detectionConfidence}
+              </p>
+            </div>
+            <div>
+              <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/40">
+                Savings confidence
+              </p>
+              <p className="m-0 mt-1 text-lg font-semibold text-white/82">
+                {recommendation.savingsConfidence}
+              </p>
+            </div>
+          </div>
           {recommendation.principalLimitation !== null ? (
             <details className="mt-3">
               <summary className="cursor-pointer text-xs font-medium text-white/55">
