@@ -1,10 +1,23 @@
 export type DashboardDataQuality =
-  'READY' | 'PARTIAL_DATA' | 'ZERO_USAGE' | 'NO_DATA';
+  | 'READY'
+  | 'PARTIAL_DATA'
+  | 'ZERO_USAGE'
+  | 'NO_DATA';
 
 export type DashboardSavingsState = 'OPPORTUNITY' | 'TESTED' | 'VERIFIED';
 
 export type DashboardDecision =
-  'OPTIMIZE' | 'DO_NOT_CHANGE' | 'INSUFFICIENT_EVIDENCE';
+  | 'OPTIMIZE'
+  | 'DO_NOT_CHANGE'
+  | 'INSUFFICIENT_EVIDENCE';
+
+export type ConfidenceBand = 'LOW' | 'MEDIUM' | 'HIGH';
+
+export type SavingsConfidence =
+  | 'UNMEASURED'
+  | 'MODELED'
+  | 'TESTED'
+  | 'VERIFIED';
 
 export type DisplayMoneyEvidence = Readonly<{
   amount: string;
@@ -17,13 +30,30 @@ export type DashboardSavingEvidence = DisplayMoneyEvidence &
     horizon: 'OBSERVED_PERIOD' | 'THIRTY_DAY_PROJECTION';
   }>;
 
+export type ModeledSavingsRange = Readonly<{
+  currency: string;
+  horizon: 'OBSERVED_PERIOD' | 'THIRTY_DAY_PROJECTION';
+  low: string;
+  base: string;
+  high: string;
+  evidenceRef: string;
+  formulaVersion: string;
+  pricingRef: string | null;
+  overlapGroup: string | null;
+}>;
+
 export type DashboardRecommendationEvidence = Readonly<{
   recommendationId: string;
+  priorityRank?: number;
   title: string;
   state: DashboardSavingsState;
   decision: DashboardDecision;
   saving: DashboardSavingEvidence | null;
-  confidenceBand: 'LOW' | 'MEDIUM' | 'HIGH';
+  modeledRange?: ModeledSavingsRange | null;
+  detectionConfidence?: ConfidenceBand;
+  savingsConfidence?: SavingsConfidence;
+  /** @deprecated Use detectionConfidence. Kept while legacy consumers migrate. */
+  confidenceBand?: ConfidenceBand;
   principalLimitation: string | null;
   nextAction: string;
 }>;
@@ -49,7 +79,10 @@ export type DashboardEvidence = Readonly<{
   dataQuality: DashboardDataQuality;
   observedSpend: DisplayMoneyEvidence | null;
   completeCalendarDays: number;
-  strongestAction: DashboardRecommendationEvidence | null;
+  recommendations?: readonly DashboardRecommendationEvidence[];
+  nonOverlappingModeledTotal?: ModeledSavingsRange | null;
+  /** @deprecated Use recommendations. Kept while dashboard loading migrates. */
+  strongestAction?: DashboardRecommendationEvidence | null;
   verifiedNetSavings: VerifiedNetSavingsEvidence | null;
   diagnosticFacts: readonly DashboardDiagnosticFact[];
   isDemo: boolean;
@@ -58,6 +91,11 @@ export type DashboardEvidence = Readonly<{
 
 export type DashboardRecommendationView = Readonly<
   DashboardRecommendationEvidence & {
+    priorityRank: number;
+    modeledRange: ModeledSavingsRange | null;
+    detectionConfidence: ConfidenceBand;
+    savingsConfidence: SavingsConfidence;
+    confidenceBand: ConfidenceBand;
     stateLabel: 'Potential saving' | 'Tested saving' | 'Verified saving';
   }
 >;
@@ -76,6 +114,10 @@ export type FounderDashboardView = Readonly<{
   periodLabel: string;
   dataQuality: DashboardDataQuality;
   observedSpend: DisplayMoneyEvidence | null;
+  recommendations: readonly DashboardRecommendationView[];
+  bestFirstMove: DashboardRecommendationView | null;
+  nonOverlappingModeledTotal: ModeledSavingsRange | null;
+  /** @deprecated Use bestFirstMove. Kept while UI consumers migrate. */
   strongestAction: DashboardRecommendationView | null;
   verifiedNetSavings: VerifiedNetSavingsView | null;
   diagnosticFacts: readonly DashboardDiagnosticFact[];
@@ -97,6 +139,40 @@ function savingsStateLabel(
   }
 }
 
+function savingsConfidence(
+  recommendation: DashboardRecommendationEvidence,
+): SavingsConfidence {
+  if (recommendation.savingsConfidence !== undefined) {
+    return recommendation.savingsConfidence;
+  }
+  if (recommendation.state === 'VERIFIED') return 'VERIFIED';
+  if (recommendation.state === 'TESTED') return 'TESTED';
+  return recommendation.modeledRange === undefined ||
+    recommendation.modeledRange === null
+    ? 'UNMEASURED'
+    : 'MODELED';
+}
+
+function recommendationView(
+  recommendation: DashboardRecommendationEvidence,
+  fallbackRank: number,
+): DashboardRecommendationView {
+  const detectionConfidence =
+    recommendation.detectionConfidence ?? recommendation.confidenceBand ?? 'LOW';
+  const modeledRange = recommendation.modeledRange ?? null;
+
+  return Object.freeze({
+    ...recommendation,
+    priorityRank: recommendation.priorityRank ?? fallbackRank,
+    modeledRange:
+      modeledRange === null ? null : Object.freeze({ ...modeledRange }),
+    detectionConfidence,
+    savingsConfidence: savingsConfidence(recommendation),
+    confidenceBand: detectionConfidence,
+    stateLabel: savingsStateLabel(recommendation.state),
+  });
+}
+
 function verifiedImpactView(
   value: VerifiedNetSavingsEvidence | null,
 ): VerifiedNetSavingsView | null {
@@ -109,7 +185,11 @@ function verifiedImpactView(
   }
 
   const direction =
-    numerator > 0n ? 'SAVING' : numerator < 0n ? 'COST_INCREASE' : 'NO_CHANGE';
+    numerator > 0n
+      ? 'SAVING'
+      : numerator < 0n
+        ? 'COST_INCREASE'
+        : 'NO_CHANGE';
 
   return Object.freeze({
     exactNumerator: value.numerator,
@@ -124,13 +204,26 @@ function verifiedImpactView(
 export function buildFounderDashboardView(
   input: DashboardEvidence,
 ): FounderDashboardView {
-  const strongestAction =
-    input.strongestAction === null
-      ? null
-      : Object.freeze({
-          ...input.strongestAction,
-          stateLabel: savingsStateLabel(input.strongestAction.state),
-        });
+  const recommendationEvidence =
+    input.recommendations ??
+    (input.strongestAction === undefined || input.strongestAction === null
+      ? []
+      : [input.strongestAction]);
+
+  const recommendations = Object.freeze(
+    recommendationEvidence
+      .map((recommendation, index) =>
+        recommendationView(recommendation, index + 1),
+      )
+      .sort(
+        (left, right) =>
+          left.priorityRank - right.priorityRank ||
+          left.recommendationId.localeCompare(right.recommendationId),
+      )
+      .slice(0, 3),
+  );
+  const bestFirstMove = recommendations[0] ?? null;
+  const nonOverlappingModeledTotal = input.nonOverlappingModeledTotal ?? null;
 
   return Object.freeze({
     organizationName: input.organizationName,
@@ -140,7 +233,13 @@ export function buildFounderDashboardView(
       input.observedSpend === null
         ? null
         : Object.freeze({ ...input.observedSpend }),
-    strongestAction,
+    recommendations,
+    bestFirstMove,
+    nonOverlappingModeledTotal:
+      nonOverlappingModeledTotal === null
+        ? null
+        : Object.freeze({ ...nonOverlappingModeledTotal }),
+    strongestAction: bestFirstMove,
     verifiedNetSavings: verifiedImpactView(input.verifiedNetSavings),
     diagnosticFacts: Object.freeze(
       input.diagnosticFacts.map((fact) =>
