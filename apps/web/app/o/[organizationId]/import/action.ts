@@ -28,6 +28,7 @@ export async function uploadUsageCsv(formData: FormData): Promise<never> {
 
   const database = createDatabase(databaseUrl);
   let importId: string;
+  let blocked = false;
   try {
     const result = await importCustomerUsage({
       db: database.db,
@@ -39,6 +40,7 @@ export async function uploadUsageCsv(formData: FormData): Promise<never> {
       receivedAt: new Date().toISOString(),
     });
     importId = result.importId;
+    blocked = result.blocked;
     if (!result.blocked) {
       await analyzeImportedUsage({
         db: database.db,
@@ -59,7 +61,13 @@ export async function uploadUsageCsv(formData: FormData): Promise<never> {
     await database.close();
   }
 
+  if (blocked) {
+    redirect(
+      `/o/${organizationId}/import?importId=${encodeURIComponent(importId)}`,
+    );
+  }
+
   redirect(
-    `/o/${organizationId}/import?importId=${encodeURIComponent(importId)}`,
+    `/o/${organizationId}?source=import&importId=${encodeURIComponent(importId)}`,
   );
 }

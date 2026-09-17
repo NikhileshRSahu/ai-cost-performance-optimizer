@@ -10,10 +10,10 @@ export function RecommendationCard({
   organizationId: string;
   recommendation: DashboardRecommendationView;
 }>) {
-  const saving =
-    recommendation.saving === null
-      ? 'Saving amount unavailable'
-      : `${recommendation.saving.currency} ${recommendation.saving.amount}`;
+  const hasSaving = recommendation.saving !== null;
+  const saving = hasSaving
+    ? `${recommendation.saving.currency} ${recommendation.saving.amount}`
+    : 'Needs validation';
 
   const primaryHref =
     recommendation.state === 'TESTED' && recommendation.decision === 'OPTIMIZE'
@@ -27,7 +27,7 @@ export function RecommendationCard({
       ? 'Prepare safe rollout'
       : recommendation.state === 'VERIFIED'
         ? 'View verified savings'
-        : 'Test this optimization';
+        : 'Validate this opportunity';
 
   return (
     <article className="mt-2 overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.018]">
@@ -40,7 +40,7 @@ export function RecommendationCard({
                 ? 'Tested result'
                 : recommendation.state === 'VERIFIED'
                   ? 'Verified result'
-                  : 'Opportunity'}
+                  : 'Strongest finding'}
             </span>
           </div>
 
@@ -55,18 +55,20 @@ export function RecommendationCard({
                   ? 'Tested saving'
                   : recommendation.state === 'VERIFIED'
                     ? 'Verified saving'
-                    : 'Potential saving'}
+                    : 'Savings estimate'}
               </p>
               <p className="m-0 mt-1 font-mono text-3xl font-medium tracking-[-0.04em] text-white">
                 {saving}
               </p>
             </div>
-            <p className="m-0 pb-1 text-xs text-white/48">
+            <p className="m-0 max-w-xl pb-1 text-xs leading-5 text-white/48">
               {recommendation.state === 'TESTED'
                 ? 'Benchmark-supported, not yet verified in production'
                 : recommendation.state === 'VERIFIED'
                   ? 'Supported by comparable post-change evidence'
-                  : 'Opportunity only, not achieved'}
+                  : hasSaving
+                    ? 'Opportunity only — this amount is not achieved or verified.'
+                    : 'No financial saving is claimed until a candidate is benchmarked against your quality and performance requirements.'}
             </p>
           </div>
         </div>
@@ -81,7 +83,7 @@ export function RecommendationCard({
           {recommendation.principalLimitation !== null ? (
             <details className="mt-3">
               <summary className="cursor-pointer text-xs font-medium text-white/55">
-                Why this is not fully verified yet
+                What still needs validation
               </summary>
               <p className="mt-2 text-xs leading-5 text-white/55">
                 {recommendation.principalLimitation}
@@ -91,13 +93,18 @@ export function RecommendationCard({
         </div>
       </div>
 
-      <div className="border-t border-white/[0.07] bg-white/[0.014] px-5 py-4 sm:px-6">
+      <div className="flex flex-wrap items-center gap-3 border-t border-white/[0.07] bg-white/[0.014] px-5 py-4 sm:px-6">
         <Link
           className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 no-underline transition hover:bg-emerald-100"
           href={primaryHref}
         >
           {primaryLabel} <ArrowRight className="size-4" />
         </Link>
+        {recommendation.state === 'OPPORTUNITY' ? (
+          <span className="text-xs text-white/42">
+            We will ask only for the evidence still needed to test this safely.
+          </span>
+        ) : null}
       </div>
     </article>
   );

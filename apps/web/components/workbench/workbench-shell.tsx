@@ -23,12 +23,12 @@ import { cn } from '../../lib/utils';
 const primary = [
   { slug: '', label: 'Overview', icon: Activity },
   { slug: '/import', label: 'Data', icon: Database },
-  { slug: '/benchmark', label: 'Tests', icon: FlaskConical },
   { slug: '/proof', label: 'Savings', icon: ShieldCheck },
 ] as const;
 
 const advanced = [
   { slug: '/workloads', label: 'Safety', icon: BrainCircuit },
+  { slug: '/benchmark', label: 'Tests', icon: FlaskConical },
   { slug: '/telemetry', label: 'Telemetry', icon: BarChart3 },
   { slug: '/settings', label: 'Settings', icon: Settings },
 ] as const;

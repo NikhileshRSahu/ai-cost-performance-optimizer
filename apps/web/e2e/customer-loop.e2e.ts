@@ -42,18 +42,19 @@ async function reachVerification(
     await page.locator('input[name="isDemo"]').check();
   }
   await page.getByRole('button', { name: 'Analyze this usage' }).click();
+  await expect(page).toHaveURL(new RegExp(`/o/${organizationId}\\?source=import`));
   await expect(
-    page.getByRole('heading', { name: 'Your AI usage data is ready' }),
+    page.getByRole('heading', { name: 'We analyzed your AI usage' }),
+  ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
+  await expect(page.getByText('Savings estimate', { exact: true })).toBeVisible();
+  await expect(page.getByText('Needs validation', { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'Validate this opportunity' }),
   ).toBeVisible();
-  await page.getByText('See import details').click();
-  const importSummary = page.getByLabel('Import evidence summary');
-  await expect(importSummary).toContainText('28');
-  await expect(importSummary).toContainText('5');
   await expectAccessible(page);
 
-  await page
-    .getByRole('link', { name: 'Advanced: configure safety rules' })
-    .click();
+  // Advanced validation remains available without being the default customer path.
+  await page.goto(`/o/${organizationId}/workloads`);
   await page.getByLabel('Workload name').fill('classification');
   await page.getByLabel('Environment').fill('production');
   await page.getByLabel('Minimum quality').fill('0.90');
