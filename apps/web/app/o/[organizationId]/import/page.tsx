@@ -53,7 +53,9 @@ export default async function ImportPage({
 
   const database = createDatabase(databaseUrl);
   let imported: typeof importRuns.$inferSelect | null = null;
-  let connections = await Promise.resolve([] as Awaited<ReturnType<typeof listProviderConnections>>);
+  let connections = await Promise.resolve(
+    [] as Awaited<ReturnType<typeof listProviderConnections>>,
+  );
   try {
     requireOrganizationAccess({ session, organizationId, action: 'READ' });
     connections = await listProviderConnections({
@@ -82,7 +84,8 @@ export default async function ImportPage({
 
   const canManageConnections = session.memberships.some(
     (membership) =>
-      membership.organizationId === organizationId && membership.role === 'OWNER',
+      membership.organizationId === organizationId &&
+      membership.role === 'OWNER',
   );
   const providerError = providerErrorCopy(query.providerError);
 
@@ -122,7 +125,9 @@ export default async function ImportPage({
         <div className="workflow-card import-result" role="status">
           <p className="eyebrow">Disconnected</p>
           <h2>{query.providerDisconnected} credential removed</h2>
-          <p>Previously imported evidence is left intact for your audit history.</p>
+          <p>
+            Previously imported evidence is left intact for your audit history.
+          </p>
         </div>
       ) : null}
       {error !== undefined ? (
@@ -149,7 +154,10 @@ export default async function ImportPage({
                 candidate.provider === provider && candidate.revokedAt === null,
             );
             return (
-              <div key={provider} className="rounded-2xl border border-white/10 p-5">
+              <div
+                key={provider}
+                className="rounded-2xl border border-white/10 p-5"
+              >
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <h3 className="text-lg font-semibold">
@@ -166,14 +174,18 @@ export default async function ImportPage({
                   {connection?.lastSyncAt !== null &&
                   connection?.lastSyncAt !== undefined ? (
                     <span className="trust-chip">
-                      Last checked {new Date(connection.lastSyncAt).toLocaleDateString()}
+                      Last checked{' '}
+                      {new Date(connection.lastSyncAt).toLocaleDateString()}
                     </span>
                   ) : null}
                 </div>
 
                 {canManageConnections ? (
                   connection === undefined ? (
-                    <form action={connectProviderAccount} className="mt-5 grid gap-3">
+                    <form
+                      action={connectProviderAccount}
+                      className="mt-5 grid gap-3"
+                    >
                       <input
                         type="hidden"
                         name="organizationId"
@@ -246,7 +258,9 @@ export default async function ImportPage({
           <input type="hidden" name="organizationId" value={organizationId} />
           <label className="file-drop">
             <span>Choose AI usage CSV</span>
-            <small>We validate the file before adding it to your analysis</small>
+            <small>
+              We validate the file before adding it to your analysis
+            </small>
             <input
               name="usageCsv"
               type="file"
