@@ -1,10 +1,37 @@
 import { describe, expect, it } from 'vitest';
-import type { FounderDashboardView } from '../../src/workbench/dashboard-view.js';
+import type {
+  DashboardRecommendationView,
+  FounderDashboardView,
+} from '../../src/workbench/dashboard-view.js';
 import { buildProspectProofPack } from '../../src/workbench/prospect-proof.js';
+
+function recommendation(): DashboardRecommendationView {
+  return {
+    recommendationId: 'rec-1',
+    priorityRank: 1,
+    title: 'Reduce output-token intensity',
+    state: 'OPPORTUNITY',
+    decision: 'OPTIMIZE',
+    saving: {
+      amount: '84.00',
+      currency: 'USD',
+      horizon: 'OBSERVED_PERIOD',
+      evidenceRef: 'recommendation:rec-1',
+    },
+    modeledRange: null,
+    detectionConfidence: 'MEDIUM',
+    savingsConfidence: 'UNMEASURED',
+    confidenceBand: 'MEDIUM',
+    principalLimitation: null,
+    nextAction: 'Run the bounded benchmark.',
+    stateLabel: 'Potential saving',
+  };
+}
 
 function baseView(
   overrides: Partial<FounderDashboardView> = {},
 ): FounderDashboardView {
+  const bestFirstMove = recommendation();
   return {
     organizationName: 'Prospect AI',
     periodLabel: '2026-09-01 to 2026-09-07',
@@ -14,22 +41,10 @@ function baseView(
       currency: 'USD',
       evidenceRef: 'import:prospect-1',
     },
-    strongestAction: {
-      recommendationId: 'rec-1',
-      title: 'Reduce output-token intensity',
-      state: 'OPPORTUNITY',
-      decision: 'OPTIMIZE',
-      saving: {
-        amount: '84.00',
-        currency: 'USD',
-        horizon: 'OBSERVED_PERIOD',
-        evidenceRef: 'recommendation:rec-1',
-      },
-      confidenceBand: 'MEDIUM',
-      principalLimitation: null,
-      nextAction: 'Run the bounded benchmark.',
-      stateLabel: 'Potential saving',
-    },
+    recommendations: [bestFirstMove],
+    bestFirstMove,
+    nonOverlappingModeledTotal: null,
+    strongestAction: bestFirstMove,
     verifiedNetSavings: null,
     diagnosticFacts: [],
     monthlyProjectionAllowed: true,
@@ -55,10 +70,12 @@ describe('prospect proof pack', () => {
     );
   });
 
-  it('requires ready usage evidence and a strongest action', () => {
+  it('requires ready usage evidence and a best first move', () => {
     const pack = buildProspectProofPack(
       baseView({
         dataQuality: 'PARTIAL_DATA',
+        recommendations: [],
+        bestFirstMove: null,
         strongestAction: null,
       }),
     );
