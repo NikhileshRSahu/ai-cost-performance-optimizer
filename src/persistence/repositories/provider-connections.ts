@@ -1,8 +1,8 @@
 import { and, eq } from 'drizzle-orm';
+import type { AuthenticatedSession } from '../../workbench/authz.js';
 import type { PersistenceDatabase } from '../database.js';
 import { providerConnections } from '../provider-connections-schema.js';
 import { requireOrganizationAccess } from '../tenant.js';
-import type { AuthenticatedSession } from '../../workbench/authz.js';
 
 export type ProviderConnectionProvider = 'OPENAI' | 'ANTHROPIC';
 
@@ -17,7 +17,9 @@ export type ProviderConnectionSummary = Readonly<{
   updatedAt: string;
 }>;
 
-function requireProvider(provider: string): asserts provider is ProviderConnectionProvider {
+function requireProvider(
+  provider: string,
+): asserts provider is ProviderConnectionProvider {
   if (provider !== 'OPENAI' && provider !== 'ANTHROPIC') {
     throw new Error('PROVIDER_CONNECTION_PROVIDER_INVALID');
   }
@@ -64,7 +66,10 @@ export async function saveProviderConnection(
       updatedAt: input.connectedAt,
     })
     .onConflictDoUpdate({
-      target: [providerConnections.organizationId, providerConnections.provider],
+      target: [
+        providerConnections.organizationId,
+        providerConnections.provider,
+      ],
       set: {
         credentialCiphertext: input.credentialCiphertext,
         connectedAt: input.connectedAt,
