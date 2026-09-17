@@ -96,6 +96,7 @@ function periodLabel(start: string | null, end: string | null): string {
 
 function recommendationView(
   row: typeof recommendations.$inferSelect,
+  priorityRank: number,
   projectionEligible: boolean,
   limitations: string[],
 ): DashboardRecommendationEvidence {
@@ -142,7 +143,7 @@ function recommendationView(
 
   return Object.freeze({
     recommendationId: row.id,
-    priorityRank: evidenceRank(row.evidence) ?? undefined,
+    priorityRank,
     title:
       evidenceString(row.evidence, 'title') ??
       'Review the highest-ranked optimization evidence',
@@ -150,9 +151,9 @@ function recommendationView(
     decision,
     saving,
     modeledRange: null,
-    detectionConfidence:
-      normalizedConfidence(evidenceString(row.evidence, 'detectionConfidence')) ??
-      confidenceBand,
+    detectionConfidence: normalizedConfidence(
+      evidenceString(row.evidence, 'detectionConfidence') ?? row.confidenceBand,
+    ),
     savingsConfidence: normalizedSavingsConfidence(row.evidence, state),
     confidenceBand,
     principalLimitation: evidenceString(row.evidence, 'principalLimitation'),
@@ -309,17 +310,16 @@ export async function loadFounderDashboardEvidence(
       }),
     );
 
-  const rankedRows = (
-    await db
-      .select()
-      .from(recommendations)
-      .where(eq(recommendations.organizationId, organizationId))
-      .orderBy(desc(recommendations.createdAt))
-      .limit(100)
-  )
-    .filter(
-      (row) => evidenceString(row.evidence, 'sourceImportId') === latestUsable.id,
-    )
+  const recentRecommendationRows = await db
+    .select()
+    .from(recommendations)
+    .where(eq(recommendations.organizationId, organizationId))
+    .orderBy(desc(recommendations.createdAt))
+    .limit(100);
+  const latestImportRows = recentRecommendationRows.filter(
+    (row) => evidenceString(row.evidence, 'sourceImportId') === latestUsable.id,
+  );
+  const rankedRows = latestImportRows
     .map((row) => ({ row, rank: evidenceRank(row.evidence) }))
     .filter(
       (item): item is { row: typeof recommendations.$inferSelect; rank: number } =>
@@ -331,18 +331,7 @@ export async function loadFounderDashboardEvidence(
     )
     .slice(0, 3);
 
-  const recommendationRows = rankedRows.map(({ row }) => row);
-  const latestImportRecommendationCount = (
-    await db
-      .select()
-      .from(recommendations)
-      .where(eq(recommendations.organizationId, organizationId))
-      .orderBy(desc(recommendations.createdAt))
-      .limit(100)
-  ).filter(
-    (row) => evidenceString(row.evidence, 'sourceImportId') === latestUsable.id,
-  ).length;
-  if (recommendationRows.length === 0 && latestImportRecommendationCount > 0) {
+  if (rankedRows.length === 0 && latestImportRows.length > 0) {
     limitations.push(
       'Recommendation rank metadata is unavailable, so no strongest action is claimed.',
     );
@@ -350,12 +339,12 @@ export async function loadFounderDashboardEvidence(
 
   const projectionEligible = coverage?.eligibleForThirtyDayProjection === true;
   const recommendationViews = Object.freeze(
-    recommendationRows.map((row) =>
-      recommendationView(row, projectionEligible, limitations),
+    rankedRows.map(({ row, rank }) =>
+      recommendationView(row, rank, projectionEligible, limitations),
     ),
   );
   const strongestAction = recommendationViews[0] ?? null;
-  const rankOne = recommendationRows[0];
+  const rankOne = rankedRows[0]?.row;
 
   let verifiedNetSavings: DashboardEvidence['verifiedNetSavings'] = null;
   if (rankOne !== undefined) {
@@ -421,7 +410,7 @@ export async function loadFounderDashboardEvidence(
     isDemo:
       organization.isDemo ||
       latestUsable.isDemo ||
-      recommendationRows.some((row) => row.isDemo),
+      rankedRows.some(({ row }) => row.isDemo),
     limitations: Object.freeze(limitations),
   });
 }
