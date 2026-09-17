@@ -11,6 +11,8 @@ export type ScenarioWithOverlap = Readonly<{
   recommendationId: string;
   range: ScenarioBand;
   overlapGroup: string | null;
+  currency: string;
+  horizon: 'OBSERVED_PERIOD' | 'THIRTY_DAY_PROJECTION';
 }>;
 
 function shouldReplace(
@@ -29,6 +31,17 @@ export function nonOverlappingScenarioTotal(
   scenarios: readonly ScenarioWithOverlap[],
 ): ScenarioBand | null {
   if (scenarios.length === 0) return null;
+
+  const first = scenarios[0];
+  if (first === undefined) return null;
+  for (const scenario of scenarios.slice(1)) {
+    if (scenario.currency !== first.currency) {
+      throw new Error('MIXED_SCENARIO_CURRENCY');
+    }
+    if (scenario.horizon !== first.horizon) {
+      throw new Error('MIXED_SCENARIO_HORIZON');
+    }
+  }
 
   const selected: ScenarioWithOverlap[] = [];
   const grouped = new Map<string, ScenarioWithOverlap>();
