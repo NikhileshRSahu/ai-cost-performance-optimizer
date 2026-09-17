@@ -125,16 +125,14 @@ describe('automatic usage analysis service', () => {
 
     expect(first.recommendations.every((item) => !item.reused)).toBe(true);
     expect(second.recommendations.every((item) => item.reused)).toBe(true);
-    expect(
-      second.recommendations.map(({ reused, ...item }) => {
-        void reused;
-        return item;
-      }),
-    ).toEqual(
-      first.recommendations.map(({ reused, ...item }) => {
-        void reused;
-        return item;
-      }),
+
+    const comparable = (recommendation: Record<string, unknown>) =>
+      Object.fromEntries(
+        Object.entries(recommendation).filter(([key]) => key !== 'reused'),
+      );
+
+    expect(second.recommendations.map(comparable)).toEqual(
+      first.recommendations.map(comparable),
     );
     expect(await database.db.select().from(recommendations)).toHaveLength(
       first.recommendations.length,
