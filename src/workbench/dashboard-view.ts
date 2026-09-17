@@ -1,23 +1,15 @@
 export type DashboardDataQuality =
-  | 'READY'
-  | 'PARTIAL_DATA'
-  | 'ZERO_USAGE'
-  | 'NO_DATA';
+  'READY' | 'PARTIAL_DATA' | 'ZERO_USAGE' | 'NO_DATA';
 
 export type DashboardSavingsState = 'OPPORTUNITY' | 'TESTED' | 'VERIFIED';
 
 export type DashboardDecision =
-  | 'OPTIMIZE'
-  | 'DO_NOT_CHANGE'
-  | 'INSUFFICIENT_EVIDENCE';
+  'OPTIMIZE' | 'DO_NOT_CHANGE' | 'INSUFFICIENT_EVIDENCE';
 
 export type ConfidenceBand = 'LOW' | 'MEDIUM' | 'HIGH';
 
 export type SavingsConfidence =
-  | 'UNMEASURED'
-  | 'MODELED'
-  | 'TESTED'
-  | 'VERIFIED';
+  'UNMEASURED' | 'MODELED' | 'TESTED' | 'VERIFIED';
 
 export type DisplayMoneyEvidence = Readonly<{
   amount: string;
@@ -158,7 +150,9 @@ function recommendationView(
   fallbackRank: number,
 ): DashboardRecommendationView {
   const detectionConfidence =
-    recommendation.detectionConfidence ?? recommendation.confidenceBand ?? 'LOW';
+    recommendation.detectionConfidence ??
+    recommendation.confidenceBand ??
+    'LOW';
   const modeledRange = recommendation.modeledRange ?? null;
 
   return Object.freeze({
@@ -185,11 +179,7 @@ function verifiedImpactView(
   }
 
   const direction =
-    numerator > 0n
-      ? 'SAVING'
-      : numerator < 0n
-        ? 'COST_INCREASE'
-        : 'NO_CHANGE';
+    numerator > 0n ? 'SAVING' : numerator < 0n ? 'COST_INCREASE' : 'NO_CHANGE';
 
   return Object.freeze({
     exactNumerator: value.numerator,
