@@ -13,7 +13,8 @@ export function RecommendationCard({
   const hasSaving = recommendation.saving !== null;
   const saving = hasSaving
     ? `${recommendation.saving.currency} ${recommendation.saving.amount}`
-    : 'Needs validation';
+    : 'Not measured yet';
+  const isOpportunity = recommendation.state === 'OPPORTUNITY';
 
   const primaryHref =
     recommendation.state === 'TESTED' && recommendation.decision === 'OPTIMIZE'
@@ -27,7 +28,7 @@ export function RecommendationCard({
       ? 'Prepare safe rollout'
       : recommendation.state === 'VERIFIED'
         ? 'View verified savings'
-        : 'Validate this opportunity';
+        : 'Measure exact savings (optional)';
 
   return (
     <article className="mt-2 overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.018]">
@@ -40,13 +41,24 @@ export function RecommendationCard({
                 ? 'Tested result'
                 : recommendation.state === 'VERIFIED'
                   ? 'Verified result'
-                  : 'Strongest finding'}
+                  : 'Actionable finding'}
             </span>
           </div>
 
           <h2 className="mt-4 max-w-3xl text-2xl font-semibold leading-tight tracking-[-0.04em] text-white sm:text-3xl">
             {recommendation.title}
           </h2>
+
+          {isOpportunity ? (
+            <div className="mt-5 rounded-xl border border-emerald-300/10 bg-emerald-300/[0.035] p-4">
+              <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-100/65">
+                Recommended action
+              </p>
+              <p className="m-0 mt-2 max-w-3xl text-sm leading-6 text-white/74">
+                {recommendation.nextAction}
+              </p>
+            </div>
+          ) : null}
 
           <div className="mt-5 flex flex-wrap items-end gap-x-5 gap-y-2">
             <div>
@@ -55,7 +67,7 @@ export function RecommendationCard({
                   ? 'Tested saving'
                   : recommendation.state === 'VERIFIED'
                     ? 'Verified saving'
-                    : 'Savings estimate'}
+                    : 'Savings amount'}
               </p>
               <p className="m-0 mt-1 font-mono text-3xl font-medium tracking-[-0.04em] text-white">
                 {saving}
@@ -68,14 +80,14 @@ export function RecommendationCard({
                   ? 'Supported by comparable post-change evidence'
                   : hasSaving
                     ? 'Opportunity only — this amount is not achieved or verified.'
-                    : 'No financial saving is claimed until a candidate is benchmarked against your quality and performance requirements.'}
+                    : 'You already have an actionable finding. Exact savings are optional to measure and are not guessed from usage data alone.'}
             </p>
           </div>
         </div>
 
         <div className="rounded-xl border border-white/[0.07] bg-white/[0.025] p-4">
           <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/50">
-            <Gauge className="size-3.5" /> Confidence
+            <Gauge className="size-3.5" /> Evidence confidence
           </div>
           <p className="m-0 mt-2 text-lg font-semibold text-white/82">
             {recommendation.confidenceBand} confidence
@@ -83,7 +95,7 @@ export function RecommendationCard({
           {recommendation.principalLimitation !== null ? (
             <details className="mt-3">
               <summary className="cursor-pointer text-xs font-medium text-white/55">
-                What still needs validation
+                Why confidence is not higher
               </summary>
               <p className="mt-2 text-xs leading-5 text-white/55">
                 {recommendation.principalLimitation}
@@ -95,14 +107,18 @@ export function RecommendationCard({
 
       <div className="flex flex-wrap items-center gap-3 border-t border-white/[0.07] bg-white/[0.014] px-5 py-4 sm:px-6">
         <Link
-          className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 no-underline transition hover:bg-emerald-100"
+          className={
+            isOpportunity
+              ? 'inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/12 bg-white/[0.035] px-5 py-2.5 text-sm font-semibold text-white no-underline transition hover:bg-white/[0.07]'
+              : 'inline-flex min-h-11 items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 no-underline transition hover:bg-emerald-100'
+          }
           href={primaryHref}
         >
           {primaryLabel} <ArrowRight className="size-4" />
         </Link>
-        {recommendation.state === 'OPPORTUNITY' ? (
-          <span className="text-xs text-white/42">
-            We will ask only for the evidence still needed to test this safely.
+        {isOpportunity ? (
+          <span className="max-w-2xl text-xs leading-5 text-white/42">
+            Optional: use this only when you want a quantified saving or stronger production-grade proof.
           </span>
         ) : null}
       </div>
