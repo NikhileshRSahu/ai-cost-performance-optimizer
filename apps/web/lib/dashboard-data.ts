@@ -23,6 +23,7 @@ import type {
   DashboardEvidence,
   DashboardRecommendationEvidence,
   DashboardSavingsState,
+  SavingsConfidence,
 } from '../../../src/workbench/dashboard-view';
 
 function evidenceString(
@@ -33,9 +34,16 @@ function evidenceString(
   return typeof value === 'string' && value.trim().length > 0 ? value : null;
 }
 
-function hasRankOne(evidence: Record<string, unknown>): boolean {
+function evidenceRank(evidence: Record<string, unknown>): number | null {
   const value = evidence.priorityRank;
-  return value === 1 || value === '1';
+  if (typeof value === 'number' && Number.isInteger(value) && value > 0) {
+    return value;
+  }
+  if (typeof value === 'string' && /^\d+$/.test(value)) {
+    const parsed = Number(value);
+    return parsed > 0 ? parsed : null;
+  }
+  return null;
 }
 
 function normalizedDecision(value: string): DashboardDecision {
@@ -61,6 +69,24 @@ function normalizedConfidence(
 ): DashboardRecommendationEvidence['confidenceBand'] {
   if (value === 'HIGH' || value === 'MEDIUM') return value;
   return 'LOW';
+}
+
+function normalizedSavingsConfidence(
+  evidence: Record<string, unknown>,
+  state: DashboardSavingsState,
+): SavingsConfidence {
+  const value = evidence.savingsConfidence;
+  if (
+    value === 'UNMEASURED' ||
+    value === 'MODELED' ||
+    value === 'TESTED' ||
+    value === 'VERIFIED'
+  ) {
+    return value;
+  }
+  if (state === 'VERIFIED') return 'VERIFIED';
+  if (state === 'TESTED') return 'TESTED';
+  return 'UNMEASURED';
 }
 
 function periodLabel(start: string | null, end: string | null): string {
@@ -105,6 +131,8 @@ function recommendationView(
   }
 
   const decision = normalizedDecision(row.decision);
+  const state = normalizedState(row.savingState);
+  const confidenceBand = normalizedConfidence(row.confidenceBand);
   const defaultNextAction =
     decision === 'OPTIMIZE'
       ? 'Review the implementation guide and staged rollout conditions.'
@@ -114,13 +142,19 @@ function recommendationView(
 
   return Object.freeze({
     recommendationId: row.id,
+    priorityRank: evidenceRank(row.evidence) ?? undefined,
     title:
       evidenceString(row.evidence, 'title') ??
       'Review the highest-ranked optimization evidence',
-    state: normalizedState(row.savingState),
+    state,
     decision,
     saving,
-    confidenceBand: normalizedConfidence(row.confidenceBand),
+    modeledRange: null,
+    detectionConfidence:
+      normalizedConfidence(evidenceString(row.evidence, 'detectionConfidence')) ??
+      confidenceBand,
+    savingsConfidence: normalizedSavingsConfidence(row.evidence, state),
+    confidenceBand,
     principalLimitation: evidenceString(row.evidence, 'principalLimitation'),
     nextAction: evidenceString(row.evidence, 'nextAction') ?? defaultNextAction,
   });
@@ -186,6 +220,8 @@ export async function loadFounderDashboardEvidence(
       dataQuality: 'NO_DATA',
       observedSpend: null,
       completeCalendarDays: 0,
+      recommendations: Object.freeze([]),
+      nonOverlappingModeledTotal: null,
       strongestAction: null,
       verifiedNetSavings: null,
       diagnosticFacts: Object.freeze([]),
@@ -273,24 +309,53 @@ export async function loadFounderDashboardEvidence(
       }),
     );
 
-  const rankedRows = await db
-    .select()
-    .from(recommendations)
-    .where(eq(recommendations.organizationId, organizationId))
-    .orderBy(desc(recommendations.createdAt))
-    .limit(50);
-  const rankOne = rankedRows.find((row) => hasRankOne(row.evidence));
-  if (rankOne === undefined && rankedRows.length > 0) {
+  const rankedRows = (
+    await db
+      .select()
+      .from(recommendations)
+      .where(eq(recommendations.organizationId, organizationId))
+      .orderBy(desc(recommendations.createdAt))
+      .limit(100)
+  )
+    .filter(
+      (row) => evidenceString(row.evidence, 'sourceImportId') === latestUsable.id,
+    )
+    .map((row) => ({ row, rank: evidenceRank(row.evidence) }))
+    .filter(
+      (item): item is { row: typeof recommendations.$inferSelect; rank: number } =>
+        item.rank !== null,
+    )
+    .sort(
+      (left, right) =>
+        left.rank - right.rank || left.row.id.localeCompare(right.row.id),
+    )
+    .slice(0, 3);
+
+  const recommendationRows = rankedRows.map(({ row }) => row);
+  const latestImportRecommendationCount = (
+    await db
+      .select()
+      .from(recommendations)
+      .where(eq(recommendations.organizationId, organizationId))
+      .orderBy(desc(recommendations.createdAt))
+      .limit(100)
+  ).filter(
+    (row) => evidenceString(row.evidence, 'sourceImportId') === latestUsable.id,
+  ).length;
+  if (recommendationRows.length === 0 && latestImportRecommendationCount > 0) {
     limitations.push(
       'Recommendation rank metadata is unavailable, so no strongest action is claimed.',
     );
   }
 
   const projectionEligible = coverage?.eligibleForThirtyDayProjection === true;
-  const strongestAction =
-    rankOne === undefined
-      ? null
-      : recommendationView(rankOne, projectionEligible, limitations);
+  const recommendationViews = Object.freeze(
+    recommendationRows.map((row) =>
+      recommendationView(row, projectionEligible, limitations),
+    ),
+  );
+  const strongestAction = recommendationViews[0] ?? null;
+  const rankOne = recommendationRows[0];
 
   let verifiedNetSavings: DashboardEvidence['verifiedNetSavings'] = null;
   if (rankOne !== undefined) {
@@ -348,11 +413,15 @@ export async function loadFounderDashboardEvidence(
         })
       : null,
     completeCalendarDays: coverage?.completeDays.length ?? 0,
+    recommendations: recommendationViews,
+    nonOverlappingModeledTotal: null,
     strongestAction,
     verifiedNetSavings,
     diagnosticFacts: Object.freeze(diagnosticFacts),
     isDemo:
-      organization.isDemo || latestUsable.isDemo || rankOne?.isDemo === true,
+      organization.isDemo ||
+      latestUsable.isDemo ||
+      recommendationRows.some((row) => row.isDemo),
     limitations: Object.freeze(limitations),
   });
 }
