@@ -72,7 +72,7 @@ export function RecommendationCard({
         </div>
 
         <div className="rounded-xl border border-white/[0.07] bg-white/[0.025] p-4">
-          <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/45">
+          <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/50">
             <Gauge className="size-3.5" /> Confidence
           </div>
           <p className="m-0 mt-2 text-lg font-semibold text-white/82">
