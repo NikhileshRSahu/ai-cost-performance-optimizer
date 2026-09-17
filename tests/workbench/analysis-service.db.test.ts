@@ -131,7 +131,9 @@ describe('automatic usage analysis service', () => {
     );
     expect(
       second.recommendations.map(({ reused: _reused, ...item }) => item),
-    ).toEqual(first.recommendations.map(({ reused: _reused, ...item }) => item));
+    ).toEqual(
+      first.recommendations.map(({ reused: _reused, ...item }) => item),
+    );
     expect(await database.db.select().from(recommendations)).toHaveLength(
       first.recommendations.length,
     );
