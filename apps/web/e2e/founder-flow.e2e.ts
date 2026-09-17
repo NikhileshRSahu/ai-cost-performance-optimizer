@@ -15,18 +15,28 @@ async function expectAccessible(page: Page) {
   expect(blocking, JSON.stringify(blocking, null, 2)).toEqual([]);
 }
 
-test('founder can traverse dashboard, lab, and report with demo evidence labeled', async ({
+test('founder gets one direct answer before optional evidence details', async ({
   page,
 }) => {
   await page.goto('/o/demo-org');
   await expect(
-    page.getByRole('heading', { name: 'Demo Optimizer Co' }),
+    page.getByRole('heading', { name: /we analyzed your ai usage/i }),
   ).toBeVisible();
   await expect(page.getByText(demoDisclaimer)).toBeVisible();
+  await expect(page.getByText(/best tested improvement/i)).toBeVisible();
+  await expect(page.getByText(/USD 0\.86/i).first()).toBeVisible();
+  await expect(page.getByText(/high confidence/i)).toBeVisible();
   await expect(
-    page.getByText('Tested saving', { exact: true }).first(),
+    page.getByRole('link', { name: /prepare safe rollout/i }),
   ).toBeVisible();
+  await expect(page.getByText(/see details/i)).toBeVisible();
+  await expect(page.getByText(/what should we test next/i)).toHaveCount(0);
+  await expect(page.getByText(/evidence: import:/i)).toHaveCount(0);
   await expectAccessible(page);
+
+  await page.getByText(/see details/i).click();
+  await expect(page.getByText(/what evalomics can see/i)).toBeVisible();
+  await expect(page.getByText(/evidence limitations/i)).toBeVisible();
 
   await page.getByRole('link', { name: 'Inspect evidence' }).click();
   await expect(
