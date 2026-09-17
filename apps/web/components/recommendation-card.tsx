@@ -17,16 +17,14 @@ export function RecommendationCard({
   const isOpportunity = recommendation.state === 'OPPORTUNITY';
 
   const primaryHref =
-    recommendation.state === 'TESTED' &&
-    recommendation.decision === 'OPTIMIZE'
+    recommendation.state === 'TESTED' && recommendation.decision === 'OPTIMIZE'
       ? `/o/${organizationId}/implement/${recommendation.recommendationId}`
       : recommendation.state === 'VERIFIED'
         ? `/o/${organizationId}/proof`
         : `/o/${organizationId}/lab/${recommendation.recommendationId}`;
 
   const primaryLabel =
-    recommendation.state === 'TESTED' &&
-    recommendation.decision === 'OPTIMIZE'
+    recommendation.state === 'TESTED' && recommendation.decision === 'OPTIMIZE'
       ? 'Prepare safe rollout'
       : recommendation.state === 'VERIFIED'
         ? 'View verified savings'
@@ -120,8 +118,8 @@ export function RecommendationCard({
         </Link>
         {isOpportunity ? (
           <span className="max-w-2xl text-xs leading-5 text-white/42">
-            Optional: use this only when you want a quantified saving or stronger
-            production-grade proof.
+            Optional: use this only when you want a quantified saving or
+            stronger production-grade proof.
           </span>
         ) : null}
       </div>

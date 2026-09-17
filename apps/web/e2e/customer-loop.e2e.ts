@@ -51,9 +51,7 @@ async function reachVerification(
   await expect(
     page.getByText('Recommended action', { exact: true }),
   ).toBeVisible();
-  await expect(
-    page.getByText('Savings amount', { exact: true }),
-  ).toBeVisible();
+  await expect(page.getByText('Savings amount', { exact: true })).toBeVisible();
   await expect(
     page.getByText('Not measured yet', { exact: true }),
   ).toBeVisible();
