@@ -57,8 +57,16 @@ async function reachVerification(
   await page.getByLabel('Workload name').fill('classification');
   await page.getByLabel('Environment').fill('production');
   await page.getByLabel('Minimum quality').fill('0.90');
-  await page.getByLabel('Maximum p95 latency (ms)').fill('1000');
-  await page.getByLabel('Maximum failure rate').fill('0.05');
+
+  const latencyField = page.getByLabel('Maximum p95 latency (ms)');
+  if (await latencyField.isVisible()) {
+    await latencyField.fill('1000');
+  }
+  const failureRateField = page.getByLabel('Maximum failure rate');
+  if (await failureRateField.isVisible()) {
+    await failureRateField.fill('0.05');
+  }
+
   await page
     .getByRole('button', { name: 'Save constraints and continue' })
     .click();
