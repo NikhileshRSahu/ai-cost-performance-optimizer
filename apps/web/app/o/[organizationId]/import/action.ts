@@ -2,14 +2,87 @@
 
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
+import type { ProviderConnectionProvider } from '../../../../../../src/persistence/repositories/provider-connections';
 import { analyzeImportedUsage } from '../../../../../../src/workbench/analysis-service';
 import { importCustomerUsage } from '../../../../../../src/workbench/import-service';
+import {
+  connectAndValidateProvider,
+  disconnectProvider,
+  providerConnectionSafeError,
+} from '../../../../../../src/workbench/provider-connection-service';
 import { assertUploadWithinLimit } from '../../../../../../src/workbench/upload-limits';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
 
 function textEntry(formData: FormData, key: string): string {
   const value = formData.get(key);
   return typeof value === 'string' ? value : '';
+}
+
+function providerEntry(formData: FormData): ProviderConnectionProvider {
+  const value = textEntry(formData, 'provider');
+  if (value !== 'OPENAI' && value !== 'ANTHROPIC') {
+    throw new Error('PROVIDER_CONNECTION_PROVIDER_INVALID');
+  }
+  return value;
+}
+
+export async function connectProviderAccount(formData: FormData): Promise<never> {
+  const organizationId = textEntry(formData, 'organizationId');
+  const adminKey = textEntry(formData, 'adminKey');
+  const provider = providerEntry(formData);
+  if (organizationId.length === 0 || adminKey.trim().length === 0) {
+    throw new Error('PROVIDER_CREDENTIAL_REQUIRED');
+  }
+
+  const session = await resolveRuntimeSession();
+  const databaseUrl = process.env.DATABASE_URL;
+  if (session === null || databaseUrl === undefined) redirect('/unauthorized');
+
+  const database = createDatabase(databaseUrl);
+  try {
+    const result = await connectAndValidateProvider({
+      db: database.db,
+      session,
+      organizationId,
+      provider,
+      adminKey,
+      encryptionKeyEnv: process.env.PROVIDER_CREDENTIAL_ENCRYPTION_KEY,
+    });
+    redirect(
+      `/o/${organizationId}/import?providerConnected=${result.provider}&usageRows=${result.usageRows}&costRows=${result.costRows}`,
+    );
+  } catch (error) {
+    const safeError = providerConnectionSafeError(error);
+    redirect(
+      `/o/${organizationId}/import?providerError=${encodeURIComponent(safeError)}`,
+    );
+  } finally {
+    await database.close();
+  }
+}
+
+export async function disconnectProviderAccount(
+  formData: FormData,
+): Promise<never> {
+  const organizationId = textEntry(formData, 'organizationId');
+  const provider = providerEntry(formData);
+  const session = await resolveRuntimeSession();
+  const databaseUrl = process.env.DATABASE_URL;
+  if (session === null || databaseUrl === undefined) redirect('/unauthorized');
+
+  const database = createDatabase(databaseUrl);
+  try {
+    await disconnectProvider({
+      db: database.db,
+      session,
+      organizationId,
+      provider,
+    });
+  } finally {
+    await database.close();
+  }
+
+  redirect(`/o/${organizationId}/import?providerDisconnected=${provider}`);
 }
 
 export async function uploadUsageCsv(formData: FormData): Promise<never> {
