@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
 import { importRuns } from '../../../../../../src/persistence/schema';
 import { requireOrganizationAccess } from '../../../../../../src/persistence/tenant';
-import { WorkflowProgress } from '../../../../components/workflow-progress';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
 import { uploadUsageCsv } from './action';
 
@@ -48,15 +47,14 @@ export default async function ImportPage({
 
   return (
     <div className="workflow-page">
-      <WorkflowProgress organizationId={organizationId} current="import" />
-
       <header className="workflow-header">
         <div>
           <p className="eyebrow">Data</p>
           <h1>Give Evalomics your AI usage</h1>
           <p className="lede">
-            Upload a provider export or Evalomics-formatted CSV. We validate it,
-            analyze accepted usage, and show you what is worth investigating next.
+            Upload one useful usage window. Evalomics validates it, analyzes the
+            accepted evidence, and takes you straight to the strongest answer it
+            can support.
           </p>
         </div>
         <span className="trust-chip">No provider key required</span>
@@ -71,30 +69,25 @@ export default async function ImportPage({
       <section className="workflow-card upload-card">
         <div>
           <p className="eyebrow">Upload</p>
-          <h2>Drop in one useful usage window</h2>
+          <h2>Choose your usage CSV</h2>
           <p>
-            Start with an existing export. Evalomics checks the file before it
-            affects your workspace. Maximum 10 MiB and 50,000 rows.
+            Start with an existing export or the Evalomics template. Maximum 10
+            MiB and 50,000 rows.
           </p>
           <div className="flex flex-wrap gap-4">
             <Link className="text-link" href="/usage-template.csv">
               Download CSV template
             </Link>
             <Link className="text-link" href="/demo-usage.csv">
-              Download synthetic demo CSV
+              Try synthetic demo data
             </Link>
           </div>
-          <p className="mt-3 text-xs opacity-70">
-            New here? Download the synthetic demo, upload it below, and check
-            “This file is synthetic demo data” to see the workflow before using
-            customer evidence.
-          </p>
         </div>
         <form action={uploadUsageCsv} className="upload-form">
           <input type="hidden" name="organizationId" value={organizationId} />
           <label className="file-drop">
             <span>Choose AI usage CSV</span>
-            <small>We validate the file first and clearly show what was accepted</small>
+            <small>We validate the file before adding it to your analysis</small>
             <input
               name="usageCsv"
               type="file"
@@ -123,18 +116,21 @@ export default async function ImportPage({
           aria-labelledby="import-result-title"
         >
           <div className="import-success-head">
-            <div className="import-success-check" aria-hidden="true">✓</div>
+            <div className="import-success-check" aria-hidden="true">
+              ✓
+            </div>
             <div>
-              <p className="eyebrow">Data ready</p>
+              <p className="eyebrow">Analysis ready</p>
               <h2 id="import-result-title">
                 {imported.status === 'FAILED'
                   ? 'We could not use this file'
-                  : `✓ ${imported.acceptedRows.toLocaleString()} usage rows analyzed`}
+                  : 'Your AI usage data is ready'}
               </h2>
               {imported.status !== 'FAILED' ? (
                 <p className="import-success-copy">
-                  Your evidence is in the workspace. You can continue without
-                  reading any technical import details.
+                  {imported.acceptedRows.toLocaleString()} usage rows were
+                  accepted. You can see the result now; technical import details
+                  are optional.
                 </p>
               ) : null}
             </div>
@@ -145,81 +141,78 @@ export default async function ImportPage({
             ) : null}
           </div>
 
-          <div className="summary-grid" aria-label="Import evidence summary">
-            <div>
-              <span>Accepted</span>
-              <strong>{imported.acceptedRows}</strong>
-            </div>
-            <div>
-              <span>Duplicates skipped</span>
-              <strong>{imported.skippedRows}</strong>
-            </div>
-            <div>
-              <span>Rejected</span>
-              <strong>{imported.rejectedRows}</strong>
-            </div>
-            <div>
-              <span>Warnings</span>
-              <strong>{imported.warningCount}</strong>
-            </div>
-          </div>
-
-          <details className="import-details">
-            <summary>View import details</summary>
-            <dl className="evidence-list">
-              <div>
-                <dt>Evidence window</dt>
-                <dd>
-                  {imported.rangeStart ?? 'Unavailable'} →{' '}
-                  {imported.rangeEnd ?? 'Unavailable'}
-                </dd>
-              </div>
-              <div>
-                <dt>Checksum</dt>
-                <dd><code>{imported.checksum}</code></dd>
-              </div>
-              <div>
-                <dt>Source</dt>
-                <dd>{imported.source}</dd>
-              </div>
-            </dl>
-          </details>
-
           {imported.status === 'FAILED' ? (
             <div className="recovery-stack">
               <div className="blocking-note">
-                Analysis is blocked because no valid usage rows were accepted.
+                No valid usage rows were accepted. Fix the CSV and try again.
               </div>
               <div className="action-row">
                 <Link
                   className="primary-action"
-                  href={'/o/' + organizationId + '/import'}
+                  href={`/o/${organizationId}/import`}
                 >
                   Try another CSV
-                </Link>
-                <Link
-                  className="secondary-action"
-                  href={'/o/' + organizationId}
-                >
-                  Return to overview
                 </Link>
               </div>
             </div>
           ) : (
-            <div className="action-row">
-              <Link
-                className="primary-action"
-                href={`/o/${organizationId}/workloads`}
-              >
-                Continue to safety setup
-              </Link>
-              <Link
-                className="secondary-action"
-                href={`/o/${organizationId}`}
-              >
-                View analysis overview
-              </Link>
-            </div>
+            <>
+              <div className="action-row">
+                <Link className="primary-action" href={`/o/${organizationId}`}>
+                  View my analysis
+                </Link>
+              </div>
+
+              <details className="import-details">
+                <summary>See import details</summary>
+                <div
+                  className="summary-grid"
+                  aria-label="Import evidence summary"
+                >
+                  <div>
+                    <span>Accepted</span>
+                    <strong>{imported.acceptedRows}</strong>
+                  </div>
+                  <div>
+                    <span>Duplicates skipped</span>
+                    <strong>{imported.skippedRows}</strong>
+                  </div>
+                  <div>
+                    <span>Rejected</span>
+                    <strong>{imported.rejectedRows}</strong>
+                  </div>
+                  <div>
+                    <span>Warnings</span>
+                    <strong>{imported.warningCount}</strong>
+                  </div>
+                </div>
+                <dl className="evidence-list">
+                  <div>
+                    <dt>Evidence window</dt>
+                    <dd>
+                      {imported.rangeStart ?? 'Unavailable'} →{' '}
+                      {imported.rangeEnd ?? 'Unavailable'}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Checksum</dt>
+                    <dd>
+                      <code>{imported.checksum}</code>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Source</dt>
+                    <dd>{imported.source}</dd>
+                  </div>
+                </dl>
+                <Link
+                  className="text-link"
+                  href={`/o/${organizationId}/workloads`}
+                >
+                  Advanced: configure safety rules
+                </Link>
+              </details>
+            </>
           )}
         </section>
       ) : null}
