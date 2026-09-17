@@ -24,6 +24,20 @@ function decode(value: string): Buffer {
   }
 }
 
+export function providerCredentialKeyFromEnv(
+  value: string | undefined,
+): Uint8Array {
+  if (value === undefined || value.trim().length === 0) {
+    throw new Error('PROVIDER_CREDENTIAL_KEY_REQUIRED');
+  }
+
+  const decoded = Buffer.from(value, 'base64url');
+  if (decoded.byteLength !== KEY_BYTES) {
+    throw new Error('PROVIDER_CREDENTIAL_KEY_INVALID');
+  }
+  return new Uint8Array(decoded);
+}
+
 export function encryptProviderCredential(
   plaintext: string,
   key: Uint8Array,
