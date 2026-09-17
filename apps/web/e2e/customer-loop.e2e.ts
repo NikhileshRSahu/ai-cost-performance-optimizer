@@ -73,14 +73,14 @@ async function reachVerification(
 
   await expect(
     page.getByRole('heading', {
-      name: 'Compare one candidate against your current setup',
+      name: 'Test whether a cheaper setup is safe',
     }),
   ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
   await page.locator('input[name="benchmarkCsv"]').setInputFiles(benchmarkCsv);
   if (demo) {
     await page.locator('input[name="isDemo"]').check();
   }
-  await page.getByRole('button', { name: 'Evaluate candidate' }).click();
+  await page.getByRole('button', { name: 'Run safety test' }).click();
 
   await expect(
     page.getByRole('heading', { name: 'Current versus candidate' }),
