@@ -83,7 +83,9 @@ export async function connectAndValidateProvider(
       adminKey: input.adminKey,
       startTime: Math.floor(startMs / 1000),
       endTime: Math.floor(endMs / 1000),
-      fetcher: input.openAIFetcher,
+      ...(input.openAIFetcher === undefined
+        ? {}
+        : { fetcher: input.openAIFetcher }),
     });
     const evidence = normalizeOpenAIAdminSnapshot({
       organizationId: input.organizationId,
@@ -108,7 +110,9 @@ export async function connectAndValidateProvider(
       adminKey: input.adminKey,
       startingAt: intervalStart,
       endingAt: syncedAt,
-      fetcher: input.anthropicFetcher,
+      ...(input.anthropicFetcher === undefined
+        ? {}
+        : { fetcher: input.anthropicFetcher }),
     });
     const evidence = normalizeAnthropicAdminSnapshot({
       organizationId: input.organizationId,
