@@ -24,7 +24,7 @@ describe('recovery states', () => {
     }
   });
 
-  it('provides an explicit recovery path after a failed usage import', async () => {
+  it('provides a simple recovery path after a failed usage import', async () => {
     const page = await source(
       'apps/web/app/o/[organizationId]/import/page.tsx',
     );
@@ -32,7 +32,7 @@ describe('recovery states', () => {
     expect(page).toContain('Try another CSV');
     expect(page).toContain('Return to overview');
     expect(page).toContain(
-      'Analysis is blocked because no valid usage rows were accepted.',
+      'No valid usage rows were accepted. Fix the CSV and try again.',
     );
   });
 
