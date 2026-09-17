@@ -87,7 +87,9 @@ export default async function ImportPage({
           <input type="hidden" name="organizationId" value={organizationId} />
           <label className="file-drop">
             <span>Choose AI usage CSV</span>
-            <small>We validate the file before adding it to your analysis</small>
+            <small>
+              We validate the file before adding it to your analysis
+            </small>
             <input
               name="usageCsv"
               type="file"

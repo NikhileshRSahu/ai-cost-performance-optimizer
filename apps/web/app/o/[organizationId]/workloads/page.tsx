@@ -1,7 +1,10 @@
 import { asc, desc, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
-import { usageRecords, workloads } from '../../../../../../src/persistence/schema';
+import {
+  usageRecords,
+  workloads,
+} from '../../../../../../src/persistence/schema';
 import { requireOrganizationAccess } from '../../../../../../src/persistence/tenant';
 import { WorkflowProgress } from '../../../../components/workflow-progress';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
@@ -38,7 +41,8 @@ export default async function WorkloadsPage({
       return {
         existing: existingRows,
         inferredWorkload:
-          typeof workloadFromUsage === 'string' && workloadFromUsage.trim().length > 0
+          typeof workloadFromUsage === 'string' &&
+          workloadFromUsage.trim().length > 0
             ? workloadFromUsage
             : 'AI workload',
       };
@@ -86,7 +90,9 @@ export default async function WorkloadsPage({
               inputMode="decimal"
               defaultValue="0.90"
             />
-            <small>Default: preserve at least 90% on your chosen evaluator.</small>
+            <small>
+              Default: preserve at least 90% on your chosen evaluator.
+            </small>
           </label>
           <details className="advanced-controls">
             <summary>Advanced safety controls</summary>

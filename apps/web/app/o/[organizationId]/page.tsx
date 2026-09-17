@@ -5,7 +5,10 @@ import { buildWorkMriSnapshot } from '../../../../../src/efficiency/work-mri';
 import { formatDecimal, rational } from '../../../../../src/economics/exact';
 import { createDatabase } from '../../../../../src/persistence/database';
 import { buildFounderDashboardView } from '../../../../../src/workbench/dashboard-view';
-import { ProofTimeline, type ProofStage } from '../../../components/proof-timeline';
+import {
+  ProofTimeline,
+  type ProofStage,
+} from '../../../components/proof-timeline';
 import { RecommendationCard } from '../../../components/recommendation-card';
 import { SignOutButton } from '../../../components/sign-out-button';
 import { WorkMri } from '../../../components/work-mri';
@@ -136,9 +139,9 @@ export default async function FounderDashboardPage({
             Start with your usage data
           </h2>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-white/50">
-            Upload a compatible CSV now. Provider connections can be added later;
-            the product should already give you a useful answer from one clean
-            evidence window.
+            Upload a compatible CSV now. Provider connections can be added
+            later; the product should already give you a useful answer from one
+            clean evidence window.
           </p>
           <Link
             className="mt-5 inline-flex min-h-11 items-center rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 no-underline transition hover:bg-slate-100"
@@ -158,9 +161,7 @@ export default async function FounderDashboardPage({
                 <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-200/60">
                   {resultLabel}
                 </p>
-                <p className="m-0 mt-2 text-sm text-white/55">
-                  Spend analyzed
-                </p>
+                <p className="m-0 mt-2 text-sm text-white/55">Spend analyzed</p>
                 <p className="m-0 mt-1 font-mono text-3xl font-medium tracking-[-0.04em] text-white">
                   {moneyLabel(view.observedSpend)}
                 </p>
@@ -181,8 +182,8 @@ export default async function FounderDashboardPage({
                   No supported optimization yet
                 </h2>
                 <p className="mt-2 text-sm leading-6 text-white/50">
-                  Your data was analyzed, but there is not enough evidence yet to
-                  recommend a change safely.
+                  Your data was analyzed, but there is not enough evidence yet
+                  to recommend a change safely.
                 </p>
                 <Link
                   className="mt-4 inline-flex min-h-10 items-center rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold text-white no-underline"

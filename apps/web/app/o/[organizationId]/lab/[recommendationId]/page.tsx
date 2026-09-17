@@ -2,7 +2,10 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../../src/persistence/database';
 import { buildOptimizationLabView } from '../../../../../../../src/workbench/lab-view';
-import { formatDecimal, rational } from '../../../../../../../src/economics/exact';
+import {
+  formatDecimal,
+  rational,
+} from '../../../../../../../src/economics/exact';
 import { ConstraintRow } from '../../../../../components/constraint-row';
 import { HistoricalReplay } from './historical-replay';
 import { EvidenceDetails } from '../../../../../components/evidence-details';
@@ -213,7 +216,9 @@ export default async function OptimizationLabPage({
             <p className="metric-label">Exact net saving</p>
             <p className="metric-value">{netSaving}</p>
             {exactNetSaving !== null ? (
-              <p className="metric-subtle">Exact calculation: {exactNetSaving}</p>
+              <p className="metric-subtle">
+                Exact calculation: {exactNetSaving}
+              </p>
             ) : null}
           </div>
           <div className="metric-card">
@@ -237,30 +242,37 @@ export default async function OptimizationLabPage({
         <p className="eyebrow">{LAB_COPY.evidenceLabel}</p>
         <h2 id="evidence-title">Trace the claim</h2>
         <section className="lab-next-action">
-        <div>
-          <p className="eyebrow">What next?</p>
-          <h2>{view.decision === 'OPTIMIZE' ? 'This candidate passed your safety test.' : 'Review the evidence before changing production.'}</h2>
-          <p>
-            Tested savings are not counted as Verified. Apply the change only
-            when you are ready to collect comparable post-change evidence.
-          </p>
-        </div>
-        <div className="action-row">
-          {view.decision === 'OPTIMIZE' ? (
+          <div>
+            <p className="eyebrow">What next?</p>
+            <h2>
+              {view.decision === 'OPTIMIZE'
+                ? 'This candidate passed your safety test.'
+                : 'Review the evidence before changing production.'}
+            </h2>
+            <p>
+              Tested savings are not counted as Verified. Apply the change only
+              when you are ready to collect comparable post-change evidence.
+            </p>
+          </div>
+          <div className="action-row">
+            {view.decision === 'OPTIMIZE' ? (
+              <Link
+                className="primary-action"
+                href={`/o/${organizationId}/implement/${recommendationId}`}
+              >
+                Prepare safe rollout
+              </Link>
+            ) : null}
             <Link
-              className="primary-action"
-              href={`/o/${organizationId}/implement/${recommendationId}`}
+              className="secondary-action"
+              href={`/o/${organizationId}/proof`}
             >
-              Prepare safe rollout
+              View savings status
             </Link>
-          ) : null}
-          <Link className="secondary-action" href={`/o/${organizationId}/proof`}>
-            View savings status
-          </Link>
-        </div>
-      </section>
+          </div>
+        </section>
 
-      <EvidenceDetails view={view} />
+        <EvidenceDetails view={view} />
       </section>
     </div>
   );

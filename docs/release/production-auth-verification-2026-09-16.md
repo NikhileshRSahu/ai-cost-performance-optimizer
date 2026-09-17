@@ -3,6 +3,7 @@
 Purpose: force a production build from the current `main` after PR #34 merged so Vercel includes the final `ffebfef` recursion fix rather than the earlier `53e0c78` artifact.
 
 Observed before redeploy:
+
 - `https://evalomics.vercel.app/` -> 200
 - `https://evalomics.vercel.app/api/health` -> 200 with database/auth `ok`
 - `https://evalomics.vercel.app/login` -> 200
