@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { describe, expect, it } from 'vitest';
 
 describe('customer import workflow copy', () => {
-  it('keeps the upload path simple while preserving the trust boundary', async () => {
+  it('keeps provider onboarding and CSV fallback simple while preserving the trust boundary', async () => {
     const page = await readFile(
       new URL(
         '../../apps/web/app/o/[organizationId]/import/page.tsx',
@@ -11,7 +11,7 @@ describe('customer import workflow copy', () => {
       'utf8',
     );
     const normalizedPage = page.replace(/\s+/g, ' ');
-    expect(normalizedPage).toContain('No provider key required');
+    expect(normalizedPage).toContain('Encrypted credentials · CSV fallback');
     expect(normalizedPage).toContain(
       'We validate the file before adding it to your analysis',
     );
