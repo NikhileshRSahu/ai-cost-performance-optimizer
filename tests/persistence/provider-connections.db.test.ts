@@ -140,6 +140,8 @@ describe('provider connection persistence', () => {
 
     const rows = await database.db.select().from(providerConnections);
     expect(rows[0]?.credentialCiphertext).toBe('');
-    expect(rows[0]?.revokedAt).toBe('2026-09-17T17:00:00.000Z');
+    expect(new Date(rows[0]?.revokedAt ?? '').toISOString()).toBe(
+      '2026-09-17T17:00:00.000Z',
+    );
   });
 });
