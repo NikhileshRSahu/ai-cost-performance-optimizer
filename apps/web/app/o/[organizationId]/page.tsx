@@ -1,27 +1,14 @@
-import {
-  Activity,
-  CircleDollarSign,
-  FlaskConical,
-  ShieldCheck,
-} from 'lucide-react';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { buildAnalysisDepth } from '../../../../../src/efficiency/analysis-depth';
 import { buildWorkMriSnapshot } from '../../../../../src/efficiency/work-mri';
 import { formatDecimal, rational } from '../../../../../src/economics/exact';
 import { createDatabase } from '../../../../../src/persistence/database';
 import { buildFounderDashboardView } from '../../../../../src/workbench/dashboard-view';
-import { MetricTile } from '../../../components/metric-tile';
-import {
-  ProofTimeline,
-  type ProofStage,
-} from '../../../components/proof-timeline';
+import { ProofTimeline, type ProofStage } from '../../../components/proof-timeline';
 import { RecommendationCard } from '../../../components/recommendation-card';
 import { SignOutButton } from '../../../components/sign-out-button';
 import { WorkMri } from '../../../components/work-mri';
-import {
-  WorkflowProgress,
-  type WorkflowStep,
-} from '../../../components/workflow-progress';
 import { hasSelfHostedAuthConfiguration } from '../../../lib/auth-config';
 import { loadFounderDashboardEvidence } from '../../../lib/dashboard-data';
 import { resolveRuntimeSession } from '../../../lib/runtime-session';
@@ -69,17 +56,6 @@ export default async function FounderDashboardPage({
     await database.close();
   }
 
-  const currentStep: WorkflowStep =
-    view.verifiedNetSavings !== null
-      ? 'verify'
-      : view.strongestAction?.state === 'TESTED'
-        ? 'implement'
-        : view.strongestAction !== null
-          ? 'benchmark'
-          : view.observedSpend !== null
-            ? 'workloads'
-            : 'import';
-
   const proofStage: ProofStage =
     view.verifiedNetSavings !== null
       ? 'Verified'
@@ -108,37 +84,17 @@ export default async function FounderDashboardPage({
           },
   });
 
-  const potential =
-    view.strongestAction?.state === 'OPPORTUNITY'
-      ? moneyLabel(view.strongestAction.saving)
-      : view.strongestAction?.state === 'TESTED' ||
-          view.strongestAction?.state === 'VERIFIED'
-        ? 'Moved to tested'
-        : 'No active opportunity';
-  const potentialDetail =
-    view.strongestAction?.state === 'TESTED' ||
+  const resultLabel =
     view.strongestAction?.state === 'VERIFIED'
-      ? 'The opportunity passed testing and advanced to the next stage'
-      : 'Opportunity only · not counted as achieved';
-  const tested =
-    view.strongestAction?.state === 'TESTED' ||
-    view.strongestAction?.state === 'VERIFIED'
-      ? moneyLabel(view.strongestAction.saving)
-      : 'Not tested';
-
-  const nextActionHeading =
-    view.strongestAction?.state === 'TESTED'
-      ? 'Ready to apply'
-      : view.strongestAction?.state === 'VERIFIED'
-        ? 'Verified result'
+      ? 'Verified improvement'
+      : view.strongestAction?.state === 'TESTED'
+        ? 'Best tested improvement'
         : view.strongestAction?.state === 'OPPORTUNITY'
-          ? 'Ready to test'
-          : 'Your next best action';
+          ? 'Best opportunity found'
+          : 'Analysis ready';
 
   return (
     <div className="grid gap-6">
-      <WorkflowProgress organizationId={organizationId} current={currentStep} />
-
       {view.demoDisclaimer !== null ? (
         <div
           className="rounded-xl border border-amber-300/20 bg-amber-300/[0.07] px-4 py-3 text-xs font-semibold text-amber-100/75"
@@ -150,136 +106,134 @@ export default async function FounderDashboardPage({
 
       <header className="flex flex-col gap-5 border-b border-white/[0.07] pb-6 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.17em] text-white/28">
-            Workspace overview
+          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.17em] text-blue-200/55">
+            Evalomics analysis
           </p>
-          <h1 className="m-0 mt-2 !text-[clamp(2.4rem,5vw,4.4rem)] !leading-[.98] !tracking-[-.06em] text-white">
-            {view.organizationName}
+          <h1 className="m-0 mt-2 !text-[clamp(2.3rem,5vw,4.2rem)] !leading-[.98] !tracking-[-.055em] text-white">
+            {view.dataQuality === 'NO_DATA'
+              ? 'Give Evalomics your AI usage'
+              : 'We analyzed your AI usage'}
           </h1>
-          <p className="m-0 mt-3 max-w-3xl text-sm leading-6 text-white/38">
-            Evidence window: {view.periodLabel}. Evalomics keeps observed,
-            tested, and verified results separate so the next action stays clear.
+          <p className="m-0 mt-3 max-w-3xl text-sm leading-6 text-white/50">
+            {view.dataQuality === 'NO_DATA'
+              ? 'Upload one useful usage window. Evalomics will find the strongest supported optimization and tell you what to do next.'
+              : `Evidence window: ${view.periodLabel}. Here is the strongest answer your current evidence supports.`}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2.5">
-          <span className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[10px] font-semibold text-white/45">
-            Data quality · {view.dataQuality}
-          </span>
+          {view.dataQuality !== 'NO_DATA' ? (
+            <span className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[10px] font-semibold text-white/55">
+              Data quality · {view.dataQuality}
+            </span>
+          ) : null}
           {hasSelfHostedAuthConfiguration() ? <SignOutButton /> : null}
         </div>
       </header>
 
-      <section
-        className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4"
-        aria-label="Evidence state metrics"
-      >
-        <MetricTile
-          label="Observed spend"
-          value={moneyLabel(view.observedSpend)}
-          detail="Spend measured in the selected evidence window"
-          tone="evidence"
-          icon={<CircleDollarSign className="size-4" />}
-        />
-        <MetricTile
-          label="Potential saving"
-          value={potential}
-          detail={potentialDetail}
-          tone="potential"
-          icon={<Activity className="size-4" />}
-        />
-        <MetricTile
-          label="Tested saving"
-          value={tested}
-          detail="Candidate passed the configured safety test"
-          tone="neutral"
-          icon={<FlaskConical className="size-4" />}
-        />
-        <MetricTile
-          label="Verified net saving"
-          value={verifiedMoney(view.verifiedNetSavings)}
-          detail={
-            view.verifiedNetSavings === null
-              ? 'Requires comparable post-change production evidence'
-              : `Formula: ${view.verifiedNetSavings.formulaVersion}`
-          }
-          tone="verified"
-          icon={<ShieldCheck className="size-4" />}
-        />
-      </section>
-
-      <section className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4 sm:p-5">
-        <div className="mb-4 flex items-center justify-between gap-4">
-          <div>
-            <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/28">
-              Progress
-            </p>
-            <p className="m-0 mt-1 text-xs text-white/38">
-              Tested savings only become Verified after implementation and a
-              comparable production window.
-            </p>
-          </div>
-          <span className="hidden rounded-full border border-white/10 bg-white/[0.035] px-3 py-1 text-[10px] font-semibold text-white/40 sm:inline-flex">
-            {proofStage}
-          </span>
-        </div>
-        <ProofTimeline current={proofStage} />
-      </section>
-
       {view.dataQuality === 'NO_DATA' ? (
         <section className="rounded-[22px] border border-dashed border-white/12 bg-white/[0.02] p-7">
-          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-blue-200/55">
-            No production evidence yet
-          </p>
-          <h2 className="mt-3 text-2xl font-semibold tracking-[-0.035em] text-white">
-            Give Evalomics one trustworthy usage window.
+          <h2 className="m-0 text-2xl font-semibold tracking-[-0.035em] text-white">
+            Start with your usage data
           </h2>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-white/38">
-            Import usage data to unlock the first cost diagnosis. Missing values
-            are never silently treated as zero.
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-white/50">
+            Upload a compatible CSV now. Provider connections can be added later;
+            the product should already give you a useful answer from one clean
+            evidence window.
           </p>
+          <Link
+            className="mt-5 inline-flex min-h-11 items-center rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 no-underline transition hover:bg-slate-100"
+            href={`/o/${organizationId}/import`}
+          >
+            Upload AI usage
+          </Link>
         </section>
       ) : (
-        <WorkMri snapshot={mri} />
-      )}
-
-      <section aria-labelledby="strongest-action-title">
-        <div className="mb-4">
-          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/28">
-            Recommended next step
-          </p>
-          <h2
-            id="strongest-action-title"
-            className="m-0 mt-1.5 text-2xl font-semibold tracking-[-0.035em] text-white"
+        <>
+          <section
+            className="grid gap-3 rounded-[22px] border border-white/[0.08] bg-[#0a0f16] p-5 shadow-[0_24px_70px_rgba(0,0,0,.18)] sm:p-6"
+            data-testid="direct-answer-result"
           >
-            {nextActionHeading}
-          </h2>
-        </div>
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+              <div>
+                <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-200/60">
+                  {resultLabel}
+                </p>
+                <p className="m-0 mt-2 text-sm text-white/55">
+                  Spend analyzed
+                </p>
+                <p className="m-0 mt-1 font-mono text-3xl font-medium tracking-[-0.04em] text-white">
+                  {moneyLabel(view.observedSpend)}
+                </p>
+              </div>
+              <div className="rounded-xl border border-white/[0.08] bg-white/[0.025] px-4 py-3 text-left lg:min-w-56 lg:text-right">
+                <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/45">
+                  Verified net saving
+                </p>
+                <p className="m-0 mt-1 font-mono text-xl font-medium text-white/88">
+                  {verifiedMoney(view.verifiedNetSavings)}
+                </p>
+              </div>
+            </div>
 
-        {view.strongestAction === null ? (
-          <div className="rounded-2xl border border-dashed border-white/12 bg-white/[0.02] p-5 text-sm leading-6 text-white/38">
-            Evalomics does not have enough evidence yet to recommend a next
-            optimization step.
-          </div>
-        ) : (
-          <RecommendationCard
-            organizationId={organizationId}
-            recommendation={view.strongestAction}
-          />
-        )}
-      </section>
+            {view.strongestAction === null ? (
+              <div className="mt-2 rounded-2xl border border-dashed border-white/10 bg-white/[0.018] p-5">
+                <h2 className="m-0 text-xl font-semibold text-white">
+                  No supported optimization yet
+                </h2>
+                <p className="mt-2 text-sm leading-6 text-white/50">
+                  Your data was analyzed, but there is not enough evidence yet to
+                  recommend a change safely.
+                </p>
+                <Link
+                  className="mt-4 inline-flex min-h-10 items-center rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold text-white no-underline"
+                  href={`/o/${organizationId}/import`}
+                >
+                  Add more data
+                </Link>
+              </div>
+            ) : (
+              <RecommendationCard
+                organizationId={organizationId}
+                recommendation={view.strongestAction}
+              />
+            )}
+          </section>
 
-      {view.limitations.length > 0 ? (
-        <details className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
-          <summary className="cursor-pointer text-sm font-semibold text-white/72">
-            Evidence limits
-          </summary>
-          <ul className="mt-3 grid gap-1.5 pl-5 text-xs leading-5 text-white/55">
-            {view.limitations.map((limitation) => (
-              <li key={limitation}>{limitation}</li>
-            ))}
-          </ul>
-        </details>
-      ) : null}
+          <details
+            className="group rounded-[22px] border border-white/[0.07] bg-white/[0.018]"
+            data-testid="analysis-details"
+          >
+            <summary className="cursor-pointer list-none px-5 py-4 text-sm font-semibold text-white/78 sm:px-6">
+              See details
+            </summary>
+            <div className="grid gap-6 border-t border-white/[0.07] p-5 sm:p-6">
+              <section>
+                <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">
+                  Analysis status
+                </p>
+                <div className="mt-4 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4">
+                  <ProofTimeline current={proofStage} />
+                </div>
+              </section>
+
+              <WorkMri snapshot={mri} />
+
+              {view.limitations.length > 0 ? (
+                <details className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
+                  <summary className="cursor-pointer text-sm font-semibold text-white/72">
+                    Evidence limitations
+                  </summary>
+                  <ul className="mt-3 grid gap-1.5 pl-5 text-xs leading-5 text-white/55">
+                    {view.limitations.map((limitation) => (
+                      <li key={limitation}>{limitation}</li>
+                    ))}
+                  </ul>
+                </details>
+              ) : null}
+            </div>
+          </details>
+        </>
+      )}
     </div>
   );
 }
