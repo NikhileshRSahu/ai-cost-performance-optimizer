@@ -234,7 +234,9 @@ async function fetchCosts(
   startingAt: string,
   endingAt: string,
 ): Promise<AnthropicCostEvidence[]> {
-  const base = new URL('https://api.anthropic.com/v1/organizations/cost_report');
+  const base = new URL(
+    'https://api.anthropic.com/v1/organizations/cost_report',
+  );
   base.searchParams.set('starting_at', startingAt);
   base.searchParams.set('ending_at', endingAt);
   base.searchParams.set('bucket_width', '1d');
