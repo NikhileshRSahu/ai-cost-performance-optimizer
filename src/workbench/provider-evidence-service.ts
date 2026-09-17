@@ -6,9 +6,7 @@ import { requireOrganizationAccess } from '../persistence/tenant.js';
 import type { NormalizedProviderEvidence } from '../ingestion/provider-evidence.js';
 import type { AuthenticatedSession } from './authz.js';
 
-export type ProviderEvidenceSource =
-  | 'OPENAI_ADMIN_API'
-  | 'ANTHROPIC_ADMIN_API';
+export type ProviderEvidenceSource = 'OPENAI_ADMIN_API' | 'ANTHROPIC_ADMIN_API';
 
 function canonicalJson(value: unknown): string {
   if (value === null || typeof value !== 'object') {
