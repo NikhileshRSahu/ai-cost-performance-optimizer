@@ -1,6 +1,4 @@
-export type ProviderEvidenceSource =
-  | 'OPENAI_ADMIN_API'
-  | 'ANTHROPIC_ADMIN_API';
+export type ProviderEvidenceSource = 'OPENAI_ADMIN_API' | 'ANTHROPIC_ADMIN_API';
 
 export type ProviderName = 'openai' | 'anthropic';
 export type ProviderCostAmountUnit = 'MAJOR' | 'LOWEST';
