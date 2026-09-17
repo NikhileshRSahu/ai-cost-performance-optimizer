@@ -35,7 +35,7 @@
     "demo": "tsc -p tsconfig.demo.json && node dist/demo/examples/economics-demo.js",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "test:db": "vitest run tests/persistence --exclude tests/persistence/schema.test.ts",
+    "test:db": "vitest run --config vitest.db.config.ts",
     "web:dev": "npm run dev --workspace @optimizer/web",
     "web:build": "npm run build --workspace @optimizer/web",
     "web:test": "vitest run tests/web",
