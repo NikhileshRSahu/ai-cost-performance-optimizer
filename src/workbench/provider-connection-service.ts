@@ -75,8 +75,8 @@ export async function connectAndValidateProvider(
   const intervalStart = new Date(startMs).toISOString();
   const syncedAt = now.toISOString();
 
-  let usageRows = 0;
-  let costRows = 0;
+  let usageRows: number;
+  let costRows: number;
   let snapshotId: string;
   if (input.provider === 'OPENAI') {
     const snapshot = await fetchOpenAIAdminSnapshot({
