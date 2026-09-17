@@ -9,6 +9,7 @@ import {
   connectAndValidateProvider,
   disconnectProvider,
   providerConnectionSafeError,
+  type ProviderConnectionResult,
 } from '../../../../../../src/workbench/provider-connection-service';
 import { assertUploadWithinLimit } from '../../../../../../src/workbench/upload-limits';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
@@ -39,8 +40,9 @@ export async function connectProviderAccount(formData: FormData): Promise<never>
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
 
   const database = createDatabase(databaseUrl);
+  let result: ProviderConnectionResult;
   try {
-    const result = await connectAndValidateProvider({
+    result = await connectAndValidateProvider({
       db: database.db,
       session,
       organizationId,
@@ -48,9 +50,6 @@ export async function connectProviderAccount(formData: FormData): Promise<never>
       adminKey,
       encryptionKeyEnv: process.env.PROVIDER_CREDENTIAL_ENCRYPTION_KEY,
     });
-    redirect(
-      `/o/${organizationId}/import?providerConnected=${result.provider}&usageRows=${result.usageRows}&costRows=${result.costRows}`,
-    );
   } catch (error) {
     const safeError = providerConnectionSafeError(error);
     redirect(
@@ -59,6 +58,10 @@ export async function connectProviderAccount(formData: FormData): Promise<never>
   } finally {
     await database.close();
   }
+
+  redirect(
+    `/o/${organizationId}/import?providerConnected=${result.provider}&usageRows=${result.usageRows}&costRows=${result.costRows}`,
+  );
 }
 
 export async function disconnectProviderAccount(
