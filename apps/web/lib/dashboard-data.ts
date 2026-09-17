@@ -332,7 +332,22 @@ export async function loadFounderDashboardEvidence(
     .where(eq(recommendations.organizationId, organizationId))
     .orderBy(desc(recommendations.createdAt))
     .limit(100);
+  const recentVerificationRows = await db
+    .select()
+    .from(verificationWindows)
+    .where(eq(verificationWindows.organizationId, organizationId))
+    .orderBy(desc(verificationWindows.createdAt))
+    .limit(100);
+  const latestPostChangeRecommendationIds = new Set(
+    recentVerificationRows
+      .filter(
+        (row) =>
+          evidenceString(row.evidence, 'postImportId') === latestUsable.id,
+      )
+      .map((row) => row.recommendationId),
+  );
   const currentEvidenceRows = recentRecommendationRows.filter((row) => {
+    if (latestPostChangeRecommendationIds.has(row.id)) return true;
     const sourceImportId = evidenceString(row.evidence, 'sourceImportId');
     if (sourceImportId !== null) return sourceImportId === latestUsable.id;
     return timestampAtOrAfter(row.createdAt, latestUsable.receivedAt);
