@@ -70,7 +70,7 @@ describe('nonOverlappingScenarioTotal', () => {
         scenario('usd', '10', '20', '30', null, 'USD'),
         scenario('eur', '10', '20', '30', null, 'EUR'),
       ]),
-    ).toThrowError('MIXED_SCENARIO_CURRENCY');
+    ).toThrow('MIXED_SCENARIO_CURRENCY');
   });
 
   it('rejects totals across different horizons', () => {
@@ -87,6 +87,6 @@ describe('nonOverlappingScenarioTotal', () => {
           'THIRTY_DAY_PROJECTION',
         ),
       ]),
-    ).toThrowError('MIXED_SCENARIO_HORIZON');
+    ).toThrow('MIXED_SCENARIO_HORIZON');
   });
 });
