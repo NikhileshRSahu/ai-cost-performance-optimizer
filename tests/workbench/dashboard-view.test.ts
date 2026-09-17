@@ -23,6 +23,12 @@ function recommendation(
       high: '40',
       evidenceRef: 'finding-1',
       formulaVersion: 'scenario-v1',
+      formula: 'eligibleVolume * (currentUnitCost - candidateUnitCost)',
+      assumptions: {
+        eligibleVolumeLow: '100',
+        eligibleVolumeBase: '150',
+        eligibleVolumeHigh: '200',
+      },
       pricingRef: 'pricing-2026-09',
       overlapGroup: 'model-routing',
     },
@@ -55,7 +61,11 @@ function evidence(
       base: '30',
       high: '40',
       evidenceRef: 'account-total',
-      formulaVersion: 'scenario-v1',
+      formulaVersion: 'scenario-total-v1',
+      formula: 'overlap-safe sum of surfaced modeled scenarios',
+      assumptions: {
+        overlapPolicy: 'highest-conservative-case-per-overlap-group',
+      },
       pricingRef: 'pricing-2026-09',
       overlapGroup: null,
     },
@@ -152,6 +162,25 @@ describe('founder dashboard MRI view model', () => {
       exactNumerator: '-25',
       exactDenominator: '1',
     });
+  });
+
+  it('preserves and freezes calculation provenance for modeled ranges', () => {
+    const view = buildFounderDashboardView(evidence());
+    const range = view.recommendations[0]?.modeledRange;
+
+    expect(range?.formula).toBe(
+      'eligibleVolume * (currentUnitCost - candidateUnitCost)',
+    );
+    expect(range?.assumptions).toEqual({
+      eligibleVolumeLow: '100',
+      eligibleVolumeBase: '150',
+      eligibleVolumeHigh: '200',
+    });
+    expect(Object.isFrozen(range)).toBe(true);
+    expect(Object.isFrozen(range?.assumptions)).toBe(true);
+    expect(Object.isFrozen(view.nonOverlappingModeledTotal?.assumptions)).toBe(
+      true,
+    );
   });
 
   it('freezes nested recommendations and modeled ranges', () => {
