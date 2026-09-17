@@ -1,11 +1,4 @@
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-} from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { loadFounderDashboardEvidence } from '../../apps/web/lib/dashboard-data.js';
 import { createDatabase } from '../../src/persistence/database.js';
 import { providerEvidenceSnapshots } from '../../src/persistence/provider-evidence-schema.js';
