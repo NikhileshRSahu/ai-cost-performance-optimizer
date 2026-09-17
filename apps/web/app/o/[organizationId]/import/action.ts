@@ -27,7 +27,9 @@ function providerEntry(formData: FormData): ProviderConnectionProvider {
   return value;
 }
 
-export async function connectProviderAccount(formData: FormData): Promise<never> {
+export async function connectProviderAccount(
+  formData: FormData,
+): Promise<never> {
   const organizationId = textEntry(formData, 'organizationId');
   const adminKey = textEntry(formData, 'adminKey');
   const provider = providerEntry(formData);
