@@ -17,12 +17,12 @@ export const dynamic = 'force-dynamic';
 
 const VALIDATION_COPY = {
   intro:
-    'Evalomics found a usage-backed optimization opportunity, but it does not yet have enough current-versus-candidate evidence to claim a saving or recommend a production change.',
+    'You already have an actionable usage-backed finding. This optional step measures the exact saving and tests whether the change preserves your quality and performance requirements.',
   known:
-    'The opportunity came from measured usage evidence. It remains Potential until a candidate is tested against the same cases and safety requirements.',
+    'Evalomics found this opportunity from measured usage evidence. You can use the recommendation now as an optimization lead without claiming an exact financial saving.',
   needed:
-    'Provide paired current-versus-candidate test cases and the quality or performance floor that must not get worse. Evalomics will then compare cost and safety before upgrading the claim.',
-  note: 'Advanced paired-case benchmarking remains available here; it is validation evidence, not a required step before Evalomics can show your initial analysis.',
+    'If you want a quantified saving or production-grade proof, provide comparable current-versus-candidate test cases and the quality or performance floor that must not get worse.',
+  note: 'This proof step is optional. It strengthens the claim from an actionable opportunity into a tested result; it is not required to receive the initial analysis.',
 } as const;
 
 function metric(value: string | null): string {
@@ -57,19 +57,19 @@ export default async function OptimizationLabPage({
             className="empty-state"
             aria-labelledby="lab-validation-title"
           >
-            <p className="eyebrow">Validation</p>
-            <h1 id="lab-validation-title">Validate this opportunity</h1>
+            <p className="eyebrow">Optional proof</p>
+            <h1 id="lab-validation-title">Measure exact savings</h1>
             <p>{VALIDATION_COPY.intro}</p>
 
             <div className="comparison-grid">
               <article className="configuration-card">
-                <p className="eyebrow">What we already know</p>
-                <h2>There is a supported optimization hypothesis</h2>
+                <p className="eyebrow">Your result already exists</p>
+                <h2>There is a supported optimization finding</h2>
                 <p>{VALIDATION_COPY.known}</p>
               </article>
               <article className="configuration-card">
-                <p className="eyebrow">What is still needed</p>
-                <h2>Comparable validation evidence</h2>
+                <p className="eyebrow">Only if you want stronger proof</p>
+                <h2>Comparable test evidence</h2>
                 <p>{VALIDATION_COPY.needed}</p>
               </article>
             </div>
@@ -79,10 +79,10 @@ export default async function OptimizationLabPage({
                 className="primary-action"
                 href={`/o/${organizationId}/benchmark`}
               >
-                Add validation evidence
+                Measure exact savings
               </Link>
               <Link className="secondary-action" href={`/o/${organizationId}`}>
-                Back to overview
+                Keep current result
               </Link>
             </div>
             <p className="metric-subtle">{VALIDATION_COPY.note}</p>
@@ -318,7 +318,3 @@ export default async function OptimizationLabPage({
         </section>
 
         <EvidenceDetails view={view} />
-      </section>
-    </div>
-  );
-}
