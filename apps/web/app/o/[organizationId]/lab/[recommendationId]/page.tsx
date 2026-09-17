@@ -22,8 +22,7 @@ const VALIDATION_COPY = {
     'The opportunity came from measured usage evidence. It remains Potential until a candidate is tested against the same cases and safety requirements.',
   needed:
     'Provide paired current-versus-candidate test cases and the quality or performance floor that must not get worse. Evalomics will then compare cost and safety before upgrading the claim.',
-  note:
-    'Advanced paired-case benchmarking remains available here; it is validation evidence, not a required step before Evalomics can show your initial analysis.',
+  note: 'Advanced paired-case benchmarking remains available here; it is validation evidence, not a required step before Evalomics can show your initial analysis.',
 } as const;
 
 function metric(value: string | null): string {
@@ -51,10 +50,7 @@ export default async function OptimizationLabPage({
     );
     view = buildOptimizationLabView(evidence);
   } catch (error) {
-    if (
-      error instanceof Error &&
-      error.message === 'LAB_EVIDENCE_INCOMPLETE'
-    ) {
+    if (error instanceof Error && error.message === 'LAB_EVIDENCE_INCOMPLETE') {
       return (
         <div className="lab-stack">
           <section
