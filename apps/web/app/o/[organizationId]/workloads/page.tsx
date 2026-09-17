@@ -1,7 +1,7 @@
-import { asc, eq } from 'drizzle-orm';
+import { asc, desc, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
-import { workloads } from '../../../../../../src/persistence/schema';
+import { usageRecords, workloads } from '../../../../../../src/persistence/schema';
 import { requireOrganizationAccess } from '../../../../../../src/persistence/tenant';
 import { WorkflowProgress } from '../../../../components/workflow-progress';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
@@ -18,14 +18,30 @@ export default async function WorkloadsPage({
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
 
   const database = createDatabase(databaseUrl);
-  const existing = await (async () => {
+  const { existing, inferredWorkload } = await (async () => {
     try {
       requireOrganizationAccess({ session, organizationId, action: 'READ' });
-      return await database.db
+      const existingRows = await database.db
         .select()
         .from(workloads)
         .where(eq(workloads.organizationId, organizationId))
         .orderBy(asc(workloads.name));
+      const latestUsage = (
+        await database.db
+          .select({ canonical: usageRecords.canonical })
+          .from(usageRecords)
+          .where(eq(usageRecords.organizationId, organizationId))
+          .orderBy(desc(usageRecords.intervalEnd))
+          .limit(1)
+      ).at(0);
+      const workloadFromUsage = latestUsage?.canonical?.workload;
+      return {
+        existing: existingRows,
+        inferredWorkload:
+          typeof workloadFromUsage === 'string' && workloadFromUsage.trim().length > 0
+            ? workloadFromUsage
+            : 'AI workload',
+      };
     } finally {
       await database.close();
     }
@@ -37,14 +53,14 @@ export default async function WorkloadsPage({
 
       <header className="workflow-header">
         <div>
-          <p className="eyebrow">Step 2 · Safety requirement</p>
-          <h1>Define what “good enough” means</h1>
+          <p className="eyebrow">Safety</p>
+          <h1>Tell us what must not get worse</h1>
           <p className="lede">
-            Cost cannot win by itself. Set the minimum quality your workload
-            must preserve and any latency or failure-rate limits that matter.
+            Evalomics can optimize cost, but only inside the guardrails you
+            choose. We prefill what we can from your evidence.
           </p>
         </div>
-        <span className="trust-chip">Quality threshold required</span>
+        <span className="trust-chip">One required choice</span>
       </header>
 
       <section className="workflow-card">
@@ -52,7 +68,7 @@ export default async function WorkloadsPage({
           <input type="hidden" name="organizationId" value={organizationId} />
           <label>
             <span>Workload name</span>
-            <input name="name" required placeholder="classification" />
+            <input name="name" required defaultValue={inferredWorkload} />
           </label>
           <label>
             <span>Environment</span>
@@ -63,36 +79,45 @@ export default async function WorkloadsPage({
             <input
               name="requiredQuality"
               required
-              inputMode="decimal"
-              placeholder="0.92"
-            />
-            <small>Use a 0–1 score from your chosen evaluation method.</small>
-          </label>
-          <label>
-            <span>Maximum p95 latency (ms)</span>
-            <input
-              name="maxP95LatencyMs"
-              type="number"
-              min="0"
-              step="any"
-              inputMode="decimal"
-              placeholder="1000"
-            />
-          </label>
-          <label>
-            <span>Maximum failure rate</span>
-            <input
-              name="maxFailureRate"
               type="number"
               min="0"
               max="1"
-              step="any"
+              step="0.01"
               inputMode="decimal"
-              placeholder="0.02"
+              defaultValue="0.90"
             />
+            <small>Default: preserve at least 90% on your chosen evaluator.</small>
           </label>
+          <details className="advanced-controls">
+            <summary>Advanced safety controls</summary>
+            <div className="advanced-controls-grid">
+              <label>
+                <span>Maximum p95 latency (ms)</span>
+                <input
+                  name="maxP95LatencyMs"
+                  type="number"
+                  min="0"
+                  step="any"
+                  inputMode="decimal"
+                  placeholder="Optional"
+                />
+              </label>
+              <label>
+                <span>Maximum failure rate</span>
+                <input
+                  name="maxFailureRate"
+                  type="number"
+                  min="0"
+                  max="1"
+                  step="any"
+                  inputMode="decimal"
+                  placeholder="Optional"
+                />
+              </label>
+            </div>
+          </details>
           <button className="primary-button" type="submit">
-            Save constraints and continue
+            Save safety floor and continue
           </button>
         </form>
       </section>

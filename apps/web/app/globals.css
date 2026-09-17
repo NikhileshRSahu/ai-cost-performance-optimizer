@@ -3003,3 +3003,184 @@ samp,
   color: #aeb8c4 !important;
 }
 .import-error-note { margin: 0; line-height: 1.55; }
+
+
+/* Self-serve workspace UX */
+.org-workbench {
+  --wb-bg: #070a0f;
+  --wb-panel: #0a0f16;
+  --wb-panel-soft: #0d131b;
+  --wb-border: rgba(255,255,255,.08);
+  --wb-text: #f3f6fa;
+  --wb-muted: #aeb8c4;
+  --wb-accent: #b9d0ff;
+  --wb-success: #a8f0d2;
+}
+
+.org-workbench .workflow-card,
+.org-workbench .lab-section,
+.org-workbench .configuration-card,
+.org-workbench .empty-state,
+.org-workbench .latest-test-card,
+.org-workbench .lab-next-action {
+  border: 1px solid var(--wb-border);
+  background: var(--wb-panel);
+  color: var(--wb-muted);
+}
+
+.import-success-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.15rem;
+}
+
+.import-success-check {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  flex: 0 0 auto;
+  border: 1px solid rgba(110,231,183,.24);
+  border-radius: 999px;
+  background: rgba(110,231,183,.09);
+  color: var(--wb-success);
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.import-success-copy {
+  margin: .45rem 0 0;
+  max-width: 62ch;
+}
+
+.import-details {
+  margin-top: 1rem;
+  border-top: 1px solid var(--wb-border);
+  padding-top: .85rem;
+}
+
+.import-details summary,
+.advanced-controls summary {
+  cursor: pointer;
+  width: fit-content;
+  color: #c8d2de !important;
+  font-size: .82rem;
+  font-weight: 750;
+}
+
+.import-details .evidence-list {
+  margin-top: .8rem;
+}
+
+.advanced-controls {
+  grid-column: 1 / -1;
+  margin-top: .25rem;
+  border: 1px solid var(--wb-border);
+  border-radius: .9rem;
+  background: rgba(255,255,255,.018);
+  padding: .9rem 1rem;
+}
+
+.advanced-controls-grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: .9rem;
+  margin-top: .9rem;
+}
+
+.advanced-controls-grid label {
+  display: grid;
+  gap: .42rem;
+}
+
+.latest-test-card,
+.lab-next-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 1.2rem;
+  border-radius: 1rem;
+}
+
+.latest-test-card h2,
+.lab-next-action h2 {
+  margin: .2rem 0 0;
+  color: var(--wb-text) !important;
+  font-size: 1.05rem;
+}
+
+.latest-test-card p,
+.lab-next-action p {
+  margin: .4rem 0 0;
+}
+
+.simplified-benchmark-form .benchmark-upload {
+  grid-column: 1 / -1;
+}
+
+/* Never let the generic legacy light MRI rule leak into interactive lab results. */
+.org-workbench .lab-stack .mri-action {
+  border: 1px solid var(--wb-border) !important;
+  border-radius: 1rem;
+  background: var(--wb-panel-soft) !important;
+  color: var(--wb-muted) !important;
+  padding: 1rem;
+}
+
+.org-workbench .lab-stack .mri-action :is(p,span,small,dt,dd,li,label,code) {
+  color: var(--wb-muted) !important;
+}
+
+.org-workbench .lab-stack .mri-action :is(h1,h2,h3,h4,strong,b) {
+  color: var(--wb-text) !important;
+}
+
+.org-workbench .lab-stack .mri-action .metric-card {
+  border: 1px solid var(--wb-border) !important;
+  background: #090e15 !important;
+}
+
+.org-workbench .lab-stack .mri-action .metric-label {
+  color: #9eabb9 !important;
+}
+
+.org-workbench .lab-stack .mri-action .metric-value {
+  color: var(--wb-text) !important;
+}
+
+.org-workbench .lab-stack .mri-action .projection-note {
+  border-color: rgba(122,167,255,.15) !important;
+  background: rgba(122,167,255,.06) !important;
+  color: #c7d9ff !important;
+}
+
+.org-workbench input[type='checkbox'] {
+  accent-color: #60a5fa;
+}
+
+.metric-subtle {
+  margin: .25rem 0 0 !important;
+  font-size: .72rem;
+  color: #8f9baa !important;
+}
+
+@media (max-width: 720px) {
+  .advanced-controls-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .latest-test-card,
+  .lab-next-action {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .latest-test-card .primary-action,
+  .lab-next-action .primary-action,
+  .lab-next-action .secondary-action {
+    width: 100%;
+    justify-content: center;
+  }
+}

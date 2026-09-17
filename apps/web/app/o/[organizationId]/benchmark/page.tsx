@@ -1,8 +1,8 @@
-import { asc, eq } from 'drizzle-orm';
+import { asc, desc, eq } from 'drizzle-orm';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
-import { workloads } from '../../../../../../src/persistence/schema';
+import { recommendations, workloads } from '../../../../../../src/persistence/schema';
 import { requireOrganizationAccess } from '../../../../../../src/persistence/tenant';
 import { WorkflowProgress } from '../../../../components/workflow-progress';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
@@ -24,14 +24,23 @@ export default async function BenchmarkPage({
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
 
   const database = createDatabase(databaseUrl);
-  const available = await (async () => {
+  const { available, latestRecommendation } = await (async () => {
     try {
       requireOrganizationAccess({ session, organizationId, action: 'READ' });
-      return await database.db
+      const availableWorkloads = await database.db
         .select()
         .from(workloads)
         .where(eq(workloads.organizationId, organizationId))
         .orderBy(asc(workloads.name));
+      const latest = (
+        await database.db
+          .select()
+          .from(recommendations)
+          .where(eq(recommendations.organizationId, organizationId))
+          .orderBy(desc(recommendations.createdAt))
+          .limit(1)
+      ).at(0) ?? null;
+      return { available: availableWorkloads, latestRecommendation: latest };
     } finally {
       await database.close();
     }
@@ -46,20 +55,39 @@ export default async function BenchmarkPage({
 
       <header className="workflow-header">
         <div>
-          <p className="eyebrow">Test</p>
-          <h1>Compare one candidate against your current setup</h1>
+          <p className="eyebrow">Tests</p>
+          <h1>Test whether a cheaper setup is safe</h1>
           <p className="lede">
-            Evalomics only recommends a cheaper option when the same workload
-            clears the quality and reliability constraints you already defined.
+            Use the same cases for the current and candidate setup. Evalomics
+            checks cost and your safety floor before recommending a change.
           </p>
         </div>
-        <span className="trust-chip">Same cases · same evaluator</span>
+        <span className="trust-chip">Paired test · evidence first</span>
       </header>
 
       {error !== undefined ? (
         <div className="blocking-note import-error-note" role="alert">
           {error}
         </div>
+      ) : null}
+
+      {latestRecommendation !== null ? (
+        <section className="latest-test-card">
+          <div>
+            <p className="eyebrow">Latest test</p>
+            <h2>{latestRecommendation.savingState === 'TESTED' ? '✓ Candidate passed the test' : 'Previous test result available'}</h2>
+            <p>
+              Decision: <strong>{latestRecommendation.decision}</strong> ·
+              Confidence: {latestRecommendation.confidenceBand ?? 'Unavailable'}
+            </p>
+          </div>
+          <Link
+            className="primary-action"
+            href={`/o/${organizationId}/lab/${latestRecommendation.id}`}
+          >
+            Open latest result
+          </Link>
+        </section>
       ) : null}
 
       {selected === undefined ? (
@@ -77,13 +105,16 @@ export default async function BenchmarkPage({
         <section className="workflow-card">
           <div className="benchmark-context">
             <div>
-              <p className="eyebrow">Workload</p>
+              <p className="eyebrow">Ready to test</p>
               <h2>{selected.name}</h2>
-              <p>{selected.environment}</p>
+              <p>
+                Upload paired test cases. The advanced identifiers below are
+                prefilled and can be changed only when your file uses different values.
+              </p>
             </div>
           </div>
 
-          <form action={submitBenchmark} className="benchmark-form">
+          <form action={submitBenchmark} className="benchmark-form simplified-benchmark-form">
             <input type="hidden" name="organizationId" value={organizationId} />
             <label>
               <span>Workload</span>
@@ -95,41 +126,9 @@ export default async function BenchmarkPage({
                 ))}
               </select>
             </label>
-            <label>
-              <span>Current configuration</span>
-              <input
-                name="currentConfigurationId"
-                required
-                defaultValue="model-a"
-              />
-            </label>
-            <label>
-              <span>Candidate configuration</span>
-              <input
-                name="candidateConfigurationId"
-                required
-                defaultValue="model-b"
-              />
-            </label>
-            <label>
-              <span>Evaluator version</span>
-              <input name="evaluatorVersion" required defaultValue="eval-v1" />
-              <small>
-                Use the same evaluator for current and candidate runs.
-              </small>
-            </label>
-            <label>
-              <span>Currency</span>
-              <input
-                name="currency"
-                required
-                defaultValue="USD"
-                pattern="[A-Z]{3}"
-              />
-            </label>
             <label className="file-drop benchmark-upload">
-              <span>Choose benchmark CSV</span>
-              <small>30 paired cases minimum · matched cases only</small>
+              <span>Upload paired test cases</span>
+              <small>30 paired cases minimum · same cases for both setups</small>
               <input
                 name="benchmarkCsv"
                 type="file"
@@ -137,16 +136,51 @@ export default async function BenchmarkPage({
                 required
               />
             </label>
+
+            <details className="advanced-controls benchmark-advanced">
+              <summary>Advanced benchmark settings</summary>
+              <div className="advanced-controls-grid">
+                <label>
+                  <span>Current configuration</span>
+                  <input
+                    name="currentConfigurationId"
+                    required
+                    defaultValue="model-a"
+                  />
+                </label>
+                <label>
+                  <span>Candidate configuration</span>
+                  <input
+                    name="candidateConfigurationId"
+                    required
+                    defaultValue="model-b"
+                  />
+                </label>
+                <label>
+                  <span>Evaluator version</span>
+                  <input name="evaluatorVersion" required defaultValue="eval-v1" />
+                </label>
+                <label>
+                  <span>Currency</span>
+                  <input
+                    name="currency"
+                    required
+                    defaultValue="USD"
+                    pattern="[A-Z]{3}"
+                  />
+                </label>
+              </div>
+            </details>
             <label className="checkbox-row">
               <input name="isDemo" type="checkbox" value="true" />
               <span>This benchmark is synthetic demo evidence</span>
             </label>
             <div className="action-row">
               <Link className="secondary-action" href="/benchmark-template.csv">
-                Download benchmark template
+                Download test template
               </Link>
               <button className="primary-button" type="submit">
-                Evaluate candidate
+                Run safety test
               </button>
             </div>
           </form>

@@ -52,15 +52,14 @@ export default async function ImportPage({
 
       <header className="workflow-header">
         <div>
-          <p className="eyebrow">Evidence</p>
-          <h1>Upload one real usage window</h1>
+          <p className="eyebrow">Data</p>
+          <h1>Give Evalomics your AI usage</h1>
           <p className="lede">
-            Start with the smallest useful dataset. Evalomics will validate the
-            file, preserve provenance, only analyze accepted rows, and never
-            turn missing values into zero.
+            Upload a provider export or Evalomics-formatted CSV. We validate it,
+            analyze accepted usage, and show you what is worth investigating next.
           </p>
         </div>
-        <span className="trust-chip">CSV-first · no provider key required</span>
+        <span className="trust-chip">No provider key required</span>
       </header>
 
       {error !== undefined ? (
@@ -71,11 +70,11 @@ export default async function ImportPage({
 
       <section className="workflow-card upload-card">
         <div>
-          <p className="eyebrow">Usage CSV</p>
-          <h2>Choose the period you want analyzed</h2>
+          <p className="eyebrow">Upload</p>
+          <h2>Drop in one useful usage window</h2>
           <p>
-            Required fields: timestamps, provider, model, requests, total cost,
-            and currency. Maximum 10 MiB and 50,000 rows.
+            Start with an existing export. Evalomics checks the file before it
+            affects your workspace. Maximum 10 MiB and 50,000 rows.
           </p>
           <div className="flex flex-wrap gap-4">
             <Link className="text-link" href="/usage-template.csv">
@@ -94,8 +93,8 @@ export default async function ImportPage({
         <form action={uploadUsageCsv} className="upload-form">
           <input type="hidden" name="organizationId" value={organizationId} />
           <label className="file-drop">
-            <span>Choose usage CSV</span>
-            <small>Exact decimals preserved · invalid rows are rejected</small>
+            <span>Choose AI usage CSV</span>
+            <small>We validate the file first and clearly show what was accepted</small>
             <input
               name="usageCsv"
               type="file"
@@ -113,7 +112,7 @@ export default async function ImportPage({
             <span>This file is synthetic demo data</span>
           </label>
           <button className="primary-button" type="submit">
-            Validate and import
+            Analyze this usage
           </button>
         </form>
       </section>
@@ -123,10 +122,21 @@ export default async function ImportPage({
           className="workflow-card import-result"
           aria-labelledby="import-result-title"
         >
-          <div className="section-heading">
+          <div className="import-success-head">
+            <div className="import-success-check" aria-hidden="true">✓</div>
             <div>
-              <p className="eyebrow">Import evidence</p>
-              <h2 id="import-result-title">{imported.status}</h2>
+              <p className="eyebrow">Data ready</p>
+              <h2 id="import-result-title">
+                {imported.status === 'FAILED'
+                  ? 'We could not use this file'
+                  : `✓ ${imported.acceptedRows.toLocaleString()} usage rows analyzed`}
+              </h2>
+              {imported.status !== 'FAILED' ? (
+                <p className="import-success-copy">
+                  Your evidence is in the workspace. You can continue without
+                  reading any technical import details.
+                </p>
+              ) : null}
             </div>
             {imported.isDemo ? (
               <span className="demo-inline">
@@ -154,25 +164,26 @@ export default async function ImportPage({
             </div>
           </div>
 
-          <dl className="evidence-list">
-            <div>
-              <dt>Evidence window</dt>
-              <dd>
-                {imported.rangeStart ?? 'Unavailable'} →{' '}
-                {imported.rangeEnd ?? 'Unavailable'}
-              </dd>
-            </div>
-            <div>
-              <dt>Checksum</dt>
-              <dd>
-                <code>{imported.checksum}</code>
-              </dd>
-            </div>
-            <div>
-              <dt>Source</dt>
-              <dd>{imported.source}</dd>
-            </div>
-          </dl>
+          <details className="import-details">
+            <summary>View import details</summary>
+            <dl className="evidence-list">
+              <div>
+                <dt>Evidence window</dt>
+                <dd>
+                  {imported.rangeStart ?? 'Unavailable'} →{' '}
+                  {imported.rangeEnd ?? 'Unavailable'}
+                </dd>
+              </div>
+              <div>
+                <dt>Checksum</dt>
+                <dd><code>{imported.checksum}</code></dd>
+              </div>
+              <div>
+                <dt>Source</dt>
+                <dd>{imported.source}</dd>
+              </div>
+            </dl>
+          </details>
 
           {imported.status === 'FAILED' ? (
             <div className="recovery-stack">
@@ -200,7 +211,13 @@ export default async function ImportPage({
                 className="primary-action"
                 href={`/o/${organizationId}/workloads`}
               >
-                Define workload constraints
+                Continue to safety setup
+              </Link>
+              <Link
+                className="secondary-action"
+                href={`/o/${organizationId}`}
+              >
+                View analysis overview
               </Link>
             </div>
           )}

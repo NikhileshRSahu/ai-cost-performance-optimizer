@@ -2,10 +2,10 @@ import Link from 'next/link';
 import { Check, Circle } from 'lucide-react';
 
 const steps = [
-  { id: 'import', label: 'Evidence' },
-  { id: 'workloads', label: 'Constraints' },
-  { id: 'benchmark', label: 'Benchmark' },
-  { id: 'implement', label: 'Implement' },
+  { id: 'import', label: 'Data' },
+  { id: 'workloads', label: 'Safety' },
+  { id: 'benchmark', label: 'Test' },
+  { id: 'implement', label: 'Apply' },
   { id: 'verify', label: 'Verify' },
 ] as const;
 
