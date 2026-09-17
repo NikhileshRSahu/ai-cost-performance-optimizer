@@ -64,6 +64,12 @@ function normalizedState(value: string): DashboardSavingsState {
   throw new Error('INVALID_PERSISTED_SAVINGS_STATE');
 }
 
+function stateRank(value: string): number {
+  if (value === 'VERIFIED') return 0;
+  if (value === 'TESTED') return 1;
+  return 2;
+}
+
 function normalizedConfidence(
   value: string | null,
 ): DashboardRecommendationEvidence['confidenceBand'] {
@@ -331,7 +337,10 @@ export async function loadFounderDashboardEvidence(
     )
     .sort(
       (left, right) =>
-        left.rank - right.rank || left.row.id.localeCompare(right.row.id),
+        stateRank(left.row.savingState) - stateRank(right.row.savingState) ||
+        left.rank - right.rank ||
+        right.row.createdAt.localeCompare(left.row.createdAt) ||
+        left.row.id.localeCompare(right.row.id),
     )
     .slice(0, 3);
 
