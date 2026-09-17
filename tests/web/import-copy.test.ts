@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { describe, expect, it } from 'vitest';
 
 describe('customer import workflow copy', () => {
-  it('explains the CSV-first trust boundary clearly', async () => {
+  it('keeps the upload path simple while preserving the trust boundary', async () => {
     const page = await readFile(
       new URL(
         '../../apps/web/app/o/[organizationId]/import/page.tsx',
@@ -11,8 +11,12 @@ describe('customer import workflow copy', () => {
       'utf8',
     );
     const normalizedPage = page.replace(/\s+/g, ' ');
-    expect(normalizedPage).toContain('CSV-first · no provider key required');
-    expect(normalizedPage).toContain('never turn missing values into zero');
+    expect(normalizedPage).toContain('No provider key required');
+    expect(normalizedPage).toContain(
+      'We validate the file before adding it to your analysis',
+    );
+    expect(normalizedPage).toContain('View my analysis');
+    expect(normalizedPage).toContain('See import details');
     expect(normalizedPage).toContain(
       'Synthetic demo data — not a customer result.',
     );
