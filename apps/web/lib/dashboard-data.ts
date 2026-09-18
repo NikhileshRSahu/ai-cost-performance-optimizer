@@ -18,6 +18,7 @@ import {
 import { requireOrganizationAccess } from '../../../src/persistence/tenant';
 import { usageRecordSchema } from '../../../src/usage/contracts';
 import type { AuthenticatedSession } from '../../../src/workbench/authz';
+import { loadLatestProviderDashboardEvidence } from './provider-dashboard-data';
 import type {
   DashboardDecision,
   DashboardEvidence,
@@ -167,6 +168,14 @@ export async function loadFounderDashboardEvidence(
       .orderBy(desc(importRuns.receivedAt))
       .limit(1)
   ).at(0);
+
+  const providerEvidence = await loadLatestProviderDashboardEvidence(
+    db,
+    session,
+    organizationId,
+    latestUsable?.receivedAt ?? null,
+  );
+  if (providerEvidence !== null) return providerEvidence;
 
   const limitations: string[] = [];
   if (

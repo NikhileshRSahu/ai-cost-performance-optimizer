@@ -119,7 +119,7 @@ export default async function FounderDashboardPage({
           </h1>
           <p className="m-0 mt-3 max-w-3xl text-sm leading-6 text-white/50">
             {view.dataQuality === 'NO_DATA'
-              ? 'Upload one useful usage window. Evalomics will find the strongest supported optimization and tell you what to do next.'
+              ? 'Connect OpenAI or Anthropic, upload a compatible CSV, or try the demo. Evalomics analyzes the source automatically and returns one clear result.'
               : `Evidence window: ${view.periodLabel}. Here is the strongest answer your current evidence supports.`}
           </p>
         </div>
@@ -139,15 +139,15 @@ export default async function FounderDashboardPage({
             Start with your usage data
           </h2>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-white/50">
-            Upload a compatible CSV now. Provider connections can be added
-            later; the product should already give you a useful answer from one
-            clean evidence window.
+            Connect OpenAI or Anthropic, upload a compatible CSV, or try the
+            synthetic demo. Evalomics handles the analysis and sends you back
+            here with the strongest supported answer.
           </p>
           <Link
             className="mt-5 inline-flex min-h-11 items-center rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 no-underline transition hover:bg-slate-100"
             href={`/o/${organizationId}/import`}
           >
-            Upload AI usage
+            Connect or upload usage
           </Link>
         </section>
       ) : (
@@ -166,14 +166,16 @@ export default async function FounderDashboardPage({
                   {moneyLabel(view.observedSpend)}
                 </p>
               </div>
-              <div className="rounded-xl border border-white/[0.08] bg-white/[0.025] px-4 py-3 text-left lg:min-w-56 lg:text-right">
-                <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/45">
-                  Verified net saving
-                </p>
-                <p className="m-0 mt-1 font-mono text-xl font-medium text-white/88">
-                  {verifiedMoney(view.verifiedNetSavings)}
-                </p>
-              </div>
+              {view.verifiedNetSavings !== null ? (
+                <div className="rounded-xl border border-white/[0.08] bg-white/[0.025] px-4 py-3 text-left lg:min-w-56 lg:text-right">
+                  <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/45">
+                    Verified net saving
+                  </p>
+                  <p className="m-0 mt-1 font-mono text-xl font-medium text-white/88">
+                    {verifiedMoney(view.verifiedNetSavings)}
+                  </p>
+                </div>
+              ) : null}
             </div>
 
             {view.strongestAction === null ? (

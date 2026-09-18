@@ -7,6 +7,7 @@ import {
   Activity,
   BarChart3,
   BrainCircuit,
+  ChevronDown,
   ChevronRight,
   Database,
   FlaskConical,
@@ -76,10 +77,14 @@ function NavLinks({
         })}
       </div>
 
-      <div className="mt-7 border-t border-white/[0.06] pt-5">
-        <p className="px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/25">
+      <details className="group mt-7 border-t border-white/[0.06] pt-5">
+        <summary className="flex cursor-pointer list-none items-center gap-2 px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/30">
           Advanced
-        </p>
+          <ChevronDown
+            className="ml-auto size-3 transition group-open:rotate-180"
+            aria-hidden="true"
+          />
+        </summary>
         <div className="mt-2 grid gap-1">
           {advanced.map(({ slug, label, icon: Icon }) => {
             const href = base + slug;
@@ -91,12 +96,12 @@ function NavLinks({
                 className={linkClass(href)}
               >
                 <Icon className="size-4" aria-hidden="true" />
-                <span>{label}</span>
+                <span>{label === 'Telemetry' ? 'Continuous telemetry' : label}</span>
               </Link>
             );
           })}
         </div>
-      </div>
+      </details>
 
       <div className="mt-7 border-t border-white/[0.06] pt-5">
         <p className="px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/25">
