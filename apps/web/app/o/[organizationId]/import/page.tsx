@@ -101,7 +101,25 @@ export default async function ImportPage({
           className="rounded-xl border border-rose-300/20 bg-rose-300/[0.06] px-4 py-3 text-sm text-rose-100"
           role="alert"
         >
-          {query.error}
+          <p className="m-0">
+            {query.error.startsWith('No valid usage rows were accepted')
+              ? 'No valid usage rows were accepted. Fix the CSV and try again.'
+              : query.error}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <Link
+              href="#csv-upload"
+              className="text-xs font-semibold text-rose-50 underline decoration-rose-100/30 underline-offset-4"
+            >
+              Try another CSV
+            </Link>
+            <Link
+              href={`/o/${organizationId}`}
+              className="text-xs font-semibold text-rose-50/75 underline decoration-rose-100/20 underline-offset-4"
+            >
+              Return to overview
+            </Link>
+          </div>
         </div>
       ) : null}
 
@@ -256,7 +274,10 @@ export default async function ImportPage({
           );
         })}
 
-        <article className="rounded-[22px] border border-white/[0.08] bg-[#0a0f16] p-5">
+        <article
+          id="csv-upload"
+          className="rounded-[22px] border border-white/[0.08] bg-[#0a0f16] p-5"
+        >
           <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-blue-200/55">
             File
           </p>
@@ -266,6 +287,10 @@ export default async function ImportPage({
           <p className="mt-3 text-sm leading-6 text-white/48">
             Use an existing export or the Evalomics template. Maximum 10 MiB and
             50,000 rows.
+          </p>
+          <p className="m-0 mt-2 text-xs leading-5 text-white/38">
+            No provider key required. We validate the file before adding it to
+            your analysis.
           </p>
           <form action={uploadUsageCsv} className="mt-5 grid gap-3">
             <input
@@ -289,12 +314,29 @@ export default async function ImportPage({
               Upload and analyze
             </button>
           </form>
-          <Link
-            className="mt-3 inline-flex text-xs font-semibold text-blue-200/70"
-            href="/usage-template.csv"
-          >
-            Download CSV template
-          </Link>
+          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
+            <Link
+              className="inline-flex text-xs font-semibold text-blue-200/70"
+              href="/usage-template.csv"
+            >
+              Download CSV template
+            </Link>
+            <Link
+              className="inline-flex text-xs font-semibold text-white/50"
+              href={`/o/${organizationId}`}
+            >
+              View my analysis
+            </Link>
+          </div>
+          <details className="mt-4 rounded-xl border border-white/[0.07] bg-white/[0.018] px-4 py-3">
+            <summary className="cursor-pointer text-xs font-semibold text-white/55">
+              See import details
+            </summary>
+            <p className="m-0 mt-2 text-[11px] leading-5 text-white/38">
+              Evalomics validates required columns, numeric fields, upload size,
+              and accepted rows before the import can contribute evidence.
+            </p>
+          </details>
         </article>
       </section>
 
@@ -309,6 +351,9 @@ export default async function ImportPage({
           <p className="m-0 mt-2 text-sm text-white/45">
             One click runs the demo through the same analysis path and keeps it
             clearly labeled as synthetic.
+          </p>
+          <p className="m-0 mt-2 text-xs font-semibold text-amber-100/65">
+            Synthetic demo data — not a customer result.
           </p>
         </div>
         <form action={analyzeDemoUsage} className="mt-4 sm:mt-0">
