@@ -1,12 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import {
-  ArrowLeft,
-  ArrowRight,
-  Github,
-  Link2,
-  UploadCloud,
-} from 'lucide-react';
+import { ArrowLeft, ArrowRight, Link2, UploadCloud } from 'lucide-react';
 import { createDatabase } from '../../../../../../src/persistence/database';
 import { listProviderConnections } from '../../../../../../src/persistence/repositories/provider-connections';
 import { requireOrganizationAccess } from '../../../../../../src/persistence/tenant';
@@ -44,11 +38,7 @@ function ProviderLogo({ provider }: { provider: 'OPENAI' | 'ANTHROPIC' }) {
       aria-hidden="true"
       width={24}
       height={24}
-      src={
-        provider === 'OPENAI'
-          ? 'https://cdn.simpleicons.org/openai/FFFFFF'
-          : 'https://cdn.simpleicons.org/anthropic/FFFFFF'
-      }
+      src={provider === 'OPENAI' ? '/brand/openai.svg' : '/brand/anthropic.svg'}
     />
   );
 }
@@ -362,7 +352,13 @@ export default async function ImportPage({
           <article className="relative overflow-hidden rounded-[26px] border border-white/[0.08] bg-white/[0.018] p-5 opacity-80">
             <div className="flex items-start justify-between gap-3">
               <span className="grid size-12 place-items-center rounded-2xl border border-white/[0.08] bg-white/[0.04]">
-                <Github className="size-6 text-white" />
+                <img
+                  alt=""
+                  aria-hidden="true"
+                  src="/brand/github.svg"
+                  width={24}
+                  height={24}
+                />
               </span>
               <span className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[9px] font-semibold text-white/35">
                 Coming next
