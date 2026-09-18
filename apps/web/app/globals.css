@@ -3310,9 +3310,9 @@ samp,
 .eval-template-orbit--two { width:62%; height:38%; top:21%; left:24%; animation-duration:18s; border-color:rgba(244,160,77,.18); }
 .eval-template-layer { position:absolute; transform-style:preserve-3d; }
 .eval-template-layer--back { inset:8% 8% auto 15%; opacity:.38; transform:translateZ(-100px) rotateY(-10deg) rotateX(3deg) scale(.88); filter:saturate(.8); }
-.eval-template-layer--main { top:19%; left:7%; width:86%; transform:translateZ(80px) rotateY(-7deg) rotateX(3deg) rotateZ(1.5deg); animation:et-float 7s ease-in-out infinite; }
-.eval-template-layer--drivers { bottom:10%; left:-2%; width:34%; transform:translateZ(125px) rotateY(-8deg) rotateZ(-5deg); animation:et-float 8s ease-in-out infinite reverse; }
-.eval-template-layer--flow { bottom:2%; right:-2%; width:48%; transform:translateZ(155px) rotateY(5deg) rotateZ(4deg); animation:et-float 9s ease-in-out infinite; }
+.eval-template-layer--main { top:19%; left:7%; width:86%; transform:translateZ(80px) rotateY(-7deg) rotateX(3deg) rotateZ(1.5deg); animation:et-drift 7s ease-in-out infinite; }
+.eval-template-layer--drivers { bottom:10%; left:-2%; width:34%; transform:translateZ(125px) rotateY(-8deg) rotateZ(-5deg); animation:et-drift 8s ease-in-out infinite reverse; }
+.eval-template-layer--flow { bottom:2%; right:-2%; width:48%; transform:translateZ(155px) rotateY(5deg) rotateZ(4deg); animation:et-drift 9s ease-in-out infinite; }
 .eval-template-hero-note { position:absolute; top:8%; right:0; display:flex; align-items:center; gap:.5rem; color:#8bf4df; font-size:.76rem; line-height:1.4; transform:rotate(3deg); }
 
 .eval-template-dashboard { display:grid; grid-template-columns:160px 1fr; border:1px solid rgba(255,255,255,.10); border-radius:18px; overflow:hidden; background:linear-gradient(145deg,rgba(12,17,24,.98),rgba(7,10,14,.98)); box-shadow:0 40px 100px rgba(0,0,0,.55),0 0 0 1px rgba(53,216,255,.03),0 0 80px rgba(244,160,77,.08); }
@@ -3352,7 +3352,7 @@ samp,
 .eval-template-flow { display:grid; grid-template-columns:90px 1fr 76px; align-items:stretch; gap:.5rem; padding:.55rem .8rem; }
 .eval-template-flow-labels,.eval-template-flow-output { display:flex; flex-direction:column; justify-content:space-between; gap:.35rem; color:rgba(255,255,255,.36); font-size:.48rem; }
 .eval-template-flow-lines { position:relative; min-height:110px; overflow:hidden; }
-.eval-template-flow-lines i { position:absolute; left:-10%; top:calc(10% + var(--i)*11%); width:120%; height:1px; background:linear-gradient(90deg,rgba(53,216,255,.15),rgba(53,216,255,.95),rgba(244,160,77,.96)); border-radius:999px; transform:rotate(calc(-8deg + var(--i)*2.1deg)); transform-origin:center; animation:et-flow 2.4s linear infinite; animation-delay:calc(var(--i)*-.18s); }
+.eval-template-flow-lines i { position:absolute; left:-10%; width:120%; height:1px; background:linear-gradient(90deg,rgba(53,216,255,.15),rgba(53,216,255,.95),rgba(244,160,77,.96)); border-radius:999px; transform-origin:center; animation:et-flow 2.4s linear infinite; }
 .eval-template-flow-output { color:rgba(244,194,148,.58); }
 
 .eval-template-showcase { padding:2rem 0 7rem; }
@@ -3379,7 +3379,7 @@ samp,
 .eval-template-feature-copy h3 { margin:.6rem 0 0; font-size:1.65rem; letter-spacing:-.04em; }
 .eval-template-feature-copy p { margin:.7rem 0 0; max-width:48ch; color:var(--et-muted); line-height:1.6; font-size:.93rem; }
 .eval-template-cluster-visual { position:absolute; left:4%; right:4%; bottom:3%; height:260px; }
-.eval-template-cluster-visual i { --angle:calc(var(--n)*20deg); position:absolute; left:calc(8% + (var(--n)%6)*13%); top:calc(18% + (var(--n)%4)*17%); width:7px;height:7px;border-radius:50%; background:var(--et-teal); box-shadow:0 0 15px currentColor; animation:et-node 2.6s ease-in-out infinite; animation-delay:calc(var(--n)*-.11s); }
+.eval-template-cluster-visual i { position:absolute; width:7px;height:7px;border-radius:50%; background:var(--et-teal); box-shadow:0 0 15px currentColor; animation:et-node 2.6s ease-in-out infinite; }
 .eval-template-cluster-visual i:nth-child(-n+9){ background:var(--et-amber); }
 .eval-template-cluster-visual::after { content:""; position:absolute; inset:14% 2% 6%; background:repeating-radial-gradient(ellipse at 52% 66%, transparent 0 32px, rgba(255,255,255,.05) 33px 34px); opacity:.55; }
 .eval-template-cluster-tooltip { position:absolute; z-index:4; left:34%; top:15%; display:grid; gap:.2rem; padding:.8rem 1rem; border:1px solid var(--et-border); border-radius:.7rem; background:rgba(14,18,23,.88); box-shadow:0 20px 45px rgba(0,0,0,.35); }
