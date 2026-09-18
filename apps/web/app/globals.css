@@ -13,6 +13,10 @@
 }
 
 :root {
+  --eval-observed: #7aa7ff;
+  --eval-opportunity: #f6c56b;
+  --eval-tested: #93b4ff;
+  --eval-verified: #6ee7b7;
   color-scheme: light;
   font-family:
     Inter,
@@ -3225,5 +3229,15 @@ samp,
   .lab-next-action .secondary-action {
     width: 100%;
     justify-content: center;
+  }
+}
+
+
+/* Evalomics semantic motion: preserve meaning when users request less motion. */
+@media (prefers-reduced-motion: reduce) {
+  .eval-motion-decorative {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
   }
 }

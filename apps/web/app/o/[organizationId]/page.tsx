@@ -12,6 +12,7 @@ import {
 import { RecommendationCard } from '../../../components/recommendation-card';
 import { SignOutButton } from '../../../components/sign-out-button';
 import { WorkMri } from '../../../components/work-mri';
+import { SourceChoiceCard } from '../../../components/workbench/source-choice-card';
 import { hasSelfHostedAuthConfiguration } from '../../../lib/auth-config';
 import {
   loadFounderDashboardEvidence,
@@ -21,11 +22,13 @@ import { resolveRuntimeSession } from '../../../lib/runtime-session';
 
 export const dynamic = 'force-dynamic';
 
-function dashboardSelection(input: Readonly<{
-  source?: string;
-  importId?: string;
-  provider?: string;
-}>): DashboardSelection {
+function dashboardSelection(
+  input: Readonly<{
+    source?: string;
+    importId?: string;
+    provider?: string;
+  }>,
+): DashboardSelection {
   if (
     (input.source === 'demo' || input.source === 'import') &&
     typeof input.importId === 'string' &&
@@ -161,14 +164,16 @@ export default async function FounderDashboardPage({
           <h1 className="m-0 mt-2 !text-[clamp(2.3rem,5vw,4.2rem)] !leading-[.98] !tracking-[-.055em] text-white">
             {view.dataQuality === 'NO_DATA'
               ? 'Give Evalomics your AI usage'
-              : view.dataQuality === 'ZERO_USAGE' && view.sourceKind === 'PROVIDER'
+              : view.dataQuality === 'ZERO_USAGE' &&
+                  view.sourceKind === 'PROVIDER'
                 ? `${view.providerName ?? 'Provider'} connected`
                 : 'We analyzed your AI usage'}
           </h1>
           <p className="m-0 mt-3 max-w-3xl text-sm leading-6 text-white/50">
             {view.dataQuality === 'NO_DATA'
               ? 'Connect OpenAI or Anthropic, upload a compatible CSV, or try the demo. Evalomics analyzes the source automatically and returns one clear result.'
-              : view.dataQuality === 'ZERO_USAGE' && view.sourceKind === 'PROVIDER'
+              : view.dataQuality === 'ZERO_USAGE' &&
+                  view.sourceKind === 'PROVIDER'
                 ? `Connection succeeded. No API usage or cost records were returned for ${view.periodLabel}.`
                 : `Evidence window: ${view.periodLabel}. Here is the strongest answer your current evidence supports.`}
           </p>
@@ -176,7 +181,8 @@ export default async function FounderDashboardPage({
         <div className="flex flex-wrap items-center gap-2.5">
           {view.dataQuality !== 'NO_DATA' ? (
             <span className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[10px] font-semibold text-white/55">
-              {view.dataQuality === 'ZERO_USAGE' && view.sourceKind === 'PROVIDER'
+              {view.dataQuality === 'ZERO_USAGE' &&
+              view.sourceKind === 'PROVIDER'
                 ? 'No API usage found'
                 : `Data quality · ${view.dataQuality}`}
             </span>
@@ -186,21 +192,63 @@ export default async function FounderDashboardPage({
       </header>
 
       {view.dataQuality === 'NO_DATA' ? (
-        <section className="rounded-[22px] border border-dashed border-white/12 bg-white/[0.02] p-7">
-          <h2 className="m-0 text-2xl font-semibold tracking-[-0.035em] text-white">
-            Start with your usage data
-          </h2>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-white/50">
-            Connect OpenAI or Anthropic, upload a compatible CSV, or try the
-            synthetic demo. Evalomics handles the analysis and sends you back
-            here with the strongest supported answer.
-          </p>
-          <Link
-            className="mt-5 inline-flex min-h-11 items-center rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 no-underline transition hover:bg-slate-100"
-            href={`/o/${organizationId}/import`}
+        <section className="grid gap-5">
+          <div className="max-w-3xl">
+            <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-200/55">
+              Choose a source
+            </p>
+            <h2 className="m-0 mt-2 text-2xl font-semibold tracking-[-0.035em] text-white sm:text-3xl">
+              Give Evalomics one usage source
+            </h2>
+            <p className="m-0 mt-3 text-sm leading-6 text-white/50">
+              Pick the easiest path. Evalomics handles the analysis
+              automatically and sends you back here with the strongest supported
+              answer.
+            </p>
+          </div>
+
+          <div
+            className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"
+            aria-label="AI usage source choices"
           >
-            Connect or upload usage
-          </Link>
+            <SourceChoiceCard
+              kind="OPENAI"
+              title="OpenAI"
+              description="Read organization API usage and cost reports. Prompt and response text are not requested."
+              meta="Admin API beta · 7-day evidence window"
+              href={`/o/${organizationId}/import`}
+              actionLabel="Connect OpenAI"
+            />
+            <SourceChoiceCard
+              kind="ANTHROPIC"
+              title="Anthropic"
+              description="Read organization API usage and cost reports. Consumer Claude app activity is separate."
+              meta="Admin API beta · 7-day evidence window"
+              href={`/o/${organizationId}/import`}
+              actionLabel="Connect Anthropic"
+            />
+            <SourceChoiceCard
+              kind="CSV"
+              title="Upload CSV"
+              description="Use an existing usage export when a provider connection is not the right path."
+              meta="Up to 10 MiB · 50,000 rows"
+              href={`/o/${organizationId}/import`}
+              actionLabel="Choose a usage file"
+            />
+            <SourceChoiceCard
+              kind="DEMO"
+              title="Try demo"
+              description="Run synthetic usage through the same analysis path and see the result before using customer data."
+              meta="Synthetic · never customer proof"
+              href={`/o/${organizationId}/import`}
+              actionLabel="Open the demo"
+            />
+          </div>
+
+          <p className="m-0 text-xs leading-5 text-white/38">
+            Provider connections use API-platform evidence. ChatGPT and Claude
+            consumer subscription activity is not included in these connectors.
+          </p>
         </section>
       ) : view.dataQuality === 'ZERO_USAGE' &&
         view.sourceKind === 'PROVIDER' ? (
@@ -217,9 +265,10 @@ export default async function FounderDashboardPage({
                 No API usage found in this window
               </h2>
               <p className="m-0 mt-3 max-w-3xl text-sm leading-6 text-white/52">
-                Evalomics successfully connected to {view.providerName ?? 'your provider'},
-                but the provider returned no usage or cost records for this
-                seven-day window. There is nothing to optimize yet.
+                Evalomics successfully connected to{' '}
+                {view.providerName ?? 'your provider'}, but the provider
+                returned no usage or cost records for this seven-day window.
+                There is nothing to optimize yet.
               </p>
               {view.providerName === 'OpenAI' ? (
                 <p className="m-0 mt-2 max-w-3xl text-xs leading-5 text-white/40">
