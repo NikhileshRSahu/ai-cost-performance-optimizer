@@ -13,7 +13,7 @@ export default function HomePage() {
               Find AI waste.<span className="block text-white/58">Prove the fix.</span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-7 text-white/62">
-              Choose how to give Evalomics usage. We analyze it, reject unsupported guesses, and return the strongest action your evidence can support.
+              Connect OpenAI or Anthropic, or upload a CSV. Evalomics analyzes the evidence, rejects unsupported guesses, and returns the strongest action it can support.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/start" className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 no-underline transition hover:-translate-y-0.5 hover:bg-emerald-100">
