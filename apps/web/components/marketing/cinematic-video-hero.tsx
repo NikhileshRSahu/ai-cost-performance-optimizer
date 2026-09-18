@@ -100,7 +100,7 @@ export function CinematicVideoHero() {
               href="/demo"
               className="inline-flex min-h-12 items-center rounded-xl border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white no-underline transition hover:bg-white/[0.08]"
             >
-              Try live demo
+              Try the live demo
             </Link>
           </div>
         </div>
