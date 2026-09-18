@@ -14,6 +14,7 @@ import {
 } from '../../../../../../../src/persistence/schema';
 import { requireOrganizationAccess } from '../../../../../../../src/persistence/tenant';
 import { WorkflowProgress } from '../../../../../components/workflow-progress';
+import { EvidenceProgression } from '../../../../../components/workbench/evidence-progression';
 import { resolveRuntimeSession } from '../../../../../lib/runtime-session';
 import { submitVerification } from './action';
 
@@ -157,6 +158,8 @@ export default async function VerifyPage({
         </div>
         <span className="trust-chip">Verified only when every gate passes</span>
       </header>
+
+      <EvidenceProgression current={verification?.status === 'VERIFIED' ? 'VERIFIED' : 'TESTED'} />
 
       {verification !== undefined ? (
         <section
