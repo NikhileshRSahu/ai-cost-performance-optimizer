@@ -35,9 +35,15 @@ export function EvalButton(props: LinkProps | ButtonProps) {
     );
   }
 
-  const { href: _href, ...buttonProps } = props as ButtonProps & { href?: undefined };
+  const {
+    href: _href,
+    variant: _variant,
+    className: _className,
+    children: _children,
+    ...nativeProps
+  } = props as ButtonProps & { href?: undefined };
   return (
-    <button className={classes} {...buttonProps}>
+    <button {...nativeProps} className={classes}>
       {children}
     </button>
   );
