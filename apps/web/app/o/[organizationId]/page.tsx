@@ -5,6 +5,7 @@ import { createDatabase } from '../../../../../src/persistence/database';
 import { buildFounderDashboardView } from '../../../../../src/workbench/dashboard-view';
 import { RecommendationCard } from '../../../components/recommendation-card';
 import { DirectResult } from '../../../components/workbench/direct-result';
+import { EvidenceDetails } from '../../../components/workbench/evidence-details';
 import { EvalButton } from '../../../components/ui/eval-button';
 import { EvalSurface } from '../../../components/ui/eval-surface';
 import { EvidenceBadge, type EvidenceState } from '../../../components/ui/evidence-badge';
@@ -221,6 +222,13 @@ export default async function CostDashboardPage({
         strongestState={strongestState}
         recommendationsHref={`/o/${organizationId}/recommendations`}
         proofHref={`/o/${organizationId}/proof`}
+      />
+
+      <EvidenceDetails
+        source={view.providerName ?? view.sourceKind}
+        periodLabel={view.periodLabel}
+        facts={view.diagnosticFacts}
+        limitation={strongest?.principalLimitation ?? null}
       />
     </div>
   );
