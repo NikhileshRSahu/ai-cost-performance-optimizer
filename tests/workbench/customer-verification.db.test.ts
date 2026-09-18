@@ -11,6 +11,7 @@ import {
   verificationWindows,
   workloads,
 } from '../../src/persistence/schema.js';
+import { analyzeImportedUsage } from '../../src/workbench/analysis-service.js';
 import { evaluateAndPersistBenchmark } from '../../src/workbench/benchmark-service.js';
 import { confirmImplementation } from '../../src/workbench/implementation-service.js';
 import { importCustomerUsage } from '../../src/workbench/import-service.js';
@@ -48,6 +49,15 @@ async function prepareTestedRecommendation() {
   expect(baseline.accepted).toBe(28);
   expect(baseline.rejected).toBe(5);
 
+  const analysis = await analyzeImportedUsage({
+    db: database.db,
+    session,
+    organizationId: 'journey-org',
+    importId: baseline.importId,
+  });
+  const sourceRecommendationId = analysis.recommendations[0]?.recommendationId;
+  expect(sourceRecommendationId).toBeDefined();
+
   const workload = await saveWorkloadConstraints({
     db: database.db,
     session,
@@ -72,11 +82,21 @@ async function prepareTestedRecommendation() {
     evaluatorVersion: 'eval-v1',
     currency: 'USD',
     isDemo: true,
+    sourceRecommendationId: sourceRecommendationId ?? null,
   });
 
   expect(benchmark).toMatchObject({
     decision: 'OPTIMIZE',
     savingState: 'TESTED',
+  });
+  const testedRecommendation = (
+    await database.db
+      .select()
+      .from(recommendations)
+  ).find((row) => row.id === benchmark.recommendationId);
+  expect(testedRecommendation?.evidence).toMatchObject({
+    sourceRecommendationId,
+    sourceImportId: baseline.importId,
   });
 
   await confirmImplementation({
@@ -159,6 +179,7 @@ describe('complete customer verification loop', () => {
       .from(verificationWindows);
     expect(verificationRows).toHaveLength(1);
     expect(verificationRows[0]?.evidence).toMatchObject({
+      baselineSelection: 'SOURCE_RECOMMENDATION_LINEAGE',
       denominator: 'SUCCESSFUL_OUTCOMES',
       unitDefinition: 'successful-outcome-v1',
       successDefinition: 'csv-successes-v1',

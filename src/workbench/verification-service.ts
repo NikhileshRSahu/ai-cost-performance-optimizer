@@ -61,6 +61,14 @@ function canonicalString(
   return typeof value === 'string' && value.length > 0 ? value : null;
 }
 
+function evidenceString(
+  evidence: Record<string, unknown>,
+  key: string,
+): string | null {
+  const value = evidence[key];
+  return typeof value === 'string' && value.trim().length > 0 ? value : null;
+}
+
 function aggregateWindow(
   rows: readonly (typeof usageRecords.$inferSelect)[],
   workloadName: string,
@@ -295,8 +303,17 @@ export async function verifyCustomerChange(
     )
     .orderBy(desc(importRuns.rangeEnd));
 
+  const sourceImportId = evidenceString(
+    recommendation.evidence,
+    'sourceImportId',
+  );
+  if (sourceImportId === null) {
+    throw new Error('BASELINE_LINEAGE_REQUIRED');
+  }
+
   const baselineImport = allImports.find(
     (run) =>
+      run.id === sourceImportId &&
       run.id !== postImport.importId &&
       run.rangeEnd !== null &&
       Date.parse(run.rangeEnd) <= Date.parse(implementation.rolloutStart),
@@ -445,6 +462,7 @@ export async function verifyCustomerChange(
         reasons: result.reasons,
         direction: result.direction,
         baselineImportId: baselineImport.id,
+        baselineSelection: 'SOURCE_RECOMMENDATION_LINEAGE',
         postImportId: postImport.importId,
         qualitySourceRef: input.qualitySourceRef,
         denominator,

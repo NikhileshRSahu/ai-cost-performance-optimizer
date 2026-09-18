@@ -11,6 +11,15 @@ describe('buildAnalysisDepth', () => {
     expect(depth.missingForNextLevel).toEqual(['SANITIZED_AI_EXPORT']);
   });
 
+  it('keeps provider-admin usage inside level-one evidence boundaries', () => {
+    const depth = buildAnalysisDepth(['PROVIDER_ADMIN_USAGE']);
+
+    expect(depth.level).toBe(1);
+    expect(depth.label).toBe('Usage evidence');
+    expect(depth.capabilities).toContain('COST_EFFICIENCY');
+    expect(depth.capabilities).not.toContain('PROMPT_STRUCTURE');
+  });
+
   it('unlocks prompt/workflow analysis only with content evidence', () => {
     const depth = buildAnalysisDepth(['USAGE_CSV', 'SANITIZED_AI_EXPORT']);
 

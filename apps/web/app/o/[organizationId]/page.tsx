@@ -110,9 +110,13 @@ export default async function FounderDashboardPage({
           ? 'Opportunity'
           : 'Observed';
 
-  const analysisDepth = buildAnalysisDepth(
-    view.dataQuality === 'NO_DATA' ? [] : ['USAGE_CSV'],
-  );
+  const analysisSources =
+    view.dataQuality === 'NO_DATA'
+      ? []
+      : view.sourceKind === 'PROVIDER'
+        ? (['PROVIDER_ADMIN_USAGE'] as const)
+        : (['USAGE_CSV'] as const);
+  const analysisDepth = buildAnalysisDepth(analysisSources);
   const mri = buildWorkMriSnapshot({
     depth: analysisDepth,
     additionalFacts: view.diagnosticFacts,

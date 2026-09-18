@@ -1,5 +1,6 @@
 export type EvidenceSourceKind =
   | 'USAGE_CSV'
+  | 'PROVIDER_ADMIN_USAGE'
   | 'SANITIZED_AI_EXPORT'
   | 'AUTHORIZED_WORKSPACE'
   | 'PRODUCTION_TELEMETRY';

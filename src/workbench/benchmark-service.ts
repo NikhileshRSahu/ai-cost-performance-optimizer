@@ -45,10 +45,22 @@ function recommendationId(
   organizationId: string,
   workloadId: string,
   bytes: Uint8Array,
+  currentConfigurationId: string,
+  candidateConfigurationId: string,
+  evaluatorVersion: string,
+  sourceRecommendationId: string | null,
 ): string {
   const digest = sha256Bytes(
     new TextEncoder().encode(
-      `${organizationId}\0${workloadId}\0${sha256Bytes(bytes)}`,
+      [
+        organizationId,
+        workloadId,
+        sha256Bytes(bytes),
+        currentConfigurationId,
+        candidateConfigurationId,
+        evaluatorVersion,
+        sourceRecommendationId ?? '',
+      ].join('\0'),
     ),
   ).slice(0, 24);
   return `rec-${digest}`;
@@ -139,6 +151,10 @@ export async function evaluateAndPersistBenchmark(
     input.organizationId,
     input.workloadId,
     input.bytes,
+    input.currentConfigurationId,
+    input.candidateConfigurationId,
+    input.evaluatorVersion,
+    input.sourceRecommendationId ?? null,
   );
   const existing = (
     await input.db
