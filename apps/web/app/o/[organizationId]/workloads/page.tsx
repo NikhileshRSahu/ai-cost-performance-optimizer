@@ -1,7 +1,8 @@
-import { asc, desc, eq } from 'drizzle-orm';
+import { and, asc, desc, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
 import {
+  recommendations,
   usageRecords,
   workloads,
 } from '../../../../../../src/persistence/schema';
@@ -14,8 +15,13 @@ export const dynamic = 'force-dynamic';
 
 export default async function WorkloadsPage({
   params,
-}: Readonly<{ params: Promise<{ organizationId: string }> }>) {
+  searchParams,
+}: Readonly<{
+  params: Promise<{ organizationId: string }>;
+  searchParams: Promise<{ recommendationId?: string }>;
+}>) {
   const { organizationId } = await params;
+  const { recommendationId } = await searchParams;
   const session = await resolveRuntimeSession();
   const databaseUrl = process.env.DATABASE_URL;
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
@@ -37,14 +43,35 @@ export default async function WorkloadsPage({
           .orderBy(desc(usageRecords.intervalEnd))
           .limit(1)
       ).at(0);
+      const sourceRecommendation =
+        recommendationId === undefined
+          ? undefined
+          : (
+              await database.db
+                .select()
+                .from(recommendations)
+                .where(
+                  and(
+                    eq(recommendations.organizationId, organizationId),
+                    eq(recommendations.id, recommendationId),
+                  ),
+                )
+                .limit(1)
+            ).at(0);
+      const recommendationWorkload =
+        sourceRecommendation !== undefined &&
+        typeof sourceRecommendation.evidence.workloadName === 'string'
+          ? sourceRecommendation.evidence.workloadName
+          : null;
       const workloadFromUsage = latestUsage?.canonical.workload;
       return {
         existing: existingRows,
         inferredWorkload:
-          typeof workloadFromUsage === 'string' &&
+          recommendationWorkload ??
+          (typeof workloadFromUsage === 'string' &&
           workloadFromUsage.trim().length > 0
             ? workloadFromUsage
-            : 'AI workload',
+            : 'AI workload'),
       };
     } finally {
       await database.close();
@@ -70,6 +97,11 @@ export default async function WorkloadsPage({
       <section className="workflow-card">
         <form action={saveWorkload} className="constraint-form">
           <input type="hidden" name="organizationId" value={organizationId} />
+          <input
+            type="hidden"
+            name="sourceRecommendationId"
+            value={recommendationId ?? ''}
+          />
           <label>
             <span>Workload name</span>
             <input name="name" required defaultValue={inferredWorkload} />

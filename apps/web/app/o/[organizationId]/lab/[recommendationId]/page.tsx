@@ -77,7 +77,7 @@ export default async function OptimizationLabPage({
             <div className="action-row">
               <Link
                 className="primary-action"
-                href={`/o/${organizationId}/benchmark`}
+                href={`/o/${organizationId}/benchmark?recommendationId=${encodeURIComponent(recommendationId)}`}
               >
                 Measure exact savings
               </Link>

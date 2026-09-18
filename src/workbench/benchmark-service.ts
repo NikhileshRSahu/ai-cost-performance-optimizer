@@ -22,6 +22,14 @@ const constraintSetSchema = z
   })
   .strict();
 
+function evidenceString(
+  evidence: Record<string, unknown>,
+  key: string,
+): string | null {
+  const value = evidence[key];
+  return typeof value === 'string' && value.trim().length > 0 ? value : null;
+}
+
 function exactDecimal(
   value: Readonly<{ numerator: string; denominator: string }> | null,
   places = 6,
@@ -62,6 +70,7 @@ export async function evaluateAndPersistBenchmark(
     evaluatorVersion: string;
     currency: string;
     isDemo: boolean;
+    sourceRecommendationId?: string | null;
   }>,
 ) {
   requireOrganizationAccess({
@@ -69,6 +78,33 @@ export async function evaluateAndPersistBenchmark(
     organizationId: input.organizationId,
     action: 'BENCHMARK',
   });
+
+  const sourceRecommendation =
+    input.sourceRecommendationId === undefined ||
+    input.sourceRecommendationId === null ||
+    input.sourceRecommendationId.length === 0
+      ? undefined
+      : (
+          await input.db
+            .select()
+            .from(recommendations)
+            .where(
+              and(
+                eq(recommendations.organizationId, input.organizationId),
+                eq(recommendations.id, input.sourceRecommendationId),
+              ),
+            )
+            .limit(1)
+        ).at(0);
+
+  if (
+    input.sourceRecommendationId !== undefined &&
+    input.sourceRecommendationId !== null &&
+    input.sourceRecommendationId.length > 0 &&
+    sourceRecommendation === undefined
+  ) {
+    throw new Error('SOURCE_RECOMMENDATION_NOT_FOUND');
+  }
 
   const workload = (
     await input.db
@@ -231,6 +267,18 @@ export async function evaluateAndPersistBenchmark(
         { label: 'Confidence', ref: evaluation.confidence.version },
       ],
     },
+    sourceRecommendationId: sourceRecommendation?.id ?? null,
+    sourceImportId:
+      sourceRecommendation === undefined
+        ? null
+        : evidenceString(sourceRecommendation.evidence, 'sourceImportId'),
+    sourceProviderSnapshotId:
+      sourceRecommendation === undefined
+        ? null
+        : evidenceString(
+            sourceRecommendation.evidence,
+            'sourceProviderSnapshotId',
+          ),
     proposedChange: `Canary ${input.candidateConfigurationId} for the ${workload.name} workload before wider rollout.`,
     rollbackInstructions: [
       `Restore ${input.currentConfigurationId} for the ${workload.name} workload.`,

@@ -1,4 +1,4 @@
-import { asc, desc, eq } from 'drizzle-orm';
+import { and, asc, desc, eq } from 'drizzle-orm';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
@@ -27,7 +27,8 @@ export default async function BenchmarkPage({
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
 
   const database = createDatabase(databaseUrl);
-  const { available, latestRecommendation } = await (async () => {
+  const { available, latestRecommendation, sourceRecommendation } =
+    await (async () => {
     try {
       requireOrganizationAccess({ session, organizationId, action: 'READ' });
       const availableWorkloads = await database.db
@@ -44,14 +45,49 @@ export default async function BenchmarkPage({
             .orderBy(desc(recommendations.createdAt))
             .limit(1)
         ).at(0) ?? null;
-      return { available: availableWorkloads, latestRecommendation: latest };
+      const source =
+        sourceRecommendationId === undefined
+          ? null
+          : (
+              await database.db
+                .select()
+                .from(recommendations)
+                .where(
+                  and(
+                    eq(recommendations.organizationId, organizationId),
+                    eq(recommendations.id, sourceRecommendationId),
+                  ),
+                )
+                .limit(1)
+            ).at(0) ?? null;
+      return {
+        available: availableWorkloads,
+        latestRecommendation: latest,
+        sourceRecommendation: source,
+      };
     } finally {
       await database.close();
     }
   })();
 
+  const preferredWorkloadId =
+    selectedId ?? sourceRecommendation?.workloadId ?? undefined;
   const selected =
-    available.find((workload) => workload.id === selectedId) ?? available.at(0);
+    available.find((workload) => workload.id === preferredWorkloadId) ??
+    available.at(0);
+
+  const sourceEvidence = sourceRecommendation?.evidence ?? {};
+  const sourceTitle =
+    typeof sourceEvidence.title === 'string' ? sourceEvidence.title : null;
+  const knownCurrentConfiguration =
+    typeof sourceEvidence.currentConfigurationId === 'string'
+      ? sourceEvidence.currentConfigurationId
+      : '';
+  const knownCandidateConfiguration =
+    typeof sourceEvidence.candidateConfigurationId === 'string'
+      ? sourceEvidence.candidateConfigurationId
+      : '';
+  const benchmarkCurrency = sourceRecommendation?.currency ?? 'USD';
 
   return (
     <div className="workflow-page">
@@ -68,6 +104,19 @@ export default async function BenchmarkPage({
         </div>
         <span className="trust-chip">Paired test · evidence first</span>
       </header>
+
+      {sourceRecommendation !== null ? (
+        <section className="latest-test-card">
+          <div>
+            <p className="eyebrow">Testing this finding</p>
+            <h2>{sourceTitle ?? 'Evidence-backed optimization finding'}</h2>
+            <p>
+              Evalomics will keep this test linked to the evidence window that
+              produced the finding.
+            </p>
+          </div>
+        </section>
+      ) : null}
 
       {error !== undefined ? (
         <div className="blocking-note import-error-note" role="alert">
@@ -104,7 +153,11 @@ export default async function BenchmarkPage({
           <p>Define the production requirement before running a benchmark.</p>
           <Link
             className="primary-action"
-            href={`/o/${organizationId}/workloads`}
+            href={`/o/${organizationId}/workloads${
+              sourceRecommendationId === undefined
+                ? ''
+                : `?recommendationId=${encodeURIComponent(sourceRecommendationId)}`
+            }`}
           >
             Define constraints
           </Link>
@@ -128,6 +181,11 @@ export default async function BenchmarkPage({
             className="benchmark-form simplified-benchmark-form"
           >
             <input type="hidden" name="organizationId" value={organizationId} />
+            <input
+              type="hidden"
+              name="sourceRecommendationId"
+              value={sourceRecommendationId ?? ''}
+            />
             <label>
               <span>Workload</span>
               <select name="workloadId" defaultValue={selected.id}>
@@ -159,7 +217,8 @@ export default async function BenchmarkPage({
                   <input
                     name="currentConfigurationId"
                     required
-                    defaultValue="model-a"
+                    defaultValue={knownCurrentConfiguration}
+                    placeholder="Current config from your evidence"
                   />
                 </label>
                 <label>
@@ -167,7 +226,8 @@ export default async function BenchmarkPage({
                   <input
                     name="candidateConfigurationId"
                     required
-                    defaultValue="model-b"
+                    defaultValue={knownCandidateConfiguration}
+                    placeholder="Candidate configuration to test"
                   />
                 </label>
                 <label>
@@ -183,7 +243,7 @@ export default async function BenchmarkPage({
                   <input
                     name="currency"
                     required
-                    defaultValue="USD"
+                    defaultValue={benchmarkCurrency}
                     pattern="[A-Z]{3}"
                   />
                 </label>

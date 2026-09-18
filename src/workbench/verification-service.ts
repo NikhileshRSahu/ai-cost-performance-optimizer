@@ -37,6 +37,7 @@ const constraintSchema = z
 type AggregateWindow = Readonly<{
   cost: string;
   requests: string;
+  successes: string | null;
   currency: string;
   start: string;
   end: string;
@@ -77,6 +78,8 @@ function aggregateWindow(
 
   let totalCost = rational(0n);
   let requests = 0n;
+  let successes = 0n;
+  let successesComplete = true;
   let start = matching[0]?.intervalStart;
   let end = matching[0]?.intervalEnd;
   const configurations = new Set<string>();
@@ -85,6 +88,12 @@ function aggregateWindow(
     if (row.totalCost === null) throw new Error('WINDOW_COST_REQUIRED');
     totalCost = add(totalCost, parseDecimal(row.totalCost));
     requests += BigInt(row.requests);
+    const rowSuccesses = canonicalString(row.canonical, 'successes');
+    if (rowSuccesses === null) {
+      successesComplete = false;
+    } else {
+      successes += BigInt(rowSuccesses);
+    }
     if (
       start === undefined ||
       Date.parse(row.intervalStart) < Date.parse(start)
@@ -122,6 +131,7 @@ function aggregateWindow(
   return Object.freeze({
     cost: formatDecimal(totalCost, 12),
     requests: requests.toString(),
+    successes: successesComplete ? successes.toString() : null,
     currency,
     start: isoDatetime(start),
     end: isoDatetime(end),
@@ -323,6 +333,24 @@ export async function verifyCustomerChange(
   );
   const post = aggregateWindow(postRows, workload.name, organization.timezone);
 
+  const useSuccessfulOutcomes =
+    baseline.successes !== null &&
+    post.successes !== null &&
+    baseline.successes !== '0';
+  const denominator = useSuccessfulOutcomes
+    ? 'SUCCESSFUL_OUTCOMES'
+    : 'REQUESTS';
+  const unitDefinition = useSuccessfulOutcomes
+    ? 'successful-outcome-v1'
+    : 'request-v1';
+  const successDefinition = useSuccessfulOutcomes
+    ? 'csv-successes-v1'
+    : null;
+  const baselineUnits = useSuccessfulOutcomes
+    ? baseline.successes
+    : baseline.requests;
+  const postUnits = useSuccessfulOutcomes ? post.successes : post.requests;
+
   const result = verifyPostChange({
     implementation: {
       recommendationId: implementation.recommendationId,
@@ -341,12 +369,12 @@ export async function verifyCustomerChange(
       workload: workload.name,
       configurationVersion: baseline.configurationVersion,
       currency: baseline.currency,
-      denominator: 'REQUESTS',
+      denominator,
       attributionScope: workload.name,
-      unitDefinition: 'request-v1',
-      successDefinition: null,
+      unitDefinition,
+      successDefinition,
       cost: baseline.cost,
-      units: baseline.requests,
+      units: baselineUnits,
     },
     post: {
       start: post.start,
@@ -355,12 +383,12 @@ export async function verifyCustomerChange(
       workload: workload.name,
       configurationVersion: post.configurationVersion,
       currency: post.currency,
-      denominator: 'REQUESTS',
+      denominator,
       attributionScope: workload.name,
-      unitDefinition: 'request-v1',
-      successDefinition: null,
+      unitDefinition,
+      successDefinition,
       actualCost: post.cost,
-      units: post.requests,
+      units: postUnits,
       qualityEvidence: {
         measured: input.measuredQuality,
         requiredMinimum: constraints.requiredQuality,
@@ -419,6 +447,9 @@ export async function verifyCustomerChange(
         baselineImportId: baselineImport.id,
         postImportId: postImport.importId,
         qualitySourceRef: input.qualitySourceRef,
+        denominator,
+        unitDefinition,
+        successDefinition,
         attestations: input.attestations,
       },
     });

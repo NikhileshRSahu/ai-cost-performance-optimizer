@@ -36,6 +36,10 @@ function optionalNumber(
 
 export async function saveWorkload(formData: FormData): Promise<never> {
   const organizationId = textEntry(formData, 'organizationId');
+  const sourceRecommendationId = textEntry(
+    formData,
+    'sourceRecommendationId',
+  ).trim();
   const session = await resolveRuntimeSession();
   const databaseUrl = process.env.DATABASE_URL;
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
@@ -60,7 +64,11 @@ export async function saveWorkload(formData: FormData): Promise<never> {
     await database.close();
   }
 
+  const recommendationQuery =
+    sourceRecommendationId.length === 0
+      ? ''
+      : `&recommendationId=${encodeURIComponent(sourceRecommendationId)}`;
   redirect(
-    `/o/${organizationId}/benchmark?workloadId=${encodeURIComponent(workloadId)}`,
+    `/o/${organizationId}/benchmark?workloadId=${encodeURIComponent(workloadId)}${recommendationQuery}`,
   );
 }

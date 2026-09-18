@@ -42,6 +42,8 @@ export async function submitBenchmark(formData: FormData): Promise<never> {
       evaluatorVersion: textEntry(formData, 'evaluatorVersion'),
       currency: textEntry(formData, 'currency', 'USD'),
       isDemo: formData.get('isDemo') === 'true',
+      sourceRecommendationId:
+        textEntry(formData, 'sourceRecommendationId').trim() || null,
     });
     recommendationId = result.recommendationId;
   } catch (error) {
