@@ -217,7 +217,6 @@ export async function disconnectProvider(
   });
 }
 
-
 export async function syncConnectedProvider(
   input: Readonly<{
     db: PersistenceDatabase;

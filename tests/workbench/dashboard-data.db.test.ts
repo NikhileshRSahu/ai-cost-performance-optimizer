@@ -116,8 +116,7 @@ describe('dashboard analysis context selection', () => {
     expect(explicitDemo.observedSpend).not.toBeNull();
     expect(
       explicitDemo.recommendations?.every(
-        (recommendation) =>
-          recommendation.recommendationId.length > 0,
+        (recommendation) => recommendation.recommendationId.length > 0,
       ),
     ).toBe(true);
 

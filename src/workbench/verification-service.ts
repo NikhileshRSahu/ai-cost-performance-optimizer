@@ -360,9 +360,7 @@ export async function verifyCustomerChange(
   const unitDefinition = useSuccessfulOutcomes
     ? 'successful-outcome-v1'
     : 'request-v1';
-  const successDefinition = useSuccessfulOutcomes
-    ? 'csv-successes-v1'
-    : null;
+  const successDefinition = useSuccessfulOutcomes ? 'csv-successes-v1' : null;
   const baselineUnits = useSuccessfulOutcomes
     ? baseline.successes
     : baseline.requests;

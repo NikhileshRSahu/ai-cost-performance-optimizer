@@ -7,7 +7,9 @@ import {
 
 describe('provider credential encryption', () => {
   it('uses a configured 32-byte base64url key when present', () => {
-    const configured = Buffer.from(new Uint8Array(32).fill(7)).toString('base64url');
+    const configured = Buffer.from(new Uint8Array(32).fill(7)).toString(
+      'base64url',
+    );
     expect(Array.from(providerCredentialKeyFromEnv(configured))).toEqual(
       Array.from(new Uint8Array(32).fill(7)),
     );

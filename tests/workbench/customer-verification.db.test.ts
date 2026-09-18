@@ -90,9 +90,7 @@ async function prepareTestedRecommendation() {
     savingState: 'TESTED',
   });
   const testedRecommendation = (
-    await database.db
-      .select()
-      .from(recommendations)
+    await database.db.select().from(recommendations)
   ).find((row) => row.id === benchmark.recommendationId);
   expect(testedRecommendation?.evidence).toMatchObject({
     sourceRecommendationId,
