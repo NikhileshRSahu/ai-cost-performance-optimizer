@@ -65,7 +65,7 @@ export default function ToolsPage() {
             className="group min-h-52 bg-[linear-gradient(145deg,rgba(15,23,33,.96),rgba(8,12,17,.98))] p-6 no-underline transition hover:bg-white/[0.035] sm:p-7"
           >
             <div className="flex items-start justify-between gap-4">
-              <div className="grid size-10 place-items-center rounded-xl border border-white/[0.08] bg-white/[0.03] text-white/42 transition group-hover:border-slate-300 group-hover:text-white">
+              <div className="grid size-10 place-items-center rounded-xl border border-white/[0.08] bg-white/[0.03] text-white/42 transition group-hover:border-cyan-300/20 group-hover:text-white">
                 <Icon className="size-4.5" />
               </div>
               <span className="font-mono text-[10px] font-semibold text-white/42">
