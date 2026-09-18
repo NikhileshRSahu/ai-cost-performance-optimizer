@@ -145,10 +145,10 @@ export async function analyzeImportedUsage(
     typeof concentratedModel === 'string' && concentratedModel.length > 0
       ? concentratedModel
       : models.length === 1
-        ? models[0] ?? null
+        ? (models[0] ?? null)
         : null;
   const inferredWorkload =
-    workloadNames.length === 1 ? workloadNames[0] ?? null : null;
+    workloadNames.length === 1 ? (workloadNames[0] ?? null) : null;
 
   const persisted: PersistedUsageOpportunity[] = [];
   const evidenceRepository = createEvidenceRepository(input.db);

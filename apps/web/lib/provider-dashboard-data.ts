@@ -100,9 +100,7 @@ function recommendationView(
 
 function costInMajorUnits(cost: ProviderCostEvidence) {
   const amount = parseDecimal(cost.amount);
-  return cost.amountUnit === 'LOWEST'
-    ? divide(amount, rational(100n))
-    : amount;
+  return cost.amountUnit === 'LOWEST' ? divide(amount, rational(100n)) : amount;
 }
 
 export async function loadLatestProviderDashboardEvidence(
@@ -148,9 +146,12 @@ export async function loadLatestProviderDashboardEvidence(
         item.lastSyncStatus === 'READY' &&
         item.lastSyncAt !== null,
     );
-    if (connection === undefined || connection.lastSyncAt === null) return false;
+    if (connection === undefined || connection.lastSyncAt === null)
+      return false;
 
-    return Date.parse(connection.lastSyncAt) >= Date.parse(candidate.receivedAt);
+    return (
+      Date.parse(connection.lastSyncAt) >= Date.parse(candidate.receivedAt)
+    );
   });
 
   if (
@@ -201,9 +202,7 @@ export async function loadLatestProviderDashboardEvidence(
   }
 
   const modelNames = [
-    ...new Set(
-      usage.flatMap((row) => (row.model === null ? [] : [row.model])),
-    ),
+    ...new Set(usage.flatMap((row) => (row.model === null ? [] : [row.model]))),
   ];
   const totalInputTokens = usage.reduce(
     (sum, row) => sum + BigInt(row.inputTokens),
@@ -263,7 +262,8 @@ export async function loadLatestProviderDashboardEvidence(
   const currentRows = recommendationRows
     .filter(
       (row) =>
-        evidenceString(row.evidence, 'sourceProviderSnapshotId') === snapshot.id,
+        evidenceString(row.evidence, 'sourceProviderSnapshotId') ===
+        snapshot.id,
     )
     .sort(
       (left, right) =>
