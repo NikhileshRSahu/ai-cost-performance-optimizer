@@ -14,6 +14,10 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
     return <div className="min-h-screen bg-[#070a0f]">{children}</div>;
   }
 
+  if (isHome) {
+    return <div className="min-h-screen bg-[#060708]">{children}</div>;
+  }
+
   const publicLinks = [
     { href: '/demo', label: 'Demo' },
     { href: '/pricing', label: 'Pricing' },
