@@ -12,12 +12,30 @@ export type DatabaseHandle = Readonly<{
   close(): Promise<void>;
 }>;
 
+function normalizePostgresSslMode(connectionString: string): string {
+  try {
+    const url = new URL(connectionString);
+    const sslMode = url.searchParams.get('sslmode');
+
+    if (sslMode === 'prefer' || sslMode === 'require' || sslMode === 'verify-ca') {
+      url.searchParams.set('sslmode', 'verify-full');
+      return url.toString();
+    }
+  } catch {
+    // Let pg surface the original connection-string error with its native message.
+  }
+
+  return connectionString;
+}
+
 export function createDatabase(connectionString: string): DatabaseHandle {
   if (connectionString.trim().length === 0) {
     throw new Error('DATABASE_URL_REQUIRED');
   }
 
-  const pool = new Pool({ connectionString });
+  const pool = new Pool({
+    connectionString: normalizePostgresSslMode(connectionString),
+  });
   const db = drizzle(pool, { schema });
 
   return Object.freeze({
