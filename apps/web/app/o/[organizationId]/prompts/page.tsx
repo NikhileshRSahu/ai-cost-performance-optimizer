@@ -31,7 +31,7 @@ export default function PromptOptimizerPage() {
   return (
     <div className="space-y-7">
       <section>
-        <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-violet-300">
+        <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-300">
           Prompt cost engineering
         </p>
         <h1 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-slate-100 sm:text-3xl">
@@ -47,11 +47,11 @@ export default function PromptOptimizerPage() {
         {tips.map(({ icon: Icon, category, title, before, after, note }) => (
           <article
             key={title}
-            className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5"
+            className="rounded-xl border border-white/[0.07] bg-[linear-gradient(145deg,rgba(15,23,33,.96),rgba(8,12,17,.98))] p-5"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <span className="inline-flex items-center gap-2 rounded-full border border-violet-300/15 bg-violet-400/[0.08] px-2.5 py-1 text-[10px] font-semibold text-violet-200">
+                <span className="inline-flex items-center gap-2 rounded-full border border-cyan-300/15 bg-cyan-300/[0.06] px-2.5 py-1 text-[10px] font-semibold text-cyan-100">
                   <Icon className="size-3.5" />
                   {category}
                 </span>
@@ -59,7 +59,7 @@ export default function PromptOptimizerPage() {
                   {title}
                 </h2>
               </div>
-              <Sparkles className="size-4 text-violet-300/60" />
+              <Sparkles className="size-4 text-cyan-300/60" />
             </div>
 
             <div className="mt-5 grid gap-3">
@@ -86,7 +86,7 @@ export default function PromptOptimizerPage() {
       </section>
 
       <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-4 text-xs leading-5 text-slate-500">
-        <BookOpen className="mr-2 inline size-3.5 text-violet-300/70" />
+        <BookOpen className="mr-2 inline size-3.5 text-cyan-300/70" />
         Personalized prompt optimization requires sanitized prompt/history
         evidence. Evalomics will not pretend aggregate usage can reveal prompt
         structure.
