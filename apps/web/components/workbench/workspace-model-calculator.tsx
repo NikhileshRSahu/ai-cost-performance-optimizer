@@ -1,7 +1,7 @@
 'use client';
 
 import { ArrowDownRight, ArrowUpRight, Calculator, RefreshCw } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 
 function numberValue(value: string): number {
   const parsed = Number(value);
@@ -100,7 +100,7 @@ export function WorkspaceModelCalculator() {
                 step="1"
                 value={String(value)}
                 onChange={(event) =>
-                  (setter as React.Dispatch<React.SetStateAction<string>>)(
+                  (setter as Dispatch<SetStateAction<string>>)(
                     event.target.value,
                   )
                 }
