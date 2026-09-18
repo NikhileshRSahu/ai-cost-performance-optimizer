@@ -1,14 +1,13 @@
 import Link from 'next/link';
 import { ArrowRight, ExternalLink } from 'lucide-react';
 import { WorkspaceModelCalculator } from '../../../../components/workbench/workspace-model-calculator';
+import { EvidenceBadge } from '../../../../components/ui/evidence-badge';
 
 export default function ModelCalculatorPage() {
   return (
     <div className="space-y-7">
       <section>
-        <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-300">
-          What-if planning
-        </p>
+        <EvidenceBadge state="POTENTIAL" label="What-if planning" />
         <h1 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-slate-100 sm:text-3xl">
           Model Calculator
         </h1>
