@@ -124,7 +124,14 @@ function RequestFlow() {
         </div>
         <div className="eval-template-flow-lines" aria-hidden="true">
           {Array.from({ length: 7 }).map((_, index) => (
-            <i key={index} style={{ ['--i' as string]: index } as React.CSSProperties} />
+            <i
+              key={index}
+              style={{
+                top: `${10 + index * 11}%`,
+                transform: `rotate(${-8 + index * 2.1}deg)`,
+                animationDelay: `${index * -0.18}s`,
+              }}
+            />
           ))}
         </div>
         <div className="eval-template-flow-output">
@@ -272,7 +279,14 @@ export function LaunchTemplateEvalomics() {
                 <b>$87.42 potential</b>
               </div>
               {Array.from({ length: 18 }).map((_, index) => (
-                <i key={index} style={{ ['--n' as string]: index } as React.CSSProperties} />
+                <i
+                  key={index}
+                  style={{
+                    left: `${8 + (index % 6) * 13}%`,
+                    top: `${18 + (index % 4) * 17}%`,
+                    animationDelay: `${index * -0.11}s`,
+                  }}
+                />
               ))}
             </div>
           </article>
