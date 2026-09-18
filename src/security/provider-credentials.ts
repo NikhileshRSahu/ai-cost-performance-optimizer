@@ -1,9 +1,15 @@
-import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto';
+import {
+  createCipheriv,
+  createDecipheriv,
+  hkdfSync,
+  randomBytes,
+} from 'node:crypto';
 
 const VERSION = 'v1';
 const IV_BYTES = 12;
 const KEY_BYTES = 32;
 const AUTH_TAG_BYTES = 16;
+const FALLBACK_INFO = 'evalomics/provider-credentials/v1';
 
 function requireKey(key: Uint8Array): Buffer {
   if (key.byteLength !== KEY_BYTES) {
@@ -26,16 +32,30 @@ function decode(value: string): Buffer {
 
 export function providerCredentialKeyFromEnv(
   value: string | undefined,
+  fallbackSecret?: string | undefined,
 ): Uint8Array {
-  if (value === undefined || value.trim().length === 0) {
+  const configured = value?.trim();
+  if (configured !== undefined && configured.length > 0) {
+    const decoded = Buffer.from(configured, 'base64url');
+    if (decoded.byteLength !== KEY_BYTES) {
+      throw new Error('PROVIDER_CREDENTIAL_KEY_INVALID');
+    }
+    return new Uint8Array(decoded);
+  }
+
+  const fallback = fallbackSecret?.trim();
+  if (fallback === undefined || fallback.length < 32) {
     throw new Error('PROVIDER_CREDENTIAL_KEY_REQUIRED');
   }
 
-  const decoded = Buffer.from(value, 'base64url');
-  if (decoded.byteLength !== KEY_BYTES) {
-    throw new Error('PROVIDER_CREDENTIAL_KEY_INVALID');
-  }
-  return new Uint8Array(decoded);
+  const derived = hkdfSync(
+    'sha256',
+    Buffer.from(fallback, 'utf8'),
+    Buffer.alloc(0),
+    Buffer.from(FALLBACK_INFO, 'utf8'),
+    KEY_BYTES,
+  );
+  return new Uint8Array(derived);
 }
 
 export function encryptProviderCredential(

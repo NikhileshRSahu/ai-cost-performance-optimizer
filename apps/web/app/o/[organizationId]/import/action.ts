@@ -77,6 +77,7 @@ export async function connectProviderAccount(
       provider,
       adminKey,
       encryptionKeyEnv: process.env.PROVIDER_CREDENTIAL_ENCRYPTION_KEY,
+      encryptionFallbackSecret: process.env.BETTER_AUTH_SECRET,
     });
     await completeOnboarding(database, organizationId);
   } catch (error) {

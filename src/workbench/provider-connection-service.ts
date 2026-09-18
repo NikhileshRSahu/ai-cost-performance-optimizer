@@ -60,6 +60,7 @@ export async function connectAndValidateProvider(
     provider: ProviderConnectionProvider;
     adminKey: string;
     encryptionKeyEnv: string | undefined;
+    encryptionFallbackSecret: string | undefined;
     now?: Date;
     openAIFetcher?: OpenAIAdminFetch;
     anthropicFetcher?: AnthropicAdminFetch;
@@ -69,7 +70,10 @@ export async function connectAndValidateProvider(
     throw new Error('PROVIDER_CREDENTIAL_REQUIRED');
   }
 
-  const encryptionKey = providerCredentialKeyFromEnv(input.encryptionKeyEnv);
+  const encryptionKey = providerCredentialKeyFromEnv(
+    input.encryptionKeyEnv,
+    input.encryptionFallbackSecret,
+  );
   const now = input.now ?? new Date();
   const endMs = now.getTime();
   if (!Number.isFinite(endMs)) {
