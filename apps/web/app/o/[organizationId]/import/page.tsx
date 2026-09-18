@@ -283,7 +283,7 @@ export default async function ImportPage({
                           className="min-h-12 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-950"
                           type="submit"
                         >
-                          Connect and analyze
+                          Analyze my AI usage
                         </button>
                       </form>
                     </details>
