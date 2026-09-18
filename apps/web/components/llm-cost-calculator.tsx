@@ -99,7 +99,7 @@ function convert(value: Rational, fxRate: Rational): Rational {
 }
 
 const fieldClass =
-  'min-h-12 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm font-semibold text-slate-950 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100';
+  'min-h-12 w-full rounded-xl border border-white/[0.08] bg-[#091018] px-3.5 text-sm font-semibold text-white/82 outline-none transition focus:border-cyan-300/30 focus:ring-4 focus:ring-cyan-300/[0.06]';
 
 export function LlmCostCalculator() {
   const [requests, setRequests] = useState('10000');
@@ -164,27 +164,27 @@ export function LlmCostCalculator() {
   return (
     <section className="grid gap-5 lg:grid-cols-[.94fr_1.06fr] lg:items-start">
       <form
-        className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_24px_70px_rgba(15,23,42,.055)] sm:p-6"
+        className="rounded-[24px] border border-white/[0.08] bg-[linear-gradient(145deg,rgba(15,23,33,.96),rgba(8,12,17,.98))] p-5 shadow-[0_24px_70px_rgba(15,23,42,.055)] sm:p-6"
         onSubmit={(event) => {
           event.preventDefault();
         }}
       >
-        <div className="mb-6 flex items-center justify-between gap-4 border-b border-slate-100 pb-5">
+        <div className="mb-6 flex items-center justify-between gap-4 border-b border-white/[0.06] pb-5">
           <div>
-            <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-700">
+            <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-300/75">
               Workload inputs
             </p>
-            <h2 className="mt-1 text-lg font-semibold tracking-[-0.025em] text-slate-950">
+            <h2 className="mt-1 text-lg font-semibold tracking-[-0.025em] text-white">
               Use the rates you actually pay
             </h2>
           </div>
-          <div className="grid size-10 place-items-center rounded-xl bg-slate-950 text-white">
+          <div className="grid size-10 place-items-center rounded-xl bg-white/[0.05] text-cyan-300">
             <Calculator className="size-4" />
           </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <label className="grid gap-2 text-sm font-semibold text-slate-800 sm:col-span-2">
+          <label className="grid gap-2 text-sm font-semibold text-white/72 sm:col-span-2">
             <span>Provider/model pricing preset</span>
             <select
               className={fieldClass}
@@ -209,14 +209,14 @@ export function LlmCostCalculator() {
                 </option>
               ))}
             </select>
-            <small className="text-xs font-normal leading-5 text-slate-500">
+            <small className="text-xs font-normal leading-5 text-white/34">
               {selectedPreset === null
                 ? 'Manual rates are authoritative for your own contract.'
                 : `${selectedPreset.provider} source checked ${selectedPreset.asOf}. ${selectedPreset.note}`}
             </small>
             {selectedPreset !== null ? (
               <a
-                className="w-fit text-xs font-semibold text-blue-700 underline underline-offset-4"
+                className="w-fit text-xs font-semibold text-cyan-300/75 underline underline-offset-4"
                 href={selectedPreset.sourceUrl}
                 target="_blank"
                 rel="noreferrer"
@@ -226,7 +226,7 @@ export function LlmCostCalculator() {
             ) : null}
           </label>
 
-          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+          <label className="grid gap-2 text-sm font-semibold text-white/72">
             <span>Requests per month</span>
             <input
               className={fieldClass}
@@ -239,13 +239,13 @@ export function LlmCostCalculator() {
             />
             <small
               id="requests-help"
-              className="text-xs font-normal text-slate-500"
+              className="text-xs font-normal text-white/34"
             >
               Whole requests, no commas.
             </small>
           </label>
 
-          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+          <label className="grid gap-2 text-sm font-semibold text-white/72">
             <span>Average input tokens / request</span>
             <input
               className={fieldClass}
@@ -257,7 +257,7 @@ export function LlmCostCalculator() {
             />
           </label>
 
-          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+          <label className="grid gap-2 text-sm font-semibold text-white/72">
             <span>Average output tokens / request</span>
             <input
               className={fieldClass}
@@ -269,7 +269,7 @@ export function LlmCostCalculator() {
             />
           </label>
 
-          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+          <label className="grid gap-2 text-sm font-semibold text-white/72">
             <span>Input price / 1M tokens</span>
             <input
               className={fieldClass}
@@ -282,7 +282,7 @@ export function LlmCostCalculator() {
             />
           </label>
 
-          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+          <label className="grid gap-2 text-sm font-semibold text-white/72">
             <span>Output price / 1M tokens</span>
             <input
               className={fieldClass}
@@ -295,7 +295,7 @@ export function LlmCostCalculator() {
             />
           </label>
 
-          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+          <label className="grid gap-2 text-sm font-semibold text-white/72">
             <span>Currency of entered rates</span>
             <select
               className={fieldClass}
@@ -313,7 +313,7 @@ export function LlmCostCalculator() {
             </select>
           </label>
 
-          <label className="grid gap-2 text-sm font-semibold text-slate-800 sm:col-span-2">
+          <label className="grid gap-2 text-sm font-semibold text-white/72 sm:col-span-2">
             <span>Display results in</span>
             <select
               className={fieldClass}
@@ -328,7 +328,7 @@ export function LlmCostCalculator() {
                 </option>
               ))}
             </select>
-            <small className="text-xs font-normal leading-5 text-slate-500">
+            <small className="text-xs font-normal leading-5 text-white/34">
               {rateCurrency === displayCurrency
                 ? 'No FX conversion is needed.'
                 : fx.status === 'ready'
