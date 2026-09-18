@@ -51,7 +51,7 @@ export default async function VerificationPage({
         </p>
       </header>
 
-      <EvidenceProgression current={verified ? 'VERIFIED' : strongest?.stateLabel === 'Tested' ? 'TESTED' : 'POTENTIAL'} />
+      <EvidenceProgression current={verified ? 'VERIFIED' : strongest?.state === 'TESTED' ? 'TESTED' : 'POTENTIAL'} />
 
       <section className="grid gap-3 md:grid-cols-3">
         <EvalSurface tone="raised" className="p-5">
@@ -68,7 +68,7 @@ export default async function VerificationPage({
 
         <EvalSurface tone="amber" className="p-5">
           <EvidenceBadge
-            state={strongest?.stateLabel === 'Verified' ? 'VERIFIED' : strongest?.stateLabel === 'Tested' ? 'TESTED' : 'POTENTIAL'}
+            state={strongest?.state === 'VERIFIED' ? 'VERIFIED' : strongest?.state === 'TESTED' ? 'TESTED' : 'POTENTIAL'}
             label={strongest?.stateLabel ?? 'Potential'}
           />
           <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.13em] text-white/30">
