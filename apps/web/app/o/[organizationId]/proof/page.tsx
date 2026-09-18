@@ -36,11 +36,20 @@ export default async function VerificationPage({
 
   const verified = pack.verifiedNetSavings !== null;
   const strongest = pack.strongestFinding;
+  const proofState =
+    verified
+      ? 'VERIFIED'
+      : strongest?.state === 'TESTED'
+        ? 'TESTED'
+        : 'POTENTIAL';
 
   return (
     <div className="grid gap-6">
       <header>
-        <EvidenceBadge state={verified ? 'VERIFIED' : 'TESTED'} label={verified ? 'Production reconciled' : 'Verification incomplete'} />
+        <EvidenceBadge
+          state={proofState}
+          label={verified ? 'Production reconciled' : 'Verification incomplete'}
+        />
         <h1 className="mt-4 max-w-3xl text-[clamp(2.4rem,5vw,4.8rem)] font-semibold leading-[.94] tracking-[-0.055em] text-white">
           What has actually been proven?
         </h1>
@@ -51,7 +60,7 @@ export default async function VerificationPage({
         </p>
       </header>
 
-      <EvidenceProgression current={verified ? 'VERIFIED' : strongest?.state === 'TESTED' ? 'TESTED' : 'POTENTIAL'} />
+      <EvidenceProgression current={proofState} />
 
       <section className="grid gap-3 md:grid-cols-3">
         <EvalSurface tone="raised" className="p-5">
