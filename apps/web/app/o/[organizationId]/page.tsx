@@ -55,7 +55,7 @@ function dashboardSelection(
 function moneyLabel(
   value: Readonly<{ amount: string; currency: string }> | null,
 ): string {
-  return value === null ? 'Unavailable' : \`\${value.currency} \${value.amount}\`;
+  return value === null ? 'Unavailable' : `${value.currency} ${value.amount}`;
 }
 
 function verifiedMoney(
@@ -66,10 +66,10 @@ function verifiedMoney(
   }> | null,
 ): string {
   if (value === null) return 'Not verified';
-  return \`\${value.currency} \${formatDecimal(
+  return `${value.currency} ${formatDecimal(
     rational(BigInt(value.exactNumerator), BigInt(value.exactDenominator)),
     2,
-  )}\`;
+  )}`;
 }
 
 export default async function CostDashboardPage({
@@ -107,7 +107,7 @@ export default async function CostDashboardPage({
   const modeled =
     view.nonOverlappingModeledTotal === null
       ? 'Not measured'
-      : \`\${view.nonOverlappingModeledTotal.currency} \${view.nonOverlappingModeledTotal.base}\`;
+      : `${view.nonOverlappingModeledTotal.currency} ${view.nonOverlappingModeledTotal.base}`;
 
   if (view.dataQuality === 'NO_DATA') {
     return (
@@ -127,7 +127,7 @@ export default async function CostDashboardPage({
 
         <section className="grid gap-4 md:grid-cols-2">
           <Link
-            href={\`/o/\${organizationId}/import?mode=connect\`}
+            href={`/o/${organizationId}/import?mode=connect`}
             className="group min-h-60 rounded-xl border border-white/[0.07] bg-[#111a29] p-6 no-underline transition hover:-translate-y-0.5 hover:border-sky-300/20"
           >
             <Database className="size-5 text-sky-300" />
@@ -142,7 +142,7 @@ export default async function CostDashboardPage({
             </span>
           </Link>
           <Link
-            href={\`/o/\${organizationId}/import?mode=csv\`}
+            href={`/o/${organizationId}/import?mode=csv`}
             className="group min-h-60 rounded-xl border border-white/[0.07] bg-[#111a29] p-6 no-underline transition hover:-translate-y-0.5 hover:border-emerald-300/20"
           >
             <Gauge className="size-5 text-emerald-300" />
@@ -202,7 +202,7 @@ export default async function CostDashboardPage({
             usage or cost records were returned for this period.
           </p>
           <Link
-            href={\`/o/\${organizationId}/import\`}
+            href={`/o/${organizationId}/import`}
             className="mt-5 inline-flex min-h-10 items-center rounded-lg bg-sky-400 px-4 py-2 text-xs font-semibold text-[#08101c] no-underline"
           >
             Check source
@@ -244,7 +244,7 @@ export default async function CostDashboardPage({
                 <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
                   {label}
                 </p>
-                <p className={\`mt-4 font-mono text-2xl \${tone}\`}>{value}</p>
+                <p className={`mt-4 font-mono text-2xl ${tone}`}>{value}</p>
                 <p className="mt-2 text-[10px] text-slate-600">{detail}</p>
               </article>
             ))}
@@ -281,7 +281,7 @@ export default async function CostDashboardPage({
               )}
 
               <Link
-                href={\`/o/\${organizationId}/recommendations\`}
+                href={`/o/${organizationId}/recommendations`}
                 className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-sky-300 no-underline"
               >
                 View all recommendations <ArrowRight className="size-3.5" />
@@ -330,7 +330,7 @@ export default async function CostDashboardPage({
                 ))}
               </div>
               <Link
-                href={\`/o/\${organizationId}/proof\`}
+                href={`/o/${organizationId}/proof`}
                 className="mt-5 inline-flex items-center gap-2 text-xs font-semibold text-violet-300 no-underline"
               >
                 Open verified savings <ArrowRight className="size-3.5" />
@@ -375,14 +375,14 @@ export default async function CostDashboardPage({
 
             <div className="mt-5 flex flex-wrap gap-4">
               <Link
-                href={\`/o/\${organizationId}/import\`}
+                href={`/o/${organizationId}/import`}
                 className="inline-flex items-center gap-2 text-xs font-semibold text-sky-300 no-underline"
               >
                 <Database className="size-3.5" />
                 Usage & Import
               </Link>
               <Link
-                href={\`/o/\${organizationId}/prompts\`}
+                href={`/o/${organizationId}/prompts`}
                 className="inline-flex items-center gap-2 text-xs font-semibold text-violet-300 no-underline"
               >
                 <Sparkles className="size-3.5" />
