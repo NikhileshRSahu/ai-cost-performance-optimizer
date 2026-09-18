@@ -1,28 +1,8 @@
 import Link from 'next/link';
-import { ArrowRight, Calculator, Coins, DatabaseZap } from 'lucide-react';
+import { ArrowRight, ExternalLink } from 'lucide-react';
+import { WorkspaceModelCalculator } from '../../../../components/workbench/workspace-model-calculator';
 
 export default function ModelCalculatorPage() {
-  const tools = [
-    {
-      icon: Calculator,
-      title: 'LLM Cost Calculator',
-      body: 'Compare model input/output pricing for a workload before you switch.',
-      href: '/tools/llm-cost-calculator',
-    },
-    {
-      icon: DatabaseZap,
-      title: 'Prompt Cache Savings',
-      body: 'Estimate the upside from eligible repeated input without calling it verified.',
-      href: '/tools/prompt-cache-savings',
-    },
-    {
-      icon: Coins,
-      title: 'Cost per outcome',
-      body: 'Model the cost of successful outcomes rather than raw request volume alone.',
-      href: '/tools/cost-per-outcome',
-    },
-  ] as const;
-
   return (
     <div className="space-y-7">
       <section>
@@ -30,35 +10,41 @@ export default function ModelCalculatorPage() {
           What-if planning
         </p>
         <h1 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-slate-100 sm:text-3xl">
-          Model the next cost decision.
+          Model Calculator
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-          Use the free calculators for planning. Results are scenarios, not
-          verified production savings.
+          Compare the inference economics of your current and candidate model
+          before you run a quality benchmark.
         </p>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3">
-        {tools.map(({ icon: Icon, title, body, href }) => (
-          <article
-            key={title}
-            className="flex min-h-64 flex-col rounded-xl border border-white/[0.07] bg-[#111a29] p-5"
-          >
-            <span className="grid size-10 place-items-center rounded-xl border border-amber-300/15 bg-amber-400/[0.06]">
-              <Icon className="size-4 text-amber-200" />
-            </span>
-            <h2 className="mt-6 text-base font-medium text-slate-100">
-              {title}
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-slate-500">{body}</p>
+      <WorkspaceModelCalculator />
+
+      <section className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-5">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="m-0 text-xs font-medium text-slate-300">
+              Need a more specific planning tool?
+            </p>
+            <p className="m-0 mt-1 text-[11px] text-slate-500">
+              Cache savings and cost-per-outcome calculators remain available.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
             <Link
-              href={href}
-              className="mt-auto inline-flex items-center gap-2 pt-6 text-xs font-semibold text-sky-300 no-underline"
+              href="/tools/prompt-cache-savings"
+              className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.025] px-3.5 py-2 text-xs font-semibold text-slate-300 no-underline transition hover:text-white"
             >
-              Open calculator <ArrowRight className="size-3.5" />
+              Cache calculator <ExternalLink className="size-3.5" />
             </Link>
-          </article>
-        ))}
+            <Link
+              href="/tools/cost-per-outcome"
+              className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.025] px-3.5 py-2 text-xs font-semibold text-slate-300 no-underline transition hover:text-white"
+            >
+              Cost per outcome <ArrowRight className="size-3.5" />
+            </Link>
+          </div>
+        </div>
       </section>
     </div>
   );
