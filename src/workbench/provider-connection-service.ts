@@ -129,25 +129,6 @@ export async function connectAndValidateProvider(
     });
   }
 
-  const persisted = await persistProviderEvidenceSnapshot({
-    db: input.db,
-    session: input.session,
-    organizationId: input.organizationId,
-    source,
-    intervalStart,
-    intervalEnd: syncedAt,
-    receivedAt: syncedAt,
-    evidence,
-  });
-
-  const analysis = await analyzeProviderEvidence({
-    db: input.db,
-    session: input.session,
-    organizationId: input.organizationId,
-    snapshotId: persisted.snapshotId,
-    evidence,
-  });
-
   const credentialCiphertext = encryptProviderCredential(
     input.adminKey,
     encryptionKey,
@@ -160,23 +141,61 @@ export async function connectAndValidateProvider(
     credentialCiphertext,
     connectedAt: syncedAt,
   });
-  await markProviderConnectionSync({
-    db: input.db,
-    session: input.session,
-    organizationId: input.organizationId,
-    provider: input.provider,
-    syncedAt,
-    status: 'READY',
-  });
 
-  return Object.freeze({
-    provider: input.provider,
-    syncedAt,
-    usageRows: evidence.usage.length,
-    costRows: evidence.costs.length,
-    snapshotId: persisted.snapshotId,
-    recommendationId: analysis.recommendationId,
-  });
+  try {
+    const persisted = await persistProviderEvidenceSnapshot({
+      db: input.db,
+      session: input.session,
+      organizationId: input.organizationId,
+      source,
+      intervalStart,
+      intervalEnd: syncedAt,
+      receivedAt: syncedAt,
+      evidence,
+    });
+
+    const analysis = await analyzeProviderEvidence({
+      db: input.db,
+      session: input.session,
+      organizationId: input.organizationId,
+      snapshotId: persisted.snapshotId,
+      evidence,
+    });
+
+    await markProviderConnectionSync({
+      db: input.db,
+      session: input.session,
+      organizationId: input.organizationId,
+      provider: input.provider,
+      syncedAt,
+      status: 'READY',
+    });
+
+    return Object.freeze({
+      provider: input.provider,
+      syncedAt,
+      usageRows: evidence.usage.length,
+      costRows: evidence.costs.length,
+      snapshotId: persisted.snapshotId,
+      recommendationId: analysis.recommendationId,
+    });
+  } catch (error) {
+    try {
+      await markProviderConnectionSync({
+        db: input.db,
+        session: input.session,
+        organizationId: input.organizationId,
+        provider: input.provider,
+        syncedAt,
+        status: 'FAILED',
+        safeErrorCategory: providerConnectionSafeError(error),
+      });
+    } catch {
+      // Preserve the original sync error. A later status read must not turn an
+      // incomplete snapshot into READY evidence.
+    }
+    throw error;
+  }
 }
 
 export async function disconnectProvider(

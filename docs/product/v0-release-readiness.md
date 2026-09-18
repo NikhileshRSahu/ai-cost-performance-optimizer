@@ -8,13 +8,15 @@ A customer can start with a usage CSV, understand where AI spend or work is inef
 
 The product must never present synthetic, projected, benchmarked, or inferred savings as verified customer savings.
 
-## Chosen launch mode: CSV-first pilot
+## Chosen launch mode: CSV-first beta + limited provider Admin-API beta
 
-The current launch mode is the **Evalomics CSV-first pilot / public beta** defined in `docs/product/csv-pilot-release-profile.md`.
+The primary launch path remains the **Evalomics CSV-first pilot / public beta** defined in `docs/product/csv-pilot-release-profile.md`.
 
-For this launch mode, workspace/provider connectors, provider-admin secret collection, cross-tool knowledge duplication, semantic embedding clustering, and automatic production mutation are explicitly excluded. Their unchecked gates remain mandatory before those capabilities can be advertised or enabled.
+A limited OpenAI/Anthropic **provider Admin-API beta** is also enabled for OWNER users. It reads only provider usage/cost reporting endpoints, does not request prompts or responses, and must preserve the same evidence-state boundaries as CSV. Provider evidence has lower capability when request-level quality, retries, latency, or outcome fields are unavailable.
 
-The CSV-first software surface includes public trust pages for Privacy, Security, Terms, Methodology, and Research. The legal pages are intentionally labeled as prelaunch operational drafts and do **not** close the external legal-review gate.
+Workspace/content connectors, cross-tool knowledge duplication, semantic embedding clustering, automatic production mutation, and general-availability connector claims remain excluded.
+
+The software surface includes public trust pages for Privacy, Security, Terms, Methodology, and Research. The legal pages are intentionally labeled as prelaunch operational drafts and do **not** close the external legal-review gate.
 
 ## Ship gates
 
@@ -26,7 +28,8 @@ The CSV-first software surface includes public trust pages for Privacy, Security
 - [x] Same-currency financial aggregation without silent FX conversion.
 - [x] Progressive evidence-depth contract.
 - [x] Sanitized AI-history normalized import contract, parser, and non-persistent upload/analyze UI.
-- [ ] Authorized workspace connector storage and revocation model. **Excluded from CSV-first pilot; required before connector launch.**
+- [x] OpenAI/Anthropic provider-admin connection storage, encrypted credential handling, resync, and revocation for the limited connector beta.
+- [ ] Authorized workspace/content connector storage and revocation model. **Still excluded; this is separate from provider usage/cost Admin APIs.**
 - [x] Privacy-safe production telemetry event/batch contract and usage normalizer.
 - [x] Session-authenticated production telemetry ingestion endpoint with bounded batches and idempotent event deduplication.
 - [x] Machine-to-machine telemetry credentials with one-time secrets, hash-only storage, owner UI, rotation, and revocation for unattended agents.
@@ -68,12 +71,13 @@ The CSV-first software surface includes public trust pages for Privacy, Security
 - [x] Read-only VIEWER boundary.
 - [x] Product-event metadata allowlist.
 - [x] Secret scanning in CI.
-- [ ] Encrypted connector-secret storage. **Excluded from CSV-first pilot because connector secrets are not collected.**
-- [ ] Connector token rotation/revocation. **Required before connector launch; no connector token is requested by the CSV pilot.**
+- [x] Encrypted provider-admin credential storage using AES-256-GCM with a dedicated key when configured or a domain-separated HKDF key derived from the deployment auth secret.
+- [x] Provider credential revocation/replacement path. Disconnect clears stored ciphertext; reconnect replaces the credential.
 - [x] Owner-only organization evidence purge service with explicit confirmation.
 - [x] Customer-facing owner-only data export and evidence-purge UI.
 - [x] Owner-controlled raw-evidence retention policy with dry-run preview, explicit enforcement, and preserved decision/audit records.
-- [ ] Threat-model review before provider admin connectors are enabled. **Connector release gate; provider-admin connectors are disabled in the CSV pilot.**
+- [x] Internal provider-admin connector threat-model review for the limited beta. See `docs/security/provider-admin-connector-threat-model.md`.
+- [ ] Independent/external security assessment of provider-admin connector handling. **Required before describing connector infrastructure as generally available or enterprise-audited.**
 
 ### 5. UX and trust
 
@@ -118,10 +122,17 @@ The CSV-first software surface includes public trust pages for Privacy, Security
 
 Do not call the product generally available until every unchecked item required by the chosen launch mode is either completed or explicitly excluded from that launch mode.
 
-A limited CSV-only pilot may ship before connector work if:
+The CSV path remains independently usable without provider credentials.
 
-1. connector UI is not presented as available,
-2. no provider admin secret is requested,
-3. all customer-facing claims are supported by uploaded evidence,
-4. deletion/retention behavior is documented,
-5. CI is green on the release commit.
+The limited provider Admin-API beta may remain enabled when:
+
+1. only OWNER users can create/read/revoke credential references,
+2. credentials are encrypted at rest and never returned to the browser,
+3. provider calls are restricted to the supported usage/cost reporting adapters,
+4. prompts/responses are not requested or persisted,
+5. failed/incomplete syncs cannot become READY dashboard evidence,
+6. disconnect clears the stored credential ciphertext,
+7. provider-derived claims remain bounded by source capability,
+8. CI/build gates are green on the release commit.
+
+Do not describe provider connectors as generally available or enterprise-audited while the independent security-assessment gate remains open.

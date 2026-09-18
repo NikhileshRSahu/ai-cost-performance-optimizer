@@ -134,7 +134,7 @@ export default async function ImportPage({
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-blue-200/55">
-                    Provider
+                    Provider · Admin API beta
                   </p>
                   <h2 className="m-0 mt-2 text-xl font-semibold text-white">
                     {label}
@@ -150,8 +150,9 @@ export default async function ImportPage({
               </div>
 
               <p className="mt-3 text-sm leading-6 text-white/48">
-                Read organization usage and cost reports. Prompts and responses
-                are not requested.
+                Read organization API usage and cost reports. Prompts and
+                responses are not requested. Consumer ChatGPT/Claude app usage
+                is not included.
               </p>
 
               {connection === undefined ? (
@@ -187,8 +188,9 @@ export default async function ImportPage({
                         />
                       </label>
                       <p className="m-0 text-[11px] leading-5 text-white/38">
-                        The key is validated server-side and stored only as
-                        encrypted ciphertext.
+                        Limited beta: the organization Admin API key is
+                        validated server-side and stored only as encrypted
+                        ciphertext. Disconnecting clears the stored ciphertext.
                       </p>
                       <button
                         className="min-h-11 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-950"

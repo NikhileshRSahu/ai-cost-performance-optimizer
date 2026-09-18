@@ -54,7 +54,7 @@ Planned support for cross-tool duplication, buried decisions, and knowledge wast
 
 Supports the path toward continuous verification, drift detection, and cost per successful outcome.
 
-Provider administrative credentials remain gated until encrypted secret storage, rotation, deletion, tenant isolation, redaction tests, and security review pass.
+OpenAI and Anthropic provider Admin-API connections are available as a limited OWNER-only beta for usage/cost evidence. They do not import consumer ChatGPT/Claude app history or prompt/response content. Workspace/content connectors remain gated.
 
 ## Existing optimization loop
 
@@ -143,9 +143,9 @@ The root package exposes:
 
 ## Release status
 
-Evalomics is being prepared as a **CSV-first public beta / founding pilot**, not as generally available connector infrastructure.
+Evalomics is being prepared as a **CSV-first public beta / founding pilot** with a limited OpenAI/Anthropic provider Admin-API beta. This is not generally available connector infrastructure.
 
-The software release profile is `docs/product/csv-pilot-release-profile.md`. Workspace/provider connectors and provider-admin credentials are explicitly outside this launch mode until their security gates close.
+The CSV path remains the primary low-friction proof path. Provider Admin-API connections add organization usage/cost evidence only; workspace/content connectors remain outside the launch mode.
 
 Public Privacy, Security, Terms, Methodology, and Research surfaces document the current product boundaries. Final legal review, production hosting/incident routing, and real design-partner/prospect evidence remain real-world launch gates rather than code placeholders.
 
@@ -156,6 +156,6 @@ The authoritative ship checklist is:
 
 The highest-value remaining V0 work includes sanitized AI-history analysis, automatic hypothesis generation, counterfactual replay for supported workloads, user-facing evidence drill-down, deletion/retention controls, deployment operations, and real design-partner proof.
 
-A CSV-only pilot may ship before connected-source support if its narrower release gates are satisfied and the release commit is fully green.
+The CSV path must remain fully usable without connected-source access. Provider Admin-API beta claims are bounded by the connector threat model and release-readiness gates.
 
 <!-- Vercel deployment refresh: 2026-09-18 -->

@@ -46,9 +46,22 @@ Requirements before enabling:
 
 ### Class D — provider administrative credentials
 
-Default V0 support: disabled.
+Default V0 support: **limited beta for OpenAI and Anthropic usage/cost reporting**.
 
-Administrative provider credentials must not be collected until encrypted secret storage, rotation, deletion, audit logging, tenant isolation, redaction tests, and explicit product-owner approval pass.
+The provider connector is intentionally narrower than a workspace/content connector:
+
+- OWNER-only setup and revocation;
+- organization Admin API credential entered over the authenticated server action;
+- server-side validation against supported provider reporting APIs;
+- AES-256-GCM encrypted ciphertext at rest;
+- no credential value returned in connection summaries;
+- disconnect clears the stored ciphertext;
+- prompts and responses are not requested;
+- normalized snapshots contain usage/cost metadata only;
+- failed or incomplete syncs are not eligible as READY dashboard evidence;
+- raw provider exceptions are mapped to safe error categories.
+
+The connector does **not** make consumer ChatGPT or Claude app usage available. The internal threat model is documented in `docs/security/provider-admin-connector-threat-model.md`. Independent security assessment remains a precondition for general-availability or enterprise-audited connector claims.
 
 ## Logging rules
 
@@ -81,7 +94,7 @@ Synthetic demo evidence must remain visibly labeled and must never be represente
 
 ## Production change boundary
 
-The product may generate a change package, but production changes require explicit customer authorization. Automatic production mutation is outside the CSV-only V0.
+The product may generate a change package, but production changes require explicit customer authorization. Automatic production mutation is outside the current V0/beta boundary.
 
 Every implementation path should include:
 
