@@ -35,7 +35,7 @@ export default async function RecommendationsPage({
   const modeled =
     view.nonOverlappingModeledTotal === null
       ? 'Not measured'
-      : \`\${view.nonOverlappingModeledTotal.currency} \${view.nonOverlappingModeledTotal.base}\`;
+      : `${view.nonOverlappingModeledTotal.currency} ${view.nonOverlappingModeledTotal.base}`;
 
   return (
     <div className="space-y-7">
@@ -99,7 +99,7 @@ export default async function RecommendationsPage({
             Add usage evidence before Evalomics ranks a change.
           </p>
           <Link
-            href={\`/o/\${organizationId}/import\`}
+            href={`/o/${organizationId}/import`}
             className="mt-5 inline-flex min-h-10 items-center gap-2 rounded-lg bg-sky-400 px-4 py-2 text-xs font-semibold text-[#08101c] no-underline"
           >
             <Database className="size-3.5" />
