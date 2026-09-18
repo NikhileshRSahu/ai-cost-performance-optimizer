@@ -2,23 +2,31 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 const page = readFileSync('apps/web/app/o/[organizationId]/page.tsx', 'utf8');
-const card = readFileSync(
-  'apps/web/components/recommendation-card.tsx',
+const shell = readFileSync(
+  'apps/web/components/workbench/workbench-shell.tsx',
   'utf8',
 );
 
-describe('direct result hierarchy', () => {
-  it('keeps the answer dominant and evidence depth secondary', () => {
-    expect(page).toContain('Spend analyzed');
-    expect(page.includes('See why') || page.includes('See details')).toBe(true);
+describe('cost dashboard hierarchy', () => {
+  it('keeps the default workspace focused on spend, recommendations, and proof', () => {
+    expect(page).toContain('Cost Dashboard');
+    expect(page).toContain('Observed AI spend');
+    expect(page).toContain('Savings signals');
+    expect(page).toContain('Modeled upside');
+    expect(page).toContain('Verified savings');
+    expect(page).toContain('Top recommendation');
+    expect(page).not.toContain('<WorkMri');
 
-    const resultIndex = page.indexOf('data-testid="direct-answer-result"');
-    const detailsIndex = page.indexOf('data-testid="analysis-details"');
-    const mriIndex = page.indexOf('<WorkMri');
-
-    expect(resultIndex).toBeGreaterThanOrEqual(0);
-    expect(detailsIndex).toBeGreaterThan(resultIndex);
-    expect(mriIndex).toBeGreaterThan(detailsIndex);
-    expect(card).toContain('Test this optimization');
+    for (const expected of [
+      'Cost Dashboard',
+      'Usage & Import',
+      'Recommendations',
+      'Prompt Optimizer',
+      'Model Calculator',
+      'Verified Savings',
+      'Settings',
+    ]) {
+      expect(shell).toContain(expected);
+    }
   });
 });
