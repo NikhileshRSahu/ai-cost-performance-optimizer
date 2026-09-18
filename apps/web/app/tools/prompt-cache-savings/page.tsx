@@ -66,7 +66,7 @@ export default function Page() {
             </Link>
             <Link
               href="/tools"
-              className="inline-flex min-h-11 items-center rounded-xl border border-white/[0.08] bg-[linear-gradient(145deg,rgba(15,23,33,.96),rgba(8,12,17,.98))] px-5 py-3 text-sm font-semibold text-white/70 no-underline transition hover:bg-[linear-gradient(145deg,rgba(15,23,33,.96),rgba(8,12,17,.98))]/[0.025]"
+              className="inline-flex min-h-11 items-center rounded-xl border border-white/[0.08] bg-[linear-gradient(145deg,rgba(15,23,33,.96),rgba(8,12,17,.98))] px-5 py-3 text-sm font-semibold text-white/70 no-underline transition hover:bg-white/[0.025]"
             >
               Explore free tools
             </Link>
@@ -74,7 +74,7 @@ export default function Page() {
         </div>
       </section>
 
-      <div className="flex gap-3 rounded-2xl border border-white/[0.08] bg-[linear-gradient(145deg,rgba(15,23,33,.96),rgba(8,12,17,.98))]/[0.025] p-4 text-sm leading-6 text-white/42">
+      <div className="flex gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.025] p-4 text-sm leading-6 text-white/42">
         <ShieldCheck className="mt-1 size-4 shrink-0 text-white/42" />
         <p className="m-0">
           <strong className="text-white/82">Calculation boundary:</strong> this
