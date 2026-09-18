@@ -44,7 +44,7 @@ function NavLinks({
       'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium no-underline transition-[background,color,transform] duration-200 hover:translate-x-0.5',
       active
         ? 'bg-cyan-300/[0.08] text-cyan-100 shadow-[inset_2px_0_var(--eval-cyan)]'
-        : 'text-slate-400 hover:bg-white/[0.04] hover:text-white',
+        : 'text-white/42 hover:bg-white/[0.04] hover:text-white',
     );
   }
 
@@ -63,7 +63,7 @@ function NavLinks({
               <Icon className="size-4" strokeWidth={1.8} aria-hidden="true" />
               <span>{label}</span>
               {label === 'Recommendations' ? (
-                <span className="ml-auto rounded-full bg-[var(--eval-verified)]/10 px-2 py-0.5 font-mono text-[9px] text-[var(--eval-verified)]">
+                <span className="ml-auto rounded-full bg-emerald-300/[0.06] px-2 py-0.5 font-mono text-[9px] text-[var(--eval-verified)]">
                   savings
                 </span>
               ) : null}
@@ -96,7 +96,7 @@ export function WorkbenchShell({
             <EvalomicsMark />
           </span>
           <div>
-            <p className="m-0 text-sm font-semibold tracking-[-0.02em] text-slate-100">
+            <p className="m-0 text-sm font-semibold tracking-[-0.02em] text-white">
               Evalomics
             </p>
             <p className="m-0 mt-0.5 text-[11px] text-white/35">
@@ -121,14 +121,14 @@ export function WorkbenchShell({
         </nav>
 
         <div className="rounded-xl border border-white/[0.07] bg-white/[0.025] p-3">
-          <p className="truncate text-xs font-medium text-slate-300">
+          <p className="truncate text-xs font-medium text-white/72">
             {organizationName}
           </p>
-          <p className="mt-1 text-[10px] text-slate-500">{role} workspace</p>
+          <p className="mt-1 text-[10px] text-white/35">{role} workspace</p>
         </div>
       </aside>
 
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-white/[0.07] bg-[var(--eval-panel)]/92 px-4 backdrop-blur-xl lg:hidden">
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-white/[0.07] bg-[#0a1017]/92 px-4 backdrop-blur-xl lg:hidden">
         <Link
           href="/"
           className="flex items-center gap-2 font-semibold no-underline"
