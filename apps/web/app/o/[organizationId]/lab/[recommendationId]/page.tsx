@@ -8,6 +8,8 @@ import {
 } from '../../../../../../../src/economics/exact';
 import { ConstraintRow } from '../../../../../components/constraint-row';
 import { HistoricalReplay } from './historical-replay';
+import { QualityGate } from '../../../../../components/workbench/quality-gate';
+import { EvidenceProgression } from '../../../../../components/workbench/evidence-progression';
 import { EvidenceDetails } from '../../../../../components/evidence-details';
 import { LAB_COPY } from '../../../../../lib/lab-copy';
 import { loadOptimizationLabEvidence } from '../../../../../lib/lab-data';
@@ -163,6 +165,18 @@ export default async function OptimizationLabPage({
           <strong>{view.decision}</strong>
         </div>
       </header>
+
+      <EvidenceProgression current={view.decision === 'OPTIMIZE' ? 'TESTED' : 'POTENTIAL'} />
+      <QualityGate
+        passed={view.decision === 'OPTIMIZE' ? true : view.decision === 'DO_NOT_CHANGE' ? false : null}
+        detail={
+          view.decision === 'OPTIMIZE'
+            ? 'The candidate cleared the configured benchmark constraints. This result is Tested, not yet Verified.'
+            : view.decision === 'DO_NOT_CHANGE'
+              ? 'At least one configured requirement blocked the candidate from advancing.'
+              : 'The available evidence is not strong enough to advance this candidate.'
+        }
+      />
 
       <section
         className="comparison-grid"
