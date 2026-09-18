@@ -28,8 +28,7 @@ function opportunityFromEvidence(
   }
 
   if (requests > 0n && outputTokens > requests * 500n) {
-    const scaledAverage = (outputTokens * 100n) / requests;
-    const average = Number(scaledAverage) / 100;
+    const average = Number(outputTokens) / Number(requests);
     return Object.freeze({
       kind: 'OUTPUT_LENGTH',
       title: 'Reduce oversized model outputs before paying for them',
@@ -62,8 +61,7 @@ function opportunityFromEvidence(
     totalTokens > 0n &&
     top[1] * 100n >= totalTokens * 80n
   ) {
-    const scaledShare = (top[1] * 10000n) / totalTokens;
-    const share = Number(scaledShare) / 100;
+    const share = (Number(top[1]) * 100) / Number(totalTokens);
     return Object.freeze({
       kind: 'MODEL_VOLUME_CONCENTRATION',
       title: `Test a cheaper candidate for high-volume ${top[0]} traffic`,
