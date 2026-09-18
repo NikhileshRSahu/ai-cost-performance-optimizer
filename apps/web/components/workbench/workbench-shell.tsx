@@ -43,8 +43,8 @@ function NavLinks({
     return cn(
       'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium no-underline transition-[background,color,transform] duration-200 hover:translate-x-0.5',
       active
-        ? 'bg-sky-400/10 text-sky-200 shadow-[inset_2px_0_#38bdf8]'
-        : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-100',
+        ? 'bg-cyan-300/[0.08] text-cyan-100 shadow-[inset_2px_0_var(--eval-cyan)]'
+        : 'text-slate-400 hover:bg-white/[0.04] hover:text-white',
     );
   }
 
@@ -63,7 +63,7 @@ function NavLinks({
               <Icon className="size-4" strokeWidth={1.8} aria-hidden="true" />
               <span>{label}</span>
               {label === 'Recommendations' ? (
-                <span className="ml-auto rounded-full bg-emerald-400/10 px-2 py-0.5 font-mono text-[9px] text-emerald-300">
+                <span className="ml-auto rounded-full bg-[var(--eval-verified)]/10 px-2 py-0.5 font-mono text-[9px] text-[var(--eval-verified)]">
                   savings
                 </span>
               ) : null}
@@ -89,25 +89,25 @@ export function WorkbenchShell({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="org-workbench min-h-screen bg-[#08101c] text-white">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-white/[0.07] bg-[#0d1420] px-4 py-5 lg:flex lg:flex-col">
+    <div className="org-workbench min-h-screen bg-[var(--eval-bg)] text-white">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-white/[0.07] bg-[var(--eval-panel)] px-4 py-5 lg:flex lg:flex-col">
         <div className="mb-9 flex items-start gap-3 px-2">
-          <span className="mt-0.5 grid size-8 place-items-center rounded-lg bg-sky-400 text-[#08101c] shadow-[0_0_24px_rgba(56,189,248,.22)]">
+          <span className="mt-0.5 grid size-8 place-items-center rounded-lg bg-[var(--eval-cyan)] text-[#071018] shadow-[0_0_24px_rgba(99,222,244,.18)]">
             <EvalomicsMark />
           </span>
           <div>
             <p className="m-0 text-sm font-semibold tracking-[-0.02em] text-slate-100">
               Evalomics
             </p>
-            <p className="m-0 mt-0.5 text-[11px] text-slate-500">
+            <p className="m-0 mt-0.5 text-[11px] text-white/35">
               AI cost intelligence
             </p>
           </div>
         </div>
 
-        <div className="mb-3 flex items-center justify-between px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">
+        <div className="mb-3 flex items-center justify-between px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/24">
           <span>Workspace</span>
-          <span className="flex items-center gap-1 font-mono normal-case tracking-normal text-emerald-400">
+          <span className="flex items-center gap-1 font-mono normal-case tracking-normal text-[var(--eval-verified)]">
             <span className="size-1.5 rounded-full bg-emerald-400" />
             live
           </span>
@@ -128,7 +128,7 @@ export function WorkbenchShell({
         </div>
       </aside>
 
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-white/[0.07] bg-[#0d1420]/92 px-4 backdrop-blur-xl lg:hidden">
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-white/[0.07] bg-[var(--eval-panel)]/92 px-4 backdrop-blur-xl lg:hidden">
         <Link
           href="/"
           className="flex items-center gap-2 font-semibold no-underline"
@@ -155,7 +155,7 @@ export function WorkbenchShell({
           onClick={() => setOpen(false)}
         >
           <aside
-            className="absolute left-0 top-14 h-[calc(100%-3.5rem)] w-[min(86vw,300px)] border-r border-white/10 bg-[#0d1420] p-4"
+            className="absolute left-0 top-14 h-[calc(100%-3.5rem)] w-[min(86vw,300px)] border-r border-white/10 bg-[var(--eval-panel)] p-4"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="mb-5">
