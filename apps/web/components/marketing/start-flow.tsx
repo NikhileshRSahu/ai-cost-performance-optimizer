@@ -5,9 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import {
   ArrowLeft,
   ArrowRight,
-  Database,
   FileSpreadsheet,
-  Github,
   Link2,
   ShieldCheck,
   Sparkles,
@@ -18,19 +16,13 @@ import { useState } from 'react';
 type Step = 'choice' | 'connect' | 'csv';
 
 function BrandIcon({ brand }: { brand: 'anthropic' | 'github' | 'openai' }) {
-  if (brand === 'github')
-    return <Github className="size-6" aria-hidden="true" />;
   return (
     <img
       alt=""
       aria-hidden="true"
       width={24}
       height={24}
-      src={
-        brand === 'anthropic'
-          ? 'https://cdn.simpleicons.org/anthropic/FFFFFF'
-          : 'https://cdn.simpleicons.org/openai/FFFFFF'
-      }
+      src={'/brand/' + brand + '.svg'}
     />
   );
 }
