@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { importUsageCsv } from '../ingestion/import.js';
 import type { PersistenceDatabase } from '../persistence/database.js';
 import { importRuns, usageRecords } from '../persistence/schema.js';
@@ -103,6 +103,76 @@ export async function importCustomerUsage(
             }),
       issues: Object.freeze([]),
     });
+  }
+
+  if (parsed.records.length > 0) {
+    const persistedRows = await input.db
+      .select({
+        fingerprint: usageRecords.fingerprint,
+        importRunId: usageRecords.importRunId,
+      })
+      .from(usageRecords)
+      .where(
+        and(
+          eq(usageRecords.organizationId, input.organizationId),
+          inArray(
+            usageRecords.fingerprint,
+            parsed.records.map((record) => record.fingerprint),
+          ),
+        ),
+      );
+
+    if (persistedRows.length === parsed.records.length) {
+      const sourceImportIds = new Set(
+        persistedRows.map((row) => row.importRunId),
+      );
+
+      if (sourceImportIds.size === 1) {
+        const sourceImportId = persistedRows[0]?.importRunId;
+        const sourceImport =
+          sourceImportId === undefined
+            ? undefined
+            : (
+                await input.db
+                  .select()
+                  .from(importRuns)
+                  .where(
+                    and(
+                      eq(importRuns.organizationId, input.organizationId),
+                      eq(importRuns.id, sourceImportId),
+                    ),
+                  )
+                  .limit(1)
+              ).at(0);
+
+        if (sourceImport !== undefined) {
+          return Object.freeze({
+            importId: sourceImport.id,
+            fileName: input.fileName,
+            status: persistedStatus(sourceImport.status),
+            accepted: sourceImport.acceptedRows,
+            skippedDuplicates:
+              sourceImport.skippedRows +
+              parsed.run.skippedDuplicates +
+              parsed.records.length,
+            rejected: parsed.run.rejected,
+            warnings: sourceImport.warningCount,
+            blocked: sourceImport.status === 'FAILED',
+            partial:
+              sourceImport.status === 'PARTIAL' || parsed.run.rejected > 0,
+            reused: true,
+            effectiveInterval:
+              sourceImport.rangeStart === null || sourceImport.rangeEnd === null
+                ? null
+                : Object.freeze({
+                    start: sourceImport.rangeStart,
+                    end: sourceImport.rangeEnd,
+                  }),
+            issues: parsed.run.issues,
+          });
+        }
+      }
+    }
   }
 
   const status = statusFor(parsed.run);
