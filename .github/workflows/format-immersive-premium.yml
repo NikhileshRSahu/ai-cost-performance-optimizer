@@ -1,9 +1,7 @@
 name: Format immersive premium
 on:
   push:
-    branches:
-      - feat/production-ready-premium-v1
-      - ui/launch-ui-evalomics
+    branches: [feat/production-ready-premium-v1]
 permissions:
   contents: write
 jobs:
@@ -17,12 +15,12 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npx prettier --write apps/web/app/page.tsx apps/web/components/marketing/launch-ui-home.tsx
+      - run: npx prettier --write apps/web/app/page.tsx apps/web/components/home/efficiency-story.tsx
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if ! git diff --quiet; then
-            git add apps/web/app/page.tsx apps/web/components/marketing/launch-ui-home.tsx
-            git commit -m "chore: format Launch UI adaptation"
+            git add apps/web/app/page.tsx apps/web/components/home/efficiency-story.tsx
+            git commit -m "chore: format immersive premium UI"
             git push
           fi
