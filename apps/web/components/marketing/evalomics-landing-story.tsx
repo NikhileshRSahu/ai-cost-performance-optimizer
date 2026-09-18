@@ -167,7 +167,7 @@ function ProductFrame({ active }: { active: number }) {
                   <motion.div
                     className="absolute inset-y-0 left-0 rounded-full bg-[linear-gradient(90deg,#7aa7ff,#a78bfa,#6ee7b7)]"
                     initial={false}
-                    animate={{ width: \`\${25 + active * 25}%\` }}
+                    animate={{ width: `${25 + active * 25}%` }}
                     transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                   />
                 </div>
