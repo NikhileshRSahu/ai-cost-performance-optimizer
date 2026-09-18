@@ -98,7 +98,15 @@ export default async function ImportPage({
       </header>
 
       {providerError!==null?<div className="rounded-xl border border-rose-300/20 bg-rose-300/[0.06] px-4 py-3 text-sm text-rose-100" role="alert">{providerError}</div>:null}
-      {query.error!==undefined?<div className="rounded-xl border border-rose-300/20 bg-rose-300/[0.06] px-4 py-3 text-sm text-rose-100" role="alert">{query.error}</div>:null}
+      {query.error!==undefined?(
+        <div className="rounded-xl border border-rose-300/20 bg-rose-300/[0.06] px-4 py-3 text-sm text-rose-100" role="alert">
+          <p className="m-0">{query.error.startsWith('No valid usage rows were accepted')?'No valid usage rows were accepted. Fix the CSV and try again.':query.error}</p>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <Link href="?mode=csv" className="text-xs font-semibold text-rose-50 underline decoration-rose-100/30 underline-offset-4">Try another CSV</Link>
+            <Link href={'/o/'+organizationId} className="text-xs font-semibold text-rose-50/75 underline decoration-rose-100/20 underline-offset-4">Return to overview</Link>
+          </div>
+        </div>
+      ):null}
       {query.providerDisconnected!==undefined?<div className="rounded-xl border border-emerald-300/15 bg-emerald-300/[0.05] px-4 py-3 text-sm text-emerald-100/80" role="status">{query.providerDisconnected} disconnected. Historical evidence remains available.</div>:null}
 
       {mode===null?(
@@ -173,16 +181,23 @@ export default async function ImportPage({
         <section className="grid gap-5">
           <div className="rounded-[28px] border border-white/[0.08] bg-[#0a0f16] p-5 sm:p-7">
             <CsvDropzone organizationId={organizationId} action={uploadUsageCsv} />
+            <p className="m-0 mt-4 text-[11px] leading-5 text-white/35">
+              No provider key required. We validate the file before adding it to your analysis.
+            </p>
+            <details className="mt-4 rounded-xl border border-white/[0.07] bg-white/[0.018] px-4 py-3">
+              <summary className="cursor-pointer text-xs font-semibold text-white/55">See import details</summary>
+              <p className="m-0 mt-2 text-[11px] leading-5 text-white/38">Maximum 10 MiB and 50,000 rows. Required columns and numeric fields are checked before import.</p>
+            </details>
           </div>
           <div className="flex flex-wrap gap-4 text-xs">
             <Link className="font-semibold text-blue-200/70" href="/usage-template.csv">Download CSV template</Link>
-            <Link className="font-semibold text-white/40" href={'/o/'+organizationId}>Back to overview</Link>
+            <Link className="font-semibold text-white/40" href={'/o/'+organizationId}>View my analysis</Link>
           </div>
         </section>
       ):null}
 
       <section className="rounded-[22px] border border-white/[0.07] bg-white/[0.018] p-5 sm:flex sm:items-center sm:justify-between sm:gap-6">
-        <div><p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/35">Want proof before your own data?</p><h2 className="m-0 mt-2 text-lg font-semibold text-white">Run the synthetic workspace demo</h2><p className="m-0 mt-2 text-sm text-white/42">This uses the real analysis path and stays clearly labeled synthetic.</p></div>
+        <div><p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/35">Want proof before your own data?</p><h2 className="m-0 mt-2 text-lg font-semibold text-white">Run the synthetic workspace demo</h2><p className="m-0 mt-2 text-sm text-white/42">This uses the real analysis path and stays clearly labeled synthetic.</p><p className="m-0 mt-2 text-xs font-semibold text-amber-100/65">Synthetic demo data — not a customer result.</p></div>
         <form action={analyzeDemoUsage} className="mt-4 sm:mt-0"><input type="hidden" name="organizationId" value={organizationId}/><button className="min-h-11 rounded-xl border border-white/12 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-white" type="submit">Run workspace demo</button></form>
       </section>
     </div>
