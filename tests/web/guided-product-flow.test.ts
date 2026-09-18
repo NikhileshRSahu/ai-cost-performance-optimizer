@@ -27,7 +27,7 @@ describe('guided product flow', () => {
     expect(hero).toContain('href="/demo"');
     expect(start).toContain('StartFlow');
     expect(start).not.toContain("redirect('/login')");
-    expect(startFlow).toContain('Connect a source');
+    expect(startFlow).toContain('Connect provider');
     expect(startFlow).toContain('Upload CSV');
     expect(startFlow).toContain('Anthropic');
     expect(startFlow).toContain('OpenAI');
