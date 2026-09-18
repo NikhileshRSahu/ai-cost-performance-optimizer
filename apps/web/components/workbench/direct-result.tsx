@@ -117,7 +117,7 @@ export function DirectResult({
           </div>
           <div className="flex flex-wrap gap-2">
             <EvalButton href={recommendationsHref} variant="secondary">
-              See details <ArrowRight className="size-3.5" />
+              All opportunities <ArrowRight className="size-3.5" />
             </EvalButton>
             <EvalButton href={proofHref} variant="ghost">
               <ShieldCheck className="size-3.5" /> Verification
