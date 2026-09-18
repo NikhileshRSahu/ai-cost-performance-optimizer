@@ -4595,3 +4595,11 @@ samp,
 .legal-page .evidence-note strong {
   color: #fff;
 }
+
+
+
+html,
+body {
+  background: var(--eval-bg);
+  color: rgba(255,255,255,.86);
+}
