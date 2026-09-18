@@ -37,46 +37,46 @@ export default async function BenchmarkPage({
   const database = createDatabase(databaseUrl);
   const { available, latestRecommendation, sourceRecommendation } =
     await (async () => {
-    try {
-      requireOrganizationAccess({ session, organizationId, action: 'READ' });
-      const availableWorkloads = await database.db
-        .select()
-        .from(workloads)
-        .where(eq(workloads.organizationId, organizationId))
-        .orderBy(asc(workloads.name));
-      const latest =
-        (
-          await database.db
-            .select()
-            .from(recommendations)
-            .where(eq(recommendations.organizationId, organizationId))
-            .orderBy(desc(recommendations.createdAt))
-            .limit(1)
-        ).at(0) ?? null;
-      const source =
-        sourceRecommendationId === undefined
-          ? null
-          : (
-              await database.db
-                .select()
-                .from(recommendations)
-                .where(
-                  and(
-                    eq(recommendations.organizationId, organizationId),
-                    eq(recommendations.id, sourceRecommendationId),
-                  ),
-                )
-                .limit(1)
-            ).at(0) ?? null;
-      return {
-        available: availableWorkloads,
-        latestRecommendation: latest,
-        sourceRecommendation: source,
-      };
-    } finally {
-      await database.close();
-    }
-  })();
+      try {
+        requireOrganizationAccess({ session, organizationId, action: 'READ' });
+        const availableWorkloads = await database.db
+          .select()
+          .from(workloads)
+          .where(eq(workloads.organizationId, organizationId))
+          .orderBy(asc(workloads.name));
+        const latest =
+          (
+            await database.db
+              .select()
+              .from(recommendations)
+              .where(eq(recommendations.organizationId, organizationId))
+              .orderBy(desc(recommendations.createdAt))
+              .limit(1)
+          ).at(0) ?? null;
+        const source =
+          sourceRecommendationId === undefined
+            ? null
+            : ((
+                await database.db
+                  .select()
+                  .from(recommendations)
+                  .where(
+                    and(
+                      eq(recommendations.organizationId, organizationId),
+                      eq(recommendations.id, sourceRecommendationId),
+                    ),
+                  )
+                  .limit(1)
+              ).at(0) ?? null);
+        return {
+          available: availableWorkloads,
+          latestRecommendation: latest,
+          sourceRecommendation: source,
+        };
+      } finally {
+        await database.close();
+      }
+    })();
 
   const preferredWorkloadId =
     selectedId ?? sourceRecommendation?.workloadId ?? undefined;

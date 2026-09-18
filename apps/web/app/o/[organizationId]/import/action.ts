@@ -96,9 +96,7 @@ export async function connectProviderAccount(
   redirect(`/o/${organizationId}?source=provider&provider=${provider}`);
 }
 
-export async function syncProviderAccount(
-  formData: FormData,
-): Promise<never> {
+export async function syncProviderAccount(formData: FormData): Promise<never> {
   const organizationId = textEntry(formData, 'organizationId');
   const provider = providerEntry(formData);
   const session = await resolveRuntimeSession();
@@ -225,7 +223,9 @@ export async function analyzeDemoUsage(formData: FormData): Promise<never> {
 
   let importId: string;
   try {
-    const bytes = await readFile(join(process.cwd(), 'public', 'demo-usage.csv'));
+    const bytes = await readFile(
+      join(process.cwd(), 'public', 'demo-usage.csv'),
+    );
     importId = await analyzeBytes(
       organizationId,
       'demo-usage.csv',

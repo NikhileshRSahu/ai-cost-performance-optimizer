@@ -369,8 +369,7 @@ export async function loadFounderDashboardEvidence(
     .orderBy(desc(recommendations.createdAt))
     .limit(50);
   const scopedRecommendationRows = rankedRows.filter(
-    (row) =>
-      evidenceString(row.evidence, 'sourceImportId') === latestUsable.id,
+    (row) => evidenceString(row.evidence, 'sourceImportId') === latestUsable.id,
   );
   const rankOne = scopedRecommendationRows.find((row) =>
     hasRankOne(row.evidence),

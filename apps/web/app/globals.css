@@ -3232,7 +3232,6 @@ samp,
   }
 }
 
-
 /* Evalomics semantic motion: preserve meaning when users request less motion. */
 @media (prefers-reduced-motion: reduce) {
   .eval-motion-decorative {
