@@ -23,6 +23,7 @@ import type { AuthenticatedSession } from '../../../src/workbench/authz';
 import type {
   DashboardDecision,
   DashboardEvidence,
+  DashboardProviderName,
   DashboardRecommendationEvidence,
   DashboardSavingsState,
 } from '../../../src/workbench/dashboard-view';
@@ -109,6 +110,7 @@ export async function loadLatestProviderDashboardEvidence(
   session: AuthenticatedSession,
   organizationId: string,
   newerThan: string | null,
+  selectedProvider: DashboardProviderName | null = null,
 ): Promise<DashboardEvidence | null> {
   requireOrganizationAccess({ session, organizationId, action: 'READ' });
 
@@ -133,6 +135,11 @@ export async function loadLatestProviderDashboardEvidence(
           ? 'ANTHROPIC'
           : null;
     if (provider === null) return false;
+    const providerName: DashboardProviderName =
+      provider === 'OPENAI' ? 'OpenAI' : 'Anthropic';
+    if (selectedProvider !== null && providerName !== selectedProvider) {
+      return false;
+    }
 
     const connection = connections.find(
       (item) =>

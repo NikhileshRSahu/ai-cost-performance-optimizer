@@ -124,6 +124,32 @@ export async function analyzeImportedUsage(
     policy: input.policy ?? DEFAULT_POLICY,
   });
 
+  const workloadNames = [
+    ...new Set(
+      canonicalRecords.flatMap((record) =>
+        record.workload === null ? [] : [record.workload],
+      ),
+    ),
+  ];
+  const models = [
+    ...new Set(
+      canonicalRecords.flatMap((record) =>
+        record.model === null ? [] : [record.model],
+      ),
+    ),
+  ];
+  const concentratedModel =
+    diagnosis.facts.find((fact) => fact.key === 'TOP_MODEL_COST_SHARE')
+      ?.evidence.model ?? null;
+  const inferredCurrentConfiguration =
+    typeof concentratedModel === 'string' && concentratedModel.length > 0
+      ? concentratedModel
+      : models.length === 1
+        ? models[0] ?? null
+        : null;
+  const inferredWorkload =
+    workloadNames.length === 1 ? workloadNames[0] ?? null : null;
+
   const persisted: PersistedUsageOpportunity[] = [];
   const evidenceRepository = createEvidenceRepository(input.db);
 
@@ -181,6 +207,8 @@ export async function analyzeImportedUsage(
           methodologyVersion: 'usage-hypothesis-v1',
           opportunityKind: hypothesis.kind,
           sourceImportId: input.importId,
+          workloadName: inferredWorkload,
+          currentConfigurationId: inferredCurrentConfiguration,
         },
         isDemo: organization.isDemo || importRun.isDemo,
       });

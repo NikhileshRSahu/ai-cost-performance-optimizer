@@ -145,7 +145,10 @@ export async function importCustomerUsage(
                   .limit(1)
               ).at(0);
 
-        if (sourceImport !== undefined) {
+        if (
+          sourceImport !== undefined &&
+          sourceImport.isDemo === input.isDemo
+        ) {
           return Object.freeze({
             importId: sourceImport.id,
             fileName: input.fileName,

@@ -26,6 +26,15 @@ import type {
   DashboardSavingsState,
 } from '../../../src/workbench/dashboard-view';
 
+export type DashboardSelection =
+  | Readonly<{ source: 'AUTO' }>
+  | Readonly<{ source: 'IMPORT'; importId: string }>
+  | Readonly<{ source: 'DEMO'; importId: string }>
+  | Readonly<{
+      source: 'PROVIDER';
+      providerName: 'OpenAI' | 'Anthropic' | null;
+    }>;
+
 function evidenceString(
   evidence: Record<string, unknown>,
   key: string,
@@ -131,6 +140,7 @@ export async function loadFounderDashboardEvidence(
   db: PersistenceDatabase,
   session: AuthenticatedSession,
   organizationId: string,
+  selection: DashboardSelection = Object.freeze({ source: 'AUTO' }),
 ): Promise<DashboardEvidence> {
   requireOrganizationAccess({ session, organizationId, action: 'READ' });
 
@@ -143,39 +153,102 @@ export async function loadFounderDashboardEvidence(
   ).at(0);
   if (organization === undefined) throw new Error('ORGANIZATION_NOT_FOUND');
 
-  const latestAttempt = (
-    await db
-      .select()
-      .from(importRuns)
-      .where(eq(importRuns.organizationId, organizationId))
-      .orderBy(desc(importRuns.receivedAt))
-      .limit(1)
-  ).at(0);
+  const explicitImportId =
+    selection.source === 'IMPORT' || selection.source === 'DEMO'
+      ? selection.importId
+      : null;
 
-  const latestUsable = (
-    await db
-      .select()
-      .from(importRuns)
-      .where(
-        and(
-          eq(importRuns.organizationId, organizationId),
-          or(
-            eq(importRuns.status, 'COMPLETED'),
-            eq(importRuns.status, 'PARTIAL'),
-          ),
-        ),
-      )
-      .orderBy(desc(importRuns.receivedAt))
-      .limit(1)
-  ).at(0);
+  const explicitImport =
+    explicitImportId === null
+      ? undefined
+      : (
+          await db
+            .select()
+            .from(importRuns)
+            .where(
+              and(
+                eq(importRuns.organizationId, organizationId),
+                eq(importRuns.id, explicitImportId),
+              ),
+            )
+            .limit(1)
+        ).at(0);
 
-  const providerEvidence = await loadLatestProviderDashboardEvidence(
-    db,
-    session,
-    organizationId,
-    latestUsable?.receivedAt ?? null,
-  );
-  if (providerEvidence !== null) return providerEvidence;
+  const latestAttempt =
+    explicitImportId === null
+      ? (
+          await db
+            .select()
+            .from(importRuns)
+            .where(eq(importRuns.organizationId, organizationId))
+            .orderBy(desc(importRuns.receivedAt))
+            .limit(1)
+        ).at(0)
+      : explicitImport;
+
+  const latestUsable =
+    explicitImportId === null
+      ? (
+          await db
+            .select()
+            .from(importRuns)
+            .where(
+              and(
+                eq(importRuns.organizationId, organizationId),
+                or(
+                  eq(importRuns.status, 'COMPLETED'),
+                  eq(importRuns.status, 'PARTIAL'),
+                ),
+              ),
+            )
+            .orderBy(desc(importRuns.receivedAt))
+            .limit(1)
+        ).at(0)
+      : explicitImport !== undefined &&
+          (explicitImport.status === 'COMPLETED' ||
+            explicitImport.status === 'PARTIAL') &&
+          (selection.source !== 'DEMO' || explicitImport.isDemo)
+        ? explicitImport
+        : undefined;
+
+  if (selection.source === 'PROVIDER') {
+    const providerEvidence = await loadLatestProviderDashboardEvidence(
+      db,
+      session,
+      organizationId,
+      null,
+      selection.providerName,
+    );
+    if (providerEvidence !== null) return providerEvidence;
+
+    return Object.freeze({
+      organizationName: organization.name,
+      periodLabel: 'No provider evidence window',
+      dataQuality: 'NO_DATA',
+      sourceKind: 'PROVIDER',
+      providerName: selection.providerName,
+      observedSpend: null,
+      completeCalendarDays: 0,
+      strongestAction: null,
+      verifiedNetSavings: null,
+      diagnosticFacts: Object.freeze([]),
+      isDemo: false,
+      limitations: Object.freeze([
+        'No completed provider evidence snapshot is available for the selected connection.',
+      ]),
+    });
+  }
+
+  if (selection.source === 'AUTO') {
+    const providerEvidence = await loadLatestProviderDashboardEvidence(
+      db,
+      session,
+      organizationId,
+      latestUsable?.receivedAt ?? null,
+      null,
+    );
+    if (providerEvidence !== null) return providerEvidence;
+  }
 
   const limitations: string[] = [];
   if (
@@ -193,6 +266,13 @@ export async function loadFounderDashboardEvidence(
       organizationName: organization.name,
       periodLabel: 'No comparable period',
       dataQuality: 'NO_DATA',
+      sourceKind:
+        selection.source === 'DEMO'
+          ? 'DEMO'
+          : selection.source === 'IMPORT'
+            ? 'CSV'
+            : 'NONE',
+      providerName: null,
       observedSpend: null,
       completeCalendarDays: 0,
       strongestAction: null,
@@ -288,10 +368,16 @@ export async function loadFounderDashboardEvidence(
     .where(eq(recommendations.organizationId, organizationId))
     .orderBy(desc(recommendations.createdAt))
     .limit(50);
-  const rankOne = rankedRows.find((row) => hasRankOne(row.evidence));
-  if (rankOne === undefined && rankedRows.length > 0) {
+  const scopedRecommendationRows = rankedRows.filter(
+    (row) =>
+      evidenceString(row.evidence, 'sourceImportId') === latestUsable.id,
+  );
+  const rankOne = scopedRecommendationRows.find((row) =>
+    hasRankOne(row.evidence),
+  );
+  if (rankOne === undefined && scopedRecommendationRows.length > 0) {
     limitations.push(
-      'Recommendation rank metadata is unavailable, so no strongest action is claimed.',
+      'Recommendation rank metadata is unavailable for this evidence window, so no strongest action is claimed.',
     );
   }
 
@@ -349,6 +435,8 @@ export async function loadFounderDashboardEvidence(
     organizationName: organization.name,
     periodLabel: periodLabel(latestUsable.rangeStart, latestUsable.rangeEnd),
     dataQuality,
+    sourceKind: latestUsable.isDemo ? 'DEMO' : 'CSV',
+    providerName: null,
     observedSpend: hasCost
       ? Object.freeze({
           amount: formatDecimal(total, 2),

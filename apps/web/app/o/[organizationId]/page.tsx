@@ -13,10 +13,41 @@ import { RecommendationCard } from '../../../components/recommendation-card';
 import { SignOutButton } from '../../../components/sign-out-button';
 import { WorkMri } from '../../../components/work-mri';
 import { hasSelfHostedAuthConfiguration } from '../../../lib/auth-config';
-import { loadFounderDashboardEvidence } from '../../../lib/dashboard-data';
+import {
+  loadFounderDashboardEvidence,
+  type DashboardSelection,
+} from '../../../lib/dashboard-data';
 import { resolveRuntimeSession } from '../../../lib/runtime-session';
 
 export const dynamic = 'force-dynamic';
+
+function dashboardSelection(input: Readonly<{
+  source?: string;
+  importId?: string;
+  provider?: string;
+}>): DashboardSelection {
+  if (
+    (input.source === 'demo' || input.source === 'import') &&
+    typeof input.importId === 'string' &&
+    input.importId.length > 0
+  ) {
+    return input.source === 'demo'
+      ? Object.freeze({ source: 'DEMO', importId: input.importId })
+      : Object.freeze({ source: 'IMPORT', importId: input.importId });
+  }
+
+  if (input.source === 'provider') {
+    const providerName =
+      input.provider === 'OPENAI'
+        ? 'OpenAI'
+        : input.provider === 'ANTHROPIC'
+          ? 'Anthropic'
+          : null;
+    return Object.freeze({ source: 'PROVIDER', providerName });
+  }
+
+  return Object.freeze({ source: 'AUTO' });
+}
 
 function moneyLabel(
   value: Readonly<{ amount: string; currency: string }> | null,
@@ -40,8 +71,18 @@ function verifiedMoney(
 
 export default async function FounderDashboardPage({
   params,
-}: Readonly<{ params: Promise<{ organizationId: string }> }>) {
+  searchParams,
+}: Readonly<{
+  params: Promise<{ organizationId: string }>;
+  searchParams: Promise<{
+    source?: string;
+    importId?: string;
+    provider?: string;
+  }>;
+}>) {
   const { organizationId } = await params;
+  const query = await searchParams;
+  const selection = dashboardSelection(query);
   const session = await resolveRuntimeSession();
   const databaseUrl = process.env.DATABASE_URL;
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
@@ -53,6 +94,7 @@ export default async function FounderDashboardPage({
       database.db,
       session,
       organizationId,
+      selection,
     );
     view = buildFounderDashboardView(evidence);
   } finally {

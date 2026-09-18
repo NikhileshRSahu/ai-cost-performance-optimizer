@@ -1,7 +1,7 @@
 export type DashboardDataQuality =
   'READY' | 'PARTIAL_DATA' | 'ZERO_USAGE' | 'NO_DATA';
 
-export type DashboardSourceKind = 'NONE' | 'CSV' | 'PROVIDER';
+export type DashboardSourceKind = 'NONE' | 'CSV' | 'DEMO' | 'PROVIDER';
 export type DashboardProviderName = 'OpenAI' | 'Anthropic';
 
 export type DashboardSavingsState = 'OPPORTUNITY' | 'TESTED' | 'VERIFIED';
