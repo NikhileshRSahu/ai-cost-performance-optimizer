@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { headers } from 'next/headers';
-import { ArrowLeft, Check, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Check } from 'lucide-react';
+import { LoginProductMotion } from '../../components/marketing/login-product-motion';
 import { GoogleSignInButton } from '../../components/google-sign-in-button';
 import { hasSelfHostedAuthConfiguration } from '../../lib/auth-config';
 
@@ -49,10 +50,10 @@ export default async function LoginPage({
       <section className="flex flex-col justify-between p-7 sm:p-10 lg:p-12">
         <div>
           <Link
-            href="/"
+            href="/start"
             className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 no-underline hover:text-slate-900"
           >
-            <ArrowLeft className="size-3.5" /> Back to Evalomics
+            <ArrowLeft className="size-3.5" /> Back to your chosen flow
           </Link>
 
           <div className="mt-14 max-w-xl">
@@ -63,10 +64,8 @@ export default async function LoginPage({
               Give us usage. Get one answer.
             </h1>
             <p className="mt-6 text-base leading-7 text-slate-600">
-              Sign in, then choose OpenAI, Anthropic, CSV, or the demo.
-              Evalomics analyzes the evidence automatically and returns the
-              strongest supported optimization before asking you to do anything
-              advanced.
+              You already chose what you want to do. Sign in only to create the
+              private workspace for OpenAI, Anthropic, CSV, or demo evidence.
             </p>
           </div>
 
@@ -106,53 +105,7 @@ export default async function LoginPage({
 
       <section className="relative flex items-center bg-[#070a0f] p-7 text-white sm:p-10 lg:p-12">
         <div className="w-full">
-          <ShieldCheck className="size-5 text-emerald-200/70" />
-          <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/70">
-            What happens next
-          </p>
-          <div className="mt-6 grid gap-4">
-            {[
-              [
-                '01',
-                'Connect or upload',
-                'Choose OpenAI, Anthropic, CSV, or the synthetic demo.',
-              ],
-              [
-                '02',
-                'Analyze automatically',
-                'Evalomics normalizes the evidence and filters unsupported guesses.',
-              ],
-              [
-                '03',
-                'Get one clear result',
-                'See the strongest supported action first. Details stay optional.',
-              ],
-            ].map(([n, title, body]) => (
-              <div
-                key={title}
-                className="grid grid-cols-[38px_1fr] gap-3 rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4"
-              >
-                <span className="font-mono text-[10px] text-blue-200/90">
-                  {n}
-                </span>
-                <div>
-                  <p className="m-0 text-sm font-semibold text-white/88">
-                    {title}
-                  </p>
-                  <p className="m-0 mt-1 text-xs leading-5 text-white/58">
-                    {body}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-6 rounded-2xl border border-emerald-300/12 bg-emerald-300/[0.035] p-4">
-            <p className="m-0 text-xs leading-5 text-emerald-50/70">
-              Testing and verification are available after the first result;
-              they are not the price of admission to getting value.
-            </p>
-          </div>
+          <LoginProductMotion />
         </div>
       </section>
     </div>

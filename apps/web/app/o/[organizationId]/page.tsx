@@ -13,6 +13,7 @@ import { RecommendationCard } from '../../../components/recommendation-card';
 import { SignOutButton } from '../../../components/sign-out-button';
 import { WorkMri } from '../../../components/work-mri';
 import { SourceChoiceCard } from '../../../components/workbench/source-choice-card';
+import { ResultJourney } from '../../../components/workbench/result-journey';
 import { hasSelfHostedAuthConfiguration } from '../../../lib/auth-config';
 import {
   loadFounderDashboardEvidence,
@@ -136,6 +137,15 @@ export default async function FounderDashboardPage({
           },
   });
 
+  const journeyStage =
+    view.strongestAction?.state === 'VERIFIED'
+      ? 'Verified'
+      : view.strongestAction?.state === 'TESTED'
+        ? 'Tested'
+        : view.strongestAction !== null
+          ? 'Finding'
+          : 'Observed';
+
   const resultLabel =
     view.strongestAction?.state === 'VERIFIED'
       ? 'Verified improvement'
@@ -190,6 +200,11 @@ export default async function FounderDashboardPage({
           {hasSelfHostedAuthConfiguration() ? <SignOutButton /> : null}
         </div>
       </header>
+
+      {view.dataQuality !== 'NO_DATA' &&
+      !(view.dataQuality === 'ZERO_USAGE' && view.sourceKind === 'PROVIDER') ? (
+        <ResultJourney current={journeyStage} />
+      ) : null}
 
       {view.dataQuality === 'NO_DATA' ? (
         <section className="grid gap-5">
