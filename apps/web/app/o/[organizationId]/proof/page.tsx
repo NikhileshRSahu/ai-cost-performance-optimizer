@@ -7,6 +7,7 @@ import { EvalButton } from '../../../../components/ui/eval-button';
 import { EvalSurface } from '../../../../components/ui/eval-surface';
 import { EvidenceBadge } from '../../../../components/ui/evidence-badge';
 import { StatusBanner } from '../../../../components/ui/status-banner';
+import { EvidenceProgression } from '../../../../components/workbench/evidence-progression';
 import { loadFounderDashboardEvidence } from '../../../../lib/dashboard-data';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
 
@@ -49,6 +50,8 @@ export default async function VerificationPage({
           saving does not become Verified.
         </p>
       </header>
+
+      <EvidenceProgression current={verified ? 'VERIFIED' : strongest?.stateLabel === 'Tested' ? 'TESTED' : 'POTENTIAL'} />
 
       <section className="grid gap-3 md:grid-cols-3">
         <EvalSurface tone="raised" className="p-5">
