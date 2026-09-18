@@ -1,6 +1,11 @@
 'use client';
 
-import { ArrowDownRight, ArrowUpRight, Calculator, RefreshCw } from 'lucide-react';
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  Calculator,
+  RefreshCw,
+} from 'lucide-react';
 import { useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 
 function numberValue(value: string): number {
@@ -163,7 +168,9 @@ export function WorkspaceModelCalculator() {
                   min="0"
                   step="0.01"
                   value={candidateInputRate}
-                  onChange={(event) => setCandidateInputRate(event.target.value)}
+                  onChange={(event) =>
+                    setCandidateInputRate(event.target.value)
+                  }
                   className="min-h-11 rounded-lg border border-white/[0.08] bg-[#101a2a] px-3 font-mono text-sm text-slate-200 outline-none focus:border-emerald-300/30"
                 />
               </label>
@@ -174,7 +181,9 @@ export function WorkspaceModelCalculator() {
                   min="0"
                   step="0.01"
                   value={candidateOutputRate}
-                  onChange={(event) => setCandidateOutputRate(event.target.value)}
+                  onChange={(event) =>
+                    setCandidateOutputRate(event.target.value)
+                  }
                   className="min-h-11 rounded-lg border border-white/[0.08] bg-[#101a2a] px-3 font-mono text-sm text-slate-200 outline-none focus:border-emerald-300/30"
                 />
               </label>
