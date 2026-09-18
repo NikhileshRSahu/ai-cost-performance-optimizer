@@ -18,10 +18,18 @@ export default async function BenchmarkPage({
   searchParams,
 }: Readonly<{
   params: Promise<{ organizationId: string }>;
-  searchParams: Promise<{ workloadId?: string; error?: string }>;
+  searchParams: Promise<{
+    workloadId?: string;
+    recommendationId?: string;
+    error?: string;
+  }>;
 }>) {
   const { organizationId } = await params;
-  const { workloadId: selectedId, error } = await searchParams;
+  const {
+    workloadId: selectedId,
+    recommendationId: sourceRecommendationId,
+    error,
+  } = await searchParams;
   const session = await resolveRuntimeSession();
   const databaseUrl = process.env.DATABASE_URL;
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
