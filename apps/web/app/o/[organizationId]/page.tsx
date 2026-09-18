@@ -201,7 +201,8 @@ export default async function FounderDashboardPage({
         </div>
       </header>
 
-      {view.dataQuality !== 'NO_DATA' && !(view.dataQuality === 'ZERO_USAGE' && view.sourceKind === 'PROVIDER') ? (
+      {view.dataQuality !== 'NO_DATA' &&
+      !(view.dataQuality === 'ZERO_USAGE' && view.sourceKind === 'PROVIDER') ? (
         <ResultJourney current={journeyStage} />
       ) : null}
 

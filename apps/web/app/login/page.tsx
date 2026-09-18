@@ -64,7 +64,8 @@ export default async function LoginPage({
               Give us usage. Get one answer.
             </h1>
             <p className="mt-6 text-base leading-7 text-slate-600">
-              You already chose what you want to do. Sign in only to create the private workspace for OpenAI, Anthropic, CSV, or demo evidence.
+              You already chose what you want to do. Sign in only to create the
+              private workspace for OpenAI, Anthropic, CSV, or demo evidence.
             </p>
           </div>
 
@@ -103,7 +104,9 @@ export default async function LoginPage({
       </section>
 
       <section className="relative flex items-center bg-[#070a0f] p-7 text-white sm:p-10 lg:p-12">
-        <div className="w-full"><LoginProductMotion /></div>
+        <div className="w-full">
+          <LoginProductMotion />
+        </div>
       </section>
     </div>
   );
