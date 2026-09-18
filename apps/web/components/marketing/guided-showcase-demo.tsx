@@ -51,7 +51,7 @@ function VerifyScreen() {
   </div>
 }
 
-export function GuidedShowcaseDemo(){
+// Recommit: Launch-style stacked showcase deployment trigger\nexport function GuidedShowcaseDemo(){
   const ref=useRef<HTMLElement>(null);
   const {scrollYProgress}=useScroll({target:ref,offset:['start start','end end']});
   const x1=useTransform(scrollYProgress,[0,1],['-18%','-34%']);
