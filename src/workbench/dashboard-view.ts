@@ -127,6 +127,17 @@ export type FounderDashboardView = Readonly<{
   limitations: readonly string[];
 }>;
 
+function evidenceStateRank(state: DashboardSavingsState): number {
+  switch (state) {
+    case 'VERIFIED':
+      return 0;
+    case 'TESTED':
+      return 1;
+    case 'OPPORTUNITY':
+      return 2;
+  }
+}
+
 function savingsStateLabel(
   state: DashboardSavingsState,
 ): DashboardRecommendationView['stateLabel'] {
@@ -226,6 +237,7 @@ export function buildFounderDashboardView(
       .sort(
         (left, right) =>
           left.priorityRank - right.priorityRank ||
+          evidenceStateRank(left.state) - evidenceStateRank(right.state) ||
           left.recommendationId.localeCompare(right.recommendationId),
       )
       .slice(0, 3),
