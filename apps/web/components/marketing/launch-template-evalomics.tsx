@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import {
   ArrowRight,
@@ -175,27 +175,36 @@ function ScrollCostTrails() {
     offset: ['start start', 'end end'],
   });
 
-  const copyY = useTransform(scrollYProgress, [0, 0.24, 0.7, 1], [70, 0, 0, -56]);
-  const copyOpacity = useTransform(scrollYProgress, [0, 0.12, 0.78, 1], [0.35, 1, 1, 0.35]);
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 85,
+    damping: 26,
+    mass: 0.45,
+  });
 
-  const mainRotateX = useTransform(scrollYProgress, [0, 0.18, 0.62, 1], [63, 48, 17, 8]);
-  const mainRotateZ = useTransform(scrollYProgress, [0, 0.22, 0.72, 1], [-8, -5, -1.5, 0]);
-  const mainScale = useTransform(scrollYProgress, [0, 0.58, 1], [0.78, 0.94, 1.02]);
-  const mainY = useTransform(scrollYProgress, [0, 0.6, 1], [130, 24, -22]);
-  const mainX = useTransform(scrollYProgress, [0, 0.55, 1], [120, 30, 0]);
+  const copyY = useTransform(smoothProgress, [0, 0.2, 0.82, 1], [36, 0, 0, -24]);
+  const copyOpacity = useTransform(smoothProgress, [0, 0.1, 0.88, 1], [0.55, 1, 1, 0.7]);
 
-  const topX = useTransform(scrollYProgress, [0, 0.65, 1], [300, 110, 40]);
-  const topY = useTransform(scrollYProgress, [0, 0.65, 1], [-40, -12, 30]);
-  const topRotate = useTransform(scrollYProgress, [0, 1], [7, 2]);
-  const topScale = useTransform(scrollYProgress, [0, 1], [0.72, 0.92]);
+  const mainRotateX = useTransform(smoothProgress, [0, 0.45, 1], [28, 10, 2]);
+  const mainRotateY = useTransform(smoothProgress, [0, 0.5, 1], [-8, -3, 0]);
+  const mainRotateZ = useTransform(smoothProgress, [0, 0.55, 1], [-3, -1, 0]);
+  const mainScale = useTransform(smoothProgress, [0, 0.55, 1], [0.9, 0.98, 1.03]);
+  const mainY = useTransform(smoothProgress, [0, 0.6, 1], [60, 10, -12]);
+  const mainX = useTransform(smoothProgress, [0, 0.6, 1], [42, 12, 0]);
 
-  const sideX = useTransform(scrollYProgress, [0, 0.65, 1], [280, 120, 26]);
-  const sideY = useTransform(scrollYProgress, [0, 0.65, 1], [170, 100, 54]);
-  const sideRotate = useTransform(scrollYProgress, [0, 1], [9, 3]);
-  const sideScale = useTransform(scrollYProgress, [0, 1], [0.72, 0.95]);
+  const topX = useTransform(smoothProgress, [0, 0.5, 1], [120, 58, 16]);
+  const topY = useTransform(smoothProgress, [0, 0.5, 1], [-22, -4, 16]);
+  const topRotate = useTransform(smoothProgress, [0, 1], [4, 1]);
+  const topScale = useTransform(smoothProgress, [0, 0.55, 1], [0.82, 0.92, 0.98]);
+  const topOpacity = useTransform(smoothProgress, [0, 0.12, 1], [0.35, 0.9, 1]);
 
-  const glowScale = useTransform(scrollYProgress, [0, 0.45, 1], [0.8, 1.06, 1.2]);
-  const glowOpacity = useTransform(scrollYProgress, [0, 0.45, 1], [0.26, 0.58, 0.36]);
+  const sideX = useTransform(smoothProgress, [0, 0.5, 1], [110, 42, 8]);
+  const sideY = useTransform(smoothProgress, [0, 0.5, 1], [80, 42, 20]);
+  const sideRotate = useTransform(smoothProgress, [0, 1], [5, 1]);
+  const sideScale = useTransform(smoothProgress, [0, 0.55, 1], [0.84, 0.93, 0.99]);
+  const sideOpacity = useTransform(smoothProgress, [0, 0.12, 1], [0.32, 0.9, 1]);
+
+  const glowScale = useTransform(smoothProgress, [0, 0.5, 1], [0.9, 1.04, 1.12]);
+  const glowOpacity = useTransform(smoothProgress, [0, 0.45, 1], [0.2, 0.5, 0.34]);
 
   return (
     <section ref={sectionRef} className="eval-scroll-showcase">
@@ -234,6 +243,7 @@ function ScrollCostTrails() {
                 ? undefined
                 : {
                     rotateX: mainRotateX,
+                    rotateY: mainRotateY,
                     rotateZ: mainRotateZ,
                     scale: mainScale,
                     x: mainX,
@@ -249,7 +259,7 @@ function ScrollCostTrails() {
             style={
               reduceMotion
                 ? undefined
-                : { x: topX, y: topY, rotateZ: topRotate, scale: topScale }
+                : { x: topX, y: topY, rotateZ: topRotate, scale: topScale, opacity: topOpacity }
             }
           >
             <RequestFlow />
@@ -260,7 +270,7 @@ function ScrollCostTrails() {
             style={
               reduceMotion
                 ? undefined
-                : { x: sideX, y: sideY, rotateZ: sideRotate, scale: sideScale }
+                : { x: sideX, y: sideY, rotateZ: sideRotate, scale: sideScale, opacity: sideOpacity }
             }
           >
             <CostDrivers />
@@ -268,11 +278,11 @@ function ScrollCostTrails() {
 
           <motion.div
             className="eval-scroll-showcase__signal eval-scroll-showcase__signal--one"
-            style={reduceMotion ? undefined : { opacity: scrollYProgress }}
+            style={reduceMotion ? undefined : { opacity: smoothProgress }}
           />
           <motion.div
             className="eval-scroll-showcase__signal eval-scroll-showcase__signal--two"
-            style={reduceMotion ? undefined : { opacity: scrollYProgress }}
+            style={reduceMotion ? undefined : { opacity: smoothProgress }}
           />
         </div>
 
