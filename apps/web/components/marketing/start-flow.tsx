@@ -7,7 +7,6 @@ import {
   ArrowRight,
   FileSpreadsheet,
   Link2,
-  ShieldCheck,
   Sparkles,
   UploadCloud,
 } from 'lucide-react';
@@ -15,7 +14,7 @@ import { useState } from 'react';
 
 type Step = 'choice' | 'connect' | 'csv';
 
-function BrandIcon({ brand }: { brand: 'anthropic' | 'github' | 'openai' }) {
+function BrandIcon({ brand }: { brand: 'anthropic' | 'openai' }) {
   return (
     <img
       alt=""
@@ -181,28 +180,19 @@ export function StartFlow({
                 The connection screen appears only after you choose a provider.
               </p>
 
-              <div className="mt-8 grid gap-4 md:grid-cols-3">
+              <div className="mt-8 grid gap-4 md:grid-cols-2">
                 {[
                   {
                     brand: 'anthropic' as const,
                     name: 'Anthropic',
                     meta: 'Admin API · available',
                     href: realHref('connect', 'ANTHROPIC'),
-                    active: true,
-                  },
-                  {
-                    brand: 'github' as const,
-                    name: 'GitHub',
-                    meta: 'Workflow context · coming next',
-                    href: '#',
-                    active: false,
                   },
                   {
                     brand: 'openai' as const,
                     name: 'OpenAI',
                     meta: 'Admin API · available',
                     href: realHref('connect', 'OPENAI'),
-                    active: true,
                   },
                 ].map((provider) => (
                   <motion.div
@@ -214,14 +204,8 @@ export function StartFlow({
                       <span className="grid size-11 place-items-center rounded-2xl border border-white/[0.08] bg-white/[0.045]">
                         <BrandIcon brand={provider.brand} />
                       </span>
-                      <span
-                        className={
-                          provider.active
-                            ? 'rounded-full border border-emerald-300/15 bg-emerald-300/[0.055] px-2.5 py-1 text-[9px] font-semibold text-emerald-100/75'
-                            : 'rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[9px] font-semibold text-white/35'
-                        }
-                      >
-                        {provider.active ? 'Available' : 'Coming soon'}
+                      <span className="rounded-full border border-emerald-300/15 bg-emerald-300/[0.055] px-2.5 py-1 text-[9px] font-semibold text-emerald-100/75">
+                        Available
                       </span>
                     </div>
                     <h2 className="m-0 mt-7 text-xl font-semibold text-white">
@@ -230,30 +214,15 @@ export function StartFlow({
                     <p className="m-0 mt-1 text-xs text-white/34">
                       {provider.meta}
                     </p>
-                    {provider.active ? (
-                      <Link
-                        href={provider.href}
-                        className="mt-7 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-950 no-underline"
-                      >
-                        Continue <ArrowRight className="size-3.5" />
-                      </Link>
-                    ) : (
-                      <button
-                        type="button"
-                        disabled
-                        className="mt-7 min-h-11 w-full rounded-xl border border-white/[0.08] bg-white/[0.02] px-4 py-2.5 text-sm font-semibold text-white/28"
-                      >
-                        Not faked
-                      </button>
-                    )}
+                    <Link
+                      href={provider.href}
+                      className="mt-7 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-950 no-underline"
+                    >
+                      Continue <ArrowRight className="size-3.5" />
+                    </Link>
                   </motion.div>
                 ))}
               </div>
-              <p className="m-0 mt-5 flex items-center gap-2 text-[11px] text-white/30">
-                <ShieldCheck className="size-3.5" /> GitHub is visible because
-                it is in the roadmap; it is not pretending to be a working usage
-                connector today.
-              </p>
             </motion.div>
           ) : (
             <motion.div
