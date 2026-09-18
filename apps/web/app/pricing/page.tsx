@@ -18,14 +18,14 @@ export default function PricingPage() {
   return (
     <div className="grid gap-14 pb-12">
       <section className="max-w-4xl pt-6 sm:pt-10">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300/75">
           Launch beta
         </p>
-        <h1 className="mt-4 !text-[clamp(3.2rem,7vw,6.8rem)] !leading-[.9] !tracking-[-.07em] text-slate-950">
+        <h1 className="mt-4 !text-[clamp(3.2rem,7vw,6.8rem)] !leading-[.9] !tracking-[-.07em] text-white">
           Everything is free.
-          <span className="block text-slate-600">Use real data. No card.</span>
+          <span className="block text-white/45">Use real data. No card.</span>
         </h1>
-        <p className="mt-7 max-w-2xl text-base leading-7 text-slate-600">
+        <p className="mt-7 max-w-2xl text-base leading-7 text-white/45">
           During the Evalomics launch beta, the complete product workflow is
           available for $0. Create a workspace, upload a usage CSV, diagnose AI
           waste, test a candidate, and verify the result without entering
@@ -34,7 +34,7 @@ export default function PricingPage() {
       </section>
 
       <section
-        className="max-w-3xl rounded-[28px] border border-emerald-300/30 bg-slate-950 p-6 text-white shadow-[0_30px_90px_rgba(15,23,42,.16)] sm:p-9"
+        className="max-w-3xl rounded-[28px] border border-cyan-300/16 bg-[linear-gradient(145deg,rgba(15,23,33,.98),rgba(8,12,17,.98))] p-6 text-white shadow-[0_30px_90px_rgba(0,0,0,.28)] sm:p-9"
         aria-label="Launch beta pricing"
       >
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
@@ -82,7 +82,7 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section className="max-w-3xl rounded-[24px] border border-slate-200 bg-slate-50 p-6 sm:p-8">
+      <section className="max-w-3xl rounded-[24px] border border-white/[0.08] bg-white/[0.025] p-6 sm:p-8">
         <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-600">
           Why free right now
         </p>
