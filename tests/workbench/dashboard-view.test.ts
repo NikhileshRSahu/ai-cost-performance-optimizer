@@ -109,6 +109,41 @@ describe('founder dashboard MRI view model', () => {
     expect(view.bestFirstMove?.recommendationId).toBe('rec-1');
   });
 
+  it('prefers stronger evidence maturity when recommendations share priority rank', () => {
+    const view = buildFounderDashboardView(
+      evidence({
+        recommendations: [
+          recommendation({
+            recommendationId: 'rec-a-opportunity',
+            priorityRank: 1,
+            state: 'OPPORTUNITY',
+          }),
+          recommendation({
+            recommendationId: 'rec-z-tested',
+            priorityRank: 1,
+            state: 'TESTED',
+            decision: 'OPTIMIZE',
+            savingsConfidence: 'TESTED',
+          }),
+          recommendation({
+            recommendationId: 'rec-y-verified',
+            priorityRank: 1,
+            state: 'VERIFIED',
+            decision: 'OPTIMIZE',
+            savingsConfidence: 'VERIFIED',
+          }),
+        ],
+      }),
+    );
+
+    expect(view.recommendations.map((item) => item.recommendationId)).toEqual([
+      'rec-y-verified',
+      'rec-z-tested',
+      'rec-a-opportunity',
+    ]);
+    expect(view.bestFirstMove?.recommendationId).toBe('rec-y-verified');
+  });
+
   it('preserves explicit demo source metadata', () => {
     const view = buildFounderDashboardView(
       evidence({
