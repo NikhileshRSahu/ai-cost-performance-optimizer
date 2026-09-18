@@ -7,7 +7,6 @@ import { requireOrganizationAccess } from '../../../../../../src/persistence/ten
 import { CsvDropzone } from '../../../../components/workbench/csv-dropzone';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
 import {
-  analyzeDemoUsage,
   connectProviderAccount,
   disconnectProviderAccount,
   syncProviderAccount,
@@ -95,33 +94,22 @@ export default async function ImportPage({
         >
           <ArrowLeft className="size-3.5" /> Change source
         </Link>
-        <div className="mt-5 flex flex-wrap items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.14em]">
-          <span className="rounded-full border border-emerald-300/18 bg-emerald-300/[0.055] px-3 py-1.5 text-emerald-100/75">
-            1 · Source chosen
-          </span>
-          <span className="rounded-full border border-blue-300/16 bg-blue-300/[0.045] px-3 py-1.5 text-blue-100/65">
-            2 · Provide evidence
-          </span>
-          <span className="rounded-full border border-white/[0.08] px-3 py-1.5 text-white/25">
-            3 · Analyze
-          </span>
-        </div>
-        <p className="m-0 mt-5 text-[10px] font-semibold uppercase tracking-[0.17em] text-blue-200/55">
-          Data source
+        <p className="m-0 mt-5 text-[10px] font-semibold uppercase tracking-[0.17em] text-sky-300/70">
+          Usage & Import
         </p>
-        <h1 className="m-0 mt-2 !text-[clamp(2.5rem,5vw,4.5rem)] !leading-[.98] !tracking-[-.055em] text-white">
+        <h1 className="m-0 mt-2 !text-[clamp(2rem,4vw,3.2rem)] !leading-[1] !tracking-[-.045em] text-white">
           {mode === 'connect'
             ? 'Connect the source you chose'
             : mode === 'csv'
               ? 'Upload your usage CSV'
               : 'Choose how to continue'}
         </h1>
-        <p className="m-0 mt-4 max-w-3xl text-sm leading-6 text-white/50">
+        <p className="m-0 mt-3 max-w-2xl text-sm leading-6 text-white/45">
           {mode === 'connect'
-            ? 'We only ask for the selected provider credential now. After validation, Evalomics analyzes the usage automatically.'
+            ? 'Choose a provider, connect the Admin API, and analyze the returned usage.'
             : mode === 'csv'
-              ? 'Drop the file, confirm it is ready, then press one button to analyze your AI usage.'
-              : 'Choose one path. The other setup disappears so the screen stays focused.'}
+              ? 'Drop a usage export, validate it, then analyze it.'
+              : 'Connect a supported provider or upload a usage CSV.'}
         </p>
       </header>
 
@@ -213,7 +201,7 @@ export default async function ImportPage({
 
       {mode === 'connect' ? (
         <section
-          className="grid gap-4 lg:grid-cols-3"
+          className="grid gap-4 lg:grid-cols-2"
           aria-label="Provider choices"
         >
           {(['ANTHROPIC', 'OPENAI'] as const).map((provider) => {
@@ -349,36 +337,7 @@ export default async function ImportPage({
             );
           })}
 
-          <article className="relative overflow-hidden rounded-[26px] border border-white/[0.08] bg-white/[0.018] p-5 opacity-80">
-            <div className="flex items-start justify-between gap-3">
-              <span className="grid size-12 place-items-center rounded-2xl border border-white/[0.08] bg-white/[0.04]">
-                <img
-                  alt=""
-                  aria-hidden="true"
-                  src="/brand/github.svg"
-                  width={24}
-                  height={24}
-                />
-              </span>
-              <span className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[9px] font-semibold text-white/35">
-                Coming next
-              </span>
-            </div>
-            <h2 className="m-0 mt-6 text-xl font-semibold text-white">
-              GitHub
-            </h2>
-            <p className="m-0 mt-2 text-sm leading-6 text-white/38">
-              Planned for workflow and code-context evidence. It is visible in
-              the product direction, but not faked as a working usage connector.
-            </p>
-            <button
-              type="button"
-              disabled
-              className="mt-5 min-h-11 w-full rounded-xl border border-white/[0.08] bg-white/[0.02] px-4 text-sm font-semibold text-white/25"
-            >
-              Not available yet
-            </button>
-          </article>
+
         </section>
       ) : null}
 
@@ -393,15 +352,6 @@ export default async function ImportPage({
               No provider key required. We validate the file before adding it to
               your analysis.
             </p>
-            <details className="mt-4 rounded-xl border border-white/[0.07] bg-white/[0.018] px-4 py-3">
-              <summary className="cursor-pointer text-xs font-semibold text-white/55">
-                See import details
-              </summary>
-              <p className="m-0 mt-2 text-[11px] leading-5 text-white/38">
-                Maximum 10 MiB and 50,000 rows. Required columns and numeric
-                fields are checked before import.
-              </p>
-            </details>
           </div>
           <div className="flex flex-wrap gap-4 text-xs">
             <Link
@@ -420,32 +370,7 @@ export default async function ImportPage({
         </section>
       ) : null}
 
-      <section className="rounded-[22px] border border-white/[0.07] bg-white/[0.018] p-5 sm:flex sm:items-center sm:justify-between sm:gap-6">
-        <div>
-          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/35">
-            Want proof before your own data?
-          </p>
-          <h2 className="m-0 mt-2 text-lg font-semibold text-white">
-            Run the synthetic workspace demo
-          </h2>
-          <p className="m-0 mt-2 text-sm text-white/42">
-            This uses the real analysis path and stays clearly labeled
-            synthetic.
-          </p>
-          <p className="m-0 mt-2 text-xs font-semibold text-amber-100/65">
-            Synthetic demo data — not a customer result.
-          </p>
-        </div>
-        <form action={analyzeDemoUsage} className="mt-4 sm:mt-0">
-          <input type="hidden" name="organizationId" value={organizationId} />
-          <button
-            className="min-h-11 rounded-xl border border-white/12 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-white"
-            type="submit"
-          >
-            Run workspace demo
-          </button>
-        </form>
-      </section>
+
     </div>
   );
 }
