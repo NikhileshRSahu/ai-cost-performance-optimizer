@@ -11,15 +11,13 @@ const importPage = readFileSync(
 );
 
 describe('source intake flow', () => {
-  it('keeps source choice before the authenticated intake details', () => {
-    for (const expected of [
-      'Connect provider',
-      'Upload CSV',
-      'Anthropic',
-      'OpenAI',
-    ]) {
+  it('shows all supported source choices before authenticated intake details', () => {
+    for (const expected of ['OpenAI', 'Anthropic', 'Upload CSV']) {
       expect(start).toContain(expected);
     }
+    expect(start).toContain('Connect your AI usage.');
+    expect(start).toContain('takes you');
+    expect(start).toContain('straight to the strongest supported result');
 
     expect(importPage).toContain('Upload your usage CSV');
     expect(importPage).toContain('Connect the source you chose');
