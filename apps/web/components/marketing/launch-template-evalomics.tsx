@@ -1,4 +1,8 @@
+'use client';
+
 import Link from 'next/link';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 import {
   ArrowRight,
   BarChart3,
@@ -162,6 +166,122 @@ function EvidenceSteps() {
   );
 }
 
+
+function ScrollCostTrails() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end end'],
+  });
+
+  const copyY = useTransform(scrollYProgress, [0, 0.24, 0.7, 1], [70, 0, 0, -56]);
+  const copyOpacity = useTransform(scrollYProgress, [0, 0.12, 0.78, 1], [0.35, 1, 1, 0.35]);
+
+  const mainRotateX = useTransform(scrollYProgress, [0, 0.18, 0.62, 1], [63, 48, 17, 8]);
+  const mainRotateZ = useTransform(scrollYProgress, [0, 0.22, 0.72, 1], [-8, -5, -1.5, 0]);
+  const mainScale = useTransform(scrollYProgress, [0, 0.58, 1], [0.78, 0.94, 1.02]);
+  const mainY = useTransform(scrollYProgress, [0, 0.6, 1], [130, 24, -22]);
+  const mainX = useTransform(scrollYProgress, [0, 0.55, 1], [120, 30, 0]);
+
+  const topX = useTransform(scrollYProgress, [0, 0.65, 1], [300, 110, 40]);
+  const topY = useTransform(scrollYProgress, [0, 0.65, 1], [-40, -12, 30]);
+  const topRotate = useTransform(scrollYProgress, [0, 1], [7, 2]);
+  const topScale = useTransform(scrollYProgress, [0, 1], [0.72, 0.92]);
+
+  const sideX = useTransform(scrollYProgress, [0, 0.65, 1], [280, 120, 26]);
+  const sideY = useTransform(scrollYProgress, [0, 0.65, 1], [170, 100, 54]);
+  const sideRotate = useTransform(scrollYProgress, [0, 1], [9, 3]);
+  const sideScale = useTransform(scrollYProgress, [0, 1], [0.72, 0.95]);
+
+  const glowScale = useTransform(scrollYProgress, [0, 0.45, 1], [0.8, 1.06, 1.2]);
+  const glowOpacity = useTransform(scrollYProgress, [0, 0.45, 1], [0.26, 0.58, 0.36]);
+
+  return (
+    <section ref={sectionRef} className="eval-scroll-showcase">
+      <div className="eval-scroll-showcase__sticky">
+        <motion.div
+          className="eval-scroll-showcase__glow"
+          style={reduceMotion ? undefined : { scale: glowScale, opacity: glowOpacity }}
+        />
+
+        <motion.div
+          className="eval-scroll-showcase__copy"
+          style={reduceMotion ? undefined : { y: copyY, opacity: copyOpacity }}
+        >
+          <span>Inside Evalomics</span>
+          <h2>AI requests become visible cost trails.</h2>
+          <p>
+            Watch raw provider usage resolve into spend, waste patterns,
+            optimization candidates, quality tests, and verified outcomes.
+          </p>
+          <div className="eval-scroll-showcase__progress">
+            <span>Observe</span>
+            <i />
+            <span>Detect</span>
+            <i />
+            <span>Test</span>
+            <i />
+            <span>Verify</span>
+          </div>
+        </motion.div>
+
+        <div className="eval-scroll-showcase__scene">
+          <motion.div
+            className="eval-scroll-showcase__main"
+            style={
+              reduceMotion
+                ? undefined
+                : {
+                    rotateX: mainRotateX,
+                    rotateZ: mainRotateZ,
+                    scale: mainScale,
+                    x: mainX,
+                    y: mainY,
+                  }
+            }
+          >
+            <MiniDashboard />
+          </motion.div>
+
+          <motion.div
+            className="eval-scroll-showcase__top"
+            style={
+              reduceMotion
+                ? undefined
+                : { x: topX, y: topY, rotateZ: topRotate, scale: topScale }
+            }
+          >
+            <RequestFlow />
+          </motion.div>
+
+          <motion.div
+            className="eval-scroll-showcase__side"
+            style={
+              reduceMotion
+                ? undefined
+                : { x: sideX, y: sideY, rotateZ: sideRotate, scale: sideScale }
+            }
+          >
+            <CostDrivers />
+          </motion.div>
+
+          <motion.div
+            className="eval-scroll-showcase__signal eval-scroll-showcase__signal--one"
+            style={reduceMotion ? undefined : { opacity: scrollYProgress }}
+          />
+          <motion.div
+            className="eval-scroll-showcase__signal eval-scroll-showcase__signal--two"
+            style={reduceMotion ? undefined : { opacity: scrollYProgress }}
+          />
+        </div>
+
+        <div className="eval-scroll-showcase__hint">Scroll to resolve the economics</div>
+      </div>
+    </section>
+  );
+}
+
 export function LaunchTemplateEvalomics() {
   return (
     <div className="eval-template-page">
@@ -237,24 +357,7 @@ export function LaunchTemplateEvalomics() {
           </div>
         </section>
 
-        <section className="eval-template-showcase">
-          <div className="eval-template-showcase-frame">
-            <div className="eval-template-showcase-glow eval-motion-decorative" />
-            <div className="eval-template-showcase-copy">
-              <span>Inside Evalomics</span>
-              <h2>AI requests become visible cost trails.</h2>
-              <p>
-                The same provider evidence becomes a spatial map of repeated input,
-                model routing, context load, testing state, and savings confidence.
-              </p>
-            </div>
-            <div className="eval-template-showcase-layers">
-              <div className="eval-template-showcase-card one eval-motion-decorative"><MiniDashboard /></div>
-              <div className="eval-template-showcase-card two eval-motion-decorative"><RequestFlow /></div>
-              <div className="eval-template-showcase-card three eval-motion-decorative"><CostDrivers /></div>
-            </div>
-          </div>
-        </section>
+        <ScrollCostTrails />
 
         <section className="eval-template-intro">
           <span>How Evalomics works</span>
