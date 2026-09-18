@@ -1,5 +1,5 @@
-import { LaunchTemplateEvalomics } from '../components/marketing/launch-template-evalomics';
+import { LaunchExactEvalomics } from '../components/marketing/launch-exact-evalomics';
 
 export default function HomePage() {
-  return <LaunchTemplateEvalomics />;
+  return <LaunchExactEvalomics />;
 }
