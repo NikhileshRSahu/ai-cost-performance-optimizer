@@ -87,7 +87,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
               <Link
                 className="rounded-lg bg-slate-950 px-3 py-2"
                 style={{ color: '#ffffff' }}
-                href="/login"
+                href="/start"
               >
                 Start free
               </Link>
