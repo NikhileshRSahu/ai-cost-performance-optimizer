@@ -46,24 +46,24 @@ export default async function LoginPage({
   const canSignIn = authConfigured && authHostAllowed(host);
 
   return (
-    <div className="mx-auto grid min-h-[620px] max-w-5xl overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_30px_100px_rgba(15,23,42,.08)] lg:grid-cols-[1fr_.9fr]">
+    <div className="relative mx-auto grid min-h-[620px] max-w-5xl overflow-hidden rounded-[28px] border border-white/[0.08] bg-[#070b10] text-white shadow-[0_38px_120px_rgba(0,0,0,.36)] lg:grid-cols-[1fr_.9fr]">
       <section className="flex flex-col justify-between p-7 sm:p-10 lg:p-12">
         <div>
           <Link
             href="/start"
-            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 no-underline hover:text-slate-900"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-white/40 no-underline hover:text-white"
           >
             <ArrowLeft className="size-3.5" /> Back to your chosen flow
           </Link>
 
           <div className="mt-14 max-w-xl">
-            <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+            <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300/75">
               Private workspace
             </p>
-            <h1 className="mt-4 text-[clamp(3rem,6vw,5.2rem)] font-semibold leading-[.92] tracking-[-.065em] text-slate-950">
+            <h1 className="mt-4 text-[clamp(3rem,6vw,5.2rem)] font-semibold leading-[.92] tracking-[-.065em] text-white">
               Give us usage. Get one answer.
             </h1>
-            <p className="mt-6 text-base leading-7 text-slate-600">
+            <p className="mt-6 text-base leading-7 text-white/45">
               You already chose what you want to do. Sign in only to create the
               private workspace for OpenAI, Anthropic, CSV, or demo evidence.
             </p>
@@ -74,7 +74,7 @@ export default async function LoginPage({
               <GoogleSignInButton callbackPath={callbackPath} />
             ) : (
               <div
-                className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900"
+                className="rounded-xl border border-amber-300/20 bg-amber-300/[0.06] p-4 text-sm leading-6 text-amber-100"
                 role="status"
               >
                 <strong>
@@ -89,7 +89,7 @@ export default async function LoginPage({
           </div>
         </div>
 
-        <div className="mt-12 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-medium text-slate-600">
+        <div className="mt-12 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-medium text-white/42">
           {[
             'Full beta · free',
             'No credit card',
@@ -103,7 +103,7 @@ export default async function LoginPage({
         </div>
       </section>
 
-      <section className="relative flex items-center bg-[#070a0f] p-7 text-white sm:p-10 lg:p-12">
+      <section className="relative flex items-center bg-[radial-gradient(circle_at_50%_15%,rgba(240,163,91,.12),transparent_38%),#050708] p-7 text-white sm:p-10 lg:p-12">
         <div className="w-full">
           <LoginProductMotion />
         </div>
