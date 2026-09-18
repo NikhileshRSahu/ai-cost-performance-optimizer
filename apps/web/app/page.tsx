@@ -22,7 +22,8 @@ export default function HomePage() {
                 Start with one source
               </div>
               <h2 className="mt-5 max-w-[760px] text-[clamp(2.4rem,5vw,4.8rem)] font-semibold leading-[0.95] tracking-[-0.058em]">
-                See what your AI usage is costing you — and what is safe to change.
+                See what your AI usage is costing you — and what is safe to
+                change.
               </h2>
               <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs font-medium text-white/42">
                 <span className="inline-flex items-center gap-1.5">

@@ -208,7 +208,8 @@ export function LaunchUiHomeHero() {
                           Recommended next action
                         </p>
                         <p className="m-0 mt-1.5 text-sm font-medium text-slate-200">
-                          Benchmark cache reuse against your required quality floor.
+                          Benchmark cache reuse against your required quality
+                          floor.
                         </p>
                       </div>
                       <span className="inline-flex shrink-0 items-center gap-2 text-xs font-semibold text-sky-300">
@@ -290,13 +291,14 @@ export function LaunchUiHomeHero() {
                 One simple product flow
               </p>
               <h2 className="mt-3 max-w-[12ch] text-[clamp(2.5rem,5vw,4.7rem)] font-semibold leading-[0.94] tracking-[-0.058em]">
-                Connect once. Get the answer. Inspect proof only when you need it.
+                Connect once. Get the answer. Inspect proof only when you need
+                it.
               </h2>
             </div>
             <p className="m-0 max-w-2xl justify-self-end text-sm leading-6 text-white/42 sm:text-base sm:leading-7">
               Evalomics keeps the default experience short. Deeper evidence,
-              methodology, benchmark details, and source IDs stay behind
-              “See details” instead of blocking the first useful result.
+              methodology, benchmark details, and source IDs stay behind “See
+              details” instead of blocking the first useful result.
             </p>
           </div>
 
