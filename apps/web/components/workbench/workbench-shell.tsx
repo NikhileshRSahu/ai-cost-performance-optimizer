@@ -32,7 +32,7 @@ function NavLinks({
   onNavigate,
 }: Readonly<{ organizationId: string; onNavigate?: () => void }>) {
   const pathname = usePathname();
-  const base = \`/o/\${organizationId}\`;
+  const base = `/o/${organizationId}`;
 
   function linkClass(href: string): string {
     const active =
