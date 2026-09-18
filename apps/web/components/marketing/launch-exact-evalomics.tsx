@@ -20,6 +20,7 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { EvalomicsMark } from '../evalomics-mark';
+import { GuidedShowcaseDemo } from './guided-showcase-demo';
 
 const buttonBase =
   'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0';
@@ -501,6 +502,7 @@ export function LaunchExactEvalomics() {
       <Navbar />
       <main>
         <Hero />
+        <GuidedShowcaseDemo />
         <Logos />
         <Items />
         <Stats />
