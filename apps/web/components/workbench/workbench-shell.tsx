@@ -96,7 +96,9 @@ function NavLinks({
                 className={linkClass(href)}
               >
                 <Icon className="size-4" aria-hidden="true" />
-                <span>{label === 'Telemetry' ? 'Continuous telemetry' : label}</span>
+                <span>
+                  {label === 'Telemetry' ? 'Continuous telemetry' : label}
+                </span>
               </Link>
             );
           })}
