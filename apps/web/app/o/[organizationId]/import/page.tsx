@@ -320,7 +320,7 @@ export default async function ImportPage({
                             className="min-h-10 rounded-xl border border-white/12 bg-white/[0.04] px-4 py-2 text-xs font-semibold text-white"
                             type="submit"
                           >
-                            Analyze again
+                            Analyze my AI usage
                           </button>
                         </form>
                         <form action={disconnectProviderAccount}>
