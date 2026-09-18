@@ -51,8 +51,6 @@ function VerifyScreen() {
   </div>
 }
 
-const screens=[UploadScreen,AnalyzeScreen,DetectScreen,VerifyScreen];
-
 export function GuidedShowcaseDemo(){
   const ref=useRef<HTMLElement>(null);
   const {scrollYProgress}=useScroll({target:ref,offset:['start start','end end']});
