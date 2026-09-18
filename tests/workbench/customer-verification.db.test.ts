@@ -154,9 +154,15 @@ describe('complete customer verification loop', () => {
 
     const [recommendation] = await database.db.select().from(recommendations);
     expect(recommendation?.savingState).toBe('VERIFIED');
-    expect(await database.db.select().from(verificationWindows)).toHaveLength(
-      1,
-    );
+    const verificationRows = await database.db
+      .select()
+      .from(verificationWindows);
+    expect(verificationRows).toHaveLength(1);
+    expect(verificationRows[0]?.evidence).toMatchObject({
+      denominator: 'SUCCESSFUL_OUTCOMES',
+      unitDefinition: 'successful-outcome-v1',
+      successDefinition: 'csv-successes-v1',
+    });
   });
 
   it('keeps the recommendation TESTED when post-change quality fails', async () => {

@@ -109,6 +109,20 @@ describe('founder dashboard MRI view model', () => {
     expect(view.bestFirstMove?.recommendationId).toBe('rec-1');
   });
 
+  it('preserves explicit demo source metadata', () => {
+    const view = buildFounderDashboardView(
+      evidence({
+        sourceKind: 'DEMO',
+        isDemo: true,
+      }),
+    );
+
+    expect(view.sourceKind).toBe('DEMO');
+    expect(view.demoDisclaimer).toBe(
+      'Synthetic demo data — not a customer result.',
+    );
+  });
+
   it('preserves provider source metadata for zero-usage states', () => {
     const view = buildFounderDashboardView(
       evidence({

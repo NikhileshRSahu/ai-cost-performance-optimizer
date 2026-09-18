@@ -96,7 +96,13 @@ describe('automatic usage analysis service', () => {
     expect(persisted[0]?.evidence).toMatchObject({
       priorityRank: 1,
       methodologyVersion: 'usage-hypothesis-v1',
+      sourceImportId: imported.importId,
     });
+    expect(
+      persisted.every(
+        (row) => row.evidence.sourceImportId === imported.importId,
+      ),
+    ).toBe(true);
   });
 
   it('is idempotent for the same import and records opportunity ledger evidence once', async () => {
