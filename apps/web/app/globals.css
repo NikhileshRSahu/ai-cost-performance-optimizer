@@ -4555,3 +4555,43 @@ samp,
   border-color: rgba(240,163,91,.22);
   background: rgba(240,163,91,.06);
 }
+
+
+
+/* Unified dark treatment for public supporting pages. */
+.landing-stack,
+.legal-page {
+  color: rgba(255,255,255,.86);
+}
+.landing-stack .hero h1,
+.legal-page .hero h1,
+.landing-grid h2,
+.legal-sections h2,
+.privacy-levels strong {
+  color: #fff;
+}
+.landing-stack .lede,
+.legal-page .lede,
+.legal-sections p,
+.privacy-levels p {
+  color: rgba(255,255,255,.45);
+}
+.landing-stack .eyebrow,
+.legal-page .eyebrow,
+.privacy-levels span {
+  color: rgba(99,222,244,.7);
+}
+.privacy-levels article,
+.legal-sections article,
+.landing-grid,
+.landing-stack .evidence-note,
+.legal-page .evidence-note {
+  border-color: var(--eval-border);
+  background: linear-gradient(145deg, rgba(15,23,33,.92), rgba(8,12,17,.98));
+  color: rgba(255,255,255,.76);
+  box-shadow: inset 0 1px rgba(255,255,255,.025);
+}
+.landing-stack .evidence-note strong,
+.legal-page .evidence-note strong {
+  color: #fff;
+}
