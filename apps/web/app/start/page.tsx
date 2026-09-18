@@ -1,41 +1,27 @@
-import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
-import { createDatabase } from '../../../../src/persistence/database';
-import { organizations } from '../../../../src/persistence/schema';
+import { StartFlow } from '../../components/marketing/start-flow';
 import { resolveRuntimeSession } from '../../lib/runtime-session';
 
-export default async function StartPage() {
-  const session = await resolveRuntimeSession();
-  if (session === null) redirect('/login');
+export default async function StartPage({
+  searchParams,
+}: Readonly<{
+  searchParams: Promise<{mode?:string;provider?:string}>;
+}>) {
+  const query=await searchParams;
+  const session=await resolveRuntimeSession();
+  const membership=session?.memberships.at(0);
+  const organizationId=membership?.organizationId ?? null;
 
-  const membership = session.memberships.at(0);
-  if (membership === undefined) redirect('/unauthorized');
-
-  const databaseUrl = process.env.DATABASE_URL;
-  if (databaseUrl === undefined) redirect('/unauthorized');
-
-  const database = createDatabase(databaseUrl);
-  try {
-    const organization = (
-      await database.db
-        .select({
-          onboardingCompletedAt: organizations.onboardingCompletedAt,
-        })
-        .from(organizations)
-        .where(eq(organizations.id, membership.organizationId))
-        .limit(1)
-    ).at(0);
-
-    if (
-      organization !== undefined &&
-      organization.onboardingCompletedAt === null &&
-      membership.role === 'OWNER'
-    ) {
-      redirect('/o/' + membership.organizationId + '/import');
-    }
-  } finally {
-    await database.close();
+  if (organizationId !== null && query.mode === 'csv') {
+    redirect('/o/'+organizationId+'/import?mode=csv');
+  }
+  if (
+    organizationId !== null &&
+    query.mode === 'connect' &&
+    (query.provider === 'OPENAI' || query.provider === 'ANTHROPIC')
+  ) {
+    redirect('/o/'+organizationId+'/import?mode=connect&provider='+query.provider);
   }
 
-  redirect('/o/' + membership.organizationId);
+  return <StartFlow organizationId={organizationId} />;
 }
