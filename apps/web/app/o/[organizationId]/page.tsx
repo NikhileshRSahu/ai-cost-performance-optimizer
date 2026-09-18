@@ -1,19 +1,18 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { buildAnalysisDepth } from '../../../../../src/efficiency/analysis-depth';
-import { buildWorkMriSnapshot } from '../../../../../src/efficiency/work-mri';
+import {
+  ArrowRight,
+  BadgeDollarSign,
+  Database,
+  Gauge,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react';
 import { formatDecimal, rational } from '../../../../../src/economics/exact';
 import { createDatabase } from '../../../../../src/persistence/database';
 import { buildFounderDashboardView } from '../../../../../src/workbench/dashboard-view';
-import {
-  ProofTimeline,
-  type ProofStage,
-} from '../../../components/proof-timeline';
 import { RecommendationCard } from '../../../components/recommendation-card';
 import { SignOutButton } from '../../../components/sign-out-button';
-import { WorkMri } from '../../../components/work-mri';
-import { SourceChoiceCard } from '../../../components/workbench/source-choice-card';
-import { ResultJourney } from '../../../components/workbench/result-journey';
 import { hasSelfHostedAuthConfiguration } from '../../../lib/auth-config';
 import {
   loadFounderDashboardEvidence,
@@ -73,7 +72,7 @@ function verifiedMoney(
   )}`;
 }
 
-export default async function FounderDashboardPage({
+export default async function CostDashboardPage({
   params,
   searchParams,
 }: Readonly<{
@@ -86,7 +85,6 @@ export default async function FounderDashboardPage({
 }>) {
   const { organizationId } = await params;
   const query = await searchParams;
-  const selection = dashboardSelection(query);
   const session = await resolveRuntimeSession();
   const databaseUrl = process.env.DATABASE_URL;
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
@@ -94,318 +92,315 @@ export default async function FounderDashboardPage({
   const database = createDatabase(databaseUrl);
   let view;
   try {
-    const evidence = await loadFounderDashboardEvidence(
-      database.db,
-      session,
-      organizationId,
-      selection,
+    view = buildFounderDashboardView(
+      await loadFounderDashboardEvidence(
+        database.db,
+        session,
+        organizationId,
+        dashboardSelection(query),
+      ),
     );
-    view = buildFounderDashboardView(evidence);
   } finally {
     await database.close();
   }
 
-  const proofStage: ProofStage =
-    view.verifiedNetSavings !== null
-      ? 'Verified'
-      : view.strongestAction?.state === 'TESTED'
-        ? 'Tested'
-        : view.strongestAction !== null
-          ? 'Opportunity'
-          : 'Observed';
+  const modeled =
+    view.nonOverlappingModeledTotal === null
+      ? 'Not measured'
+      : `${view.nonOverlappingModeledTotal.currency} ${view.nonOverlappingModeledTotal.base}`;
 
-  const analysisSources =
-    view.dataQuality === 'NO_DATA'
-      ? []
-      : view.sourceKind === 'PROVIDER'
-        ? (['PROVIDER_ADMIN_USAGE'] as const)
-        : (['USAGE_CSV'] as const);
-  const analysisDepth = buildAnalysisDepth(analysisSources);
-  const mri = buildWorkMriSnapshot({
-    depth: analysisDepth,
-    additionalFacts: view.diagnosticFacts,
-    observedSpend: view.observedSpend,
-    strongestAction: null,
-    verifiedNetSavings:
-      view.verifiedNetSavings === null
-        ? null
-        : {
-            numerator: view.verifiedNetSavings.exactNumerator,
-            denominator: view.verifiedNetSavings.exactDenominator,
-            currency: view.verifiedNetSavings.currency,
-            evidenceRef: view.verifiedNetSavings.evidenceRef,
-          },
-  });
+  if (view.dataQuality === 'NO_DATA') {
+    return (
+      <div className="space-y-7">
+        <section>
+          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-sky-300">
+            Cost dashboard
+          </p>
+          <h1 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-slate-100 sm:text-3xl">
+            Bring your first usage window into focus.
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
+            Connect a supported provider or upload a CSV. Once evidence exists,
+            this page becomes the compact cost dashboard.
+          </p>
+        </section>
 
-  const journeyStage =
-    view.strongestAction?.state === 'VERIFIED'
-      ? 'Verified'
-      : view.strongestAction?.state === 'TESTED'
-        ? 'Tested'
-        : view.strongestAction !== null
-          ? 'Finding'
-          : 'Observed';
-
-  const resultLabel =
-    view.strongestAction?.state === 'VERIFIED'
-      ? 'Verified improvement'
-      : view.strongestAction?.state === 'TESTED'
-        ? 'Best tested improvement'
-        : view.strongestAction?.state === 'OPPORTUNITY'
-          ? 'Best opportunity found'
-          : 'Analysis ready';
+        <section className="grid gap-4 md:grid-cols-2">
+          <Link
+            href={`/o/${organizationId}/import?mode=connect`}
+            className="group min-h-60 rounded-xl border border-white/[0.07] bg-[#111a29] p-6 no-underline transition hover:-translate-y-0.5 hover:border-sky-300/20"
+          >
+            <Database className="size-5 text-sky-300" />
+            <h2 className="mt-8 text-xl font-medium text-slate-100">
+              Connect provider
+            </h2>
+            <p className="mt-2 max-w-sm text-sm leading-6 text-slate-500">
+              Use OpenAI or Anthropic Admin API evidence.
+            </p>
+            <span className="mt-7 inline-flex items-center gap-2 text-xs font-semibold text-sky-300">
+              Connect source <ArrowRight className="size-3.5" />
+            </span>
+          </Link>
+          <Link
+            href={`/o/${organizationId}/import?mode=csv`}
+            className="group min-h-60 rounded-xl border border-white/[0.07] bg-[#111a29] p-6 no-underline transition hover:-translate-y-0.5 hover:border-emerald-300/20"
+          >
+            <Gauge className="size-5 text-emerald-300" />
+            <h2 className="mt-8 text-xl font-medium text-slate-100">
+              Upload usage CSV
+            </h2>
+            <p className="mt-2 max-w-sm text-sm leading-6 text-slate-500">
+              Validate a usage export and run the same analysis path.
+            </p>
+            <span className="mt-7 inline-flex items-center gap-2 text-xs font-semibold text-emerald-300">
+              Upload data <ArrowRight className="size-3.5" />
+            </span>
+          </Link>
+        </section>
+      </div>
+    );
+  }
 
   return (
-    <div className="grid gap-6">
+    <div className="space-y-7">
       {view.demoDisclaimer !== null ? (
-        <div
-          className="rounded-xl border border-amber-300/20 bg-amber-300/[0.07] px-4 py-3 text-xs font-semibold text-amber-100/75"
-          role="note"
-        >
+        <div className="rounded-xl border border-amber-300/15 bg-amber-300/[0.05] px-4 py-3 text-xs font-semibold text-amber-100/70">
           {view.demoDisclaimer}
         </div>
       ) : null}
 
-      <header className="flex flex-col gap-5 border-b border-white/[0.07] pb-6 xl:flex-row xl:items-end xl:justify-between">
+      <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.17em] text-blue-200/55">
-            Evalomics analysis
-          </p>
-          <h1 className="m-0 mt-2 !text-[clamp(2.3rem,5vw,4.2rem)] !leading-[.98] !tracking-[-.055em] text-white">
-            {view.dataQuality === 'NO_DATA'
-              ? 'Give Evalomics your AI usage'
-              : view.dataQuality === 'ZERO_USAGE' &&
-                  view.sourceKind === 'PROVIDER'
-                ? `${view.providerName ?? 'Provider'} connected`
-                : 'We analyzed your AI usage'}
-          </h1>
-          <p className="m-0 mt-3 max-w-3xl text-sm leading-6 text-white/50">
-            {view.dataQuality === 'NO_DATA'
-              ? 'Connect OpenAI or Anthropic, upload a compatible CSV, or try the demo. Evalomics analyzes the source automatically and returns one clear result.'
-              : view.dataQuality === 'ZERO_USAGE' &&
-                  view.sourceKind === 'PROVIDER'
-                ? `Connection succeeded. No API usage or cost records were returned for ${view.periodLabel}.`
-                : `Evidence window: ${view.periodLabel}. Here is the strongest answer your current evidence supports.`}
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2.5">
-          {view.dataQuality !== 'NO_DATA' ? (
-            <span className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[10px] font-semibold text-white/55">
-              {view.dataQuality === 'ZERO_USAGE' &&
-              view.sourceKind === 'PROVIDER'
-                ? 'No API usage found'
-                : `Data quality · ${view.dataQuality}`}
+          <div className="mb-3 flex items-center gap-2">
+            <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-semibold text-emerald-300">
+              ● Cost intelligence
             </span>
-          ) : null}
-          {hasSelfHostedAuthConfiguration() ? <SignOutButton /> : null}
-        </div>
-      </header>
-
-      {view.dataQuality !== 'NO_DATA' &&
-      !(view.dataQuality === 'ZERO_USAGE' && view.sourceKind === 'PROVIDER') ? (
-        <ResultJourney current={journeyStage} />
-      ) : null}
-
-      {view.dataQuality === 'NO_DATA' ? (
-        <section className="grid gap-5">
-          <div className="max-w-3xl">
-            <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-200/55">
-              Choose a source
-            </p>
-            <h2 className="m-0 mt-2 text-2xl font-semibold tracking-[-0.035em] text-white sm:text-3xl">
-              Give Evalomics one usage source
-            </h2>
-            <p className="m-0 mt-3 text-sm leading-6 text-white/50">
-              Pick the easiest path. Evalomics handles the analysis
-              automatically and sends you back here with the strongest supported
-              answer.
-            </p>
+            <span className="font-mono text-[11px] text-slate-500">
+              {view.periodLabel}
+            </span>
           </div>
-
-          <div
-            className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"
-            aria-label="AI usage source choices"
-          >
-            <SourceChoiceCard
-              kind="OPENAI"
-              title="OpenAI"
-              description="Read organization API usage and cost reports. Prompt and response text are not requested."
-              meta="Admin API beta · 7-day evidence window"
-              href={`/o/${organizationId}/import`}
-              actionLabel="Connect OpenAI"
-            />
-            <SourceChoiceCard
-              kind="ANTHROPIC"
-              title="Anthropic"
-              description="Read organization API usage and cost reports. Consumer Claude app activity is separate."
-              meta="Admin API beta · 7-day evidence window"
-              href={`/o/${organizationId}/import`}
-              actionLabel="Connect Anthropic"
-            />
-            <SourceChoiceCard
-              kind="CSV"
-              title="Upload CSV"
-              description="Use an existing usage export when a provider connection is not the right path."
-              meta="Up to 10 MiB · 50,000 rows"
-              href={`/o/${organizationId}/import`}
-              actionLabel="Choose a usage file"
-            />
-            <SourceChoiceCard
-              kind="DEMO"
-              title="Try demo"
-              description="Run synthetic usage through the same analysis path and see the result before using customer data."
-              meta="Synthetic · never customer proof"
-              href={`/o/${organizationId}/import`}
-              actionLabel="Open the demo"
-            />
-          </div>
-
-          <p className="m-0 text-xs leading-5 text-white/38">
-            Provider connections use API-platform evidence. ChatGPT and Claude
-            consumer subscription activity is not included in these connectors.
+          <h1 className="text-2xl font-semibold tracking-[-0.04em] text-slate-100 sm:text-3xl">
+            Cost Dashboard
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
+            One screen for spend, supported opportunities, and proof state.
           </p>
-        </section>
-      ) : view.dataQuality === 'ZERO_USAGE' &&
-        view.sourceKind === 'PROVIDER' ? (
-        <>
-          <section
-            className="grid gap-5 rounded-[22px] border border-white/[0.08] bg-[#0a0f16] p-6 shadow-[0_24px_70px_rgba(0,0,0,.18)]"
-            data-testid="provider-zero-usage"
-          >
-            <div>
-              <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-200/65">
-                Connection ready
-              </p>
-              <h2 className="m-0 mt-2 text-2xl font-semibold tracking-[-0.035em] text-white">
-                No API usage found in this window
-              </h2>
-              <p className="m-0 mt-3 max-w-3xl text-sm leading-6 text-white/52">
-                Evalomics successfully connected to{' '}
-                {view.providerName ?? 'your provider'}, but the provider
-                returned no usage or cost records for this seven-day window.
-                There is nothing to optimize yet.
-              </p>
-              {view.providerName === 'OpenAI' ? (
-                <p className="m-0 mt-2 max-w-3xl text-xs leading-5 text-white/40">
-                  ChatGPT app usage is separate from OpenAI API Platform usage,
-                  so ChatGPT conversations do not appear in this connector.
-                </p>
-              ) : null}
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Link
-                className="inline-flex min-h-11 items-center rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 no-underline"
-                href={`/o/${organizationId}/import`}
-              >
-                Check again
-              </Link>
-              <Link
-                className="inline-flex min-h-11 items-center rounded-xl border border-white/10 bg-white/[0.04] px-5 py-2.5 text-sm font-semibold text-white no-underline"
-                href={`/o/${organizationId}/import`}
-              >
-                Upload CSV or try demo
-              </Link>
-            </div>
-          </section>
+        </div>
+        {hasSelfHostedAuthConfiguration() ? <SignOutButton /> : null}
+      </section>
 
-          <details className="group rounded-[22px] border border-white/[0.07] bg-white/[0.018]">
-            <summary className="cursor-pointer list-none px-5 py-4 text-sm font-semibold text-white/78 sm:px-6">
-              See connection details
-            </summary>
-            <div className="border-t border-white/[0.07] p-5 sm:p-6">
-              <ul className="m-0 grid gap-2 pl-5 text-xs leading-5 text-white/55">
-                {view.limitations.map((limitation) => (
-                  <li key={limitation}>{limitation}</li>
-                ))}
-              </ul>
-            </div>
-          </details>
-        </>
+      {view.dataQuality === 'ZERO_USAGE' && view.sourceKind === 'PROVIDER' ? (
+        <section className="rounded-xl border border-white/[0.07] bg-[#111a29] p-6">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-300/70">
+            Connection ready
+          </p>
+          <h2 className="mt-3 text-xl font-medium text-slate-100">
+            No API usage found in this window
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+            {view.providerName ?? 'Provider'} connected successfully, but no
+            usage or cost records were returned for this period.
+          </p>
+          <Link
+            href={`/o/${organizationId}/import`}
+            className="mt-5 inline-flex min-h-10 items-center rounded-lg bg-sky-400 px-4 py-2 text-xs font-semibold text-[#08101c] no-underline"
+          >
+            Check source
+          </Link>
+        </section>
       ) : (
         <>
-          <section
-            className="grid gap-3 rounded-[22px] border border-white/[0.08] bg-[#0a0f16] p-5 shadow-[0_24px_70px_rgba(0,0,0,.18)] sm:p-6"
-            data-testid="direct-answer-result"
-          >
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-              <div>
-                <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-200/60">
-                  {resultLabel}
+          <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {[
+              {
+                label: 'Observed AI spend',
+                value: moneyLabel(view.observedSpend),
+                detail:
+                  view.sourceKind === 'PROVIDER'
+                    ? (view.providerName ?? 'Provider')
+                    : view.sourceKind,
+                tone: 'text-sky-300',
+              },
+              {
+                label: 'Savings signals',
+                value: String(view.recommendations.length),
+                detail: 'ranked recommendations',
+                tone: 'text-slate-100',
+              },
+              {
+                label: 'Modeled upside',
+                value: modeled,
+                detail: 'planning evidence only',
+                tone: 'text-emerald-300',
+              },
+              {
+                label: 'Verified savings',
+                value: verifiedMoney(view.verifiedNetSavings),
+                detail: 'production evidence',
+                tone: 'text-violet-300',
+              },
+            ].map(({ label, value, detail, tone }) => (
+              <article
+                key={label}
+                className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5"
+              >
+                <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+                  {label}
                 </p>
-                <p className="m-0 mt-2 text-sm text-white/55">Spend analyzed</p>
-                <p className="m-0 mt-1 font-mono text-3xl font-medium tracking-[-0.04em] text-white">
-                  {moneyLabel(view.observedSpend)}
-                </p>
-              </div>
-              {view.verifiedNetSavings !== null ? (
-                <div className="rounded-xl border border-white/[0.08] bg-white/[0.025] px-4 py-3 text-left lg:min-w-56 lg:text-right">
-                  <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/45">
-                    Verified net saving
-                  </p>
-                  <p className="m-0 mt-1 font-mono text-xl font-medium text-white/88">
-                    {verifiedMoney(view.verifiedNetSavings)}
-                  </p>
-                </div>
-              ) : null}
-            </div>
-
-            {view.strongestAction === null ? (
-              <div className="mt-2 rounded-2xl border border-dashed border-white/10 bg-white/[0.018] p-5">
-                <h2 className="m-0 text-xl font-semibold text-white">
-                  No supported optimization yet
-                </h2>
-                <p className="mt-2 text-sm leading-6 text-white/50">
-                  Your data was analyzed, but there is not enough evidence yet
-                  to recommend a change safely.
-                </p>
-                <Link
-                  className="mt-4 inline-flex min-h-10 items-center rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold text-white no-underline"
-                  href={`/o/${organizationId}/import`}
-                >
-                  Add more data
-                </Link>
-              </div>
-            ) : (
-              <RecommendationCard
-                organizationId={organizationId}
-                recommendation={view.strongestAction}
-              />
-            )}
+                <p className={`mt-4 font-mono text-2xl ${tone}`}>{value}</p>
+                <p className="mt-2 text-[10px] text-slate-600">{detail}</p>
+              </article>
+            ))}
           </section>
 
-          <details
-            className="group rounded-[22px] border border-white/[0.07] bg-white/[0.018]"
-            data-testid="analysis-details"
-          >
-            <summary className="cursor-pointer list-none px-5 py-4 text-sm font-semibold text-white/78 sm:px-6">
-              See details
-            </summary>
-            <div className="grid gap-6 border-t border-white/[0.07] p-5 sm:p-6">
-              <section>
-                <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">
-                  Analysis status
-                </p>
-                <div className="mt-4 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4">
-                  <ProofTimeline current={proofStage} />
+          <section className="grid gap-6 xl:grid-cols-[1.25fr_.75fr]">
+            <div className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.16em] text-emerald-300/70">
+                    Top recommendation
+                  </p>
+                  <h2 className="mt-2 text-base font-medium text-slate-100">
+                    Strongest supported action
+                  </h2>
                 </div>
-              </section>
+                <Sparkles className="size-4 text-emerald-300/60" />
+              </div>
 
-              <WorkMri snapshot={mri} />
+              {view.strongestAction === null ? (
+                <div className="mt-5 rounded-lg border border-dashed border-white/[0.08] p-5">
+                  <p className="text-sm font-medium text-slate-300">
+                    No supported optimization yet
+                  </p>
+                  <p className="mt-2 text-xs leading-5 text-slate-500">
+                    Add more evidence before changing production behavior.
+                  </p>
+                </div>
+              ) : (
+                <RecommendationCard
+                  organizationId={organizationId}
+                  recommendation={view.strongestAction}
+                />
+              )}
 
-              {view.limitations.length > 0 ? (
-                <details className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
-                  <summary className="cursor-pointer text-sm font-semibold text-white/72">
-                    Evidence limitations
-                  </summary>
-                  <ul className="mt-3 grid gap-1.5 pl-5 text-xs leading-5 text-white/55">
-                    {view.limitations.map((limitation) => (
-                      <li key={limitation}>{limitation}</li>
-                    ))}
-                  </ul>
-                </details>
-              ) : null}
+              <Link
+                href={`/o/${organizationId}/recommendations`}
+                className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-sky-300 no-underline"
+              >
+                View all recommendations <ArrowRight className="size-3.5" />
+              </Link>
             </div>
-          </details>
+
+            <div className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="size-4 text-violet-300" />
+                <h2 className="text-sm font-medium text-slate-100">
+                  Evidence status
+                </h2>
+              </div>
+              <div className="mt-5 grid gap-3">
+                {[
+                  ['Observed', 'Usage and cost evidence loaded', true],
+                  [
+                    'Potential',
+                    'Optimization detected',
+                    view.strongestAction !== null,
+                  ],
+                  [
+                    'Tested',
+                    'Benchmark-supported',
+                    view.strongestAction?.state === 'TESTED' ||
+                      view.strongestAction?.state === 'VERIFIED',
+                  ],
+                  [
+                    'Verified',
+                    'Production proof',
+                    view.verifiedNetSavings !== null,
+                  ],
+                ].map(([label, detail, reached]) => (
+                  <div
+                    key={String(label)}
+                    className="flex items-center justify-between gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-3"
+                  >
+                    <div>
+                      <p className="text-xs font-medium text-slate-300">
+                        {String(label)}
+                      </p>
+                      <p className="mt-1 text-[10px] text-slate-600">
+                        {String(detail)}
+                      </p>
+                    </div>
+                    <span
+                      className={
+                        reached
+                          ? 'size-2 rounded-full bg-emerald-400'
+                          : 'size-2 rounded-full bg-slate-700'
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
+              <Link
+                href={`/o/${organizationId}/proof`}
+                className="mt-5 inline-flex items-center gap-2 text-xs font-semibold text-violet-300 no-underline"
+              >
+                Open verified savings <ArrowRight className="size-3.5" />
+              </Link>
+            </div>
+          </section>
+
+          <section className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+                  Usage diagnosis
+                </p>
+                <h2 className="mt-2 text-base font-medium text-slate-100">
+                  Signals Evalomics can support
+                </h2>
+              </div>
+              <BadgeDollarSign className="size-4 text-sky-300/60" />
+            </div>
+
+            {view.diagnosticFacts.length > 0 ? (
+              <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                {view.diagnosticFacts.slice(0, 4).map((fact) => (
+                  <article
+                    key={fact.label}
+                    className="rounded-lg border border-white/[0.06] bg-[#0c1421] p-4"
+                  >
+                    <p className="text-[10px] uppercase tracking-[0.12em] text-slate-600">
+                      {fact.label}
+                    </p>
+                    <p className="mt-3 font-mono text-base text-slate-200">
+                      {fact.value}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-5 text-sm text-slate-500">
+                No additional diagnostic facts are available for this source.
+              </p>
+            )}
+
+            <div className="mt-5 flex flex-wrap gap-4">
+              <Link
+                href={`/o/${organizationId}/import`}
+                className="inline-flex items-center gap-2 text-xs font-semibold text-sky-300 no-underline"
+              >
+                <Database className="size-3.5" />
+                Usage & Import
+              </Link>
+              <Link
+                href={`/o/${organizationId}/prompts`}
+                className="inline-flex items-center gap-2 text-xs font-semibold text-violet-300 no-underline"
+              >
+                <Sparkles className="size-3.5" />
+                Prompt Optimizer
+              </Link>
+            </div>
+          </section>
         </>
       )}
     </div>
