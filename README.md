@@ -157,3 +157,5 @@ The authoritative ship checklist is:
 The highest-value remaining V0 work includes sanitized AI-history analysis, automatic hypothesis generation, counterfactual replay for supported workloads, user-facing evidence drill-down, deletion/retention controls, deployment operations, and real design-partner proof.
 
 A CSV-only pilot may ship before connected-source support if its narrower release gates are satisfied and the release commit is fully green.
+
+<!-- Vercel deployment refresh: 2026-09-18 -->
