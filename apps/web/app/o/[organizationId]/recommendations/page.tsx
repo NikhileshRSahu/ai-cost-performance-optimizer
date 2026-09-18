@@ -40,7 +40,7 @@ export default async function RecommendationsPage({
   return (
     <div className="space-y-7">
       <section>
-        <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-300">
+        <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--eval-amber)]">
           Savings signal engine
         </p>
         <h1 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-slate-100 sm:text-3xl">
@@ -61,11 +61,11 @@ export default async function RecommendationsPage({
             {view.recommendations.length}
           </p>
         </div>
-        <div className="rounded-xl border border-emerald-400/15 bg-emerald-400/[0.04] p-5">
-          <p className="text-[10px] uppercase tracking-[0.16em] text-emerald-300/70">
-            Modeled upside
+        <div className="rounded-xl border border-amber-300/15 bg-amber-300/[0.04] p-5">
+          <p className="text-[10px] uppercase tracking-[0.16em] text-amber-200/70">
+            Potential upside
           </p>
-          <p className="mt-4 font-mono text-2xl text-emerald-300">{modeled}</p>
+          <p className="mt-4 font-mono text-2xl text-[var(--eval-amber)]">{modeled}</p>
           <p className="mt-1 text-[10px] text-slate-500">
             Only shown when the evidence model supports it.
           </p>
@@ -112,7 +112,7 @@ export default async function RecommendationsPage({
 
       <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-4 text-xs leading-5 text-slate-500">
         <BadgeDollarSign className="mr-2 inline size-3.5 text-emerald-300/70" />
-        Modeled savings are planning evidence. Tested or verified states appear
+        Potential savings are planning evidence. Tested or verified states appear
         only after stronger proof exists.
       </div>
     </div>
