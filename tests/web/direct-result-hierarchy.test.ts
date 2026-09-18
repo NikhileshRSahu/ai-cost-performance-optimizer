@@ -10,6 +10,10 @@ const shell = readFileSync(
   'apps/web/components/workbench/workbench-shell.tsx',
   'utf8',
 );
+const details = readFileSync(
+  'apps/web/components/workbench/evidence-details.tsx',
+  'utf8',
+);
 
 describe('direct result hierarchy', () => {
   it('puts evidence, strongest action, and optional details ahead of dashboard complexity', () => {
@@ -21,11 +25,11 @@ describe('direct result hierarchy', () => {
       'Strongest supported opportunity',
       'confidence',
       'Recommended next action',
-      'See details',
     ]) {
       expect(direct).toContain(expected);
     }
 
+    expect(details).toContain('See details');
     expect(page).toContain('Give Evalomics usage. Get one clear next action.');
     expect(page).not.toContain('<WorkMri');
 
