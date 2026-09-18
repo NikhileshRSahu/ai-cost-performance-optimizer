@@ -1,20 +1,20 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-const cardPath = 'apps/web/components/workbench/source-choice-card.tsx';
-const pagePath = 'apps/web/app/o/[organizationId]/page.tsx';
+const start = readFileSync('apps/web/components/marketing/start-flow.tsx', 'utf8');
+const importPage = readFileSync(
+  'apps/web/app/o/[organizationId]/import/page.tsx',
+  'utf8',
+);
 
-describe('source launchpad', () => {
-  it('exposes four low-friction source paths', () => {
-    const card = readFileSync(cardPath, 'utf8');
-    const page = readFileSync(pagePath, 'utf8');
-
-    for (const expected of ['OpenAI', 'Anthropic', 'Upload CSV', 'Try demo']) {
-      expect(page).toContain(expected);
+describe('source intake flow', () => {
+  it('keeps source choice before the authenticated intake details', () => {
+    for (const expected of ['Connect a source', 'Upload CSV', 'Anthropic', 'OpenAI']) {
+      expect(start).toContain(expected);
     }
 
-    expect(card).not.toContain('credential');
-    expect(card).not.toContain('type="file"');
-    expect(card).toContain('href');
+    expect(importPage).toContain('Upload your usage CSV');
+    expect(importPage).toContain('Connect the source you chose');
+    expect(importPage).toContain('Analyze my AI usage');
   });
 });
