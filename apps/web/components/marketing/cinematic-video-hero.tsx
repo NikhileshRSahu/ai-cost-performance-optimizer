@@ -65,9 +65,15 @@ export function CinematicVideoHero() {
               type="button"
               onClick={togglePlayback}
               className="grid size-10 place-items-center rounded-full border border-white/12 bg-black/55 text-white/80 backdrop-blur transition hover:bg-white hover:text-slate-950"
-              aria-label={playing ? 'Pause landing animation' : 'Play landing animation'}
+              aria-label={
+                playing ? 'Pause landing animation' : 'Play landing animation'
+              }
             >
-              {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
+              {playing ? (
+                <Pause className="size-4" />
+              ) : (
+                <Play className="size-4" />
+              )}
             </button>
           </div>
         </div>

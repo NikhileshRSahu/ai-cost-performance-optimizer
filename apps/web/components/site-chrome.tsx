@@ -78,13 +78,22 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
               Menu
             </summary>
             <nav className="absolute right-0 mt-2 grid min-w-48 gap-1 rounded-xl border border-slate-200 bg-white p-2 text-sm text-slate-800 shadow-xl">
-              <Link className="rounded-lg px-3 py-2 hover:bg-slate-50" href="/demo">
+              <Link
+                className="rounded-lg px-3 py-2 hover:bg-slate-50"
+                href="/demo"
+              >
                 Demo
               </Link>
-              <Link className="rounded-lg px-3 py-2 hover:bg-slate-50" href="/pricing">
+              <Link
+                className="rounded-lg px-3 py-2 hover:bg-slate-50"
+                href="/pricing"
+              >
                 Pricing
               </Link>
-              <Link className="rounded-lg bg-slate-950 px-3 py-2 text-white" href="/start">
+              <Link
+                className="rounded-lg bg-slate-950 px-3 py-2 text-white"
+                href="/start"
+              >
                 Start free
               </Link>
             </nav>
@@ -115,7 +124,9 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
           }
         >
           <div className="grid gap-1">
-            <strong className={isHome ? 'text-white' : 'text-slate-900'}>Evalomics</strong>
+            <strong className={isHome ? 'text-white' : 'text-slate-900'}>
+              Evalomics
+            </strong>
             <span>AI Efficiency Intelligence · Evidence before claims</span>
           </div>
           <nav className="flex flex-wrap gap-5" aria-label="Trust and legal">

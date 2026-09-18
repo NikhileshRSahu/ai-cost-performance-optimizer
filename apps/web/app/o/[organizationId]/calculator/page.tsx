@@ -47,7 +47,9 @@ export default function ModelCalculatorPage() {
             <span className="grid size-10 place-items-center rounded-xl border border-amber-300/15 bg-amber-400/[0.06]">
               <Icon className="size-4 text-amber-200" />
             </span>
-            <h2 className="mt-6 text-base font-medium text-slate-100">{title}</h2>
+            <h2 className="mt-6 text-base font-medium text-slate-100">
+              {title}
+            </h2>
             <p className="mt-2 text-sm leading-6 text-slate-500">{body}</p>
             <Link
               href={href}

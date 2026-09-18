@@ -336,8 +336,6 @@ export default async function ImportPage({
               </article>
             );
           })}
-
-
         </section>
       ) : null}
 
@@ -369,8 +367,6 @@ export default async function ImportPage({
           </div>
         </section>
       ) : null}
-
-
     </div>
   );
 }

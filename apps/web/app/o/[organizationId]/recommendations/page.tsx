@@ -75,7 +75,9 @@ export default async function RecommendationsPage({
             Method
           </p>
           <p className="mt-4 text-sm text-slate-200">Evidence-ranked actions</p>
-          <p className="mt-1 text-xs text-slate-500">No black-box savings claim</p>
+          <p className="mt-1 text-xs text-slate-500">
+            No black-box savings claim
+          </p>
         </div>
       </div>
 

@@ -215,7 +215,10 @@ export default async function CostDashboardPage({
               {
                 label: 'Observed AI spend',
                 value: moneyLabel(view.observedSpend),
-                detail: view.sourceKind === 'PROVIDER' ? view.providerName ?? 'Provider' : view.sourceKind,
+                detail:
+                  view.sourceKind === 'PROVIDER'
+                    ? (view.providerName ?? 'Provider')
+                    : view.sourceKind,
                 tone: 'text-sky-300',
               },
               {
@@ -298,14 +301,22 @@ export default async function CostDashboardPage({
               <div className="mt-5 grid gap-3">
                 {[
                   ['Observed', 'Usage and cost evidence loaded', true],
-                  ['Potential', 'Optimization detected', view.strongestAction !== null],
+                  [
+                    'Potential',
+                    'Optimization detected',
+                    view.strongestAction !== null,
+                  ],
                   [
                     'Tested',
                     'Benchmark-supported',
                     view.strongestAction?.state === 'TESTED' ||
                       view.strongestAction?.state === 'VERIFIED',
                   ],
-                  ['Verified', 'Production proof', view.verifiedNetSavings !== null],
+                  [
+                    'Verified',
+                    'Production proof',
+                    view.verifiedNetSavings !== null,
+                  ],
                 ].map(([label, detail, reached]) => (
                   <div
                     key={String(label)}
