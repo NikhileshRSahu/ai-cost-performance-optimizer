@@ -97,7 +97,8 @@ function nextUnlockLabel(depth: AnalysisDepth): string | null {
     case 'PRODUCTION_TELEMETRY':
       return 'Connect outcome-bearing production telemetry to unlock cost-per-success and continuous verification.';
     case 'USAGE_CSV':
-      return 'Upload usage evidence to begin the MRI.';
+    case 'PROVIDER_ADMIN_USAGE':
+      return 'Add usage evidence to begin the MRI.';
     case undefined:
       return null;
   }
