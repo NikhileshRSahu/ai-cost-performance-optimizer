@@ -15,7 +15,7 @@ import { useFxRate } from '../hooks/use-fx-rate';
 
 const currencies = ['USD', 'EUR', 'GBP', 'INR'] as const;
 const fieldClass =
-  'min-h-12 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm font-semibold text-slate-950 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100';
+  'min-h-12 w-full rounded-xl border border-white/[0.08] bg-[#091018] px-3.5 text-sm font-semibold text-white/82 outline-none transition focus:border-cyan-300/30 focus:ring-4 focus:ring-cyan-300/[0.06]';
 
 function parseCount(value: string): bigint | null {
   if (!/^(0|[1-9]\d{0,17})$/.test(value)) return null;
@@ -85,27 +85,27 @@ export function CostPerOutcomeCalculator() {
   return (
     <section className="grid gap-5 lg:grid-cols-[.94fr_1.06fr] lg:items-start">
       <form
-        className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_24px_70px_rgba(15,23,42,.055)] sm:p-6"
+        className="rounded-[24px] border border-white/[0.08] bg-[linear-gradient(145deg,rgba(15,23,33,.96),rgba(8,12,17,.98))] p-5 shadow-[0_24px_70px_rgba(15,23,42,.055)] sm:p-6"
         onSubmit={(event) => {
           event.preventDefault();
         }}
       >
-        <div className="mb-6 flex items-center justify-between gap-4 border-b border-slate-100 pb-5">
+        <div className="mb-6 flex items-center justify-between gap-4 border-b border-white/[0.06] pb-5">
           <div>
-            <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-700">
+            <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-300/75">
               Outcome economics
             </p>
-            <h2 className="mt-1 text-lg font-semibold tracking-[-0.025em] text-slate-950">
+            <h2 className="mt-1 text-lg font-semibold tracking-[-0.025em] text-white">
               Price reliability, not just requests
             </h2>
           </div>
-          <div className="grid size-10 place-items-center rounded-xl bg-slate-950 text-white">
+          <div className="grid size-10 place-items-center rounded-xl bg-white/[0.05] text-cyan-300">
             <Target className="size-4" />
           </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+          <label className="grid gap-2 text-sm font-semibold text-white/72">
             <span>Monthly AI cost</span>
             <input
               className={fieldClass}
@@ -117,7 +117,7 @@ export function CostPerOutcomeCalculator() {
             />
           </label>
 
-          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+          <label className="grid gap-2 text-sm font-semibold text-white/72">
             <span>Requests per month</span>
             <input
               className={fieldClass}
@@ -129,7 +129,7 @@ export function CostPerOutcomeCalculator() {
             />
           </label>
 
-          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+          <label className="grid gap-2 text-sm font-semibold text-white/72">
             <span>Successful outcome rate (%)</span>
             <input
               className={fieldClass}
@@ -139,12 +139,12 @@ export function CostPerOutcomeCalculator() {
                 setSuccessRate(event.target.value);
               }}
             />
-            <small className="text-xs font-normal text-slate-500">
+            <small className="text-xs font-normal text-white/34">
               Must be above 0 and at most 100.
             </small>
           </label>
 
-          <label className="grid gap-2 text-sm font-semibold text-slate-800">
+          <label className="grid gap-2 text-sm font-semibold text-white/72">
             <span>Currency of monthly cost</span>
             <select
               className={fieldClass}
@@ -161,7 +161,7 @@ export function CostPerOutcomeCalculator() {
             </select>
           </label>
 
-          <label className="grid gap-2 text-sm font-semibold text-slate-800 sm:col-span-2">
+          <label className="grid gap-2 text-sm font-semibold text-white/72 sm:col-span-2">
             <span>Display results in</span>
             <select
               className={fieldClass}
@@ -176,7 +176,7 @@ export function CostPerOutcomeCalculator() {
                 </option>
               ))}
             </select>
-            <small className="text-xs font-normal leading-5 text-slate-500">
+            <small className="text-xs font-normal leading-5 text-white/34">
               {inputCurrency === displayCurrency
                 ? 'No FX conversion is needed.'
                 : fx.status === 'ready'
