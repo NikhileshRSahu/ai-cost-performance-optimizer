@@ -1,6 +1,9 @@
 export type DashboardDataQuality =
   'READY' | 'PARTIAL_DATA' | 'ZERO_USAGE' | 'NO_DATA';
 
+export type DashboardSourceKind = 'NONE' | 'CSV' | 'PROVIDER';
+export type DashboardProviderName = 'OpenAI' | 'Anthropic';
+
 export type DashboardSavingsState = 'OPPORTUNITY' | 'TESTED' | 'VERIFIED';
 
 export type DashboardDecision =
@@ -71,6 +74,8 @@ export type DashboardEvidence = Readonly<{
   organizationName: string;
   periodLabel: string;
   dataQuality: DashboardDataQuality;
+  sourceKind?: DashboardSourceKind;
+  providerName?: DashboardProviderName | null;
   observedSpend: DisplayMoneyEvidence | null;
   completeCalendarDays: number;
   recommendations?: readonly DashboardRecommendationEvidence[];
@@ -107,6 +112,8 @@ export type FounderDashboardView = Readonly<{
   organizationName: string;
   periodLabel: string;
   dataQuality: DashboardDataQuality;
+  sourceKind: DashboardSourceKind;
+  providerName: DashboardProviderName | null;
   observedSpend: DisplayMoneyEvidence | null;
   recommendations: readonly DashboardRecommendationView[];
   bestFirstMove: DashboardRecommendationView | null;
@@ -230,6 +237,9 @@ export function buildFounderDashboardView(
     organizationName: input.organizationName,
     periodLabel: input.periodLabel,
     dataQuality: input.dataQuality,
+    sourceKind:
+      input.sourceKind ?? (input.dataQuality === 'NO_DATA' ? 'NONE' : 'CSV'),
+    providerName: input.providerName ?? null,
     observedSpend:
       input.observedSpend === null
         ? null

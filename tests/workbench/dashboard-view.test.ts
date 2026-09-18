@@ -109,6 +109,22 @@ describe('founder dashboard MRI view model', () => {
     expect(view.bestFirstMove?.recommendationId).toBe('rec-1');
   });
 
+  it('preserves provider source metadata for zero-usage states', () => {
+    const view = buildFounderDashboardView(
+      evidence({
+        dataQuality: 'ZERO_USAGE',
+        sourceKind: 'PROVIDER',
+        providerName: 'OpenAI',
+        observedSpend: null,
+        recommendations: [],
+      }),
+    );
+
+    expect(view.sourceKind).toBe('PROVIDER');
+    expect(view.providerName).toBe('OpenAI');
+    expect(view.dataQuality).toBe('ZERO_USAGE');
+  });
+
   it('supports zero findings without inventing an opportunity', () => {
     const view = buildFounderDashboardView(
       evidence({ recommendations: [], nonOverlappingModeledTotal: null }),

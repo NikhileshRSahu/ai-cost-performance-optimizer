@@ -115,18 +115,24 @@ export default async function FounderDashboardPage({
           <h1 className="m-0 mt-2 !text-[clamp(2.3rem,5vw,4.2rem)] !leading-[.98] !tracking-[-.055em] text-white">
             {view.dataQuality === 'NO_DATA'
               ? 'Give Evalomics your AI usage'
-              : 'We analyzed your AI usage'}
+              : view.dataQuality === 'ZERO_USAGE' && view.sourceKind === 'PROVIDER'
+                ? `${view.providerName ?? 'Provider'} connected`
+                : 'We analyzed your AI usage'}
           </h1>
           <p className="m-0 mt-3 max-w-3xl text-sm leading-6 text-white/50">
             {view.dataQuality === 'NO_DATA'
               ? 'Connect OpenAI or Anthropic, upload a compatible CSV, or try the demo. Evalomics analyzes the source automatically and returns one clear result.'
-              : `Evidence window: ${view.periodLabel}. Here is the strongest answer your current evidence supports.`}
+              : view.dataQuality === 'ZERO_USAGE' && view.sourceKind === 'PROVIDER'
+                ? `Connection succeeded. No API usage or cost records were returned for ${view.periodLabel}.`
+                : `Evidence window: ${view.periodLabel}. Here is the strongest answer your current evidence supports.`}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2.5">
           {view.dataQuality !== 'NO_DATA' ? (
             <span className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[10px] font-semibold text-white/55">
-              Data quality · {view.dataQuality}
+              {view.dataQuality === 'ZERO_USAGE' && view.sourceKind === 'PROVIDER'
+                ? 'No API usage found'
+                : `Data quality · ${view.dataQuality}`}
             </span>
           ) : null}
           {hasSelfHostedAuthConfiguration() ? <SignOutButton /> : null}
@@ -150,6 +156,61 @@ export default async function FounderDashboardPage({
             Connect or upload usage
           </Link>
         </section>
+      ) : view.dataQuality === 'ZERO_USAGE' &&
+        view.sourceKind === 'PROVIDER' ? (
+        <>
+          <section
+            className="grid gap-5 rounded-[22px] border border-white/[0.08] bg-[#0a0f16] p-6 shadow-[0_24px_70px_rgba(0,0,0,.18)]"
+            data-testid="provider-zero-usage"
+          >
+            <div>
+              <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-200/65">
+                Connection ready
+              </p>
+              <h2 className="m-0 mt-2 text-2xl font-semibold tracking-[-0.035em] text-white">
+                No API usage found in this window
+              </h2>
+              <p className="m-0 mt-3 max-w-3xl text-sm leading-6 text-white/52">
+                Evalomics successfully connected to {view.providerName ?? 'your provider'},
+                but the provider returned no usage or cost records for this
+                seven-day window. There is nothing to optimize yet.
+              </p>
+              {view.providerName === 'OpenAI' ? (
+                <p className="m-0 mt-2 max-w-3xl text-xs leading-5 text-white/40">
+                  ChatGPT app usage is separate from OpenAI API Platform usage,
+                  so ChatGPT conversations do not appear in this connector.
+                </p>
+              ) : null}
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                className="inline-flex min-h-11 items-center rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 no-underline"
+                href={`/o/${organizationId}/import`}
+              >
+                Check again
+              </Link>
+              <Link
+                className="inline-flex min-h-11 items-center rounded-xl border border-white/10 bg-white/[0.04] px-5 py-2.5 text-sm font-semibold text-white no-underline"
+                href={`/o/${organizationId}/import`}
+              >
+                Upload CSV or try demo
+              </Link>
+            </div>
+          </section>
+
+          <details className="group rounded-[22px] border border-white/[0.07] bg-white/[0.018]">
+            <summary className="cursor-pointer list-none px-5 py-4 text-sm font-semibold text-white/78 sm:px-6">
+              See connection details
+            </summary>
+            <div className="border-t border-white/[0.07] p-5 sm:p-6">
+              <ul className="m-0 grid gap-2 pl-5 text-xs leading-5 text-white/55">
+                {view.limitations.map((limitation) => (
+                  <li key={limitation}>{limitation}</li>
+                ))}
+              </ul>
+            </div>
+          </details>
+        </>
       ) : (
         <>
           <section

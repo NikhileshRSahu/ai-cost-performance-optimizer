@@ -8,6 +8,7 @@ import {
   analyzeDemoUsage,
   connectProviderAccount,
   disconnectProviderAccount,
+  syncProviderAccount,
   uploadUsageCsv,
 } from './action';
 
@@ -23,6 +24,12 @@ function providerErrorCopy(code: string | undefined): string | null {
   }
   if (code === 'PROVIDER_CONNECTION_NOT_CONFIGURED') {
     return 'Provider connections are not fully configured on this Evalomics deployment yet.';
+  }
+  if (code === 'PROVIDER_TEMPORARY_ERROR') {
+    return 'A temporary database connection interruption stopped the sync. No failed sync is treated as valid evidence. Try again.';
+  }
+  if (code === 'PROVIDER_CONNECTION_REQUIRED') {
+    return 'This provider is not connected anymore. Connect it again to analyze usage.';
   }
   return 'Evalomics could not validate this provider connection. Nothing was saved.';
 }
@@ -134,7 +141,11 @@ export default async function ImportPage({
                   </h2>
                 </div>
                 <span className="rounded-full border border-white/10 px-2.5 py-1 text-[10px] font-semibold text-white/55">
-                  {connection === undefined ? 'Not connected' : 'Connected'}
+                  {connection === undefined
+                    ? 'Not connected'
+                    : connection.lastSyncStatus === 'READY'
+                      ? 'Connected'
+                      : 'Needs check'}
                 </span>
               </div>
 
@@ -197,27 +208,45 @@ export default async function ImportPage({
                 <div className="mt-5 grid gap-3">
                   <div className="rounded-xl border border-emerald-300/10 bg-emerald-300/[0.035] px-4 py-3">
                     <p className="m-0 text-xs font-semibold text-emerald-100/80">
-                      Ready for analysis
+                      {connection.lastSyncStatus === 'READY'
+                        ? 'Connected'
+                        : 'Connection needs a fresh check'}
                     </p>
                     <p className="m-0 mt-1 text-[11px] text-white/42">
                       Last checked {connection.lastSyncAt ?? connection.connectedAt}
                     </p>
                   </div>
                   {owner ? (
-                    <form action={disconnectProviderAccount}>
-                      <input
-                        type="hidden"
-                        name="organizationId"
-                        value={organizationId}
-                      />
-                      <input type="hidden" name="provider" value={provider} />
-                      <button
-                        className="text-xs font-semibold text-white/45 underline decoration-white/20 underline-offset-4"
-                        type="submit"
-                      >
-                        Disconnect
-                      </button>
-                    </form>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <form action={syncProviderAccount}>
+                        <input
+                          type="hidden"
+                          name="organizationId"
+                          value={organizationId}
+                        />
+                        <input type="hidden" name="provider" value={provider} />
+                        <button
+                          className="min-h-10 rounded-xl border border-white/12 bg-white/[0.04] px-4 py-2 text-xs font-semibold text-white"
+                          type="submit"
+                        >
+                          Check again
+                        </button>
+                      </form>
+                      <form action={disconnectProviderAccount}>
+                        <input
+                          type="hidden"
+                          name="organizationId"
+                          value={organizationId}
+                        />
+                        <input type="hidden" name="provider" value={provider} />
+                        <button
+                          className="text-xs font-semibold text-white/45 underline decoration-white/20 underline-offset-4"
+                          type="submit"
+                        >
+                          Disconnect
+                        </button>
+                      </form>
+                    </div>
                   ) : null}
                 </div>
               )}

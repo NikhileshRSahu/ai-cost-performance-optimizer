@@ -36,6 +36,10 @@ export function createDatabase(connectionString: string): DatabaseHandle {
   const pool = new Pool({
     connectionString: normalizePostgresSslMode(connectionString),
   });
+  pool.on('error', (error) => {
+    const code = (error as Error & { code?: string }).code ?? 'UNKNOWN';
+    console.warn('DATABASE_POOL_IDLE_ERROR', code);
+  });
   const db = drizzle(pool, { schema });
 
   return Object.freeze({

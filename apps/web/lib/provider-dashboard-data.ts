@@ -11,6 +11,7 @@ import type {
   ProviderUsageEvidence,
 } from '../../../src/ingestion/provider-evidence';
 import type { PersistenceDatabase } from '../../../src/persistence/database';
+import { providerConnections } from '../../../src/persistence/provider-connections-schema';
 import { providerEvidenceSnapshots } from '../../../src/persistence/provider-evidence-schema';
 import {
   organizations,
@@ -111,14 +112,39 @@ export async function loadLatestProviderDashboardEvidence(
 ): Promise<DashboardEvidence | null> {
   requireOrganizationAccess({ session, organizationId, action: 'READ' });
 
-  const snapshot = (
-    await db
+  const [snapshots, connections] = await Promise.all([
+    db
       .select()
       .from(providerEvidenceSnapshots)
       .where(eq(providerEvidenceSnapshots.organizationId, organizationId))
       .orderBy(desc(providerEvidenceSnapshots.receivedAt))
-      .limit(1)
-  ).at(0);
+      .limit(20),
+    db
+      .select()
+      .from(providerConnections)
+      .where(eq(providerConnections.organizationId, organizationId)),
+  ]);
+
+  const snapshot = snapshots.find((candidate) => {
+    const provider =
+      candidate.source === 'OPENAI_ADMIN_API'
+        ? 'OPENAI'
+        : candidate.source === 'ANTHROPIC_ADMIN_API'
+          ? 'ANTHROPIC'
+          : null;
+    if (provider === null) return false;
+
+    const connection = connections.find(
+      (item) =>
+        item.provider === provider &&
+        item.revokedAt === null &&
+        item.lastSyncStatus === 'READY' &&
+        item.lastSyncAt !== null,
+    );
+    if (connection === undefined || connection.lastSyncAt === null) return false;
+
+    return Date.parse(connection.lastSyncAt) >= Date.parse(candidate.receivedAt);
+  });
 
   if (
     snapshot === undefined ||
@@ -299,6 +325,9 @@ export async function loadLatestProviderDashboardEvidence(
     periodLabel: `${snapshot.intervalStart.slice(0, 10)} to ${snapshot.intervalEnd.slice(0, 10)}`,
     dataQuality:
       usage.length === 0 && costs.length === 0 ? 'ZERO_USAGE' : 'READY',
+    sourceKind: 'PROVIDER',
+    providerName:
+      snapshot.source === 'OPENAI_ADMIN_API' ? 'OpenAI' : 'Anthropic',
     observedSpend: hasSpend
       ? Object.freeze({
           amount: formatDecimal(spend, 2),

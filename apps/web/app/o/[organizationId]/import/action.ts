@@ -13,6 +13,7 @@ import {
   connectAndValidateProvider,
   disconnectProvider,
   providerConnectionSafeError,
+  syncConnectedProvider,
 } from '../../../../../../src/workbench/provider-connection-service';
 import { assertUploadWithinLimit } from '../../../../../../src/workbench/upload-limits';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
@@ -69,6 +70,7 @@ export async function connectProviderAccount(
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
 
   const database = createDatabase(databaseUrl);
+  let safeError: string | null = null;
   try {
     await connectAndValidateProvider({
       db: database.db,
@@ -81,14 +83,51 @@ export async function connectProviderAccount(
     });
     await completeOnboarding(database, organizationId);
   } catch (error) {
-    const safeError = providerConnectionSafeError(error);
-    redirect(
-      `/o/${organizationId}/import?providerError=${encodeURIComponent(safeError)}`,
-    );
+    safeError = providerConnectionSafeError(error);
   } finally {
     await database.close();
   }
 
+  if (safeError !== null) {
+    redirect(
+      `/o/${organizationId}/import?providerError=${encodeURIComponent(safeError)}`,
+    );
+  }
+  redirect(`/o/${organizationId}?source=provider&provider=${provider}`);
+}
+
+export async function syncProviderAccount(
+  formData: FormData,
+): Promise<never> {
+  const organizationId = textEntry(formData, 'organizationId');
+  const provider = providerEntry(formData);
+  const session = await resolveRuntimeSession();
+  const databaseUrl = process.env.DATABASE_URL;
+  if (session === null || databaseUrl === undefined) redirect('/unauthorized');
+
+  const database = createDatabase(databaseUrl);
+  let safeError: string | null = null;
+  try {
+    await syncConnectedProvider({
+      db: database.db,
+      session,
+      organizationId,
+      provider,
+      encryptionKeyEnv: process.env.PROVIDER_CREDENTIAL_ENCRYPTION_KEY,
+      encryptionFallbackSecret: process.env.BETTER_AUTH_SECRET,
+    });
+    await completeOnboarding(database, organizationId);
+  } catch (error) {
+    safeError = providerConnectionSafeError(error);
+  } finally {
+    await database.close();
+  }
+
+  if (safeError !== null) {
+    redirect(
+      `/o/${organizationId}/import?providerError=${encodeURIComponent(safeError)}`,
+    );
+  }
   redirect(`/o/${organizationId}?source=provider&provider=${provider}`);
 }
 

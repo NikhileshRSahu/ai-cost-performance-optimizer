@@ -13,12 +13,14 @@ import {
 } from '../ingestion/provider-normalization.js';
 import type { PersistenceDatabase } from '../persistence/database.js';
 import {
+  getProviderCredentialCiphertext,
   markProviderConnectionSync,
   revokeProviderConnection,
   saveProviderConnection,
   type ProviderConnectionProvider,
 } from '../persistence/repositories/provider-connections.js';
 import {
+  decryptProviderCredential,
   encryptProviderCredential,
   providerCredentialKeyFromEnv,
 } from '../security/provider-credentials.js';
@@ -48,6 +50,17 @@ export function providerConnectionSafeError(error: unknown): string {
   }
   if (message.includes('KEY_REQUIRED') || message.includes('KEY_INVALID')) {
     return 'PROVIDER_CONNECTION_NOT_CONFIGURED';
+  }
+  if (
+    message.includes('57P01') ||
+    message.includes('57P02') ||
+    message.includes('57P03') ||
+    message.toLowerCase().includes('terminating connection')
+  ) {
+    return 'PROVIDER_TEMPORARY_ERROR';
+  }
+  if (message === 'PROVIDER_CONNECTION_REQUIRED') {
+    return 'PROVIDER_CONNECTION_REQUIRED';
   }
   return 'PROVIDER_SYNC_FAILED';
 }
@@ -182,5 +195,52 @@ export async function disconnectProvider(
     organizationId: input.organizationId,
     provider: input.provider,
     revokedAt: now.toISOString(),
+  });
+}
+
+
+export async function syncConnectedProvider(
+  input: Readonly<{
+    db: PersistenceDatabase;
+    session: AuthenticatedSession;
+    organizationId: string;
+    provider: ProviderConnectionProvider;
+    encryptionKeyEnv: string | undefined;
+    encryptionFallbackSecret: string | undefined;
+    now?: Date;
+    openAIFetcher?: OpenAIAdminFetch;
+    anthropicFetcher?: AnthropicAdminFetch;
+  }>,
+): Promise<ProviderConnectionResult> {
+  const encryptionKey = providerCredentialKeyFromEnv(
+    input.encryptionKeyEnv,
+    input.encryptionFallbackSecret,
+  );
+  const ciphertext = await getProviderCredentialCiphertext({
+    db: input.db,
+    session: input.session,
+    organizationId: input.organizationId,
+    provider: input.provider,
+  });
+  if (ciphertext === null) {
+    throw new Error('PROVIDER_CONNECTION_REQUIRED');
+  }
+
+  const adminKey = decryptProviderCredential(ciphertext, encryptionKey);
+  return connectAndValidateProvider({
+    db: input.db,
+    session: input.session,
+    organizationId: input.organizationId,
+    provider: input.provider,
+    adminKey,
+    encryptionKeyEnv: input.encryptionKeyEnv,
+    encryptionFallbackSecret: input.encryptionFallbackSecret,
+    ...(input.now === undefined ? {} : { now: input.now }),
+    ...(input.openAIFetcher === undefined
+      ? {}
+      : { openAIFetcher: input.openAIFetcher }),
+    ...(input.anthropicFetcher === undefined
+      ? {}
+      : { anthropicFetcher: input.anthropicFetcher }),
   });
 }

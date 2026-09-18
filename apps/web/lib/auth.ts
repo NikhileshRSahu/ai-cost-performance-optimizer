@@ -18,6 +18,18 @@ export function hasGoogleAuthConfiguration(): boolean {
   return hasSelfHostedAuthConfiguration();
 }
 
+function createAuthPool(connectionString: string): Pool {
+  const pool = new Pool({
+    connectionString,
+    options: '-c search_path=auth',
+  });
+  pool.on('error', (error) => {
+    const code = (error as Error & { code?: string }).code ?? 'UNKNOWN';
+    console.warn('AUTH_DATABASE_POOL_IDLE_ERROR', code);
+  });
+  return pool;
+}
+
 function createWebAuth() {
   const configuration = requireSelfHostedAuthConfiguration();
 
@@ -29,10 +41,7 @@ function createWebAuth() {
       new URL(configuration.baseUrl).origin,
       'https://evalomics.vercel.app',
     ],
-    database: new Pool({
-      connectionString: configuration.databaseUrl,
-      options: '-c search_path=auth',
-    }),
+    database: createAuthPool(configuration.databaseUrl),
     socialProviders: {
       google: {
         clientId: configuration.googleClientId,
