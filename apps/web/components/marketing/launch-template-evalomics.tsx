@@ -137,6 +137,29 @@ function RequestFlow() {
   );
 }
 
+function DiagnosticSignal() {
+  return (
+    <div className="eval-template-diagnostic">
+      <div className="eval-template-diagnostic__eyebrow">Highest-confidence waste signal</div>
+      <div className="eval-template-diagnostic__headline">
+        <strong>Repeated input</strong>
+        <span>1,248 similar requests</span>
+      </div>
+      <div className="eval-template-diagnostic__row">
+        <span>Avoidable spend</span>
+        <b>$87.42</b>
+      </div>
+      <div className="eval-template-diagnostic__row">
+        <span>Evidence confidence</span>
+        <b>High</b>
+      </div>
+      <div className="eval-template-diagnostic__action">
+        Test cache reuse <ArrowRight size={13} />
+      </div>
+    </div>
+  );
+}
+
 function EvidenceSteps() {
   return (
     <div className="eval-template-proof-stack">
@@ -234,16 +257,17 @@ export function LaunchTemplateEvalomics() {
           <div className="eval-template-showcase-frame">
             <div className="eval-template-showcase-glow eval-motion-decorative" />
             <div className="eval-template-showcase-copy">
-              <span>Inside Evalomics</span>
-              <h2>AI requests become visible cost trails.</h2>
+              <span>Diagnosis, not another dashboard</span>
+              <h2>The bill shows the cost. Evalomics finds the cause.</h2>
               <p>
-                The same provider evidence becomes a spatial map of repeated input,
-                model routing, context load, testing state, and savings confidence.
+                Thousands of requests can hide the same expensive behavior. Evalomics
+                traces repeated input, oversized context, and model-routing waste back
+                to the pattern creating it — then turns the strongest signal into a testable action.
               </p>
             </div>
-            <div className="eval-template-showcase-layers">
-              <div className="eval-template-showcase-card one eval-motion-decorative"><MiniDashboard /></div>
-              <div className="eval-template-showcase-card two eval-motion-decorative"><RequestFlow /></div>
+            <div className="eval-template-showcase-layers eval-template-showcase-layers--diagnosis">
+              <div className="eval-template-showcase-card one eval-motion-decorative"><RequestFlow /></div>
+              <div className="eval-template-showcase-card two eval-motion-decorative"><DiagnosticSignal /></div>
               <div className="eval-template-showcase-card three eval-motion-decorative"><CostDrivers /></div>
             </div>
           </div>
