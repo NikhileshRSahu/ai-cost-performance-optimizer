@@ -22,9 +22,9 @@ import { EvalomicsMark } from '../evalomics-mark';
 import { cn } from '../../lib/utils';
 
 const primary = [
-  { slug: '', label: 'Overview', icon: Activity },
-  { slug: '/import', label: 'Data', icon: Database },
-  { slug: '/proof', label: 'Savings', icon: ShieldCheck },
+  { slug: '', label: 'Decision', icon: Activity },
+  { slug: '/import', label: 'Sources', icon: Database },
+  { slug: '/proof', label: 'Proof', icon: ShieldCheck },
 ] as const;
 
 const advanced = [
