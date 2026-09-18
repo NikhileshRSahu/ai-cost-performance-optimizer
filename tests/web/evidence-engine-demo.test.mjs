@@ -13,7 +13,11 @@ function collectFiles(dir) {
 }
 
 test('evidence engine communicates causality and supports reduced motion', () => {
-  assert.equal(existsSync(componentPath), true, 'EvidenceEngineDemo is missing');
+  assert.equal(
+    existsSync(componentPath),
+    true,
+    'EvidenceEngineDemo is missing',
+  );
   const source = readFileSync(componentPath, 'utf8');
 
   for (const expected of [
@@ -33,7 +37,9 @@ test('evidence engine communicates causality and supports reduced motion', () =>
 
   const oldImports = collectFiles('apps/web')
     .filter((path) => /\.(tsx?|jsx?)$/.test(path))
-    .filter((path) => readFileSync(path, 'utf8').includes('container-scroll-animation'));
+    .filter((path) =>
+      readFileSync(path, 'utf8').includes('container-scroll-animation'),
+    );
 
   assert.deepEqual(oldImports, []);
 });

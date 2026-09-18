@@ -2,10 +2,7 @@ import { AnalysisProgress } from '../../../components/workbench/analysis-progres
 
 export default function OrganizationLoading() {
   return (
-    <section
-      className="recovery-state workbench-loading"
-      aria-busy="true"
-    >
+    <section className="recovery-state workbench-loading" aria-busy="true">
       <div role="status" aria-live="polite">
         <AnalysisProgress />
       </div>

@@ -38,7 +38,8 @@ export function AnalysisProgress() {
           Analyzing usage evidence…
         </h1>
         <p className="m-0 mt-3 max-w-2xl text-sm leading-6 text-white/50">
-          Evalomics is turning the source into comparable evidence and looking for the strongest supported action.
+          Evalomics is turning the source into comparable evidence and looking
+          for the strongest supported action.
         </p>
       </div>
 
@@ -65,11 +66,25 @@ export function AnalysisProgress() {
               }
             >
               {reached ? (
-                <CheckCircle2 className="size-4 text-emerald-200/75" aria-hidden="true" />
+                <CheckCircle2
+                  className="size-4 text-emerald-200/75"
+                  aria-hidden="true"
+                />
               ) : (
-                <CircleDot className={active ? 'size-4 text-blue-200' : 'size-4 text-white/26'} aria-hidden="true" />
+                <CircleDot
+                  className={
+                    active ? 'size-4 text-blue-200' : 'size-4 text-white/26'
+                  }
+                  aria-hidden="true"
+                />
               )}
-              <span className={active ? 'text-sm font-semibold text-white/86' : 'text-sm font-medium text-white/48'}>
+              <span
+                className={
+                  active
+                    ? 'text-sm font-semibold text-white/86'
+                    : 'text-sm font-medium text-white/48'
+                }
+              >
                 {label}
               </span>
             </motion.div>

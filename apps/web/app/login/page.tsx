@@ -78,7 +78,9 @@ export default async function LoginPage({
                 className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900"
                 role="status"
               >
-                <strong>Google sign-in is disabled on this preview host.</strong>
+                <strong>
+                  Google sign-in is disabled on this preview host.
+                </strong>
                 <span className="mt-1 block">
                   Use the production domain for authentication while
                   preview-domain trust is being corrected.
@@ -110,18 +112,36 @@ export default async function LoginPage({
           </p>
           <div className="mt-6 grid gap-4">
             {[
-              ['01', 'Connect or upload', 'Choose OpenAI, Anthropic, CSV, or the synthetic demo.'],
-              ['02', 'Analyze automatically', 'Evalomics normalizes the evidence and filters unsupported guesses.'],
-              ['03', 'Get one clear result', 'See the strongest supported action first. Details stay optional.'],
+              [
+                '01',
+                'Connect or upload',
+                'Choose OpenAI, Anthropic, CSV, or the synthetic demo.',
+              ],
+              [
+                '02',
+                'Analyze automatically',
+                'Evalomics normalizes the evidence and filters unsupported guesses.',
+              ],
+              [
+                '03',
+                'Get one clear result',
+                'See the strongest supported action first. Details stay optional.',
+              ],
             ].map(([n, title, body]) => (
               <div
                 key={title}
                 className="grid grid-cols-[38px_1fr] gap-3 rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4"
               >
-                <span className="font-mono text-[10px] text-blue-200/90">{n}</span>
+                <span className="font-mono text-[10px] text-blue-200/90">
+                  {n}
+                </span>
                 <div>
-                  <p className="m-0 text-sm font-semibold text-white/88">{title}</p>
-                  <p className="m-0 mt-1 text-xs leading-5 text-white/58">{body}</p>
+                  <p className="m-0 text-sm font-semibold text-white/88">
+                    {title}
+                  </p>
+                  <p className="m-0 mt-1 text-xs leading-5 text-white/58">
+                    {body}
+                  </p>
                 </div>
               </div>
             ))}

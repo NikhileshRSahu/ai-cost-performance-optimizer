@@ -11,10 +11,22 @@ test('empty workspace exposes four low-friction source paths', () => {
   const page = readFileSync(pagePath, 'utf8');
 
   for (const expected of ['OpenAI', 'Anthropic', 'Upload CSV', 'Try demo']) {
-    assert.equal(page.includes(expected), true, `workspace missing ${expected}`);
+    assert.equal(
+      page.includes(expected),
+      true,
+      `workspace missing ${expected}`,
+    );
   }
 
-  assert.equal(card.includes('credential'), false, 'launchpad must not handle credentials');
-  assert.equal(card.includes('type="file"'), false, 'launchpad must not upload files itself');
+  assert.equal(
+    card.includes('credential'),
+    false,
+    'launchpad must not handle credentials',
+  );
+  assert.equal(
+    card.includes('type="file"'),
+    false,
+    'launchpad must not upload files itself',
+  );
   assert.equal(card.includes('href'), true);
 });

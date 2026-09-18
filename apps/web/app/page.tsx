@@ -53,7 +53,10 @@ export default function HomePage() {
               'No invented savings',
             ].map((item) => (
               <span key={item} className="inline-flex items-center gap-1.5">
-                <CheckCircle2 className="size-3 text-emerald-200/70" aria-hidden="true" />
+                <CheckCircle2
+                  className="size-3 text-emerald-200/70"
+                  aria-hidden="true"
+                />
                 {item}
               </span>
             ))}

@@ -22,11 +22,13 @@ import { resolveRuntimeSession } from '../../../lib/runtime-session';
 
 export const dynamic = 'force-dynamic';
 
-function dashboardSelection(input: Readonly<{
-  source?: string;
-  importId?: string;
-  provider?: string;
-}>): DashboardSelection {
+function dashboardSelection(
+  input: Readonly<{
+    source?: string;
+    importId?: string;
+    provider?: string;
+  }>,
+): DashboardSelection {
   if (
     (input.source === 'demo' || input.source === 'import') &&
     typeof input.importId === 'string' &&
@@ -162,14 +164,16 @@ export default async function FounderDashboardPage({
           <h1 className="m-0 mt-2 !text-[clamp(2.3rem,5vw,4.2rem)] !leading-[.98] !tracking-[-.055em] text-white">
             {view.dataQuality === 'NO_DATA'
               ? 'Give Evalomics your AI usage'
-              : view.dataQuality === 'ZERO_USAGE' && view.sourceKind === 'PROVIDER'
+              : view.dataQuality === 'ZERO_USAGE' &&
+                  view.sourceKind === 'PROVIDER'
                 ? `${view.providerName ?? 'Provider'} connected`
                 : 'We analyzed your AI usage'}
           </h1>
           <p className="m-0 mt-3 max-w-3xl text-sm leading-6 text-white/50">
             {view.dataQuality === 'NO_DATA'
               ? 'Connect OpenAI or Anthropic, upload a compatible CSV, or try the demo. Evalomics analyzes the source automatically and returns one clear result.'
-              : view.dataQuality === 'ZERO_USAGE' && view.sourceKind === 'PROVIDER'
+              : view.dataQuality === 'ZERO_USAGE' &&
+                  view.sourceKind === 'PROVIDER'
                 ? `Connection succeeded. No API usage or cost records were returned for ${view.periodLabel}.`
                 : `Evidence window: ${view.periodLabel}. Here is the strongest answer your current evidence supports.`}
           </p>
@@ -177,7 +181,8 @@ export default async function FounderDashboardPage({
         <div className="flex flex-wrap items-center gap-2.5">
           {view.dataQuality !== 'NO_DATA' ? (
             <span className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[10px] font-semibold text-white/55">
-              {view.dataQuality === 'ZERO_USAGE' && view.sourceKind === 'PROVIDER'
+              {view.dataQuality === 'ZERO_USAGE' &&
+              view.sourceKind === 'PROVIDER'
                 ? 'No API usage found'
                 : `Data quality · ${view.dataQuality}`}
             </span>
@@ -196,8 +201,9 @@ export default async function FounderDashboardPage({
               Give Evalomics one usage source
             </h2>
             <p className="m-0 mt-3 text-sm leading-6 text-white/50">
-              Pick the easiest path. Evalomics handles the analysis automatically
-              and sends you back here with the strongest supported answer.
+              Pick the easiest path. Evalomics handles the analysis
+              automatically and sends you back here with the strongest supported
+              answer.
             </p>
           </div>
 
@@ -259,9 +265,10 @@ export default async function FounderDashboardPage({
                 No API usage found in this window
               </h2>
               <p className="m-0 mt-3 max-w-3xl text-sm leading-6 text-white/52">
-                Evalomics successfully connected to {view.providerName ?? 'your provider'},
-                but the provider returned no usage or cost records for this
-                seven-day window. There is nothing to optimize yet.
+                Evalomics successfully connected to{' '}
+                {view.providerName ?? 'your provider'}, but the provider
+                returned no usage or cost records for this seven-day window.
+                There is nothing to optimize yet.
               </p>
               {view.providerName === 'OpenAI' ? (
                 <p className="m-0 mt-2 max-w-3xl text-xs leading-5 text-white/40">

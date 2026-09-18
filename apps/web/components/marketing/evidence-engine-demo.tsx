@@ -73,19 +73,31 @@ export function EvidenceEngineDemo() {
               return (
                 <motion.div
                   key={label}
-                  animate={reduceMotion ? undefined : { opacity: active ? 1 : 0.38 }}
+                  animate={
+                    reduceMotion ? undefined : { opacity: active ? 1 : 0.38 }
+                  }
                   className="flex items-center gap-3 rounded-2xl border border-white/[0.07] bg-white/[0.025] p-3.5"
                   transition={{ duration: 0.35 }}
                 >
                   <span className="grid size-9 place-items-center rounded-xl border border-white/[0.08] bg-white/[0.035]">
-                    <Icon className="size-4 text-blue-200/80" aria-hidden="true" />
+                    <Icon
+                      className="size-4 text-blue-200/80"
+                      aria-hidden="true"
+                    />
                   </span>
                   <div className="min-w-0">
-                    <p className="m-0 text-sm font-semibold text-white/88">{label}</p>
-                    <p className="m-0 mt-0.5 truncate text-[11px] text-white/42">{detail}</p>
+                    <p className="m-0 text-sm font-semibold text-white/88">
+                      {label}
+                    </p>
+                    <p className="m-0 mt-0.5 truncate text-[11px] text-white/42">
+                      {detail}
+                    </p>
                   </div>
                   {stage > 0 ? (
-                    <CheckCircle2 className="ml-auto size-4 text-emerald-200/70" aria-hidden="true" />
+                    <CheckCircle2
+                      className="ml-auto size-4 text-emerald-200/70"
+                      aria-hidden="true"
+                    />
                   ) : null}
                 </motion.div>
               );
@@ -93,7 +105,8 @@ export function EvidenceEngineDemo() {
           </div>
           <div className="mt-5 flex items-center gap-2 text-[11px] font-medium text-white/35">
             <ArrowDown className="size-3.5" aria-hidden="true" />
-            No prompt content is used in this synthetic aggregate-data walkthrough.
+            No prompt content is used in this synthetic aggregate-data
+            walkthrough.
           </div>
         </aside>
 
@@ -119,9 +132,16 @@ export function EvidenceEngineDemo() {
                     ['Tokens', '28.6M'],
                     ['Observed spend', '$18,420'],
                   ].map(([label, value]) => (
-                    <div key={label} className="rounded-2xl border border-white/[0.07] bg-white/[0.022] p-4">
-                      <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.13em] text-white/38">{label}</p>
-                      <p className="m-0 mt-2 font-mono text-xl font-semibold text-white/90">{value}</p>
+                    <div
+                      key={label}
+                      className="rounded-2xl border border-white/[0.07] bg-white/[0.022] p-4"
+                    >
+                      <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.13em] text-white/38">
+                        {label}
+                      </p>
+                      <p className="m-0 mt-2 font-mono text-xl font-semibold text-white/90">
+                        {value}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -143,8 +163,18 @@ export function EvidenceEngineDemo() {
                 <div className="mt-7 grid gap-2.5">
                   {[
                     ['01', 'Reduce oversized outputs', 'Supported', true],
-                    ['02', 'Switch every request to a cheaper model', 'Needs benchmark evidence', false],
-                    ['03', 'Increase cache reuse', 'Insufficient evidence', false],
+                    [
+                      '02',
+                      'Switch every request to a cheaper model',
+                      'Needs benchmark evidence',
+                      false,
+                    ],
+                    [
+                      '03',
+                      'Increase cache reuse',
+                      'Insufficient evidence',
+                      false,
+                    ],
                   ].map(([rank, label, detail, active]) => (
                     <div
                       key={String(rank)}
@@ -154,12 +184,23 @@ export function EvidenceEngineDemo() {
                           : 'grid grid-cols-[36px_1fr_auto] items-center gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.015] p-4 opacity-45'
                       }
                     >
-                      <span className="font-mono text-[10px] text-white/38">{rank}</span>
+                      <span className="font-mono text-[10px] text-white/38">
+                        {rank}
+                      </span>
                       <div>
-                        <p className="m-0 text-sm font-semibold text-white/86">{label}</p>
-                        <p className="m-0 mt-1 text-[11px] text-white/42">{detail}</p>
+                        <p className="m-0 text-sm font-semibold text-white/86">
+                          {label}
+                        </p>
+                        <p className="m-0 mt-1 text-[11px] text-white/42">
+                          {detail}
+                        </p>
                       </div>
-                      {active ? <CircleDot className="size-4 text-amber-200" aria-hidden="true" /> : null}
+                      {active ? (
+                        <CircleDot
+                          className="size-4 text-amber-200"
+                          aria-hidden="true"
+                        />
+                      ) : null}
                     </div>
                   ))}
                 </div>
@@ -192,9 +233,16 @@ export function EvidenceEngineDemo() {
                     ['Savings', 'Not measured yet'],
                     ['Detection confidence', 'Medium'],
                   ].map(([label, value]) => (
-                    <div key={label} className="rounded-2xl border border-white/[0.07] bg-white/[0.022] p-4">
-                      <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.13em] text-white/38">{label}</p>
-                      <p className="m-0 mt-2 font-mono text-lg font-semibold text-white/90">{value}</p>
+                    <div
+                      key={label}
+                      className="rounded-2xl border border-white/[0.07] bg-white/[0.022] p-4"
+                    >
+                      <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.13em] text-white/38">
+                        {label}
+                      </p>
+                      <p className="m-0 mt-2 font-mono text-lg font-semibold text-white/90">
+                        {value}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -204,7 +252,8 @@ export function EvidenceEngineDemo() {
                     Recommended next action
                   </p>
                   <p className="m-0 mt-2 text-sm leading-6 text-white/72">
-                    Test a shorter response limit against the quality floor before treating savings as achieved.
+                    Test a shorter response limit against the quality floor
+                    before treating savings as achieved.
                   </p>
                 </div>
               </motion.div>
@@ -223,22 +272,45 @@ export function EvidenceEngineDemo() {
                 </h3>
                 <div className="mt-8 grid gap-3 sm:grid-cols-3">
                   {[
-                    ['Opportunity', 'Detected from usage', CircleDot, 'border-amber-300/20 bg-amber-300/[0.055] text-amber-100'],
-                    ['Tested', 'Benchmark-supported', FlaskConical, 'border-blue-300/20 bg-blue-300/[0.055] text-blue-100'],
-                    ['Verified', 'Production evidence', ShieldCheck, 'border-emerald-300/20 bg-emerald-300/[0.055] text-emerald-100'],
+                    [
+                      'Opportunity',
+                      'Detected from usage',
+                      CircleDot,
+                      'border-amber-300/20 bg-amber-300/[0.055] text-amber-100',
+                    ],
+                    [
+                      'Tested',
+                      'Benchmark-supported',
+                      FlaskConical,
+                      'border-blue-300/20 bg-blue-300/[0.055] text-blue-100',
+                    ],
+                    [
+                      'Verified',
+                      'Production evidence',
+                      ShieldCheck,
+                      'border-emerald-300/20 bg-emerald-300/[0.055] text-emerald-100',
+                    ],
                   ].map(([label, detail, Icon, classes]) => {
                     const StateIcon = Icon as typeof CircleDot;
                     return (
-                      <div key={String(label)} className={`rounded-2xl border p-4 ${classes}`}>
+                      <div
+                        key={String(label)}
+                        className={`rounded-2xl border p-4 ${classes}`}
+                      >
                         <StateIcon className="size-4" aria-hidden="true" />
-                        <p className="m-0 mt-4 text-sm font-semibold">{String(label)}</p>
-                        <p className="m-0 mt-1 text-[11px] opacity-60">{String(detail)}</p>
+                        <p className="m-0 mt-4 text-sm font-semibold">
+                          {String(label)}
+                        </p>
+                        <p className="m-0 mt-1 text-[11px] opacity-60">
+                          {String(detail)}
+                        </p>
                       </div>
                     );
                   })}
                 </div>
                 <p className="m-0 mt-6 text-xs leading-5 text-white/40">
-                  Synthetic example only. These values demonstrate the product logic and are not a customer result.
+                  Synthetic example only. These values demonstrate the product
+                  logic and are not a customer result.
                 </p>
               </motion.div>
             )}

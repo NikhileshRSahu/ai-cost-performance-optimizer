@@ -17,10 +17,18 @@ test('analysis loading uses semantic stages without fake percentages', () => {
     'Ranking supported opportunities',
     'useReducedMotion',
   ]) {
-    assert.equal(source.includes(expected), true, `analysis progress missing ${expected}`);
+    assert.equal(
+      source.includes(expected),
+      true,
+      `analysis progress missing ${expected}`,
+    );
   }
 
-  assert.equal(source.includes('%'), false, 'analysis progress must not fake percentages');
+  assert.equal(
+    source.includes('%'),
+    false,
+    'analysis progress must not fake percentages',
+  );
   assert.equal(loading.includes('AnalysisProgress'), true);
   assert.equal(loading.includes('role="status"'), true);
 });
