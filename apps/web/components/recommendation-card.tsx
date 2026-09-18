@@ -7,21 +7,23 @@ export function RecommendationCard({
   organizationId,
   recommendation,
 }: Readonly<{
-  organizationId:string;
-  recommendation:DashboardRecommendationView;
+  organizationId: string;
+  recommendation: DashboardRecommendationView;
 }>) {
-  const hasSaving=recommendation.saving!==null;
-  const saving=hasSaving?recommendation.saving!.currency+' '+recommendation.saving!.amount:'Not measured yet';
-  const primaryHref=
-    recommendation.state==='TESTED'&&recommendation.decision==='OPTIMIZE'
-      ? '/o/'+organizationId+'/implement/'+recommendation.recommendationId
-      : recommendation.state==='VERIFIED'
-        ? '/o/'+organizationId+'/proof'
-        : '/o/'+organizationId+'/lab/'+recommendation.recommendationId;
-  const primaryLabel=
-    recommendation.state==='TESTED'&&recommendation.decision==='OPTIMIZE'
+  const hasSaving = recommendation.saving !== null;
+  const saving = hasSaving
+    ? recommendation.saving!.currency + ' ' + recommendation.saving!.amount
+    : 'Not measured yet';
+  const primaryHref =
+    recommendation.state === 'TESTED' && recommendation.decision === 'OPTIMIZE'
+      ? '/o/' + organizationId + '/implement/' + recommendation.recommendationId
+      : recommendation.state === 'VERIFIED'
+        ? '/o/' + organizationId + '/proof'
+        : '/o/' + organizationId + '/lab/' + recommendation.recommendationId;
+  const primaryLabel =
+    recommendation.state === 'TESTED' && recommendation.decision === 'OPTIMIZE'
       ? 'Prepare safe rollout'
-      : recommendation.state==='VERIFIED'
+      : recommendation.state === 'VERIFIED'
         ? 'View verified savings'
         : 'Test this optimization';
 
@@ -40,38 +42,66 @@ export function RecommendationCard({
         </h2>
 
         <div className="mt-6 rounded-2xl border border-emerald-300/10 bg-emerald-300/[0.035] p-4 sm:p-5">
-          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-100/60">What to do next</p>
-          <p className="m-0 mt-2 max-w-4xl text-sm leading-6 text-white/72">{recommendation.nextAction}</p>
+          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-100/60">
+            What to do next
+          </p>
+          <p className="m-0 mt-2 max-w-4xl text-sm leading-6 text-white/72">
+            {recommendation.nextAction}
+          </p>
         </div>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-3">
           <div className="rounded-2xl border border-white/[0.07] bg-black/15 p-4">
-            <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-white/32">Savings</p>
-            <p className="m-0 mt-2 font-mono text-lg font-semibold text-white/86">{saving}</p>
+            <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-white/32">
+              Savings
+            </p>
+            <p className="m-0 mt-2 font-mono text-lg font-semibold text-white/86">
+              {saving}
+            </p>
           </div>
           <div className="rounded-2xl border border-white/[0.07] bg-black/15 p-4">
-            <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-white/32">Detection confidence</p>
-            <p className="m-0 mt-2 text-lg font-semibold text-white/86">{recommendation.detectionConfidence}</p>
+            <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-white/32">
+              Detection confidence
+            </p>
+            <p className="m-0 mt-2 text-lg font-semibold text-white/86">
+              {recommendation.detectionConfidence}
+            </p>
           </div>
           <div className="rounded-2xl border border-white/[0.07] bg-black/15 p-4">
-            <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-white/32">Savings confidence</p>
-            <p className="m-0 mt-2 text-lg font-semibold text-white/86">{recommendation.savingsConfidence}</p>
+            <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-white/32">
+              Savings confidence
+            </p>
+            <p className="m-0 mt-2 text-lg font-semibold text-white/86">
+              {recommendation.savingsConfidence}
+            </p>
           </div>
         </div>
 
-        {recommendation.principalLimitation!==null?(
+        {recommendation.principalLimitation !== null ? (
           <details className="mt-4 rounded-xl border border-white/[0.06] bg-white/[0.018] px-4 py-3">
-            <summary className="cursor-pointer text-xs font-semibold text-white/48"><Gauge className="mr-2 inline size-3.5" />Why confidence is not higher</summary>
-            <p className="m-0 mt-2 text-xs leading-5 text-white/45">{recommendation.principalLimitation}</p>
+            <summary className="cursor-pointer text-xs font-semibold text-white/48">
+              <Gauge className="mr-2 inline size-3.5" />
+              Why confidence is not higher
+            </summary>
+            <p className="m-0 mt-2 text-xs leading-5 text-white/45">
+              {recommendation.principalLimitation}
+            </p>
           </details>
-        ):null}
+        ) : null}
       </div>
 
       <div className="flex flex-col gap-3 border-t border-white/[0.07] bg-black/15 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-7">
         <p className="m-0 text-xs text-white/35">
-          {recommendation.state==='VERIFIED'?'Production evidence supports this claim.':recommendation.state==='TESTED'?'Benchmark-supported; production proof is next.':'Finding first. Savings remain unmeasured until you test it.'}
+          {recommendation.state === 'VERIFIED'
+            ? 'Production evidence supports this claim.'
+            : recommendation.state === 'TESTED'
+              ? 'Benchmark-supported; production proof is next.'
+              : 'Finding first. Savings remain unmeasured until you test it.'}
         </p>
-        <Link href={primaryHref} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 no-underline transition hover:bg-emerald-100">
+        <Link
+          href={primaryHref}
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 no-underline transition hover:bg-emerald-100"
+        >
           {primaryLabel} <ArrowRight className="size-4" />
         </Link>
       </div>
