@@ -36,10 +36,17 @@ export function ShowcaseContainerScroll({
     <section
       ref={containerRef}
       className="eval-template-showcase eval-template-showcase--scroll"
+      style={{ minHeight: isMobile ? '60rem' : '80rem', padding: 0 }}
     >
       <div
         className="eval-template-showcase-frame"
-        style={{ perspective: '1000px' }}
+        style={{
+          perspective: '1000px',
+          position: 'sticky',
+          top: 0,
+          height: '100vh',
+          minHeight: '100vh',
+        }}
       >
         <div className="eval-template-showcase-glow eval-motion-decorative" />
 
