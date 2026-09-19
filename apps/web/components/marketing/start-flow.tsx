@@ -75,7 +75,7 @@ export function StartFlow({
       <div className="mb-5 flex items-center justify-between gap-4">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-950 no-underline"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-white no-underline"
         >
           <EvalomicsMark size={24} />
           <span>Evalomics</span>
@@ -83,14 +83,14 @@ export function StartFlow({
 
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 no-underline transition hover:text-slate-950"
+          className="eval-glass-pill inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold text-white/60 no-underline transition hover:text-white"
         >
           <ArrowLeft className="size-3.5" />
           Back
         </Link>
       </div>
 
-      <section className="relative overflow-hidden rounded-[26px] border border-white/[0.08] bg-[#070b10] text-white shadow-[0_30px_90px_rgba(0,0,0,.24)]">
+      <section className="eval-glass-panel relative overflow-hidden rounded-[26px] text-white">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_10%,rgba(240,163,91,.09),transparent_30%),radial-gradient(circle_at_15%_92%,rgba(99,222,244,.06),transparent_32%)]" />
 
         <div className="relative px-6 pb-4 pt-7 sm:px-8 sm:pt-9">
@@ -122,7 +122,7 @@ export function StartFlow({
             >
               <Link
                 href={source.href}
-                className="group flex min-h-48 h-full flex-col rounded-[18px] border border-white/[0.08] bg-[linear-gradient(145deg,rgba(15,23,33,.94),rgba(8,12,17,.98))] p-5 no-underline transition hover:border-cyan-300/20"
+                className="eval-glass-card group flex min-h-48 h-full flex-col rounded-[18px] p-5 no-underline"
               >
                 <div className="flex items-start justify-between gap-3">
                   <span className="grid size-11 place-items-center rounded-xl border border-white/[0.08] bg-white/[0.04] text-white/80">
