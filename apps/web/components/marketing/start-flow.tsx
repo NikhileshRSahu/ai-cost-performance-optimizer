@@ -47,7 +47,7 @@ export function StartFlow({
     {
       id: 'openai',
       name: 'OpenAI',
-      action: 'Connect workspace',
+      action: 'Connect usage',
       href: realHref('connect', 'OPENAI'),
       icon: <BrandIcon brand="openai" />,
       meta: 'Admin API',
@@ -55,7 +55,7 @@ export function StartFlow({
     {
       id: 'anthropic',
       name: 'Anthropic',
-      action: 'Connect workspace',
+      action: 'Connect usage',
       href: realHref('connect', 'ANTHROPIC'),
       icon: <BrandIcon brand="anthropic" />,
       meta: 'Admin API',

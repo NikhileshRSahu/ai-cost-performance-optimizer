@@ -262,32 +262,39 @@ export default async function VerifyPage({
               <small>Maximum: {maxFailureRate ?? 'Not configured'}</small>
             </label>
             <label>
-              <span>Performance evidence reference</span>
+              <span>Quality evidence reference</span>
               <input
                 name="qualitySourceRef"
                 required
-                placeholder="eval-suite:classification-v3"
+                placeholder="Example: eval-suite:classification-v3"
               />
-            </label>
-            <label>
-              <span>Implementation cost in this window</span>
-              <input
-                name="implementationCost"
-                defaultValue="0"
-                inputMode="decimal"
-              />
-            </label>
-            <label>
-              <span>Incremental operating cost</span>
-              <input
-                name="incrementalOperatingCost"
-                defaultValue="0"
-                inputMode="decimal"
-              />
+              <small>Use the test run, report, or evaluation ID that supports the quality measurement.</small>
             </label>
 
+            <details className="advanced-controls full-field">
+              <summary>Optional cost adjustments</summary>
+              <div className="advanced-controls-grid">
+                <label>
+                  <span>Implementation cost in this window</span>
+                  <input
+                    name="implementationCost"
+                    defaultValue="0"
+                    inputMode="decimal"
+                  />
+                </label>
+                <label>
+                  <span>Incremental operating cost</span>
+                  <input
+                    name="incrementalOperatingCost"
+                    defaultValue="0"
+                    inputMode="decimal"
+                  />
+                </label>
+              </div>
+            </details>
+
             <fieldset className="attestation-group full-field">
-              <legend>Comparability attestations</legend>
+              <legend>Before we count this as verified</legend>
               <label className="checkbox-row">
                 <input
                   name="unitDefinitionUnchanged"

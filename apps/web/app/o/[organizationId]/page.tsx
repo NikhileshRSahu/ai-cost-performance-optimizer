@@ -114,14 +114,14 @@ export default async function CostDashboardPage({
       <div className="space-y-7">
         <section>
           <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-sky-300">
-            Cost dashboard
+            AI Efficiency MRI
           </p>
           <h1 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-slate-100 sm:text-3xl">
             Bring your first usage window into focus.
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-            Connect a supported provider or upload a CSV. Once evidence exists,
-            this page becomes the compact cost dashboard.
+            Connect a supported provider or upload a CSV. Evalomics will analyze
+            the evidence and bring you back here with one clear result.
           </p>
         </section>
 
@@ -226,9 +226,9 @@ export default async function CostDashboardPage({
                 tone: 'text-sky-300',
               },
               {
-                label: 'Savings signals',
+                label: 'Opportunities found',
                 value: String(view.recommendations.length),
-                detail: 'ranked recommendations',
+                detail: 'supported recommendations',
                 tone: 'text-slate-100',
               },
               {
@@ -352,7 +352,10 @@ export default async function CostDashboardPage({
                 href={`/o/${organizationId}/proof`}
                 className="mt-5 inline-flex items-center gap-2 text-xs font-semibold text-violet-300 no-underline"
               >
-                Open verified savings <ArrowRight className="size-3.5" />
+                {view.verifiedNetSavings === null
+                  ? 'View proof status'
+                  : 'Open verified savings'}{' '}
+                <ArrowRight className="size-3.5" />
               </Link>
             </div>
           </section>
