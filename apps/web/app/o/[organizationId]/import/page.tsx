@@ -140,9 +140,7 @@ export default async function ImportPage({
           role="alert"
         >
           <p className="m-0">
-            {query.error.startsWith('No valid usage rows were accepted')
-              ? 'No valid usage rows were accepted. Fix the CSV and try again.'
-              : query.error}
+            {query.error}
           </p>
           <div className="mt-3 flex flex-wrap gap-3">
             <Link
