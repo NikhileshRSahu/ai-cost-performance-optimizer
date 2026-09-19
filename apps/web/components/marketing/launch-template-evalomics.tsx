@@ -20,7 +20,6 @@ import {
 } from 'lucide-react';
 import { EvalomicsMark } from '../evalomics-mark';
 import { HeroIntelligence } from './hero-intelligence';
-import { ShowcaseContainerScroll } from './showcase-container-scroll';
 
 const capabilities = [
   ['Multi-provider ingestion', 'OpenAI, Anthropic, and CSV usage in one evidence model.', CloudUpload],
@@ -230,23 +229,6 @@ export function LaunchTemplateEvalomics() {
             <div className="eval-template-hero-note">From AI usage<br />to verified savings <ArrowRight size={15} /></div>
           </div>
         </section>
-
-        <ShowcaseContainerScroll
-          copy={
-            <>
-              <span>Inside Evalomics</span>
-              <h2>AI requests become visible cost trails.</h2>
-              <p>
-                The same provider evidence becomes a spatial map of repeated input,
-                model routing, context load, testing state, and savings confidence.
-              </p>
-            </>
-          }
-        >
-          <div className="eval-template-showcase-card one eval-motion-decorative"><MiniDashboard /></div>
-          <div className="eval-template-showcase-card two eval-motion-decorative"><RequestFlow /></div>
-          <div className="eval-template-showcase-card three eval-motion-decorative"><CostDrivers /></div>
-        </ShowcaseContainerScroll>
 
         <section className="eval-template-intro">
           <span>How Evalomics works</span>
