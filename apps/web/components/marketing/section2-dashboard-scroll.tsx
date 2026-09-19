@@ -72,7 +72,6 @@ export function Section2DashboardScroll() {
                 fetchPriority="high"
                 decoding="async"
                 className="block aspect-video h-auto w-full rounded-[22px] object-contain"
-                loading="eager"
                 draggable={false}
               />
             </div>
