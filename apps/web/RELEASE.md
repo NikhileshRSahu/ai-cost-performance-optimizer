@@ -37,3 +37,5 @@ Production redeploy for draggable observability-style dashboard — 2026-09-19.
 Final send-ready gate: demo-first flow, CSV compatibility, auth, and draggable observability dashboard — 2026-09-19.
 
 Evalomics AI release: customer-first estimated savings, evaluation status, clickable drilldowns, and evidence-grounded workspace copilot — 2026-09-19.
+
+Unified customer story release: Connected → Found → Evaluated → Ready → Proven across import, overview, recommendations, evaluation tools, proof, and Evalomics AI — 2026-09-19.
