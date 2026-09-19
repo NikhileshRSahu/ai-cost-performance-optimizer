@@ -12,6 +12,7 @@ import { formatDecimal, rational } from '../../../../../src/economics/exact';
 import { createDatabase } from '../../../../../src/persistence/database';
 import { buildFounderDashboardView } from '../../../../../src/workbench/dashboard-view';
 import { RecommendationCard } from '../../../components/recommendation-card';
+import { DashboardWidgetGrid } from '../../../components/workbench/dashboard-widget-grid';
 import { SignOutButton } from '../../../components/sign-out-button';
 import { hasSelfHostedAuthConfiguration } from '../../../lib/auth-config';
 import {
@@ -209,8 +210,27 @@ export default async function CostDashboardPage({
         </section>
       ) : (
         <>
-          <section className="grid gap-6 xl:grid-cols-[1.25fr_.75fr]">
-            <div className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">
+          <DashboardWidgetGrid
+            storageKey={`evalomics-dashboard-${organizationId}`}
+            items={[
+              {
+                id: 'recommendation',
+                size: 'wide',
+                label: 'Recommended action',
+              },
+              { id: 'evidence', size: 'wide', label: 'Evidence status' },
+              { id: 'spend', size: 'sm', label: 'Observed AI spend' },
+              {
+                id: 'opportunities',
+                size: 'sm',
+                label: 'Opportunities found',
+              },
+              { id: 'modeled', size: 'sm', label: 'Modeled upside' },
+              { id: 'verified', size: 'sm', label: 'Verified savings' },
+              { id: 'diagnosis', size: 'lg', label: 'Usage diagnosis' },
+            ]}
+          >
+            <section className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.16em] text-emerald-300/70">
@@ -249,9 +269,9 @@ export default async function CostDashboardPage({
               >
                 View all recommendations <ArrowRight className="size-3.5" />
               </Link>
-            </div>
+            </section>
 
-            <div className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">
+            <section className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="size-4 text-violet-300" />
                 <h2 className="text-sm font-medium text-slate-100">
@@ -309,107 +329,111 @@ export default async function CostDashboardPage({
                   : 'Open verified savings'}{' '}
                 <ArrowRight className="size-3.5" />
               </Link>
-            </div>
-          </section>
+            </section>
 
-          <section
-            className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
-            aria-label="Supporting evidence summary"
-          >
-            {[
-              {
-                label: 'Observed AI spend',
-                value: moneyLabel(view.observedSpend),
-                detail:
-                  view.sourceKind === 'PROVIDER'
-                    ? (view.providerName ?? 'Provider')
-                    : view.sourceKind,
-                tone: 'text-sky-300',
-              },
-              {
-                label: 'Opportunities found',
-                value: String(view.recommendations.length),
-                detail: 'supported recommendations',
-                tone: 'text-slate-100',
-              },
-              {
-                label: 'Modeled upside',
-                value: modeled,
-                detail: 'planning evidence only',
-                tone: 'text-emerald-300',
-              },
-              {
-                label: 'Verified savings',
-                value: verifiedMoney(view.verifiedNetSavings),
-                detail: 'production evidence',
-                tone: 'text-violet-300',
-              },
-            ].map(({ label, value, detail, tone }) => (
-              <article
-                key={label}
-                className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5"
-              >
-                <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
-                  {label}
-                </p>
-                <p className={`mt-4 font-mono text-2xl ${tone}`}>{value}</p>
-                <p className="mt-2 text-[10px] text-slate-600">{detail}</p>
-              </article>
-            ))}
-          </section>
-
-          <section className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
-                  Usage diagnosis
-                </p>
-                <h2 className="mt-2 text-base font-medium text-slate-100">
-                  Signals Evalomics can support
-                </h2>
-              </div>
-              <BadgeDollarSign className="size-4 text-sky-300/60" />
-            </div>
-
-            {view.diagnosticFacts.length > 0 ? (
-              <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                {view.diagnosticFacts.slice(0, 4).map((fact) => (
-                  <article
-                    key={fact.label}
-                    className="rounded-lg border border-white/[0.06] bg-[#0c1421] p-4"
-                  >
-                    <p className="text-[10px] uppercase tracking-[0.12em] text-slate-600">
-                      {fact.label}
-                    </p>
-                    <p className="mt-3 font-mono text-base text-slate-200">
-                      {fact.value}
-                    </p>
-                  </article>
-                ))}
-              </div>
-            ) : (
-              <p className="mt-5 text-sm text-slate-500">
-                No additional diagnostic facts are available for this source.
+            <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+                Observed AI spend
               </p>
-            )}
+              <p className="mt-4 font-mono text-2xl text-sky-300">
+                {moneyLabel(view.observedSpend)}
+              </p>
+              <p className="mt-2 text-[10px] text-slate-600">
+                {view.sourceKind === 'PROVIDER'
+                  ? (view.providerName ?? 'Provider')
+                  : view.sourceKind}
+              </p>
+            </article>
 
-            <div className="mt-5 flex flex-wrap gap-4">
-              <Link
-                href={`/o/${organizationId}/import`}
-                className="inline-flex items-center gap-2 text-xs font-semibold text-sky-300 no-underline"
-              >
-                <Database className="size-3.5" />
-                Usage & Import
-              </Link>
-              <Link
-                href={`/o/${organizationId}/prompts`}
-                className="inline-flex items-center gap-2 text-xs font-semibold text-violet-300 no-underline"
-              >
-                <Sparkles className="size-3.5" />
-                Prompt Optimizer
-              </Link>
-            </div>
-          </section>
+            <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+                Opportunities found
+              </p>
+              <p className="mt-4 font-mono text-2xl text-slate-100">
+                {String(view.recommendations.length)}
+              </p>
+              <p className="mt-2 text-[10px] text-slate-600">
+                supported recommendations
+              </p>
+            </article>
+
+            <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+                Modeled upside
+              </p>
+              <p className="mt-4 font-mono text-2xl text-emerald-300">
+                {modeled}
+              </p>
+              <p className="mt-2 text-[10px] text-slate-600">
+                planning evidence only
+              </p>
+            </article>
+
+            <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+                Verified savings
+              </p>
+              <p className="mt-4 font-mono text-2xl text-violet-300">
+                {verifiedMoney(view.verifiedNetSavings)}
+              </p>
+              <p className="mt-2 text-[10px] text-slate-600">
+                production evidence
+              </p>
+            </article>
+
+            <section className="overflow-auto rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+                    Usage diagnosis
+                  </p>
+                  <h2 className="mt-2 text-base font-medium text-slate-100">
+                    Signals Evalomics can support
+                  </h2>
+                </div>
+                <BadgeDollarSign className="size-4 text-sky-300/60" />
+              </div>
+
+              {view.diagnosticFacts.length > 0 ? (
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  {view.diagnosticFacts.slice(0, 4).map((fact) => (
+                    <article
+                      key={fact.label}
+                      className="rounded-lg border border-white/[0.06] bg-[#0c1421] p-4"
+                    >
+                      <p className="text-[10px] uppercase tracking-[0.12em] text-slate-600">
+                        {fact.label}
+                      </p>
+                      <p className="mt-3 font-mono text-base text-slate-200">
+                        {fact.value}
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-5 text-sm text-slate-500">
+                  No additional diagnostic facts are available for this source.
+                </p>
+              )}
+
+              <div className="mt-5 flex flex-wrap gap-4">
+                <Link
+                  href={`/o/${organizationId}/import`}
+                  className="inline-flex items-center gap-2 text-xs font-semibold text-sky-300 no-underline"
+                >
+                  <Database className="size-3.5" />
+                  Usage & Import
+                </Link>
+                <Link
+                  href={`/o/${organizationId}/prompts`}
+                  className="inline-flex items-center gap-2 text-xs font-semibold text-violet-300 no-underline"
+                >
+                  <Sparkles className="size-3.5" />
+                  Prompt Optimizer
+                </Link>
+              </div>
+            </section>
+          </DashboardWidgetGrid>
         </>
       )}
     </div>
