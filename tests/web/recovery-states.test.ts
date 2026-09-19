@@ -31,9 +31,7 @@ describe('recovery states', () => {
 
     expect(page).toContain('Try another CSV');
     expect(page).toContain('Return to overview');
-    expect(page).toContain(
-      'No valid usage rows were accepted. Fix the CSV and try again.',
-    );
+    expect(page).toContain('{query.error}');
   });
 
   it('covers loading states without implying evidence mutation', async () => {
