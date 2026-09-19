@@ -261,7 +261,7 @@ test('non-demo customer path reaches verified savings without demo provenance', 
 });
 
 test('failed post-change quality never becomes verified', async ({ page }) => {
-  test.setTimeout(JOURNEY_TEST_TIMEOUT_MS);
+  test.setTimeout(90_000);
   await reachVerification(page, 'journey-bad-org');
   await submitPostChange(page, '0.80');
 
