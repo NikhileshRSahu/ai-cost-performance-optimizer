@@ -18,7 +18,7 @@ describe('public first-value copy', () => {
       'OpenAI',
       'Anthropic',
       'CSV',
-      'Analyze my AI usage',
+      'Analyze my own AI usage',
       'Try with demo data',
     ]) {
       expect(publicExperience).toContain(expected);
