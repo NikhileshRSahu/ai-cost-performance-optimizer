@@ -22,7 +22,7 @@ function DemoBars({
         <span
           key={index}
           className={index === values.length - 1 ? accent : 'bg-white/[0.16]'}
-          style={{ height: `${Math.max(14, value)}%`, width: '100%' }}
+          style={{ height: String(Math.max(14, value)) + '%', width: '100%' }}
         />
       ))}
     </div>
