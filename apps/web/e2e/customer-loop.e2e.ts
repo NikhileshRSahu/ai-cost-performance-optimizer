@@ -113,83 +113,83 @@ async function reachVerification(
       }),
     ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
 
-  const defineConstraints = page.getByRole('link', {
-    name: 'Define constraints',
-  });
-  const benchmarkUpload = page.getByLabel(/Upload paired test cases/i);
-
-  const benchmarkState = await expect
-    .poll(
-      async () => {
-        if (await benchmarkUpload.isVisible()) return 'ready';
-        if (await defineConstraints.isVisible()) return 'constraints';
-        return 'loading';
-      },
-      { timeout: JOURNEY_STATE_TIMEOUT_MS },
-    )
-    .not.toBe('loading')
-    .then(async () => {
-      if (await benchmarkUpload.isVisible()) return 'ready';
-      return 'constraints';
+    const defineConstraints = page.getByRole('link', {
+      name: 'Define constraints',
     });
+    const benchmarkUpload = page.getByLabel(/Upload paired test cases/i);
 
-  if (benchmarkState === 'constraints') {
-    await defineConstraints.click();
-    await page.getByLabel('Workload name').fill('classification');
-    await page.getByLabel('Environment').fill('production');
-    await page.getByLabel('Minimum quality').fill('0.90');
+    const benchmarkState = await expect
+      .poll(
+        async () => {
+          if (await benchmarkUpload.isVisible()) return 'ready';
+          if (await defineConstraints.isVisible()) return 'constraints';
+          return 'loading';
+        },
+        { timeout: JOURNEY_STATE_TIMEOUT_MS },
+      )
+      .not.toBe('loading')
+      .then(async () => {
+        if (await benchmarkUpload.isVisible()) return 'ready';
+        return 'constraints';
+      });
 
-    const latencyField = page.getByLabel('Maximum p95 latency (ms)');
-    if (await latencyField.isVisible()) {
-      await latencyField.fill('1000');
+    if (benchmarkState === 'constraints') {
+      await defineConstraints.click();
+      await page.getByLabel('Workload name').fill('classification');
+      await page.getByLabel('Environment').fill('production');
+      await page.getByLabel('Minimum quality').fill('0.90');
+
+      const latencyField = page.getByLabel('Maximum p95 latency (ms)');
+      if (await latencyField.isVisible()) {
+        await latencyField.fill('1000');
+      }
+      const failureRateField = page.getByLabel('Maximum failure rate');
+      if (await failureRateField.isVisible()) {
+        await failureRateField.fill('0.05');
+      }
+
+      await page
+        .getByRole('button', { name: 'Save safety floor and continue' })
+        .click();
+
+      await expect(
+        page.getByRole('heading', {
+          name: 'Test whether a cheaper setup is safe',
+        }),
+      ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
     }
-    const failureRateField = page.getByLabel('Maximum failure rate');
-    if (await failureRateField.isVisible()) {
-      await failureRateField.fill('0.05');
-    }
 
-    await page
-      .getByRole('button', { name: 'Save safety floor and continue' })
-      .click();
+    await expect(benchmarkUpload).toBeVisible({
+      timeout: JOURNEY_STATE_TIMEOUT_MS,
+    });
+    await benchmarkUpload.setInputFiles(benchmarkCsv);
+    if (demo) {
+      await page.locator('input[name="isDemo"]').check();
+    }
+    await page.getByRole('button', { name: 'Run safety test' }).click();
 
     await expect(
-      page.getByRole('heading', {
-        name: 'Test whether a cheaper setup is safe',
-      }),
+      page.getByRole('heading', { name: 'Current versus candidate' }),
     ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
-  }
+    await expect(page.getByText('OPTIMIZE', { exact: true })).toBeVisible({
+      timeout: JOURNEY_STATE_TIMEOUT_MS,
+    });
 
-  await expect(benchmarkUpload).toBeVisible({
-    timeout: JOURNEY_STATE_TIMEOUT_MS,
-  });
-  await benchmarkUpload.setInputFiles(benchmarkCsv);
-  if (demo) {
-    await page.locator('input[name="isDemo"]').check();
-  }
-  await page.getByRole('button', { name: 'Run safety test' }).click();
-
-  await expect(
-    page.getByRole('heading', { name: 'Current versus candidate' }),
-  ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
-  await expect(page.getByText('OPTIMIZE', { exact: true })).toBeVisible({
-    timeout: JOURNEY_STATE_TIMEOUT_MS,
-  });
-
-  await page.getByLabel('Historical baseline cost').fill('1000');
-  await page
-    .getByLabel(
-      'I confirm this window represents a comparable workload and volume basis for this projection.',
-    )
-    .check();
-  await page.getByRole('button', { name: 'Replay historical cost' }).click();
-  await expect(page.getByText('Projected gross saving')).toBeVisible({
-    timeout: JOURNEY_STATE_TIMEOUT_MS,
-  });
-  await expect(
-    page.getByText(
-      'This replay is never written to the VERIFIED savings ledger.',
-    ),
-  ).toBeVisible();
+    await page.getByLabel('Historical baseline cost').fill('1000');
+    await page
+      .getByLabel(
+        'I confirm this window represents a comparable workload and volume basis for this projection.',
+      )
+      .check();
+    await page.getByRole('button', { name: 'Replay historical cost' }).click();
+    await expect(page.getByText('Projected gross saving')).toBeVisible({
+      timeout: JOURNEY_STATE_TIMEOUT_MS,
+    });
+    await expect(
+      page.getByText(
+        'This replay is never written to the VERIFIED savings ledger.',
+      ),
+    ).toBeVisible();
     await expectAccessible(page);
   }
 
