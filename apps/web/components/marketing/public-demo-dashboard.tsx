@@ -38,6 +38,7 @@ function DemoHeatmap() {
   return (
     <div
       className="mt-5 grid grid-cols-12 gap-1"
+      role="img"
       aria-label="Synthetic activity heatmap"
     >
       {intensities.map((value, index) => (
