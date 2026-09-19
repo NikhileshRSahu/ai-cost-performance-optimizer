@@ -11,6 +11,10 @@ import {
 import { formatDecimal, rational } from '../../../../../src/economics/exact';
 import { createDatabase } from '../../../../../src/persistence/database';
 import { buildFounderDashboardView } from '../../../../../src/workbench/dashboard-view';
+import {
+  dashboardEstimatedSaving,
+  dashboardEvaluationStatus,
+} from '../../../../../src/workbench/evalomics-ai';
 import { RecommendationCard } from '../../../components/recommendation-card';
 import { DashboardDrilldown } from '../../../components/workbench/dashboard-drilldown';
 import { DashboardWidgetGrid } from '../../../components/workbench/dashboard-widget-grid';
@@ -150,10 +154,21 @@ export default async function CostDashboardPage({
     await database.close();
   }
 
-  const modeled =
-    view.nonOverlappingModeledTotal === null
-      ? 'Not measured'
-      : `${view.nonOverlappingModeledTotal.currency} ${view.nonOverlappingModeledTotal.base}`;
+  const estimatedSaving = dashboardEstimatedSaving(view);
+  const estimatedSavingLabel = estimatedSaving ?? 'Estimate pending';
+  const evaluationStatus = dashboardEvaluationStatus(view);
+  const evaluationStatusLabel =
+    evaluationStatus === 'PROVEN'
+      ? 'Proven'
+      : evaluationStatus === 'READY_TO_OPTIMIZE'
+        ? 'Ready to optimize'
+        : evaluationStatus === 'KEEP_CURRENT'
+          ? 'Keep current'
+          : evaluationStatus === 'EVALUATED'
+            ? 'Evaluated'
+            : evaluationStatus === 'CANDIDATE_IDENTIFIED'
+              ? 'Candidate identified'
+              : 'Analyzing evidence';
 
   if (view.dataQuality === 'NO_DATA') {
     return (
@@ -270,8 +285,8 @@ export default async function CostDashboardPage({
                 size: 'sm',
                 label: 'Opportunities found',
               },
-              { id: 'modeled', size: 'sm', label: 'Modeled upside' },
-              { id: 'verified', size: 'sm', label: 'Verified savings' },
+              { id: 'estimated', size: 'sm', label: 'Estimated savings' },
+              { id: 'evaluation', size: 'sm', label: 'Evaluation status' },
               { id: 'diagnosis', size: 'lg', label: 'Usage diagnosis' },
             ]}
           >
@@ -558,100 +573,139 @@ export default async function CostDashboardPage({
             </DashboardDrilldown>
 
             <DashboardDrilldown
-              eyebrow="Modeled upside"
-              title={modeled}
-              summary="This is planning evidence: a modeled estimate of what might be saved if the supported optimization works as expected. It is intentionally not labeled as verified."
+              eyebrow="Estimated savings"
+              title={estimatedSavingLabel}
+              summary="This is the best savings estimate Evalomics can currently support from the selected evidence. It is useful for prioritization now; production proof is a later confirmation step."
               items={[
-                { label: 'Modeled upside', value: modeled },
-                {
-                  label: 'Recommendations contributing',
-                  value: String(view.recommendations.length),
-                },
-                {
-                  label: 'Evidence state',
-                  value: view.strongestAction?.state ?? 'Observed only',
-                },
+                { label: 'Estimated saving', value: estimatedSavingLabel },
                 {
                   label: 'Savings confidence',
-                  value: view.strongestAction?.savingsConfidence ?? 'Unmeasured',
-                },
-              ]}
-              insight="Evalomics uses modeled upside to prioritize what is worth evaluating first, not to claim money already saved."
-              nextStep={
-                view.strongestAction?.nextAction ??
-                'Gather more evidence before estimating a production change.'
-              }
-              actionHref={`/o/${organizationId}/recommendations`}
-              actionLabel="See calculation context"
-            >
-            <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
-                Modeled upside
-              </p>
-              <p className="mt-4 font-mono text-3xl tracking-[-0.04em] text-white">
-                {modeled}
-              </p>
-              <p className="mt-2 font-mono text-[10px] text-slate-500">
-                planning evidence only
-              </p>
-              <ConsoleBars
-                values={[24, 31, 27, 39, 36, 48, 44, 52, 57, 61, 68, 74]}
-                accent="bg-amber-300"
-              />
-            </article>
-            </DashboardDrilldown>
-
-            <DashboardDrilldown
-              eyebrow="Verified savings"
-              title={verifiedMoney(view.verifiedNetSavings)}
-              summary="Verified savings require production evidence after a change. Evalomics keeps this separate from modeled and benchmark results so customers can see exactly what has been proven."
-              items={[
-                {
-                  label: 'Verified net savings',
-                  value: verifiedMoney(view.verifiedNetSavings),
+                  value: view.strongestAction?.savingsConfidence ?? 'Pending evaluation',
                 },
                 {
-                  label: 'Production proof',
-                  value: view.verifiedNetSavings === null ? 'Missing' : 'Available',
+                  label: 'Strongest opportunity',
+                  value: view.strongestAction?.title ?? 'Still analyzing',
                 },
                 {
-                  label: 'Current strongest state',
-                  value: view.strongestAction?.state ?? 'Observed only',
-                },
-                {
-                  label: 'Modeled upside',
-                  value: modeled,
-                  note: 'Modeled upside does not become verified until production evidence supports it.',
+                  label: 'Evaluation status',
+                  value: evaluationStatusLabel,
                 },
               ]}
               insight={
-                view.verifiedNetSavings === null
-                  ? 'No production-reconciled saving is being claimed yet.'
-                  : 'Production evidence supports the verified amount shown here.'
+                estimatedSaving === null
+                  ? 'Evalomics has found an optimization candidate, but it is still building enough comparable evidence to publish a responsible savings estimate.'
+                  : 'This estimate comes from Evalomics evidence and economics, not generated guesswork.'
               }
               nextStep={
-                view.verifiedNetSavings === null
-                  ? 'Open proof status to see what must happen before Evalomics can verify savings.'
-                  : 'Open the proof record to inspect the evidence behind the verified amount.'
+                view.strongestAction?.nextAction ??
+                'Keep the usage evidence connected so Evalomics can finish candidate evaluation.'
               }
-              actionHref={`/o/${organizationId}/proof`}
-              actionLabel="Inspect proof"
+              actionHref={`/o/${organizationId}/recommendations`}
+              actionLabel="See how this was calculated"
             >
-            <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
-                Verified savings
-              </p>
-              <p className="mt-4 font-mono text-3xl tracking-[-0.04em] text-white">
-                {verifiedMoney(view.verifiedNetSavings)}
-              </p>
-              <p className="mt-2 font-mono text-[10px] text-slate-500">
-                production evidence
-              </p>
-              <ConsoleBars
-                values={[16, 16, 18, 18, 20, 20, 22, 23, 23, 25, 26, 28]}
-                accent="bg-violet-300"
-              />
-            </article>
+              <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
+                  Estimated savings
+                </p>
+                <p className="mt-4 font-mono text-3xl tracking-[-0.04em] text-white">
+                  {estimatedSavingLabel}
+                </p>
+                <p className="mt-2 font-mono text-[10px] text-slate-500">
+                  {estimatedSaving === null
+                    ? 'Evalomics evaluation in progress'
+                    : 'evidence-backed estimate'}
+                </p>
+                <ConsoleBars
+                  values={[24, 31, 27, 39, 36, 48, 44, 52, 57, 61, 68, 74]}
+                  accent="bg-amber-300"
+                />
+              </article>
+            </DashboardDrilldown>
+
+            <DashboardDrilldown
+              eyebrow="Evaluation status"
+              title={evaluationStatusLabel}
+              summary="This is the customer-facing decision state. Evalomics identifies the candidate, evaluates it when comparable evidence is available, and only later marks the production result as proven."
+              items={[
+                {
+                  label: 'Current status',
+                  value: evaluationStatusLabel,
+                },
+                {
+                  label: 'Recommendation',
+                  value: view.strongestAction?.title ?? 'No supported candidate yet',
+                },
+                {
+                  label: 'Detection confidence',
+                  value: view.strongestAction?.detectionConfidence ?? 'Pending',
+                },
+                {
+                  label: 'Production proof',
+                  value:
+                    view.verifiedNetSavings === null
+                      ? 'Later confirmation step'
+                      : verifiedMoney(view.verifiedNetSavings),
+                },
+              ]}
+              insight={
+                evaluationStatus === 'READY_TO_OPTIMIZE'
+                  ? 'Evalomics has enough evaluation evidence to recommend a staged implementation.'
+                  : evaluationStatus === 'KEEP_CURRENT'
+                    ? 'The candidate did not justify a production change under the configured evidence constraints.'
+                    : evaluationStatus === 'PROVEN'
+                      ? 'Post-change production evidence supports the result.'
+                      : 'Evalomics is still between detection and a safe implementation decision.'
+              }
+              nextStep={
+                view.strongestAction?.nextAction ??
+                'Continue collecting evidence; Evalomics will surface the next safe action.'
+              }
+              actionHref={`/o/${organizationId}/recommendations`}
+              actionLabel="Open evaluation"
+            >
+              <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
+                  Evaluation status
+                </p>
+                <p className="mt-4 text-xl font-semibold tracking-[-0.03em] text-white">
+                  {evaluationStatusLabel}
+                </p>
+                <p className="mt-2 font-mono text-[10px] text-slate-500">
+                  Evalomics decision state
+                </p>
+                <div className="mt-auto grid gap-2 pt-5 text-[10px]">
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500">Found</span>
+                    <span className={view.strongestAction !== null ? 'text-emerald-300' : 'text-slate-600'}>
+                      {view.strongestAction !== null ? 'yes' : 'pending'}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500">Evaluated</span>
+                    <span className={
+                      evaluationStatus === 'READY_TO_OPTIMIZE' ||
+                      evaluationStatus === 'KEEP_CURRENT' ||
+                      evaluationStatus === 'EVALUATED' ||
+                      evaluationStatus === 'PROVEN'
+                        ? 'text-emerald-300'
+                        : 'text-slate-600'
+                    }>
+                      {evaluationStatus === 'READY_TO_OPTIMIZE' ||
+                      evaluationStatus === 'KEEP_CURRENT' ||
+                      evaluationStatus === 'EVALUATED' ||
+                      evaluationStatus === 'PROVEN'
+                        ? 'yes'
+                        : 'in progress'}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500">Proven</span>
+                    <span className={evaluationStatus === 'PROVEN' ? 'text-emerald-300' : 'text-slate-600'}>
+                      {evaluationStatus === 'PROVEN' ? 'yes' : 'after rollout'}
+                    </span>
+                  </div>
+                </div>
+              </article>
             </DashboardDrilldown>
 
             <DashboardDrilldown
