@@ -104,11 +104,11 @@ export function WorkspaceModelCalculator() {
                 min="0"
                 step="1"
                 value={String(value)}
-                onChange={(event) =>
+                onChange={(event) => {
                   (setter as Dispatch<SetStateAction<string>>)(
                     event.target.value,
-                  )
-                }
+                  );
+                }}
                 className="min-h-11 rounded-lg border border-white/[0.08] bg-[#0c1421] px-3 font-mono text-sm text-slate-200 outline-none transition focus:border-sky-300/30"
               />
             </label>
@@ -133,7 +133,9 @@ export function WorkspaceModelCalculator() {
                   min="0"
                   step="0.01"
                   value={currentInputRate}
-                  onChange={(event) => setCurrentInputRate(event.target.value)}
+                  onChange={(event) => {
+                    setCurrentInputRate(event.target.value);
+                  }}
                   className="min-h-11 rounded-lg border border-white/[0.08] bg-[#101a2a] px-3 font-mono text-sm text-slate-200 outline-none focus:border-sky-300/30"
                 />
               </label>
@@ -144,7 +146,9 @@ export function WorkspaceModelCalculator() {
                   min="0"
                   step="0.01"
                   value={currentOutputRate}
-                  onChange={(event) => setCurrentOutputRate(event.target.value)}
+                  onChange={(event) => {
+                    setCurrentOutputRate(event.target.value);
+                  }}
                   className="min-h-11 rounded-lg border border-white/[0.08] bg-[#101a2a] px-3 font-mono text-sm text-slate-200 outline-none focus:border-sky-300/30"
                 />
               </label>
@@ -168,9 +172,9 @@ export function WorkspaceModelCalculator() {
                   min="0"
                   step="0.01"
                   value={candidateInputRate}
-                  onChange={(event) =>
-                    setCandidateInputRate(event.target.value)
-                  }
+                  onChange={(event) => {
+                    setCandidateInputRate(event.target.value);
+                  }}
                   className="min-h-11 rounded-lg border border-white/[0.08] bg-[#101a2a] px-3 font-mono text-sm text-slate-200 outline-none focus:border-emerald-300/30"
                 />
               </label>
@@ -181,9 +185,9 @@ export function WorkspaceModelCalculator() {
                   min="0"
                   step="0.01"
                   value={candidateOutputRate}
-                  onChange={(event) =>
-                    setCandidateOutputRate(event.target.value)
-                  }
+                  onChange={(event) => {
+                    setCandidateOutputRate(event.target.value);
+                  }}
                   className="min-h-11 rounded-lg border border-white/[0.08] bg-[#101a2a] px-3 font-mono text-sm text-slate-200 outline-none focus:border-emerald-300/30"
                 />
               </label>

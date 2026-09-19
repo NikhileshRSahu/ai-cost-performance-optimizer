@@ -42,7 +42,9 @@ export function EvidenceEngineDemo() {
     );
 
     return () => {
-      timers.forEach((timer) => window.clearTimeout(timer));
+      timers.forEach((timer) => {
+        window.clearTimeout(timer);
+      });
     };
   }, [reduceMotion]);
 

@@ -51,7 +51,9 @@ export function CsvDropzone({
         type="file"
         accept=".csv,text/csv"
         required
-        onChange={(e) => setFile(e.target.files?.item(0) ?? null)}
+        onChange={(e) => {
+          setFile(e.target.files?.item(0) ?? null);
+        }}
       />
       <motion.button
         type="button"
@@ -60,8 +62,12 @@ export function CsvDropzone({
           e.preventDefault();
           setDragging(true);
         }}
-        onDragOver={(e) => e.preventDefault()}
-        onDragLeave={() => setDragging(false)}
+        onDragOver={(e) => {
+          e.preventDefault();
+        }}
+        onDragLeave={() => {
+          setDragging(false);
+        }}
         onDrop={handleDrop}
         animate={
           reduceMotion

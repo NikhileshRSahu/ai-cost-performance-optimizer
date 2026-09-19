@@ -22,10 +22,16 @@ export function AnalysisProgress() {
     }
 
     const timers = [700, 1450, 2250].map((delay, index) =>
-      window.setTimeout(() => setCurrent(index + 1), delay),
+      window.setTimeout(() => {
+        setCurrent(index + 1);
+      }, delay),
     );
 
-    return () => timers.forEach((timer) => window.clearTimeout(timer));
+    return () => {
+      timers.forEach((timer) => {
+        window.clearTimeout(timer);
+      });
+    };
   }, [reduceMotion]);
 
   return (

@@ -12,7 +12,7 @@ export function RecommendationCard({
 }>) {
   const hasSaving = recommendation.saving !== null;
   const saving = hasSaving
-    ? recommendation.saving!.currency + ' ' + recommendation.saving!.amount
+    ? recommendation.saving.currency + ' ' + recommendation.saving.amount
     : 'Not measured yet';
   const savingLabel =
     recommendation.state === 'VERIFIED'

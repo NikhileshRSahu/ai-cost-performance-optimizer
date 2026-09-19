@@ -32,7 +32,7 @@ function decode(value: string): Buffer {
 
 export function providerCredentialKeyFromEnv(
   value: string | undefined,
-  fallbackSecret?: string | undefined,
+  fallbackSecret?: string,
 ): Uint8Array {
   const configured = value?.trim();
   if (configured !== undefined && configured.length > 0) {

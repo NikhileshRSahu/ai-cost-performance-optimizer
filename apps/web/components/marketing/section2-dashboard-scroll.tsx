@@ -9,10 +9,14 @@ export function Section2DashboardScroll() {
   const { scrollYProgress } = useScroll({ target: containerRef });
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
   const rotate = useTransform(scrollYProgress, [0, 1], [20, 0]);

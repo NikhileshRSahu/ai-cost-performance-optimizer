@@ -25,9 +25,15 @@ export function HeroIntelligence() {
   useEffect(() => {
     if (reduceMotion) return;
     const timers = [900, 2050, 3250].map((delay, index) =>
-      window.setTimeout(() => setPhase(index + 1), delay),
+      window.setTimeout(() => {
+        setPhase(index + 1);
+      }, delay),
     );
-    return () => timers.forEach((timer) => window.clearTimeout(timer));
+    return () => {
+      timers.forEach((timer) => {
+        window.clearTimeout(timer);
+      });
+    };
   }, [reduceMotion]);
 
   return (
