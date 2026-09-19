@@ -79,7 +79,10 @@ async function reachVerification(
     page.getByRole('heading', { name: 'Let Evalomics evaluate this candidate' }),
   ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
   await page
-    .getByRole('link', { name: 'Add evidence for Evalomics evaluation', exact: true })
+    .getByRole('link', {
+      name: 'Add evidence for Evalomics evaluation',
+      exact: true,
+    })
     .click();
 
   await expect(
