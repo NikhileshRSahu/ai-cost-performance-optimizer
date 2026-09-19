@@ -1,4 +1,5 @@
-import { BookOpen, Copy, Scissors, Shapes, Sparkles } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowLeft, ArrowRight, BookOpen, Copy, Scissors, Shapes, Sparkles } from 'lucide-react';
 
 const tips = [
   {
@@ -27,20 +28,48 @@ const tips = [
   },
 ] as const;
 
-export default function PromptOptimizerPage() {
+export default async function PromptOptimizerPage({
+  params,
+}: Readonly<{ params: Promise<{ organizationId: string }> }>) {
+  const { organizationId } = await params;
   return (
     <div className="space-y-7">
       <section>
         <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-violet-300">
-          Prompt cost engineering
+          Evalomics evaluation tool · prompt
         </p>
         <h1 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-slate-100 sm:text-3xl">
-          Make every token earn its keep.
+          Improve the prompt only when the evidence points here.
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-          A compact library of general optimization patterns. These are not
-          personalized claims unless Evalomics has prompt-level evidence.
+          This page supports the main optimization story. Use these patterns when
+          Evalomics identifies prompt or context waste; the recommendation remains
+          the source of truth for what should be changed first.
         </p>
+      </section>
+
+      <section className="rounded-[22px] border border-sky-300/12 bg-sky-300/[0.035] p-5 sm:p-6">
+        <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.15em] text-sky-200/65">
+          Where this fits
+        </p>
+        <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="m-0 text-lg font-semibold text-white">
+              Found → evaluate prompt change → return to the recommendation
+            </h2>
+            <p className="m-0 mt-2 max-w-2xl text-sm leading-6 text-white/45">
+              Do not optimize prompts just because you can. Start from the supported
+              finding, use this tool to shape the candidate, then let Evalomics
+              evaluate the result against the workload requirements.
+            </p>
+          </div>
+          <Link
+            href={'/o/' + organizationId + '/recommendations'}
+            className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-4 py-2 text-xs font-semibold text-slate-950 no-underline"
+          >
+            Back to next action <ArrowRight className="size-3.5" />
+          </Link>
+        </div>
       </section>
 
       <section className="grid gap-4 lg:grid-cols-2">
@@ -87,10 +116,17 @@ export default function PromptOptimizerPage() {
 
       <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-4 text-xs leading-5 text-slate-500">
         <BookOpen className="mr-2 inline size-3.5 text-violet-300/70" />
-        Personalized prompt optimization requires sanitized prompt/history
-        evidence. Evalomics will not pretend aggregate usage can reveal prompt
-        structure.
+        When prompt-level evidence is unavailable, these remain general engineering
+        patterns. Evalomics AI can explain whether your current recommendation
+        actually requires prompt evidence before you change anything.
       </div>
+
+      <Link
+        href={'/o/' + organizationId}
+        className="inline-flex items-center gap-2 text-xs font-semibold text-white/45 no-underline hover:text-white"
+      >
+        <ArrowLeft className="size-3.5" /> Return to your result
+      </Link>
     </div>
   );
 }
