@@ -454,7 +454,7 @@ export default async function CostDashboardPage({
 
                 <Link
                   href={`/o/${organizationId}/recommendations`}
-                  className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-sky-300 no-underline"
+                  className="mt-4 inline-flex min-h-6 items-center gap-2 px-1 text-xs font-semibold text-sky-300 no-underline"
                 >
                   View all recommendations <ArrowRight className="size-3.5" />
                 </Link>
@@ -565,7 +565,7 @@ export default async function CostDashboardPage({
                 </div>
                 <Link
                   href={`/o/${organizationId}/proof`}
-                  className="mt-5 inline-flex items-center gap-2 text-xs font-semibold text-violet-300 no-underline"
+                  className="mt-5 inline-flex min-h-6 items-center gap-2 px-1 text-xs font-semibold text-violet-300 no-underline"
                 >
                   {view.verifiedNetSavings === null
                     ? 'View result evidence'
@@ -880,14 +880,14 @@ export default async function CostDashboardPage({
                 <div className="mt-5 flex flex-wrap gap-4">
                   <Link
                     href={`/o/${organizationId}/import`}
-                    className="inline-flex items-center gap-2 text-xs font-semibold text-sky-300 no-underline"
+                    className="inline-flex min-h-6 items-center gap-2 px-1 text-xs font-semibold text-sky-300 no-underline"
                   >
                     <Database className="size-3.5" />
                     Usage & Import
                   </Link>
                   <Link
                     href={`/o/${organizationId}/prompts`}
-                    className="inline-flex items-center gap-2 text-xs font-semibold text-violet-300 no-underline"
+                    className="inline-flex min-h-6 items-center gap-2 px-1 text-xs font-semibold text-violet-300 no-underline"
                   >
                     <Sparkles className="size-3.5" />
                     Prompt Optimizer
