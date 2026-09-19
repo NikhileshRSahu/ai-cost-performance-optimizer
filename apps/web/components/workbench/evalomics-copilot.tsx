@@ -34,7 +34,7 @@ export function EvalomicsCopilot({
     const onContext = (event: Event) => {
       const detail = (event as CustomEvent<{ context?: unknown }>).detail;
       const nextContext =
-        typeof detail?.context === 'string' ? detail.context.trim() : '';
+        typeof detail.context === 'string' ? detail.context.trim() : '';
       if (nextContext.length === 0) return;
 
       setContext(nextContext);
