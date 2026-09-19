@@ -9,9 +9,14 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
   const pathname = usePathname();
   const isWorkbench = pathname.startsWith('/o/');
   const isHome = pathname === '/';
+  const isFocusedStart = pathname === '/start';
 
   if (isWorkbench) {
     return <div className="min-h-screen bg-[#070a0f]">{children}</div>;
+  }
+
+  if (isFocusedStart) {
+    return <div className="min-h-screen bg-[#f5f7fa]">{children}</div>;
   }
 
   if (isHome) {
