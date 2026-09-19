@@ -43,3 +43,5 @@ Unified customer story release: Connected → Found → Evaluated → Ready → 
 Final verification after unified story and Evalomics AI lint fixes — 2026-09-19.
 
 Complete story verification: contextual Evalomics AI, interactive prompt evaluation, model context prefill, mirrored demo, outcome summary, and decision-ordered recommendations — 2026-09-19.
+
+Green-gate rerun after final customer journey E2E formatting — 2026-09-19.
