@@ -4346,7 +4346,7 @@ samp,
 
 @keyframes et-appear {
   from {
-    opacity: 0;
+    opacity: 1;
     transform: translateY(22px);
     filter: blur(10px);
   }

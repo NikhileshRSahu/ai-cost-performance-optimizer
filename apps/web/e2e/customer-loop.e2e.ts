@@ -66,24 +66,39 @@ async function reachVerification(
   ).toBeVisible();
   await expectAccessible(page);
 
-  // Advanced validation remains available without being the default customer path.
-  await page.goto(`/o/${organizationId}/workloads`);
-  await page.getByLabel('Workload name').fill('classification');
-  await page.getByLabel('Environment').fill('production');
-  await page.getByLabel('Minimum quality').fill('0.90');
-
-  const latencyField = page.getByLabel('Maximum p95 latency (ms)');
-  if (await latencyField.isVisible()) {
-    await latencyField.fill('1000');
-  }
-  const failureRateField = page.getByLabel('Maximum failure rate');
-  if (await failureRateField.isVisible()) {
-    await failureRateField.fill('0.05');
-  }
-
+  // Optional proof follows the same customer-facing path as the product.
   await page
-    .getByRole('button', { name: 'Save safety floor and continue' })
+    .getByRole('link', { name: 'Measure exact savings (optional)' })
     .click();
+  await expect(
+    page.getByRole('heading', { name: 'Measure exact savings' }),
+  ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
+  await page
+    .getByRole('link', { name: 'Measure exact savings', exact: true })
+    .click();
+
+  const defineConstraints = page.getByRole('link', {
+    name: 'Define constraints',
+  });
+  if (await defineConstraints.isVisible()) {
+    await defineConstraints.click();
+    await page.getByLabel('Workload name').fill('classification');
+    await page.getByLabel('Environment').fill('production');
+    await page.getByLabel('Minimum quality').fill('0.90');
+
+    const latencyField = page.getByLabel('Maximum p95 latency (ms)');
+    if (await latencyField.isVisible()) {
+      await latencyField.fill('1000');
+    }
+    const failureRateField = page.getByLabel('Maximum failure rate');
+    if (await failureRateField.isVisible()) {
+      await failureRateField.fill('0.05');
+    }
+
+    await page
+      .getByRole('button', { name: 'Save safety floor and continue' })
+      .click();
+  }
 
   await expect(
     page.getByRole('heading', {
