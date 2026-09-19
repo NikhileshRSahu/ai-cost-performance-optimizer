@@ -21,7 +21,8 @@ const quickQuestions = [
 
 export function EvalomicsCopilot({
   organizationId,
-}: Readonly<{ organizationId: string }>) {
+  demo = false,
+}: Readonly<{ organizationId: string; demo?: boolean }>) {
   const [open, setOpen] = useState(false);
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState<AiAnswer | null>(null);
@@ -55,6 +56,50 @@ export function EvalomicsCopilot({
     setPending(true);
     setError(null);
     try {
+      if (demo) {
+        const lower = trimmed.toLowerCase();
+        const demoAnswer: AiAnswer =
+          lower.includes('save') || lower.includes('saving')
+            ? {
+                answer:
+                  'In this synthetic workspace, Evalomics estimates $286–$421 of savings potential across the sample period. The strongest illustrated opportunity is repeated-input optimization, with $87.42 attributed to that candidate.',
+                facts: [
+                  'Observed spend: $1,774.78',
+                  'Estimated savings: $286–$421',
+                  'Strongest candidate: repeated-input optimization',
+                ],
+                action: null,
+                confidence: 'MEDIUM',
+              }
+            : lower.includes('implement') || lower.includes('next')
+              ? {
+                  answer:
+                    'The illustrated next action is to keep the stable prompt prefix unchanged so eligible repeated tokens can use provider caching, then evaluate the workload against the same quality floor before rollout.',
+                  facts: [
+                    '1,248 similar requests',
+                    'Sample quality score: 0.91',
+                    'Candidate opportunity: $87.42',
+                  ],
+                  action: null,
+                  confidence: 'MEDIUM',
+                }
+              : {
+                  answer:
+                    'This demo shows how Evalomics moves from observed usage to a found opportunity, an evaluated candidate, a ready action, and finally a proven production result.',
+                  facts: [
+                    '22,380 synthetic requests',
+                    'Observed spend: $1,774.78',
+                    'Current demo stage: Evaluated',
+                  ],
+                  action: null,
+                  confidence: 'HIGH',
+                };
+        setAnswer(demoAnswer);
+        setQuestion('');
+        setContext(null);
+        return;
+      }
+
       const response = await fetch('/api/evalomics-ai', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
