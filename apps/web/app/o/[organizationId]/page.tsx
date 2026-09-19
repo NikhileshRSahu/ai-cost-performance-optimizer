@@ -176,15 +176,12 @@ export default async function CostDashboardPage({
     return (
       <div className="space-y-7">
         <section>
-          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-sky-300">
-            AI Efficiency MRI
-          </p>
-          <h1 className="mt-3 font-mono text-2xl font-medium tracking-[-0.04em] text-slate-100 sm:text-3xl">
-            Bring your first usage window into focus.
+          <h1 className="m-0 text-3xl font-semibold tracking-[-0.045em] text-white">
+            See where your AI money goes.
           </h1>
-          <p className="mt-2 max-w-2xl font-mono text-xs leading-5 text-slate-500">
-            Connect a supported provider or upload a CSV. Evalomics will analyze
-            the evidence and bring you back here with one clear result.
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-white/42">
+            Connect your usage once. Evalomics will show what you spent, what is
+            wasting money, and the best next change.
           </p>
           <div className="mt-5 rounded-xl border border-white/[0.07] bg-white/[0.02] p-4">
             <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-white/30">
@@ -200,7 +197,7 @@ export default async function CostDashboardPage({
         <section className="grid gap-4 md:grid-cols-2">
           <Link
             href={`/o/${organizationId}/import?mode=connect`}
-            className="group min-h-60 rounded-xl border border-white/[0.07] bg-[#111a29] p-6 no-underline transition hover:-translate-y-0.5 hover:border-sky-300/20"
+            className="group min-h-60 rounded-xl border border-white/[0.07] bg-[#111214] p-6 no-underline transition hover:-translate-y-0.5 hover:border-sky-300/20"
           >
             <Database className="size-5 text-sky-300" />
             <h2 className="mt-8 text-xl font-medium text-slate-100">
@@ -215,7 +212,7 @@ export default async function CostDashboardPage({
           </Link>
           <Link
             href={`/o/${organizationId}/import?mode=csv`}
-            className="group min-h-60 rounded-xl border border-white/[0.07] bg-[#111a29] p-6 no-underline transition hover:-translate-y-0.5 hover:border-emerald-300/20"
+            className="group min-h-60 rounded-xl border border-white/[0.07] bg-[#111214] p-6 no-underline transition hover:-translate-y-0.5 hover:border-emerald-300/20"
           >
             <Gauge className="size-5 text-emerald-300" />
             <h2 className="mt-8 text-xl font-medium text-slate-100">
@@ -241,27 +238,23 @@ export default async function CostDashboardPage({
         </div>
       ) : null}
 
-      <section className="flex flex-col justify-between gap-4 border-b border-white/[0.06] pb-5 sm:flex-row sm:items-end">
+      <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="mb-3 font-mono text-[11px] text-slate-500">
+          <p className="m-0 font-mono text-[10px] uppercase tracking-[0.14em] text-white/28">
             {view.periodLabel}
           </p>
-          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-sky-300">
-            AI Efficiency MRI
-          </p>
-          <h1 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-slate-100 sm:text-3xl">
-            We analyzed your AI usage
+          <h1 className="m-0 mt-2 text-3xl font-semibold tracking-[-0.045em] text-white">
+            Your AI spend at a glance
           </h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-            Here is the spend we observed, the strongest supported action, and
-            what has actually been proven.
+          <p className="m-0 mt-2 text-sm text-white/38">
+            Spend, savings, waste, and the next action — nothing else.
           </p>
         </div>
         {hasSelfHostedAuthConfiguration() ? <SignOutButton /> : null}
       </section>
 
       {view.dataQuality === 'ZERO_USAGE' && view.sourceKind === 'PROVIDER' ? (
-        <section className="rounded-xl border border-white/[0.07] bg-[#111a29] p-6">
+        <section className="rounded-xl border border-white/[0.07] bg-[#111214] p-6">
           <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-300/70">
             Connection ready
           </p>
@@ -331,31 +324,16 @@ export default async function CostDashboardPage({
             }
           />
 
-          <section className="rounded-[22px] border border-white/[0.08] bg-[#0f1115] p-5">
-            <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.15em] text-sky-300/65">
-              Outcome summary
-            </p>
-            <p className="m-0 mt-2 text-sm leading-6 text-white/65">
-              You spent {moneyLabel(view.observedSpend)} → Evalomics found{' '}
-              {view.recommendations.length} supported opportunity
-              {view.recommendations.length === 1 ? '' : 'ies'} → best change:{' '}
-              {view.strongestAction?.title ?? 'still analyzing'} → expected
-              impact: {estimatedSavingLabel} → confidence:{' '}
-              {view.strongestAction?.detectionConfidence ?? 'pending'} → next:{' '}
-              {view.strongestAction?.nextAction ?? 'keep evidence connected'}.
-            </p>
-          </section>
-
           <DashboardWidgetGrid
             storageKey={`evalomics-dashboard-${organizationId}`}
             items={[
               { id: 'spend', size: 'sm', label: 'How much did I spend?' },
               { id: 'estimated', size: 'sm', label: 'How much can I save?' },
-              { id: 'waste', size: 'wide', label: 'What is wasting money?' },
-              { id: 'change', size: 'wide', label: 'What should I change?' },
+              { id: 'waste', size: 'sm', label: 'What is wasting money?' },
+              { id: 'change', size: 'sm', label: 'What should I change?' },
               { id: 'safe', size: 'sm', label: 'Is it safe?' },
-              { id: 'next', size: 'wide', label: 'What do I do next?' },
-              { id: 'result', size: 'sm', label: 'What happened after rollout?' },
+              { id: 'next', size: 'sm', label: 'What do I do next?' },
+              { id: 'result', size: 'lg', label: 'What happened after rollout?' },
             ]}
           >
             <DashboardDrilldown
@@ -716,20 +694,49 @@ export default async function CostDashboardPage({
               actionHref={`/o/${organizationId}/proof`}
               actionLabel="View production result"
             >
-              <article className="flex h-full flex-col rounded-[18px] border border-white/[0.09] bg-[#111214] p-5 font-mono">
-                <p className="m-0 text-[10px] uppercase tracking-[0.17em] text-white/42">
-                  Production result
-                </p>
-                <p className="m-0 mt-4 text-xl font-semibold tracking-[-0.03em] text-white">
-                  {view.verifiedNetSavings === null
-                    ? 'After rollout'
-                    : verifiedMoney(view.verifiedNetSavings)}
-                </p>
-                <p className="m-0 mt-2 text-[10px] text-white/30">
-                  {view.verifiedNetSavings === null
-                    ? 'No production change measured yet'
-                    : 'measured production impact'}
-                </p>
+              <article className="grid h-full gap-5 rounded-[18px] border border-white/[0.09] bg-[#111214] p-5 md:grid-cols-[.8fr_1.2fr] md:items-center">
+                <div>
+                  <p className="m-0 font-mono text-[10px] uppercase tracking-[0.17em] text-white/42">
+                    Production result
+                  </p>
+                  <p
+                    className={
+                      view.verifiedNetSavings === null
+                        ? 'm-0 mt-4 text-xl font-semibold tracking-[-0.03em] text-amber-200'
+                        : 'm-0 mt-4 text-xl font-semibold tracking-[-0.03em] text-emerald-200'
+                    }
+                  >
+                    {view.verifiedNetSavings === null
+                      ? 'Pending rollout'
+                      : verifiedMoney(view.verifiedNetSavings)}
+                  </p>
+                  <p className="m-0 mt-2 text-xs leading-5 text-white/30">
+                    {view.verifiedNetSavings === null
+                      ? 'Production impact appears here after deployment.'
+                      : 'Measured production impact.'}
+                  </p>
+                </div>
+                <div className="grid grid-cols-3 items-start gap-2">
+                  {[
+                    ['Staged', evaluationStatus !== 'CANDIDATE_IDENTIFIED' && evaluationStatus !== 'ANALYZING'],
+                    ['In production', evaluationStatus === 'PROVEN'],
+                    ['Result', view.verifiedNetSavings !== null],
+                  ].map(([label, reached], index) => (
+                    <div key={String(label)} className="relative">
+                      {index < 2 ? (
+                        <span className="absolute left-5 right-[-10px] top-[7px] h-px bg-white/[0.08]" />
+                      ) : null}
+                      <span
+                        className={
+                          reached
+                            ? 'relative z-10 block size-3.5 rounded-full border-2 border-[#111214] bg-blue-400 ring-1 ring-blue-300/60'
+                            : 'relative z-10 block size-3.5 rounded-full border border-white/20 bg-[#111214]'
+                        }
+                      />
+                      <p className="m-0 mt-3 text-[10px] text-white/34">{String(label)}</p>
+                    </div>
+                  ))}
+                </div>
               </article>
             </DashboardDrilldown>
           </DashboardWidgetGrid>
