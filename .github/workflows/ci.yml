@@ -22,5 +22,6 @@ jobs:
       - run: npm install
       - run: npm run build
         env:
-          NEON_AUTH_BASE_URL: https://ep-green-night-b4iaryax.neonauth.c-6.us-east-2.aws.neon.tech/evalomics/auth
-          NEON_AUTH_COOKIE_SECRET: ci-only-cookie-secret-that-is-long-enough-2026
+          AUTH_SECRET: ci-only-auth-secret-that-is-long-enough-2026
+          GOOGLE_CLIENT_ID: 504485830242-1mk5p7h8aho03phd48ma9kisath17rk4.apps.googleusercontent.com
+          GOOGLE_CLIENT_SECRET: ci-only-google-secret
