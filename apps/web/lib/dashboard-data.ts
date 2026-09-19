@@ -133,6 +133,11 @@ function recommendationView(
     confidenceBand: normalizedConfidence(row.confidenceBand),
     principalLimitation: evidenceString(row.evidence, 'principalLimitation'),
     nextAction: evidenceString(row.evidence, 'nextAction') ?? defaultNextAction,
+    workloadName: evidenceString(row.evidence, 'workloadName'),
+    currentConfigurationId: evidenceString(
+      row.evidence,
+      'currentConfigurationId',
+    ),
   });
 }
 
