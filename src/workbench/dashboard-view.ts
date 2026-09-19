@@ -55,6 +55,9 @@ export type DashboardRecommendationEvidence = Readonly<{
   nextAction: string;
   workloadName?: string | null;
   currentConfigurationId?: string | null;
+  measuredFact?: string | null;
+  inference?: string | null;
+  qualityGuard?: string | null;
 }>;
 
 export type VerifiedNetSavingsEvidence = Readonly<{
