@@ -74,6 +74,12 @@ test('founder gets one direct answer before optional evidence details', async ({
   ]) {
     await expect(page.getByRole('heading', { name: section })).toBeVisible();
   }
+  await expect(
+    page.getByRole('link', { name: 'Back to verification' }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'View proof status' }),
+  ).toBeVisible();
   await expectAccessible(page);
 });
 
