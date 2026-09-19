@@ -133,7 +133,7 @@ export function DashboardWidgetGrid({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => setEditable((value) => !value)}
+            onClick={() => { setEditable((value) => !value); }}
             className="rounded-md border border-white/[0.09] bg-[#111214] px-3 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-400 transition hover:border-white/[0.16] hover:text-white"
           >
             {editable ? 'Lock layout' : 'Edit layout'}
@@ -160,10 +160,10 @@ export function DashboardWidgetGrid({
             <div
               key={id}
               draggable={editable}
-              onDragStart={(event) => handleDragStart(event, id)}
-              onDragOver={(event) => handleDragOver(event, id)}
+              onDragStart={(event) => { handleDragStart(event, id); }}
+              onDragOver={(event) => { handleDragOver(event, id); }}
               onDrop={handleDrop}
-              onDragEnd={() => setDraggingId(null)}
+              onDragEnd={() => { setDraggingId(null); }}
               className={[
                 'group relative min-w-0',
                 spanClass(item.size),
