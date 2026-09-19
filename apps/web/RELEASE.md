@@ -39,3 +39,5 @@ Final send-ready gate: demo-first flow, CSV compatibility, auth, and draggable o
 Evalomics AI release: customer-first estimated savings, evaluation status, clickable drilldowns, and evidence-grounded workspace copilot — 2026-09-19.
 
 Unified customer story release: Connected → Found → Evaluated → Ready → Proven across import, overview, recommendations, evaluation tools, proof, and Evalomics AI — 2026-09-19.
+
+Final verification after unified story and Evalomics AI lint fixes — 2026-09-19.
