@@ -2,7 +2,13 @@
 
 import Link from 'next/link';
 import { ArrowRight, X } from 'lucide-react';
-import { useEffect, useState, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react';
+import {
+  useEffect,
+  useState,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactNode,
+} from 'react';
 
 type DetailItem = Readonly<{
   label: string;
@@ -48,8 +54,10 @@ export function DashboardDrilldown({
   }, [open]);
 
   function isInteractive(target: EventTarget | null): boolean {
-    return target instanceof Element &&
-      target.closest('a,button,input,select,textarea,[role="button"]') !== null;
+    return (
+      target instanceof Element &&
+      target.closest('a,button,input,select,textarea,[role="button"]') !== null
+    );
   }
 
   function handleClick(event: MouseEvent<HTMLDivElement>) {
@@ -88,7 +96,9 @@ export function DashboardDrilldown({
           <section
             role="dialog"
             aria-modal="true"
-            aria-labelledby={'drilldown-' + title.replace(/\s+/g, '-').toLowerCase()}
+            aria-labelledby={
+              'drilldown-' + title.replace(/\s+/g, '-').toLowerCase()
+            }
             className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-[28px] border border-white/[0.10] bg-[#101114] shadow-[0_30px_120px_rgba(0,0,0,.55)] sm:rounded-[28px]"
           >
             <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-white/[0.07] bg-[#101114]/95 px-5 py-5 backdrop-blur-xl sm:px-7">
@@ -114,7 +124,9 @@ export function DashboardDrilldown({
             </div>
 
             <div className="grid gap-6 p-5 sm:p-7">
-              <p className="m-0 max-w-2xl text-sm leading-7 text-white/55">{summary}</p>
+              <p className="m-0 max-w-2xl text-sm leading-7 text-white/55">
+                {summary}
+              </p>
 
               <div className="grid gap-3 sm:grid-cols-2">
                 {items.map((item) => (
@@ -125,9 +137,13 @@ export function DashboardDrilldown({
                     <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-white/35">
                       {item.label}
                     </p>
-                    <p className="m-0 mt-2 font-mono text-base text-white">{item.value}</p>
+                    <p className="m-0 mt-2 font-mono text-base text-white">
+                      {item.value}
+                    </p>
                     {item.note ? (
-                      <p className="m-0 mt-2 text-xs leading-5 text-white/38">{item.note}</p>
+                      <p className="m-0 mt-2 text-xs leading-5 text-white/38">
+                        {item.note}
+                      </p>
                     ) : null}
                   </article>
                 ))}
@@ -138,13 +154,17 @@ export function DashboardDrilldown({
                   <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-emerald-200/70">
                     What Evalomics identified
                   </p>
-                  <p className="m-0 mt-3 text-sm leading-6 text-emerald-50/70">{insight}</p>
+                  <p className="m-0 mt-3 text-sm leading-6 text-emerald-50/70">
+                    {insight}
+                  </p>
                 </div>
                 <div className="rounded-2xl border border-sky-300/12 bg-sky-300/[0.035] p-5">
                   <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-sky-200/70">
                     What to do next
                   </p>
-                  <p className="m-0 mt-3 text-sm leading-6 text-sky-50/70">{nextStep}</p>
+                  <p className="m-0 mt-3 text-sm leading-6 text-sky-50/70">
+                    {nextStep}
+                  </p>
                 </div>
               </div>
 

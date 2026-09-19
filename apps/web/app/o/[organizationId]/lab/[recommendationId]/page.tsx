@@ -58,7 +58,9 @@ export default async function OptimizationLabPage({
             aria-labelledby="lab-validation-title"
           >
             <p className="eyebrow">Optional proof</p>
-            <h1 id="lab-validation-title">Let Evalomics evaluate this candidate</h1>
+            <h1 id="lab-validation-title">
+              Let Evalomics evaluate this candidate
+            </h1>
             <p>{VALIDATION_COPY.intro}</p>
 
             <div className="comparison-grid">
@@ -153,8 +155,8 @@ export default async function OptimizationLabPage({
           <h1>Current versus candidate</h1>
           <p className="lede">
             Evalomics compares the same workload evidence and checks whether the
-            cheaper configuration stays inside your required quality and performance
-            floor before recommending adoption.
+            cheaper configuration stays inside your required quality and
+            performance floor before recommending adoption.
           </p>
         </div>
         <div
@@ -296,8 +298,9 @@ export default async function OptimizationLabPage({
                 : 'Review the evidence before changing production.'}
             </h2>
             <p>
-              Evaluated savings are still not Verified. Apply the change only when
-              you are ready for Evalomics to compare post-change production evidence.
+              Evaluated savings are still not Verified. Apply the change only
+              when you are ready for Evalomics to compare post-change production
+              evidence.
             </p>
           </div>
           <div className="action-row">

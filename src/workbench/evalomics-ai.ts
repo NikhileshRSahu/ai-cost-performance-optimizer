@@ -141,9 +141,9 @@ export function answerEvalomicsQuestion(
     q.includes('why') &&
     (q.includes('spend') || q.includes('cost') || q.includes('expensive'))
   ) {
-    const facts = view.diagnosticFacts.slice(0, 4).map(
-      (fact) => fact.label + ': ' + fact.value,
-    );
+    const facts = view.diagnosticFacts
+      .slice(0, 4)
+      .map((fact) => fact.label + ': ' + fact.value);
     return Object.freeze({
       answer:
         facts.length === 0
@@ -208,10 +208,7 @@ export function answerEvalomicsQuestion(
         label: 'Open implementation path',
         href:
           action?.state === 'TESTED' && action.decision === 'OPTIMIZE'
-            ? '/o/' +
-              organizationId +
-              '/implement/' +
-              action.recommendationId
+            ? '/o/' + organizationId + '/implement/' + action.recommendationId
             : '/o/' + organizationId + '/recommendations',
       }),
       confidence: action?.detectionConfidence ?? 'LOW',
@@ -270,7 +267,13 @@ export function dashboardEstimatedSaving(
 
 export function dashboardEvaluationStatus(
   view: FounderDashboardView,
-): 'PROVEN' | 'ANALYZING' | 'KEEP_CURRENT' | 'READY_TO_OPTIMIZE' | 'EVALUATED' | 'CANDIDATE_IDENTIFIED' {
+):
+  | 'PROVEN'
+  | 'ANALYZING'
+  | 'KEEP_CURRENT'
+  | 'READY_TO_OPTIMIZE'
+  | 'EVALUATED'
+  | 'CANDIDATE_IDENTIFIED' {
   return evaluationStatus(view) as
     | 'PROVEN'
     | 'ANALYZING'

@@ -292,7 +292,9 @@ export default async function CostDashboardPage({
           >
             <DashboardDrilldown
               eyebrow="Recommended action"
-              title={view.strongestAction?.title ?? 'No supported optimization yet'}
+              title={
+                view.strongestAction?.title ?? 'No supported optimization yet'
+              }
               summary={
                 view.strongestAction === null
                   ? 'Evalomics has not found enough evidence to recommend a production change yet.'
@@ -317,11 +319,14 @@ export default async function CostDashboardPage({
                 },
                 {
                   label: 'Detection confidence',
-                  value: view.strongestAction?.detectionConfidence ?? 'Insufficient evidence',
+                  value:
+                    view.strongestAction?.detectionConfidence ??
+                    'Insufficient evidence',
                 },
                 {
                   label: 'Savings confidence',
-                  value: view.strongestAction?.savingsConfidence ?? 'Unmeasured',
+                  value:
+                    view.strongestAction?.savingsConfidence ?? 'Unmeasured',
                 },
               ]}
               insight={
@@ -336,45 +341,45 @@ export default async function CostDashboardPage({
               actionLabel="View all recommendations"
             >
               <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
-                    Recommended action
-                  </p>
-                  <h2 className="mt-2 font-mono text-base font-medium text-white">
-                    {view.strongestAction?.state === 'TESTED'
-                      ? 'Best tested improvement'
-                      : view.strongestAction?.state === 'VERIFIED'
-                        ? 'Best verified improvement'
-                        : 'Strongest supported action'}
-                  </h2>
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
+                      Recommended action
+                    </p>
+                    <h2 className="mt-2 font-mono text-base font-medium text-white">
+                      {view.strongestAction?.state === 'TESTED'
+                        ? 'Best tested improvement'
+                        : view.strongestAction?.state === 'VERIFIED'
+                          ? 'Best verified improvement'
+                          : 'Strongest supported action'}
+                    </h2>
+                  </div>
+                  <Sparkles className="size-4 text-emerald-300/60" />
                 </div>
-                <Sparkles className="size-4 text-emerald-300/60" />
-              </div>
 
-              {view.strongestAction === null ? (
-                <div className="mt-5 rounded-lg border border-dashed border-white/[0.08] p-5">
-                  <p className="text-sm font-medium text-slate-300">
-                    No supported optimization yet
-                  </p>
-                  <p className="mt-2 text-xs leading-5 text-slate-500">
-                    Add more evidence before changing production behavior.
-                  </p>
-                </div>
-              ) : (
-                <RecommendationCard
-                  organizationId={organizationId}
-                  recommendation={view.strongestAction}
-                />
-              )}
+                {view.strongestAction === null ? (
+                  <div className="mt-5 rounded-lg border border-dashed border-white/[0.08] p-5">
+                    <p className="text-sm font-medium text-slate-300">
+                      No supported optimization yet
+                    </p>
+                    <p className="mt-2 text-xs leading-5 text-slate-500">
+                      Add more evidence before changing production behavior.
+                    </p>
+                  </div>
+                ) : (
+                  <RecommendationCard
+                    organizationId={organizationId}
+                    recommendation={view.strongestAction}
+                  />
+                )}
 
-              <Link
-                href={`/o/${organizationId}/recommendations`}
-                className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-sky-300 no-underline"
-              >
-                View all recommendations <ArrowRight className="size-3.5" />
-              </Link>
-            </section>
+                <Link
+                  href={`/o/${organizationId}/recommendations`}
+                  className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-sky-300 no-underline"
+                >
+                  View all recommendations <ArrowRight className="size-3.5" />
+                </Link>
+              </section>
             </DashboardDrilldown>
 
             <DashboardDrilldown
@@ -385,7 +390,8 @@ export default async function CostDashboardPage({
                 { label: 'Observed', value: 'Usage + cost evidence loaded' },
                 {
                   label: 'Potential',
-                  value: view.strongestAction !== null ? 'Detected' : 'Not detected',
+                  value:
+                    view.strongestAction !== null ? 'Detected' : 'Not detected',
                 },
                 {
                   label: 'Tested',
@@ -410,78 +416,82 @@ export default async function CostDashboardPage({
                   : 'Review the production evidence behind the verified saving.'
               }
               actionHref={`/o/${organizationId}/proof`}
-              actionLabel={view.verifiedNetSavings === null ? 'View proof status' : 'Open verified savings'}
-            >
-            <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="size-4 text-violet-300" />
-                <h2 className="text-sm font-medium text-slate-100">
-                  Evidence status
-                </h2>
-              </div>
-              <EvidenceHeat
-                active={
-                  view.verifiedNetSavings !== null
-                    ? 4
-                    : view.strongestAction?.state === 'TESTED'
-                      ? 3
-                      : view.strongestAction !== null
-                        ? 2
-                        : 1
-                }
-              />
-              <div className="mt-5 grid gap-3">
-                {[
-                  ['Observed', 'Usage and cost evidence loaded', true],
-                  [
-                    'Potential',
-                    'Optimization detected',
-                    view.strongestAction !== null,
-                  ],
-                  [
-                    'Tested',
-                    'Benchmark-supported',
-                    view.strongestAction?.state === 'TESTED' ||
-                      view.strongestAction?.state === 'VERIFIED',
-                  ],
-                  [
-                    'Verified',
-                    'Production proof',
-                    view.verifiedNetSavings !== null,
-                  ],
-                ].map(([label, detail, reached]) => (
-                  <div
-                    key={String(label)}
-                    className="flex items-center justify-between gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-3"
-                  >
-                    <div>
-                      <p className="text-xs font-medium text-slate-300">
-                        {String(label)}
-                      </p>
-                      <p className="mt-1 font-mono text-[10px] text-slate-500">
-                        {String(detail)}
-                      </p>
-                    </div>
-                    <span
-                      className={
-                        reached
-                          ? 'size-2 rounded-full bg-emerald-400'
-                          : 'size-2 rounded-full bg-slate-700'
-                      }
-                    />
-                  </div>
-                ))}
-              </div>
-              <Link
-                href={`/o/${organizationId}/proof`}
-                className="mt-5 inline-flex items-center gap-2 text-xs font-semibold text-violet-300 no-underline"
-              >
-                {view.verifiedNetSavings === null
+              actionLabel={
+                view.verifiedNetSavings === null
                   ? 'View proof status'
-                  : 'Open verified savings'}{' '}
-                <ArrowRight className="size-3.5" />
-              </Link>
-            </section>
+                  : 'Open verified savings'
+              }
+            >
+              <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="size-4 text-violet-300" />
+                  <h2 className="text-sm font-medium text-slate-100">
+                    Evidence status
+                  </h2>
+                </div>
+                <EvidenceHeat
+                  active={
+                    view.verifiedNetSavings !== null
+                      ? 4
+                      : view.strongestAction?.state === 'TESTED'
+                        ? 3
+                        : view.strongestAction !== null
+                          ? 2
+                          : 1
+                  }
+                />
+                <div className="mt-5 grid gap-3">
+                  {[
+                    ['Observed', 'Usage and cost evidence loaded', true],
+                    [
+                      'Potential',
+                      'Optimization detected',
+                      view.strongestAction !== null,
+                    ],
+                    [
+                      'Tested',
+                      'Benchmark-supported',
+                      view.strongestAction?.state === 'TESTED' ||
+                        view.strongestAction?.state === 'VERIFIED',
+                    ],
+                    [
+                      'Verified',
+                      'Production proof',
+                      view.verifiedNetSavings !== null,
+                    ],
+                  ].map(([label, detail, reached]) => (
+                    <div
+                      key={String(label)}
+                      className="flex items-center justify-between gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-3"
+                    >
+                      <div>
+                        <p className="text-xs font-medium text-slate-300">
+                          {String(label)}
+                        </p>
+                        <p className="mt-1 font-mono text-[10px] text-slate-500">
+                          {String(detail)}
+                        </p>
+                      </div>
+                      <span
+                        className={
+                          reached
+                            ? 'size-2 rounded-full bg-emerald-400'
+                            : 'size-2 rounded-full bg-slate-700'
+                        }
+                      />
+                    </div>
+                  ))}
+                </div>
+                <Link
+                  href={`/o/${organizationId}/proof`}
+                  className="mt-5 inline-flex items-center gap-2 text-xs font-semibold text-violet-300 no-underline"
+                >
+                  {view.verifiedNetSavings === null
+                    ? 'View proof status'
+                    : 'Open verified savings'}{' '}
+                  <ArrowRight className="size-3.5" />
+                </Link>
+              </section>
             </DashboardDrilldown>
 
             <DashboardDrilldown
@@ -489,7 +499,10 @@ export default async function CostDashboardPage({
               title={moneyLabel(view.observedSpend)}
               summary="This is the spend Evalomics can directly support from the selected usage evidence. It is the baseline used before estimating or verifying any optimization impact."
               items={[
-                { label: 'Observed spend', value: moneyLabel(view.observedSpend) },
+                {
+                  label: 'Observed spend',
+                  value: moneyLabel(view.observedSpend),
+                },
                 {
                   label: 'Evidence source',
                   value:
@@ -509,38 +522,47 @@ export default async function CostDashboardPage({
               actionHref={`/o/${organizationId}/import`}
               actionLabel="Open usage & import"
             >
-            <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
-                Observed AI spend
-              </p>
-              <p className="mt-4 font-mono text-3xl tracking-[-0.04em] text-white">
-                {moneyLabel(view.observedSpend)}
-              </p>
-              <p className="mt-2 font-mono text-[10px] text-slate-500">
-                {view.sourceKind === 'PROVIDER'
-                  ? (view.providerName ?? 'Provider')
-                  : view.sourceKind}
-              </p>
-              <ConsoleBars
-                values={[34, 48, 42, 61, 53, 67, 58, 72, 64, 78, 70, 88]}
-                accent="bg-sky-400"
-              />
-            </article>
+              <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
+                  Observed AI spend
+                </p>
+                <p className="mt-4 font-mono text-3xl tracking-[-0.04em] text-white">
+                  {moneyLabel(view.observedSpend)}
+                </p>
+                <p className="mt-2 font-mono text-[10px] text-slate-500">
+                  {view.sourceKind === 'PROVIDER'
+                    ? (view.providerName ?? 'Provider')
+                    : view.sourceKind}
+                </p>
+                <ConsoleBars
+                  values={[34, 48, 42, 61, 53, 67, 58, 72, 64, 78, 70, 88]}
+                  accent="bg-sky-400"
+                />
+              </article>
             </DashboardDrilldown>
 
             <DashboardDrilldown
               eyebrow="Opportunities found"
-              title={String(view.recommendations.length) + ' supported recommendation' + (view.recommendations.length === 1 ? '' : 's')}
+              title={
+                String(view.recommendations.length) +
+                ' supported recommendation' +
+                (view.recommendations.length === 1 ? '' : 's')
+              }
               summary="These are the optimization opportunities Evalomics can support from the current evidence. They are ranked findings, not automatic production changes."
               items={[
-                { label: 'Supported opportunities', value: String(view.recommendations.length) },
+                {
+                  label: 'Supported opportunities',
+                  value: String(view.recommendations.length),
+                },
                 {
                   label: 'Strongest action',
                   value: view.strongestAction?.title ?? 'None yet',
                 },
                 {
                   label: 'Detection confidence',
-                  value: view.strongestAction?.detectionConfidence ?? 'Insufficient evidence',
+                  value:
+                    view.strongestAction?.detectionConfidence ??
+                    'Insufficient evidence',
                 },
                 {
                   label: 'Current evidence state',
@@ -555,21 +577,21 @@ export default async function CostDashboardPage({
               actionHref={`/o/${organizationId}/recommendations`}
               actionLabel="Review opportunities"
             >
-            <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
-                Opportunities found
-              </p>
-              <p className="mt-4 font-mono text-3xl tracking-[-0.04em] text-white">
-                {String(view.recommendations.length)}
-              </p>
-              <p className="mt-2 font-mono text-[10px] text-slate-500">
-                supported recommendations
-              </p>
-              <ConsoleBars
-                values={[18, 24, 20, 33, 29, 38, 31, 46, 42, 54, 51, 63]}
-                accent="bg-emerald-400"
-              />
-            </article>
+              <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
+                  Opportunities found
+                </p>
+                <p className="mt-4 font-mono text-3xl tracking-[-0.04em] text-white">
+                  {String(view.recommendations.length)}
+                </p>
+                <p className="mt-2 font-mono text-[10px] text-slate-500">
+                  supported recommendations
+                </p>
+                <ConsoleBars
+                  values={[18, 24, 20, 33, 29, 38, 31, 46, 42, 54, 51, 63]}
+                  accent="bg-emerald-400"
+                />
+              </article>
             </DashboardDrilldown>
 
             <DashboardDrilldown
@@ -580,7 +602,9 @@ export default async function CostDashboardPage({
                 { label: 'Estimated saving', value: estimatedSavingLabel },
                 {
                   label: 'Savings confidence',
-                  value: view.strongestAction?.savingsConfidence ?? 'Pending evaluation',
+                  value:
+                    view.strongestAction?.savingsConfidence ??
+                    'Pending evaluation',
                 },
                 {
                   label: 'Strongest opportunity',
@@ -633,7 +657,8 @@ export default async function CostDashboardPage({
                 },
                 {
                   label: 'Recommendation',
-                  value: view.strongestAction?.title ?? 'No supported candidate yet',
+                  value:
+                    view.strongestAction?.title ?? 'No supported candidate yet',
                 },
                 {
                   label: 'Detection confidence',
@@ -676,20 +701,28 @@ export default async function CostDashboardPage({
                 <div className="mt-auto grid gap-2 pt-5 text-[10px]">
                   <div className="flex items-center justify-between">
                     <span className="text-slate-500">Found</span>
-                    <span className={view.strongestAction !== null ? 'text-emerald-300' : 'text-slate-600'}>
+                    <span
+                      className={
+                        view.strongestAction !== null
+                          ? 'text-emerald-300'
+                          : 'text-slate-600'
+                      }
+                    >
                       {view.strongestAction !== null ? 'yes' : 'pending'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-500">Evaluated</span>
-                    <span className={
-                      evaluationStatus === 'READY_TO_OPTIMIZE' ||
-                      evaluationStatus === 'KEEP_CURRENT' ||
-                      evaluationStatus === 'EVALUATED' ||
-                      evaluationStatus === 'PROVEN'
-                        ? 'text-emerald-300'
-                        : 'text-slate-600'
-                    }>
+                    <span
+                      className={
+                        evaluationStatus === 'READY_TO_OPTIMIZE' ||
+                        evaluationStatus === 'KEEP_CURRENT' ||
+                        evaluationStatus === 'EVALUATED' ||
+                        evaluationStatus === 'PROVEN'
+                          ? 'text-emerald-300'
+                          : 'text-slate-600'
+                      }
+                    >
                       {evaluationStatus === 'READY_TO_OPTIMIZE' ||
                       evaluationStatus === 'KEEP_CURRENT' ||
                       evaluationStatus === 'EVALUATED' ||
@@ -700,7 +733,13 @@ export default async function CostDashboardPage({
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-500">Proven</span>
-                    <span className={evaluationStatus === 'PROVEN' ? 'text-emerald-300' : 'text-slate-600'}>
+                    <span
+                      className={
+                        evaluationStatus === 'PROVEN'
+                          ? 'text-emerald-300'
+                          : 'text-slate-600'
+                      }
+                    >
                       {evaluationStatus === 'PROVEN' ? 'yes' : 'after rollout'}
                     </span>
                   </div>
@@ -721,58 +760,59 @@ export default async function CostDashboardPage({
               actionHref={`/o/${organizationId}/recommendations`}
               actionLabel="Open recommendation evidence"
             >
-            <section className="flex h-full flex-col overflow-auto rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
-                    Supporting evidence summary
+              <section className="flex h-full flex-col overflow-auto rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
+                      Supporting evidence summary
+                    </p>
+                    <h2 className="mt-2 font-mono text-base font-medium text-white">
+                      Usage diagnosis · signals Evalomics can support
+                    </h2>
+                  </div>
+                  <BadgeDollarSign className="size-4 text-sky-300/60" />
+                </div>
+
+                {view.diagnosticFacts.length > 0 ? (
+                  <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                    {view.diagnosticFacts.slice(0, 4).map((fact) => (
+                      <article
+                        key={fact.label}
+                        className="rounded-lg border border-white/[0.07] bg-black/20 p-4"
+                      >
+                        <p className="text-[10px] uppercase tracking-[0.12em] text-slate-600">
+                          {fact.label}
+                        </p>
+                        <p className="mt-3 font-mono text-base text-slate-200">
+                          {fact.value}
+                        </p>
+                      </article>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mt-5 text-sm text-slate-500">
+                    No additional diagnostic facts are available for this
+                    source.
                   </p>
-                  <h2 className="mt-2 font-mono text-base font-medium text-white">
-                    Usage diagnosis · signals Evalomics can support
-                  </h2>
-                </div>
-                <BadgeDollarSign className="size-4 text-sky-300/60" />
-              </div>
+                )}
 
-              {view.diagnosticFacts.length > 0 ? (
-                <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                  {view.diagnosticFacts.slice(0, 4).map((fact) => (
-                    <article
-                      key={fact.label}
-                      className="rounded-lg border border-white/[0.07] bg-black/20 p-4"
-                    >
-                      <p className="text-[10px] uppercase tracking-[0.12em] text-slate-600">
-                        {fact.label}
-                      </p>
-                      <p className="mt-3 font-mono text-base text-slate-200">
-                        {fact.value}
-                      </p>
-                    </article>
-                  ))}
+                <div className="mt-5 flex flex-wrap gap-4">
+                  <Link
+                    href={`/o/${organizationId}/import`}
+                    className="inline-flex items-center gap-2 text-xs font-semibold text-sky-300 no-underline"
+                  >
+                    <Database className="size-3.5" />
+                    Usage & Import
+                  </Link>
+                  <Link
+                    href={`/o/${organizationId}/prompts`}
+                    className="inline-flex items-center gap-2 text-xs font-semibold text-violet-300 no-underline"
+                  >
+                    <Sparkles className="size-3.5" />
+                    Prompt Optimizer
+                  </Link>
                 </div>
-              ) : (
-                <p className="mt-5 text-sm text-slate-500">
-                  No additional diagnostic facts are available for this source.
-                </p>
-              )}
-
-              <div className="mt-5 flex flex-wrap gap-4">
-                <Link
-                  href={`/o/${organizationId}/import`}
-                  className="inline-flex items-center gap-2 text-xs font-semibold text-sky-300 no-underline"
-                >
-                  <Database className="size-3.5" />
-                  Usage & Import
-                </Link>
-                <Link
-                  href={`/o/${organizationId}/prompts`}
-                  className="inline-flex items-center gap-2 text-xs font-semibold text-violet-300 no-underline"
-                >
-                  <Sparkles className="size-3.5" />
-                  Prompt Optimizer
-                </Link>
-              </div>
-            </section>
+              </section>
             </DashboardDrilldown>
           </DashboardWidgetGrid>
         </>

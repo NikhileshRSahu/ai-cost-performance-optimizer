@@ -48,7 +48,9 @@ export function EvalomicsCopilot({
       setAnswer((await response.json()) as AiAnswer);
       setQuestion('');
     } catch {
-      setError('Evalomics AI could not answer this right now. Your workspace data was not changed.');
+      setError(
+        'Evalomics AI could not answer this right now. Your workspace data was not changed.',
+      );
     } finally {
       setPending(false);
     }
@@ -87,7 +89,9 @@ export function EvalomicsCopilot({
                   <Bot className="size-5 text-sky-200" />
                 </span>
                 <div>
-                  <p className="m-0 text-sm font-semibold text-white">Evalomics AI</p>
+                  <p className="m-0 text-sm font-semibold text-white">
+                    Evalomics AI
+                  </p>
                   <p className="m-0 mt-1 text-[11px] leading-5 text-white/38">
                     Evidence-grounded optimization copilot
                   </p>
@@ -108,9 +112,10 @@ export function EvalomicsCopilot({
                 <div className="grid gap-5">
                   <div className="rounded-2xl border border-emerald-300/10 bg-emerald-300/[0.035] p-4">
                     <p className="m-0 text-sm leading-6 text-emerald-50/75">
-                      Ask about your spend, the strongest optimization, expected savings,
-                      evidence, or implementation. Financial claims come from Evalomics'
-                      deterministic evidence engine — not generated guesses.
+                      Ask about your spend, the strongest optimization, expected
+                      savings, evidence, or implementation. Financial claims
+                      come from Evalomics' deterministic evidence engine — not
+                      generated guesses.
                     </p>
                   </div>
                   <div className="grid gap-2">
@@ -139,7 +144,9 @@ export function EvalomicsCopilot({
                         {answer.confidence} confidence
                       </span>
                     </div>
-                    <p className="m-0 text-sm leading-7 text-white/75">{answer.answer}</p>
+                    <p className="m-0 text-sm leading-7 text-white/75">
+                      {answer.answer}
+                    </p>
                   </div>
 
                   {answer.facts.length > 0 ? (
@@ -187,7 +194,10 @@ export function EvalomicsCopilot({
               ) : null}
             </div>
 
-            <form onSubmit={handleSubmit} className="border-t border-white/[0.07] p-4">
+            <form
+              onSubmit={handleSubmit}
+              className="border-t border-white/[0.07] p-4"
+            >
               <div className="flex items-end gap-2 rounded-2xl border border-white/[0.09] bg-black/20 p-2">
                 <textarea
                   value={question}
@@ -207,7 +217,8 @@ export function EvalomicsCopilot({
                 </button>
               </div>
               <p className="m-0 mt-2 px-1 text-[10px] leading-4 text-white/25">
-                Evalomics AI explains evidence; deterministic engines remain authoritative for cost and proof.
+                Evalomics AI explains evidence; deterministic engines remain
+                authoritative for cost and proof.
               </p>
             </form>
           </aside>

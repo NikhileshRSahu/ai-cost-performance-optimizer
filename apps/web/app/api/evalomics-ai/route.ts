@@ -22,7 +22,8 @@ export async function POST(request: Request) {
 
   const organizationId =
     typeof body.organizationId === 'string' ? body.organizationId.trim() : '';
-  const question = typeof body.question === 'string' ? body.question.trim() : '';
+  const question =
+    typeof body.question === 'string' ? body.question.trim() : '';
 
   if (organizationId.length === 0 || question.length === 0) {
     return NextResponse.json(
