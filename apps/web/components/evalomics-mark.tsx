@@ -7,33 +7,41 @@ export function EvalomicsMark({ size = 30 }: Readonly<{ size?: number }>) {
       viewBox="0 0 32 32"
       width={size}
     >
+      <rect
+        className="evalomics-mark-frame"
+        x="4.5"
+        y="4.5"
+        width="23"
+        height="23"
+        rx="7"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.2"
+      />
+      <path
+        className="evalomics-mark-e"
+        d="M11 9.5v13M11 9.5h8.5M11 16h6.8M11 22.5h8.5"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2.8"
+      />
+      <path
+        className="evalomics-mark-signal"
+        d="M19.5 21.5 22 18.7l2 1.5 3-4.2"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2.1"
+      />
       <circle
-        className="evalomics-mark-ring"
-        cx="16"
+        className="evalomics-mark-dot"
+        cx="27"
         cy="16"
-        fill="none"
-        r="10.5"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeWidth="3.5"
-      />
-      <path
-        className="evalomics-mark-path"
-        d="M16 6.5v19M16 9.5h4.25a5.25 5.25 0 0 1 0 10.5H16"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="3.5"
-      />
-      <path
-        className="evalomics-mark-proof"
-        d="m20.4 18.8 2.2 2.2 4.3-5.1"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2.6"
+        r="1.35"
+        fill="currentColor"
       />
     </svg>
   );
