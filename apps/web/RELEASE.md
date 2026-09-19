@@ -13,3 +13,5 @@ Vercel redeploy retry after quota window.
 Deploy animated orange glass public-page system.
 
 Retry deployment for latest orange-glass public pages.
+
+Retry deployment for latest public-page visual system.
