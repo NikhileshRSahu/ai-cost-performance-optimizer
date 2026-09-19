@@ -12,6 +12,7 @@ import { formatDecimal, rational } from '../../../../../src/economics/exact';
 import { createDatabase } from '../../../../../src/persistence/database';
 import { buildFounderDashboardView } from '../../../../../src/workbench/dashboard-view';
 import { RecommendationCard } from '../../../components/recommendation-card';
+import { DashboardDrilldown } from '../../../components/workbench/dashboard-drilldown';
 import { DashboardWidgetGrid } from '../../../components/workbench/dashboard-widget-grid';
 import { SignOutButton } from '../../../components/sign-out-button';
 import { hasSelfHostedAuthConfiguration } from '../../../lib/auth-config';
@@ -274,7 +275,52 @@ export default async function CostDashboardPage({
               { id: 'diagnosis', size: 'lg', label: 'Usage diagnosis' },
             ]}
           >
-            <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
+            <DashboardDrilldown
+              eyebrow="Recommended action"
+              title={view.strongestAction?.title ?? 'No supported optimization yet'}
+              summary={
+                view.strongestAction === null
+                  ? 'Evalomics has not found enough evidence to recommend a production change yet.'
+                  : 'This is the highest-priority supported action from the evidence currently available in your workspace.'
+              }
+              items={[
+                {
+                  label: 'Evidence state',
+                  value: view.strongestAction?.state ?? 'Observed only',
+                  note: 'Potential, tested, and verified are kept separate.',
+                },
+                {
+                  label: 'Detected saving',
+                  value:
+                    view.strongestAction?.saving === null ||
+                    view.strongestAction === null
+                      ? 'Not measured'
+                      : view.strongestAction.saving.currency +
+                        ' ' +
+                        view.strongestAction.saving.amount,
+                  note: 'A detected opportunity is not automatically verified savings.',
+                },
+                {
+                  label: 'Detection confidence',
+                  value: view.strongestAction?.detectionConfidence ?? 'Insufficient evidence',
+                },
+                {
+                  label: 'Savings confidence',
+                  value: view.strongestAction?.savingsConfidence ?? 'Unmeasured',
+                },
+              ]}
+              insight={
+                view.strongestAction?.principalLimitation ??
+                'Evalomics ranks only findings supported by the evidence currently available.'
+              }
+              nextStep={
+                view.strongestAction?.nextAction ??
+                'Connect more usage evidence before making a production change.'
+              }
+              actionHref={`/o/${organizationId}/recommendations`}
+              actionLabel="View all recommendations"
+            >
+              <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
@@ -314,7 +360,43 @@ export default async function CostDashboardPage({
                 View all recommendations <ArrowRight className="size-3.5" />
               </Link>
             </section>
+            </DashboardDrilldown>
 
+            <DashboardDrilldown
+              eyebrow="Evidence status"
+              title="How far this finding has been proven"
+              summary="Evalomics separates observed evidence, modeled opportunity, benchmark evidence, and production verification so a promising estimate never looks like proven savings."
+              items={[
+                { label: 'Observed', value: 'Usage + cost evidence loaded' },
+                {
+                  label: 'Potential',
+                  value: view.strongestAction !== null ? 'Detected' : 'Not detected',
+                },
+                {
+                  label: 'Tested',
+                  value:
+                    view.strongestAction?.state === 'TESTED' ||
+                    view.strongestAction?.state === 'VERIFIED'
+                      ? 'Benchmark-supported'
+                      : 'Not benchmarked',
+                },
+                {
+                  label: 'Verified',
+                  value:
+                    view.verifiedNetSavings !== null
+                      ? verifiedMoney(view.verifiedNetSavings)
+                      : 'Not production-verified',
+                },
+              ]}
+              insight="This evidence ladder is what prevents Evalomics from turning a modeled estimate into a claim."
+              nextStep={
+                view.verifiedNetSavings === null
+                  ? 'Open proof status to see exactly what evidence is still missing.'
+                  : 'Review the production evidence behind the verified saving.'
+              }
+              actionHref={`/o/${organizationId}/proof`}
+              actionLabel={view.verifiedNetSavings === null ? 'View proof status' : 'Open verified savings'}
+            >
             <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="size-4 text-violet-300" />
@@ -385,7 +467,33 @@ export default async function CostDashboardPage({
                 <ArrowRight className="size-3.5" />
               </Link>
             </section>
+            </DashboardDrilldown>
 
+            <DashboardDrilldown
+              eyebrow="Observed AI spend"
+              title={moneyLabel(view.observedSpend)}
+              summary="This is the spend Evalomics can directly support from the selected usage evidence. It is the baseline used before estimating or verifying any optimization impact."
+              items={[
+                { label: 'Observed spend', value: moneyLabel(view.observedSpend) },
+                {
+                  label: 'Evidence source',
+                  value:
+                    view.sourceKind === 'PROVIDER'
+                      ? (view.providerName ?? 'Provider')
+                      : view.sourceKind,
+                },
+                { label: 'Analysis window', value: view.periodLabel },
+                {
+                  label: 'Evidence quality',
+                  value: view.dataQuality,
+                  note: 'Only observed evidence is treated as baseline truth.',
+                },
+              ]}
+              insight="Evalomics starts from measured usage and cost rather than inventing a savings target."
+              nextStep="Open Usage & Import if you want to add another source or refresh the evidence window."
+              actionHref={`/o/${organizationId}/import`}
+              actionLabel="Open usage & import"
+            >
             <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
                 Observed AI spend
@@ -403,7 +511,35 @@ export default async function CostDashboardPage({
                 accent="bg-sky-400"
               />
             </article>
+            </DashboardDrilldown>
 
+            <DashboardDrilldown
+              eyebrow="Opportunities found"
+              title={String(view.recommendations.length) + ' supported recommendation' + (view.recommendations.length === 1 ? '' : 's')}
+              summary="These are the optimization opportunities Evalomics can support from the current evidence. They are ranked findings, not automatic production changes."
+              items={[
+                { label: 'Supported opportunities', value: String(view.recommendations.length) },
+                {
+                  label: 'Strongest action',
+                  value: view.strongestAction?.title ?? 'None yet',
+                },
+                {
+                  label: 'Detection confidence',
+                  value: view.strongestAction?.detectionConfidence ?? 'Insufficient evidence',
+                },
+                {
+                  label: 'Current evidence state',
+                  value: view.strongestAction?.state ?? 'Observed only',
+                },
+              ]}
+              insight={
+                view.strongestAction?.nextAction ??
+                'No optimization has enough support to recommend yet.'
+              }
+              nextStep="Open the recommendation list to compare opportunities, evidence, expected impact, and the exact implementation path."
+              actionHref={`/o/${organizationId}/recommendations`}
+              actionLabel="Review opportunities"
+            >
             <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
                 Opportunities found
@@ -419,8 +555,36 @@ export default async function CostDashboardPage({
                 accent="bg-emerald-400"
               />
             </article>
+            </DashboardDrilldown>
 
-            <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
+            <DashboardDrilldown
+              eyebrow="Modeled upside"
+              title={modeled}
+              summary="This is planning evidence: a modeled estimate of what might be saved if the supported optimization works as expected. It is intentionally not labeled as verified."
+              items={[
+                { label: 'Modeled upside', value: modeled },
+                {
+                  label: 'Recommendations contributing',
+                  value: String(view.recommendations.length),
+                },
+                {
+                  label: 'Evidence state',
+                  value: view.strongestAction?.state ?? 'Observed only',
+                },
+                {
+                  label: 'Savings confidence',
+                  value: view.strongestAction?.savingsConfidence ?? 'Unmeasured',
+                },
+              ]}
+              insight="Evalomics uses modeled upside to prioritize what is worth evaluating first, not to claim money already saved."
+              nextStep={
+                view.strongestAction?.nextAction ??
+                'Gather more evidence before estimating a production change.'
+              }
+              actionHref={`/o/${organizationId}/recommendations`}
+              actionLabel="See calculation context"
+            >
+
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
                 Modeled upside
               </p>
@@ -435,8 +599,45 @@ export default async function CostDashboardPage({
                 accent="bg-amber-300"
               />
             </article>
+            </DashboardDrilldown>
 
-            <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
+            <DashboardDrilldown
+              eyebrow="Verified savings"
+              title={verifiedMoney(view.verifiedNetSavings)}
+              summary="Verified savings require production evidence after a change. Evalomics keeps this separate from modeled and benchmark results so customers can see exactly what has been proven."
+              items={[
+                {
+                  label: 'Verified net savings',
+                  value: verifiedMoney(view.verifiedNetSavings),
+                },
+                {
+                  label: 'Production proof',
+                  value: view.verifiedNetSavings === null ? 'Missing' : 'Available',
+                },
+                {
+                  label: 'Current strongest state',
+                  value: view.strongestAction?.state ?? 'Observed only',
+                },
+                {
+                  label: 'Modeled upside',
+                  value: modeled,
+                  note: 'Modeled upside does not become verified until production evidence supports it.',
+                },
+              ]}
+              insight={
+                view.verifiedNetSavings === null
+                  ? 'No production-reconciled saving is being claimed yet.'
+                  : 'Production evidence supports the verified amount shown here.'
+              }
+              nextStep={
+                view.verifiedNetSavings === null
+                  ? 'Open proof status to see what must happen before Evalomics can verify savings.'
+                  : 'Open the proof record to inspect the evidence behind the verified amount.'
+              }
+              actionHref={`/o/${organizationId}/proof`}
+              actionLabel="Inspect proof"
+            >
+
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
                 Verified savings
               </p>
@@ -451,8 +652,22 @@ export default async function CostDashboardPage({
                 accent="bg-violet-300"
               />
             </article>
+            </DashboardDrilldown>
 
-            <section className="flex h-full flex-col overflow-auto rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
+            <DashboardDrilldown
+              eyebrow="Supporting evidence summary"
+              title="Why Evalomics reached this result"
+              summary="This view collects the supporting usage signals behind the recommendation so the customer can understand the decision without digging through raw records."
+              items={view.diagnosticFacts.slice(0, 4).map((fact) => ({
+                label: fact.label,
+                value: fact.value,
+              }))}
+              insight="These facts are descriptive evidence from the selected source. They support the recommendation but do not by themselves prove production savings."
+              nextStep="Use the detailed recommendation or proof view when you need the exact decision trail."
+              actionHref={`/o/${organizationId}/recommendations`}
+              actionLabel="Open recommendation evidence"
+            >
+
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
@@ -504,6 +719,7 @@ export default async function CostDashboardPage({
                 </Link>
               </div>
             </section>
+            </DashboardDrilldown>
           </DashboardWidgetGrid>
         </>
       )}
