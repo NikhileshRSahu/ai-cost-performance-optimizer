@@ -132,22 +132,22 @@ export function DashboardWidgetGrid({
 
   return (
     <section aria-label="Customizable Evalomics dashboard">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">
+      <div className="mb-3 flex items-center justify-between gap-3 border-b border-white/[0.05] pb-3">
+        <p className="m-0 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
           Dashboard widgets
         </p>
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => setEditable((value) => !value)}
-            className="rounded-lg border border-white/[0.07] bg-white/[0.025] px-3 py-2 text-[10px] font-semibold text-slate-400 transition hover:text-white"
+            className="rounded-md border border-white/[0.09] bg-[#111214] px-3 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-400 transition hover:border-white/[0.16] hover:text-white"
           >
             {editable ? 'Lock layout' : 'Edit layout'}
           </button>
           <button
             type="button"
             onClick={resetLayout}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.07] bg-white/[0.025] px-3 py-2 text-[10px] font-semibold text-slate-400 transition hover:text-white"
+            className="inline-flex items-center gap-1.5 rounded-md border border-white/[0.09] bg-[#111214] px-3 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-400 transition hover:border-white/[0.16] hover:text-white"
           >
             <RotateCcw className="size-3" />
             Reset
@@ -155,7 +155,7 @@ export function DashboardWidgetGrid({
         </div>
       </div>
 
-      <div className="grid auto-rows-[minmax(160px,auto)] grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="grid auto-rows-[minmax(170px,auto)] grid-cols-1 gap-3 md:grid-cols-4">
         {order.map((id) => {
           const item = itemById.get(id);
           if (item === undefined) return null;
@@ -189,7 +189,7 @@ export function DashboardWidgetGrid({
                 className="relative h-full"
               >
                 {editable ? (
-                  <div className="pointer-events-none absolute right-2 top-2 z-20 inline-flex items-center gap-1 rounded-md border border-white/[0.07] bg-[#08101c]/85 px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.1em] text-white/35 opacity-0 backdrop-blur transition group-hover:opacity-100">
+                  <div className="pointer-events-none absolute right-2 top-2 z-20 inline-flex items-center gap-1 rounded border border-white/[0.08] bg-black/70 px-2 py-1 font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-white/40 opacity-0 backdrop-blur transition group-hover:opacity-100">
                     <GripVertical className="size-3" />
                     drag
                   </div>
