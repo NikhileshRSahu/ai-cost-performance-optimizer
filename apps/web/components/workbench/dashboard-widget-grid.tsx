@@ -177,6 +177,7 @@ export function DashboardWidgetGrid({
                 spanClass(item.size),
                 draggingId === id ? 'z-20 opacity-70' : 'z-0',
               ].join(' ')}
+              role="group"
               aria-label={item.label}
             >
               <motion.div
@@ -191,7 +192,7 @@ export function DashboardWidgetGrid({
                 className="relative h-full"
               >
                 {editable ? (
-                  <div className="pointer-events-none absolute right-2 top-2 z-20 inline-flex items-center gap-1 rounded border border-white/[0.08] bg-black/70 px-2 py-1 font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-white/40 opacity-0 backdrop-blur transition group-hover:opacity-100">
+                  <div className="pointer-events-none absolute right-2 top-2 z-20 inline-flex items-center gap-1 rounded border border-white/[0.08] bg-black/70 px-2 py-1 font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-white/70 opacity-0 backdrop-blur transition group-hover:opacity-100">
                     <GripVertical className="size-3" />
                     drag
                   </div>
