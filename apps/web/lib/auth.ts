@@ -9,10 +9,7 @@ import {
   users,
   workspaceInvitations,
 } from '../../../src/persistence/schema';
-import {
-  hasSelfHostedAuthConfiguration,
-  requireSelfHostedAuthConfiguration,
-} from './auth-config';
+import { requireSelfHostedAuthConfiguration } from './auth-config';
 
 function createAuthPool(connectionString: string): Pool {
   const pool = new Pool({
