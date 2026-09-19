@@ -36,6 +36,8 @@ function baseView(
     organizationName: 'Prospect AI',
     periodLabel: '2026-09-01 to 2026-09-07',
     dataQuality: 'READY',
+    sourceKind: 'CSV',
+    providerName: null,
     observedSpend: {
       amount: '420.00',
       currency: 'USD',
