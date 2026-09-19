@@ -168,7 +168,9 @@ export default async function VerificationPage({
           href={`/o/${organizationId}/proof/download`}
         >
           <Download className="size-3.5" />
-          {verified ? 'Download verified evidence pack' : 'Download evidence snapshot'}
+          {verified
+            ? 'Download verified evidence pack'
+            : 'Download evidence snapshot'}
         </Link>
         <Link
           className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-white/10 bg-white/[0.035] px-4 py-2 text-xs font-semibold text-white/65 no-underline"

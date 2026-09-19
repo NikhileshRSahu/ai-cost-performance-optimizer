@@ -312,7 +312,10 @@ export default async function CostDashboardPage({
             </div>
           </section>
 
-          <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Supporting evidence summary">
+          <section
+            className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
+            aria-label="Supporting evidence summary"
+          >
             {[
               {
                 label: 'Observed AI spend',

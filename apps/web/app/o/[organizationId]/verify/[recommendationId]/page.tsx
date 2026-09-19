@@ -268,7 +268,10 @@ export default async function VerifyPage({
                 required
                 placeholder="Example: eval-suite:classification-v3"
               />
-              <small>Use the test run, report, or evaluation ID that supports the quality measurement.</small>
+              <small>
+                Use the test run, report, or evaluation ID that supports the
+                quality measurement.
+              </small>
             </label>
 
             <details className="advanced-controls full-field">
