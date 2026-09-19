@@ -59,6 +59,18 @@ export function WorkspaceModelCalculator({
     defaultCandidate.outputPerMillionUsd,
   );
 
+  const cheapestCandidate = useMemo(() => {
+    return [...providerPricingPresets].sort((left, right) => {
+      const leftCost =
+        numberValue(left.inputPerMillionUsd) * numberValue(inputTokens) +
+        numberValue(left.outputPerMillionUsd) * numberValue(outputTokens);
+      const rightCost =
+        numberValue(right.inputPerMillionUsd) * numberValue(inputTokens) +
+        numberValue(right.outputPerMillionUsd) * numberValue(outputTokens);
+      return leftCost - rightCost;
+    })[0];
+  }, [inputTokens, outputTokens]);
+
   const result = useMemo(() => {
     const requestCount = numberValue(requests);
     const input = numberValue(inputTokens);
@@ -259,8 +271,52 @@ export function WorkspaceModelCalculator({
         <div className="flex items-center gap-2">
           <Calculator className="size-4 text-amber-300" />
           <h2 className="m-0 text-base font-medium text-slate-100">
-            Scenario result
+            What should you do?
           </h2>
+        </div>
+
+        <div
+          className={
+            result.delta > 0
+              ? 'mt-5 rounded-xl border border-emerald-300/14 bg-emerald-300/[0.045] p-4'
+              : result.delta < 0
+                ? 'mt-5 rounded-xl border border-rose-300/14 bg-rose-300/[0.045] p-4'
+                : 'mt-5 rounded-xl border border-white/[0.08] bg-white/[0.025] p-4'
+          }
+        >
+          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/35">
+            Evalomics recommendation
+          </p>
+          <p
+            className={
+              result.delta > 0
+                ? 'm-0 mt-2 text-lg font-semibold text-emerald-200'
+                : result.delta < 0
+                  ? 'm-0 mt-2 text-lg font-semibold text-rose-200'
+                  : 'm-0 mt-2 text-lg font-semibold text-white'
+            }
+          >
+            {result.delta > 0
+              ? 'Worth evaluating — this candidate could lower monthly cost.'
+              : result.delta < 0
+                ? 'Do not switch to this candidate — it costs more.'
+                : 'No cost advantage — keep the current model for now.'}
+          </p>
+          <p className="m-0 mt-2 text-sm leading-6 text-white/45">
+            {result.delta > 0
+              ? 'Estimated saving: ' +
+                money(result.delta) +
+                ' per month (' +
+                Math.abs(result.percent).toFixed(1) +
+                '% lower). Quality still needs to pass before rollout.'
+              : result.delta < 0
+                ? 'This candidate adds about ' +
+                  money(Math.abs(result.delta)) +
+                  ' per month (' +
+                  Math.abs(result.percent).toFixed(1) +
+                  '% higher) at the same workload.'
+                : 'The current and candidate scenarios are effectively equal on cost.'}
+          </p>
         </div>
 
         <div className="mt-6 grid gap-3">
@@ -315,28 +371,47 @@ export function WorkspaceModelCalculator({
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={() => {
-            window.dispatchEvent(
-              new CustomEvent('evalomics:ask', {
-                detail: {
-                  context:
-                    'Model evaluation for ' +
-                    (workloadName ?? 'this workload') +
-                    '. Current model: ' +
-                    (currentModel ?? 'unknown') +
-                    '. Estimated monthly difference: ' +
-                    money(Math.abs(result.delta)) +
-                    '.',
-                },
-              }),
-            );
-          }}
-          className="mt-5 inline-flex min-h-10 items-center justify-center rounded-lg border border-sky-300/15 bg-sky-300/[0.05] px-3 text-xs font-semibold text-sky-200"
-        >
-          Ask Evalomics to interpret this candidate
-        </button>
+        <div className="mt-5 flex flex-wrap gap-2">
+          {result.delta < 0 && cheapestCandidate !== undefined ? (
+            <button
+              type="button"
+              onClick={() => {
+                setCandidatePresetId(cheapestCandidate.id);
+                setCandidateInputRate(cheapestCandidate.inputPerMillionUsd);
+                setCandidateOutputRate(cheapestCandidate.outputPerMillionUsd);
+              }}
+              className="inline-flex min-h-10 items-center justify-center rounded-lg bg-white px-3 text-xs font-semibold text-slate-950"
+            >
+              Show a cheaper candidate
+            </button>
+          ) : null}
+          <button
+            type="button"
+            onClick={() => {
+              window.dispatchEvent(
+                new CustomEvent('evalomics:ask', {
+                  detail: {
+                    context:
+                      'Model evaluation for ' +
+                      (workloadName ?? 'this workload') +
+                      '. Current model: ' +
+                      (currentModel ?? 'unknown') +
+                      '. Current monthly cost: ' +
+                      money(result.current) +
+                      '. Candidate monthly cost: ' +
+                      money(result.candidate) +
+                      '. Difference: ' +
+                      money(Math.abs(result.delta)) +
+                      (result.delta >= 0 ? ' lower.' : ' higher.'),
+                  },
+                }),
+              );
+            }}
+            className="inline-flex min-h-10 items-center justify-center rounded-lg border border-sky-300/15 bg-sky-300/[0.05] px-3 text-xs font-semibold text-sky-200"
+          >
+            Ask Evalomics why
+          </button>
+        </div>
 
         <p className="m-0 mt-4 text-[11px] leading-5 text-slate-500">
           This is the economics part of the evaluation. Evalomics still checks
