@@ -27,7 +27,8 @@ function BrandIcon({ brand }: { brand: 'anthropic' | 'openai' }) {
 
 export function StartFlow({
   organizationId,
-}: Readonly<{ organizationId: string | null }>) {
+  intent = 'start',
+}: Readonly<{ organizationId: string | null; intent?: 'start' | 'analyze' }>) {
   const reduceMotion = useReducedMotion();
   const [step, setStep] = useState<Step>('choice');
 
@@ -62,7 +63,7 @@ export function StartFlow({
         <div>
           <p className="m-0 text-sm font-semibold text-white">Usage & Import</p>
           <p className="m-0 mt-0.5 text-[11px] text-white/35">
-            Choose one source to start.
+            {intent === 'analyze' ? 'Choose the evidence source to analyze.' : 'Choose one source to start.'}
           </p>
         </div>
         <span className="rounded-full border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 font-mono text-[9px] text-white/35">
@@ -85,10 +86,10 @@ export function StartFlow({
                   Add usage
                 </p>
                 <h1 className="m-0 mt-3 text-3xl font-semibold tracking-[-0.045em] text-white sm:text-4xl">
-                  How do you want to give Evalomics usage?
+                  {intent === 'analyze' ? 'Choose the evidence source to analyze.' : 'How do you want to give Evalomics usage?'}
                 </h1>
                 <p className="m-0 mt-3 text-sm leading-6 text-white/45">
-                  Connect a supported provider or upload a CSV export.
+                  {intent === 'analyze' ? 'Pick OpenAI, Anthropic, or CSV. Evalomics will take you directly into analysis.' : 'Connect a supported provider or upload a CSV export.'}
                 </p>
               </div>
 
