@@ -50,13 +50,13 @@ export function WorkspaceModelCalculator({
     matchedCurrent?.outputPerMillionUsd ?? '15',
   );
   const [candidatePresetId, setCandidatePresetId] = useState(
-    defaultCandidate?.id ?? '',
+    defaultCandidate.id,
   );
   const [candidateInputRate, setCandidateInputRate] = useState(
-    defaultCandidate?.inputPerMillionUsd ?? '1.5',
+    defaultCandidate.inputPerMillionUsd,
   );
   const [candidateOutputRate, setCandidateOutputRate] = useState(
-    defaultCandidate?.outputPerMillionUsd ?? '8',
+    defaultCandidate.outputPerMillionUsd,
   );
 
   const result = useMemo(() => {
