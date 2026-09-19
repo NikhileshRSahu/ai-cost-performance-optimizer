@@ -1,4 +1,4 @@
-export type ReportFinancialState =
+type ReportFinancialState =
   'OBSERVED' | 'OPPORTUNITY' | 'TESTED' | 'VERIFIED';
 
 export type ReportFinancialClaim = Readonly<{
@@ -47,7 +47,7 @@ export type OptimizationReportEvidence = Readonly<{
   isDemo: boolean;
 }>;
 
-export type ReportSectionId =
+type ReportSectionId =
   | 'executive-summary'
   | 'scope-data-quality'
   | 'opportunity'
@@ -58,7 +58,7 @@ export type ReportSectionId =
   | 'verification'
   | 'methodology-limitations';
 
-export type ReportSection = Readonly<{
+type ReportSection = Readonly<{
   id: ReportSectionId;
   title: string;
 }>;
