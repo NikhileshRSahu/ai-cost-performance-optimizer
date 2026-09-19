@@ -17,6 +17,7 @@ import {
 } from '../../../../../src/workbench/evalomics-ai';
 import { RecommendationCard } from '../../../components/recommendation-card';
 import { DashboardDrilldown } from '../../../components/workbench/dashboard-drilldown';
+import { ResultJourney } from '../../../components/workbench/result-journey';
 import { DashboardWidgetGrid } from '../../../components/workbench/dashboard-widget-grid';
 import { SignOutButton } from '../../../components/sign-out-button';
 import { hasSelfHostedAuthConfiguration } from '../../../lib/auth-config';
@@ -270,6 +271,21 @@ export default async function CostDashboardPage({
         </section>
       ) : (
         <>
+          <ResultJourney
+            current={
+              evaluationStatus === 'PROVEN'
+                ? 'Proven'
+                : evaluationStatus === 'READY_TO_OPTIMIZE'
+                  ? 'Ready'
+                  : evaluationStatus === 'KEEP_CURRENT' ||
+                      evaluationStatus === 'EVALUATED'
+                    ? 'Evaluated'
+                    : evaluationStatus === 'CANDIDATE_IDENTIFIED'
+                      ? 'Found'
+                      : 'Connected'
+            }
+          />
+
           <DashboardWidgetGrid
             storageKey={`evalomics-dashboard-${organizationId}`}
             items={[
