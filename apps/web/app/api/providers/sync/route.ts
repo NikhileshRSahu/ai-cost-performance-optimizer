@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { syncConnectedProvider, providerConnectionSafeError } from '../../../../../src/workbench/provider-connection-service';
+import { syncConnectedProvider, providerConnectionSafeError } from '@/backend/workbench/provider-connection-service';
 import { withRuntimeWorkspace } from '@/lib/runtime-workspace';
 
 export const runtime='nodejs';

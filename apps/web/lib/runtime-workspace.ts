@@ -1,9 +1,9 @@
 import { createHash } from 'node:crypto';
 import { and, eq } from 'drizzle-orm';
 import { auth } from '@/auth';
-import { createDatabase } from '../../../src/persistence/database';
-import { memberships, organizations, users } from '../../../src/persistence/schema';
-import type { AuthenticatedSession } from '../../../src/workbench/authz';
+import { createDatabase } from '@/backend/persistence/database';
+import { memberships, organizations, users } from '@/backend/persistence/schema';
+import type { AuthenticatedSession } from '@/backend/workbench/authz';
 
 export type RuntimeWorkspace = Readonly<{
   userId:string;

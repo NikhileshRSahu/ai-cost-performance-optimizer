@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { disconnectProvider } from '../../../../../src/workbench/provider-connection-service';
+import { disconnectProvider } from '@/backend/workbench/provider-connection-service';
 import { withRuntimeWorkspace } from '@/lib/runtime-workspace';
 
 export const runtime='nodejs';

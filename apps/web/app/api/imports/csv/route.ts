@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { importCustomerUsage } from '../../../../../src/workbench/import-service';
-import { analyzeImportedUsage } from '../../../../../src/workbench/analysis-service';
+import { importCustomerUsage } from '@/backend/workbench/import-service';
+import { analyzeImportedUsage } from '@/backend/workbench/analysis-service';
 import { withRuntimeWorkspace } from '@/lib/runtime-workspace';
 
 export const runtime='nodejs';

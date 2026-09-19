@@ -1,7 +1,7 @@
 'use server';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
-import { organizations } from '../../../../src/persistence/schema';
+import { organizations } from '@/backend/persistence/schema';
 import { withRuntimeWorkspace } from '@/lib/runtime-workspace';
 
 function cleanName(workspaceName:string){

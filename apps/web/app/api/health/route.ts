@@ -1,4 +1,4 @@
-import { createDatabase } from '../../../../../src/persistence/database';
+import { createDatabase } from '@/backend/persistence/database';
 
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
