@@ -111,7 +111,7 @@ export function WorkspaceModelCalculator({
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1.05fr_.95fr]">
-      <section className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">
+      <section className="rounded-xl border border-white/[0.07] bg-[#111214] p-5 sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-sky-300/70">
@@ -158,14 +158,14 @@ export function WorkspaceModelCalculator({
                     event.target.value,
                   );
                 }}
-                className="min-h-11 rounded-lg border border-white/[0.08] bg-[#0c1421] px-3 font-mono text-sm text-slate-200 outline-none transition focus:border-sky-300/30"
+                className="min-h-11 rounded-lg border border-white/[0.08] bg-[#0d0f12] px-3 font-mono text-sm text-slate-200 outline-none transition focus:border-sky-300/30"
               />
             </label>
           ))}
         </div>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
-          <div className="rounded-xl border border-white/[0.07] bg-[#0c1421] p-4">
+          <div className="rounded-xl border border-white/[0.07] bg-[#0d0f12] p-4">
             <div className="flex items-center justify-between gap-3">
               <p className="m-0 text-sm font-medium text-slate-200">
                 Current model{currentModel === null ? '' : ' · ' + currentModel}
@@ -185,7 +185,7 @@ export function WorkspaceModelCalculator({
                   onChange={(event) => {
                     setCurrentInputRate(event.target.value);
                   }}
-                  className="min-h-11 rounded-lg border border-white/[0.08] bg-[#101a2a] px-3 font-mono text-sm text-slate-200 outline-none focus:border-sky-300/30"
+                  className="min-h-11 rounded-lg border border-white/[0.08] bg-[#0f1115] px-3 font-mono text-sm text-slate-200 outline-none focus:border-sky-300/30"
                 />
               </label>
               <label className="grid gap-2">
@@ -198,7 +198,7 @@ export function WorkspaceModelCalculator({
                   onChange={(event) => {
                     setCurrentOutputRate(event.target.value);
                   }}
-                  className="min-h-11 rounded-lg border border-white/[0.08] bg-[#101a2a] px-3 font-mono text-sm text-slate-200 outline-none focus:border-sky-300/30"
+                  className="min-h-11 rounded-lg border border-white/[0.08] bg-[#0f1115] px-3 font-mono text-sm text-slate-200 outline-none focus:border-sky-300/30"
                 />
               </label>
             </div>
@@ -222,7 +222,7 @@ export function WorkspaceModelCalculator({
                       setCandidateOutputRate(next.outputPerMillionUsd);
                     }
                   }}
-                  className="mt-2 min-h-9 max-w-[220px] rounded-lg border border-white/[0.08] bg-[#101a2a] px-2 text-[10px] text-slate-300 outline-none"
+                  className="mt-2 min-h-9 max-w-[220px] rounded-lg border border-white/[0.08] bg-[#0f1115] px-2 text-[10px] text-slate-300 outline-none"
                 >
                   {providerPricingPresets.map((preset) => (
                     <option key={preset.id} value={preset.id}>
@@ -246,7 +246,7 @@ export function WorkspaceModelCalculator({
                   onChange={(event) => {
                     setCandidateInputRate(event.target.value);
                   }}
-                  className="min-h-11 rounded-lg border border-white/[0.08] bg-[#101a2a] px-3 font-mono text-sm text-slate-200 outline-none focus:border-emerald-300/30"
+                  className="min-h-11 rounded-lg border border-white/[0.08] bg-[#0f1115] px-3 font-mono text-sm text-slate-200 outline-none focus:border-emerald-300/30"
                 />
               </label>
               <label className="grid gap-2">
@@ -259,7 +259,7 @@ export function WorkspaceModelCalculator({
                   onChange={(event) => {
                     setCandidateOutputRate(event.target.value);
                   }}
-                  className="min-h-11 rounded-lg border border-white/[0.08] bg-[#101a2a] px-3 font-mono text-sm text-slate-200 outline-none focus:border-emerald-300/30"
+                  className="min-h-11 rounded-lg border border-white/[0.08] bg-[#0f1115] px-3 font-mono text-sm text-slate-200 outline-none focus:border-emerald-300/30"
                 />
               </label>
             </div>
@@ -267,7 +267,7 @@ export function WorkspaceModelCalculator({
         </div>
       </section>
 
-      <section className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">
+      <section className="rounded-xl border border-white/[0.07] bg-[#111214] p-5 sm:p-6">
         <div className="flex items-center gap-2">
           <Calculator className="size-4 text-amber-300" />
           <h2 className="m-0 text-base font-medium text-slate-100">
@@ -320,7 +320,7 @@ export function WorkspaceModelCalculator({
         </div>
 
         <div className="mt-6 grid gap-3">
-          <div className="rounded-xl border border-white/[0.06] bg-[#0c1421] p-4">
+          <div className="rounded-xl border border-white/[0.06] bg-[#0d0f12] p-4">
             <p className="m-0 text-[10px] uppercase tracking-[0.14em] text-slate-600">
               Current monthly inference cost
             </p>
@@ -382,7 +382,7 @@ export function WorkspaceModelCalculator({
               }}
               className="inline-flex min-h-10 items-center justify-center rounded-lg bg-white px-3 text-xs font-semibold text-slate-950"
             >
-              Show a cheaper candidate
+              Show lowest-cost alternative
             </button>
           ) : null}
           <button
