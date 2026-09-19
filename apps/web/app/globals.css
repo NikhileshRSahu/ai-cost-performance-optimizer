@@ -3451,3 +3451,45 @@ samp,
 @media (prefers-reduced-motion:reduce){
   .eval-template-page .eval-motion-decorative,.eval-template-page .eval-motion-decorative *{animation:none!important;transition:none!important}
 }
+
+
+/* Proof / testimonial motion section */
+.eval-proof-section{width:min(1280px,calc(100% - 2rem));margin:0 auto;padding:2rem 0 8rem}
+.eval-proof-heading{max-width:760px;margin:0 auto 2.6rem;text-align:center}
+.eval-proof-heading>span{color:#77ddff;text-transform:uppercase;letter-spacing:.16em;font-size:.68rem;font-weight:740}
+.eval-proof-heading h2{margin:.8rem 0 0;font-size:clamp(2.8rem,5vw,5.2rem);line-height:.95;letter-spacing:-.06em}
+.eval-proof-heading p{margin:1rem auto 0;max-width:62ch;color:var(--et-muted);font-size:.95rem;line-height:1.65}
+.eval-proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.eval-proof-card{position:relative;min-height:480px;overflow:hidden;border:1px solid rgba(255,255,255,.08);border-radius:22px;background:linear-gradient(145deg,rgba(17,24,33,.96),rgba(7,10,14,.99));box-shadow:inset 0 1px rgba(255,255,255,.025),0 26px 75px rgba(0,0,0,.18);transform-style:preserve-3d}
+.eval-proof-card::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.018),transparent 30%)}
+.eval-proof-card--cyan{box-shadow:inset 0 1px rgba(255,255,255,.025),0 28px 85px rgba(23,190,224,.05)}
+.eval-proof-card--amber{box-shadow:inset 0 1px rgba(255,255,255,.025),0 28px 85px rgba(225,137,57,.05)}
+.eval-proof-card--verified{box-shadow:inset 0 1px rgba(255,255,255,.025),0 28px 85px rgba(80,225,184,.05)}
+.eval-proof-card__top{display:flex;align-items:center;gap:.65rem;padding:1.25rem 1.25rem 0;color:rgba(255,255,255,.52);font-size:.63rem;font-weight:720;text-transform:uppercase;letter-spacing:.12em}
+.eval-proof-card__icon{display:grid;place-items:center;width:34px;height:34px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(255,255,255,.035);color:#7ce8ff}
+.eval-proof-card--amber .eval-proof-card__icon{color:#f1b071}.eval-proof-card--verified .eval-proof-card__icon{color:#75efc9}
+.eval-proof-card__copy{position:absolute;left:1.25rem;right:1.25rem;bottom:1.25rem;z-index:3}
+.eval-proof-card__copy h3{margin:0;max-width:13ch;font-size:1.65rem;line-height:1.02;letter-spacing:-.045em}
+.eval-proof-card__copy p{margin:.8rem 0 0;color:rgba(255,255,255,.42);font-size:.82rem;line-height:1.6}
+.eval-proof-visual{position:absolute;left:1.25rem;right:1.25rem;top:5.4rem;height:245px;border:1px solid rgba(255,255,255,.07);border-radius:16px;background:radial-gradient(circle at 50% 42%,rgba(53,216,255,.07),transparent 44%),rgba(255,255,255,.015);overflow:hidden}
+.eval-proof-visual--flow{display:grid;grid-template-columns:100px 1fr 100px;align-items:stretch;gap:.55rem;padding:1.1rem}
+.eval-proof-flow-source,.eval-proof-flow-output{display:flex;flex-direction:column;justify-content:space-around;gap:.35rem;color:rgba(255,255,255,.32);font-size:.52rem}
+.eval-proof-flow-output b{font-weight:580;color:#efb070}
+.eval-proof-flow-lines{position:relative}
+.eval-proof-flow-lines i{position:absolute;left:-6%;width:112%;height:1px;background:linear-gradient(90deg,rgba(53,216,255,.16),#35d8ff,#48efc4);transform-origin:center;animation:eval-proof-flow 2.6s ease-in-out infinite}
+.eval-proof-flow-lines i:nth-child(1){top:15%;transform:rotate(8deg)}.eval-proof-flow-lines i:nth-child(2){top:29%;transform:rotate(-5deg)}.eval-proof-flow-lines i:nth-child(3){top:42%;transform:rotate(3deg)}.eval-proof-flow-lines i:nth-child(4){top:56%;transform:rotate(-8deg)}.eval-proof-flow-lines i:nth-child(5){top:70%;transform:rotate(6deg)}.eval-proof-flow-lines i:nth-child(6){top:84%;transform:rotate(-3deg)}
+.eval-proof-visual--gate{display:grid;grid-template-columns:76px 1fr 64px 1fr 76px;align-items:center;padding:1rem}
+.eval-proof-visual--gate>div{display:grid;gap:.3rem}.eval-proof-visual--gate>div.is-right{text-align:right}
+.eval-proof-visual--gate small{color:rgba(255,255,255,.32);font-size:.54rem}.eval-proof-visual--gate strong{font-family:var(--font-mono);font-size:.78rem}
+.eval-proof-gate-line{height:72px;background:repeating-linear-gradient(10deg,transparent 0 9px,rgba(244,160,77,.34) 10px 11px,transparent 12px 17px);mask-image:linear-gradient(90deg,transparent,black)}
+.eval-proof-gate-line.is-right{filter:hue-rotate(110deg);transform:scaleX(-1)}
+.eval-proof-gate-core{display:grid;place-items:center;width:58px;height:58px;margin:auto;border:1px solid rgba(62,232,191,.35);border-radius:50%;background:rgba(62,232,191,.075);color:#67f3ce;box-shadow:0 0 44px rgba(62,232,191,.18);animation:et-pulse 2.5s ease-in-out infinite}
+.eval-proof-visual--states{display:grid;align-content:center;gap:.65rem;padding:1rem}
+.eval-proof-visual--states>div{display:grid;grid-template-columns:1fr auto;align-items:center;padding:.8rem .9rem;border:1px solid rgba(255,255,255,.07);border-radius:10px;background:rgba(255,255,255,.018)}
+.eval-proof-visual--states span{color:rgba(255,255,255,.43);font-size:.62rem;font-weight:650}.eval-proof-visual--states strong{font-family:var(--font-mono);font-size:.76rem;font-weight:550}
+.eval-proof-visual--states>div:nth-child(1) strong{color:var(--et-amber)}.eval-proof-visual--states>div:nth-child(2) strong{color:#9ab6ff}.eval-proof-visual--states>div.is-verified{border-color:rgba(62,232,191,.22);background:rgba(62,232,191,.05)}.eval-proof-visual--states>div.is-verified strong{color:#75efc9}
+.eval-proof-disclaimer{margin:1.1rem auto 0;text-align:center;color:rgba(255,255,255,.25);font-size:.68rem}
+@keyframes eval-proof-flow{0%,100%{opacity:.22;filter:brightness(.8)}50%{opacity:1;filter:brightness(1.25)}}
+@media(max-width:980px){.eval-proof-grid{grid-template-columns:1fr}.eval-proof-card{min-height:430px}.eval-proof-visual{height:210px}.eval-proof-card__copy h3{max-width:none}}
+@media(max-width:640px){.eval-proof-section{padding-bottom:6rem}.eval-proof-visual--flow{grid-template-columns:80px 1fr 80px}.eval-proof-visual--gate{grid-template-columns:64px 1fr 54px 1fr 64px}.eval-proof-card{min-height:420px}}
+@media(prefers-reduced-motion:reduce){.eval-proof-flow-lines i,.eval-proof-gate-core{animation:none!important}}
