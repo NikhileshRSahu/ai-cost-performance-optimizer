@@ -2,12 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowRight, Info, Sparkles, X } from 'lucide-react';
-import {
-  useEffect,
-  useState,
-   type MouseEvent,
-  type ReactNode,
-} from 'react';
+import { useEffect, useState, type MouseEvent, type ReactNode } from 'react';
 
 type DetailItem = Readonly<{
   label: string;
