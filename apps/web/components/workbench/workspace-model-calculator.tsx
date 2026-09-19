@@ -7,6 +7,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { useMemo, useState, type Dispatch, type SetStateAction } from 'react';
+import { providerPricingPresets } from '../../lib/provider-pricing';
 
 function numberValue(value: string): number {
   const parsed = Number(value);
@@ -21,14 +22,42 @@ function money(value: number): string {
   }).format(value);
 }
 
-export function WorkspaceModelCalculator() {
+export function WorkspaceModelCalculator({
+  currentModel,
+  workloadName,
+}: Readonly<{
+  currentModel: string | null;
+  workloadName: string | null;
+}>) {
+  const matchedCurrent = providerPricingPresets.find(
+    (preset) => preset.model.toLowerCase() === currentModel?.toLowerCase(),
+  );
+  const defaultCandidate =
+    providerPricingPresets.find(
+      (preset) =>
+        matchedCurrent !== undefined &&
+        preset.provider === matchedCurrent.provider &&
+        preset.id !== matchedCurrent.id,
+    ) ?? providerPricingPresets[0];
+
   const [requests, setRequests] = useState('100000');
   const [inputTokens, setInputTokens] = useState('1200');
   const [outputTokens, setOutputTokens] = useState('250');
-  const [currentInputRate, setCurrentInputRate] = useState('3');
-  const [currentOutputRate, setCurrentOutputRate] = useState('15');
-  const [candidateInputRate, setCandidateInputRate] = useState('1.5');
-  const [candidateOutputRate, setCandidateOutputRate] = useState('8');
+  const [currentInputRate, setCurrentInputRate] = useState(
+    matchedCurrent?.inputPerMillionUsd ?? '3',
+  );
+  const [currentOutputRate, setCurrentOutputRate] = useState(
+    matchedCurrent?.outputPerMillionUsd ?? '15',
+  );
+  const [candidatePresetId, setCandidatePresetId] = useState(
+    defaultCandidate?.id ?? '',
+  );
+  const [candidateInputRate, setCandidateInputRate] = useState(
+    defaultCandidate?.inputPerMillionUsd ?? '1.5',
+  );
+  const [candidateOutputRate, setCandidateOutputRate] = useState(
+    defaultCandidate?.outputPerMillionUsd ?? '8',
+  );
 
   const result = useMemo(() => {
     const requestCount = numberValue(requests);
@@ -61,10 +90,11 @@ export function WorkspaceModelCalculator() {
     setRequests('100000');
     setInputTokens('1200');
     setOutputTokens('250');
-    setCurrentInputRate('3');
-    setCurrentOutputRate('15');
-    setCandidateInputRate('1.5');
-    setCandidateOutputRate('8');
+    setCurrentInputRate(matchedCurrent?.inputPerMillionUsd ?? '3');
+    setCurrentOutputRate(matchedCurrent?.outputPerMillionUsd ?? '15');
+    setCandidatePresetId(defaultCandidate?.id ?? '');
+    setCandidateInputRate(defaultCandidate?.inputPerMillionUsd ?? '1.5');
+    setCandidateOutputRate(defaultCandidate?.outputPerMillionUsd ?? '8');
   }
 
   return (
@@ -76,8 +106,13 @@ export function WorkspaceModelCalculator() {
               Workload
             </p>
             <h2 className="m-0 mt-2 text-base font-medium text-slate-100">
-              Compare two model-price scenarios
+              Compare the detected workload against a candidate
             </h2>
+            <p className="m-0 mt-1 text-[11px] text-slate-500">
+              {workloadName === null ? 'Workspace workload' : workloadName}
+              {' · '}
+              {currentModel === null ? 'current model not identified' : 'current: ' + currentModel}
+            </p>
           </div>
           <button
             type="button"
@@ -119,7 +154,7 @@ export function WorkspaceModelCalculator() {
           <div className="rounded-xl border border-white/[0.07] bg-[#0c1421] p-4">
             <div className="flex items-center justify-between gap-3">
               <p className="m-0 text-sm font-medium text-slate-200">
-                Current model
+                Current model{currentModel === null ? '' : ' · ' + currentModel}
               </p>
               <span className="rounded-full bg-white/[0.04] px-2 py-1 text-[9px] font-semibold text-slate-500">
                 USD / 1M tokens
@@ -157,9 +192,31 @@ export function WorkspaceModelCalculator() {
 
           <div className="rounded-xl border border-emerald-400/12 bg-emerald-400/[0.025] p-4">
             <div className="flex items-center justify-between gap-3">
-              <p className="m-0 text-sm font-medium text-slate-200">
-                Candidate model
-              </p>
+              <div>
+                <p className="m-0 text-sm font-medium text-slate-200">
+                  Candidate model
+                </p>
+                <select
+                  value={candidatePresetId}
+                  onChange={(event) => {
+                    const next = providerPricingPresets.find(
+                      (preset) => preset.id === event.target.value,
+                    );
+                    setCandidatePresetId(event.target.value);
+                    if (next !== undefined) {
+                      setCandidateInputRate(next.inputPerMillionUsd);
+                      setCandidateOutputRate(next.outputPerMillionUsd);
+                    }
+                  }}
+                  className="mt-2 min-h-9 max-w-[220px] rounded-lg border border-white/[0.08] bg-[#101a2a] px-2 text-[10px] text-slate-300 outline-none"
+                >
+                  {providerPricingPresets.map((preset) => (
+                    <option key={preset.id} value={preset.id}>
+                      {preset.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <span className="rounded-full bg-emerald-400/[0.08] px-2 py-1 text-[9px] font-semibold text-emerald-300/70">
                 USD / 1M tokens
               </span>
@@ -256,7 +313,30 @@ export function WorkspaceModelCalculator() {
           </div>
         </div>
 
-        <p className="m-0 mt-5 text-[11px] leading-5 text-slate-500">
+        <button
+          type="button"
+          onClick={() => {
+            window.dispatchEvent(
+              new CustomEvent('evalomics:ask', {
+                detail: {
+                  context:
+                    'Model evaluation for ' +
+                    (workloadName ?? 'this workload') +
+                    '. Current model: ' +
+                    (currentModel ?? 'unknown') +
+                    '. Estimated monthly difference: ' +
+                    money(Math.abs(result.delta)) +
+                    '.',
+                },
+              }),
+            );
+          }}
+          className="mt-5 inline-flex min-h-10 items-center justify-center rounded-lg border border-sky-300/15 bg-sky-300/[0.05] px-3 text-xs font-semibold text-sky-200"
+        >
+          Ask Evalomics to interpret this candidate
+        </button>
+
+        <p className="m-0 mt-4 text-[11px] leading-5 text-slate-500">
           This is the economics part of the evaluation. Evalomics still checks
           quality, latency, and failure-rate evidence before a cheaper candidate
           becomes a recommended production change.
