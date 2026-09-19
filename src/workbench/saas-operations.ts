@@ -1,34 +1,6 @@
 import { desc, eq } from 'drizzle-orm';
 import type { PersistenceDatabase } from '../persistence/database.js';
-import {
-  pilotInvoiceRequests,
-  supportRequests,
-} from '../persistence/schema.js';
-
-export type OrganizationEntitlement = Readonly<{
-  tier: 'FREE_BETA' | 'FOUNDING_AUDIT_PAID';
-  paidAudit: boolean;
-}>;
-
-export async function resolveOrganizationEntitlement(
-  db: PersistenceDatabase,
-  organizationId: string,
-): Promise<OrganizationEntitlement> {
-  const latest = (
-    await db
-      .select({ status: pilotInvoiceRequests.status })
-      .from(pilotInvoiceRequests)
-      .where(eq(pilotInvoiceRequests.organizationId, organizationId))
-      .orderBy(desc(pilotInvoiceRequests.createdAt))
-      .limit(1)
-  ).at(0);
-
-  const paidAudit = latest?.status === 'PAID';
-  return Object.freeze({
-    tier: paidAudit ? 'FOUNDING_AUDIT_PAID' : 'FREE_BETA',
-    paidAudit,
-  });
-}
+import { supportRequests } from '../persistence/schema.js';
 
 export async function listSupportRequests(db: PersistenceDatabase) {
   return db
