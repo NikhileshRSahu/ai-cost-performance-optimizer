@@ -16,7 +16,7 @@ export default function MarketingHome(){
     <header className="site-nav">
       <Link className="logo" href="/"><span/>Evalomics</Link>
       <nav><a href="#manifesto">Manifesto</a><a href="#ladder">The ladder</a><a href="#pricing">Pricing</a></nav>
-      <div className="nav-actions"><Link className="btn outline" href="/dashboard">See the live demo</Link><Link className="btn black" href="/auth/sign-up">Connect your usage data</Link><Link className="signin-link" href="/auth/sign-in">Sign in</Link></div>
+      <div className="nav-actions"><Link className="btn outline" href="/demo">See the live demo</Link><Link className="btn black" href="/auth/sign-up">Connect your usage data</Link><Link className="btn signin-button" href="/auth/sign-in">Sign in</Link></div>
     </header>
 
     <section className="hero blueprint">
@@ -24,7 +24,7 @@ export default function MarketingHome(){
         <p className="eyebrow">For teams running production LLM workloads</p>
         <h1>Your AI bill says <em>$41,208.</em><br/>It doesn’t say why.</h1>
         <p className="lead">Evalomics reads your production LLM usage, finds the waste, and proves each saving in your own spend data — before anyone claims a dollar.</p>
-        <div className="hero-actions"><Link className="btn black big" href="/auth/sign-up">Connect your usage data</Link><Link className="btn outline big" href="/dashboard">See the live demo</Link></div>
+        <div className="hero-actions"><Link className="btn black big" href="/auth/sign-up">Connect your usage data</Link><Link className="btn outline big" href="/demo">See the live demo</Link></div>
         <p className="micro">Read-only. No traffic changes until you approve an experiment.</p>
       </div>
       <div className="hero-visual">
@@ -78,6 +78,6 @@ export default function MarketingHome(){
       </div>
     </section>
 
-    <footer className="site-footer"><h2>Bring a number your VP can defend.</h2><div><Link className="btn white" href="/dashboard">See the live demo</Link><Link className="btn outline-light" href="/auth/sign-up">Connect your usage data</Link></div><p>© 2026 Evalomics. Sample figures are labeled as such because that is the whole point.</p></footer>
+    <footer className="site-footer"><h2>Bring a number your VP can defend.</h2><div><Link className="btn white" href="/demo">See the live demo</Link><Link className="btn outline-light" href="/auth/sign-up">Connect your usage data</Link></div><p>© 2026 Evalomics. Sample figures are labeled as such because that is the whole point.</p></footer>
   </main>
 }
