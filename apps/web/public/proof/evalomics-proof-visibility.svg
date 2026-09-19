@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
-<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07111b"/><stop offset="1" stop-color="#05090f"/></linearGradient><filter id="g"><feGaussianBlur stdDeviation="18"/></filter></defs>
+<style>
+text{font-family:Inter,Arial,sans-serif}.k{fill:#7f8da0;font-size:22px;font-weight:600}.t{fill:#f7fbff;font-size:34px;font-weight:750}.s{fill:#9fb0c4;font-size:20px}.n{fill:#fff;font-size:54px;font-weight:760}.sm{fill:#c7d3df;font-size:18px}.cap{fill:#9cb0c7;font-size:17px;font-weight:650}.box{fill:#0b1521;stroke:#203247;stroke-width:2}.box2{fill:#101d2b;stroke:#25425e;stroke-width:2}.pill{fill:#112438;stroke:#2b5877;stroke-width:2}.cyan{fill:#45d9ff}.green{fill:#62f0bb}.amber{fill:#ffc85d}.line{stroke:#45d9ff;stroke-width:18;stroke-linecap:round}.muted{stroke:#263649;stroke-width:18;stroke-linecap:round}</style><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07111b"/><stop offset="1" stop-color="#05090f"/></linearGradient><filter id="g"><feGaussianBlur stdDeviation="18"/></filter></defs>
 <rect width="1200" height="800" rx="38" fill="url(#bg)"/>
 <circle cx="930" cy="120" r="120" fill="#0da9d8" opacity=".08" filter="url(#g)"/>
 <text x="58" y="62" class="t">AI Spend Overview</text><text x="58" y="96" class="s">Synthetic usage · last 30 days</text>
