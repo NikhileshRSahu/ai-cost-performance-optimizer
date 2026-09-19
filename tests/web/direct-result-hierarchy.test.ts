@@ -9,23 +9,24 @@ const shell = readFileSync(
 
 describe('direct result hierarchy', () => {
   it('keeps the default workspace answer-first and moves utilities behind secondary navigation', () => {
-    expect(page).toContain('We analyzed your AI usage');
-    expect(page).toContain('Observed AI spend');
-    expect(page).toContain('Opportunities found');
+    expect(page).toContain('Your AI spend at a glance');
+    expect(page).toContain('Spend');
     expect(page).toContain('Estimated savings');
-    expect(page).toContain('Evaluation status');
-    expect(page).toContain('Recommended action');
-    expect(page).toContain('Supporting evidence summary');
+    expect(page).toContain('Biggest waste');
+    expect(page).toContain('Best change');
+    expect(page).toContain('Is this safe?');
+    expect(page).toContain('Next step');
+    expect(page).toContain('Production result');
     expect(page).not.toContain('<WorkMri');
 
     for (const expected of [
-      'Your Result',
-      '1 · Connect Data',
-      '2 · Next Action',
-      '3 · Results & Evidence',
-      'Evaluation tools',
-      'Prompt Evaluation',
-      'Model Evaluation',
+      'Overview',
+      'Usage',
+      'Optimization',
+      'Results',
+      'Tools',
+      'Prompt evaluation',
+      'Model evaluation',
       'Settings',
     ]) {
       expect(shell).toContain(expected);
