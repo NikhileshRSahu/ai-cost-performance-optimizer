@@ -122,7 +122,7 @@ function MiniDashboard() {
               <span>{label}</span>
               <strong>{value}</strong>
               <small>{meta}</small>
-              <div className={'eval-template-sparkline spark-' + index} />
+              <div className={'eval-template-sparkline spark-' + String(index)} />
             </div>
           ))}
         </div>
@@ -152,7 +152,7 @@ function CostDrivers() {
           <div className="eval-template-driver" key={name}>
             <span>{name}</span>
             <div>
-              <i style={{ width: width + '%' }} />
+              <i style={{ width: String(width) + '%' }} />
             </div>
             <b>{value}</b>
           </div>

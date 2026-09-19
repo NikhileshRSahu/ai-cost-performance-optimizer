@@ -25,6 +25,28 @@ const sourceItems = [
   { label: 'CSV', detail: 'Usage export fallback', icon: FileText },
 ] as const;
 
+const proofStates = [
+  {
+    label: 'Opportunity',
+    detail: 'Detected from usage',
+    icon: CircleDot,
+    classes: 'border-amber-300/20 bg-amber-300/[0.055] text-amber-100',
+  },
+  {
+    label: 'Tested',
+    detail: 'Benchmark-supported',
+    icon: FlaskConical,
+    classes: 'border-blue-300/20 bg-blue-300/[0.055] text-blue-100',
+  },
+  {
+    label: 'Verified',
+    detail: 'Production evidence',
+    icon: ShieldCheck,
+    classes:
+      'border-emerald-300/20 bg-emerald-300/[0.055] text-emerald-100',
+  },
+] as const;
+
 export function EvidenceEngineDemo() {
   const reduceMotion = useReducedMotion();
   const [stage, setStage] = useState(reduceMotion ? 2 : 0);
@@ -273,42 +295,22 @@ export function EvidenceEngineDemo() {
                   The label changes only when the evidence changes.
                 </h3>
                 <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                  {[
-                    [
-                      'Opportunity',
-                      'Detected from usage',
-                      CircleDot,
-                      'border-amber-300/20 bg-amber-300/[0.055] text-amber-100',
-                    ],
-                    [
-                      'Tested',
-                      'Benchmark-supported',
-                      FlaskConical,
-                      'border-blue-300/20 bg-blue-300/[0.055] text-blue-100',
-                    ],
-                    [
-                      'Verified',
-                      'Production evidence',
-                      ShieldCheck,
-                      'border-emerald-300/20 bg-emerald-300/[0.055] text-emerald-100',
-                    ],
-                  ].map(([label, detail, Icon, classes]) => {
-                    const StateIcon = Icon as typeof CircleDot;
-                    return (
+                  {proofStates.map(
+                    ({ label, detail, icon: StateIcon, classes }) => (
                       <div
-                        key={String(label)}
+                        key={label}
                         className={`rounded-2xl border p-4 ${classes}`}
                       >
                         <StateIcon className="size-4" aria-hidden="true" />
                         <p className="m-0 mt-4 text-sm font-semibold">
-                          {String(label)}
+                          {label}
                         </p>
                         <p className="m-0 mt-1 text-[11px] opacity-60">
-                          {String(detail)}
+                          {detail}
                         </p>
                       </div>
-                    );
-                  })}
+                    ),
+                  )}
                 </div>
                 <p className="m-0 mt-6 text-xs leading-5 text-white/40">
                   Synthetic example only. These values demonstrate the product
