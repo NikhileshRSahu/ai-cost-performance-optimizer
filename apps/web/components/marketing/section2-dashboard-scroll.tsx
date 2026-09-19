@@ -66,6 +66,9 @@ export function Section2DashboardScroll() {
               <img
                 src="https://d2ol7oe51mr4n9.cloudfront.net/user_3JOZbCBwNL9bBW0BUCVzdU7w8RP/0260a811-a6bc-4554-96bb-e2e6f5074b6e.webp"
                 alt="Evalomics dashboard showing AI spend, usage, cost drivers, optimization opportunities, benchmarks and verified savings"
+                width={1200}
+                height={675}
+                decoding="async"
                 className="block h-auto w-full rounded-[22px]"
                 draggable={false}
               />
