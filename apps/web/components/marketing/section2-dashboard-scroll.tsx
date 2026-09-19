@@ -68,8 +68,10 @@ export function Section2DashboardScroll() {
                 alt="Evalomics dashboard showing AI spend, usage, cost drivers, optimization opportunities, benchmarks and verified savings"
                 width={1200}
                 height={675}
+                loading="eager"
+                fetchPriority="high"
                 decoding="async"
-                className="block h-auto w-full rounded-[22px]"
+                className="block aspect-video h-auto w-full rounded-[22px] object-contain"
                 draggable={false}
               />
             </div>
