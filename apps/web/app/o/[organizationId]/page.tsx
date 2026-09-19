@@ -88,33 +88,6 @@ function ConsoleBars({
   );
 }
 
-function EvidenceHeat({ active }: Readonly<{ active: number }>) {
-  return (
-    <div
-      className="mt-5 grid grid-cols-12 gap-1"
-      role="img"
-      aria-label={String(active) + ' evidence stages active'}
-    >
-      {Array.from({ length: 36 }).map((_, index) => {
-        const stage = Math.floor(index / 9);
-        const reached = stage < active;
-        return (
-          <span
-            key={index}
-            className={
-              reached
-                ? index % 7 === 0
-                  ? 'h-3 rounded-[3px] bg-sky-300'
-                  : 'h-3 rounded-[3px] bg-sky-500/55'
-                : 'h-3 rounded-[3px] bg-white/[0.07]'
-            }
-          />
-        );
-      })}
-    </div>
-  );
-}
-
 export default async function CostDashboardPage({
   params,
   searchParams,
