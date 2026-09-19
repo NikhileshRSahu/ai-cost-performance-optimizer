@@ -13,8 +13,8 @@ export default function TermsPage() {
         <h1>A decision-support tool, not an automatic production operator.</h1>
         <p className="lede">
           Evalomics helps customers analyze AI evidence, test bounded
-          optimization hypotheses, generate implementation guidance, and
-          measure post-change impact.
+          optimization hypotheses, generate implementation guidance, and measure
+          post-change impact.
         </p>
         <div className="evidence-note">
           <strong>Beta transparency:</strong> these terms describe the current
@@ -27,8 +27,8 @@ export default function TermsPage() {
         <article>
           <h2>Customer responsibility</h2>
           <p>
-            Customers must have the right to upload the evidence they provide
-            or connect the provider organization they authorize. They are
+            Customers must have the right to upload the evidence they provide or
+            connect the provider organization they authorize. They are
             responsible for reviewing any generated implementation package
             before changing production systems.
           </p>
@@ -36,23 +36,23 @@ export default function TermsPage() {
         <article>
           <h2>No automatic production changes</h2>
           <p>
-            The free launch beta does not automatically mutate production
-            model, prompt, routing, infrastructure, or provider configuration.
+            The free launch beta does not automatically mutate production model,
+            prompt, routing, infrastructure, or provider configuration.
           </p>
         </article>
         <article>
           <h2>No guaranteed savings</h2>
           <p>
             Opportunity estimates and benchmark results are not guaranteed
-            savings. A result becomes verified only after comparable
-            post-change evidence satisfies the product&apos;s verification rules.
+            savings. A result becomes verified only after comparable post-change
+            evidence satisfies the product&apos;s verification rules.
           </p>
         </article>
         <article>
           <h2>Performance constraints</h2>
           <p>
-            A cheaper candidate is not recommended simply because it costs
-            less. Customers define quality, latency, failure-rate, and other
+            A cheaper candidate is not recommended simply because it costs less.
+            Customers define quality, latency, failure-rate, and other
             applicable constraints for the workload being tested.
           </p>
         </article>
@@ -60,10 +60,10 @@ export default function TermsPage() {
           <h2>Launch beta scope</h2>
           <p>
             The launch beta supports usage CSV analysis and optional OpenAI or
-            Anthropic organization-usage connections through
-            customer-authorized Admin API keys. Broader workspace connectors
-            and automatic production mutation are not included unless
-            separately released and explicitly authorized.
+            Anthropic organization-usage connections through customer-authorized
+            Admin API keys. Broader workspace connectors and automatic
+            production mutation are not included unless separately released and
+            explicitly authorized.
           </p>
         </article>
         <article>

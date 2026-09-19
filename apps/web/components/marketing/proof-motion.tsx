@@ -42,9 +42,9 @@ export function ProofMotion() {
         <span>Proof, not promises</span>
         <h2 id="eval-proof-title">What Evalomics makes visible.</h2>
         <p>
-          Product evidence should get stronger as it moves from observation to testing
-          to production verification. These are three different jobs — and Evalomics
-          keeps them separate.
+          Product evidence should get stronger as it moves from observation to
+          testing to production verification. These are three different jobs —
+          and Evalomics keeps them separate.
         </p>
       </div>
 
@@ -54,7 +54,9 @@ export function ProofMotion() {
           return (
             <motion.article
               key={card.title}
-              initial={reduceMotion ? false : { opacity: 0, y: 28, scale: 0.97 }}
+              initial={
+                reduceMotion ? false : { opacity: 0, y: 28, scale: 0.97 }
+              }
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, amount: 0.24 }}
               whileHover={reduceMotion ? undefined : { y: -7, scale: 1.01 }}
@@ -71,14 +73,20 @@ export function ProofMotion() {
               className={'eval-proof-card eval-proof-card--' + card.accent}
             >
               <div className="eval-proof-card__top">
-                <span className="eval-proof-card__icon"><Icon size={17} /></span>
+                <span className="eval-proof-card__icon">
+                  <Icon size={17} />
+                </span>
                 <span>{card.eyebrow}</span>
               </div>
 
               <motion.div
                 className="eval-proof-card__image-wrap"
                 whileHover={reduceMotion ? undefined : { scale: 1.025, y: -2 }}
-                transition={{ type: 'spring', visualDuration: 0.38, bounce: 0.1 }}
+                transition={{
+                  type: 'spring',
+                  visualDuration: 0.38,
+                  bounce: 0.1,
+                }}
               >
                 <img
                   src={card.image}
@@ -101,7 +109,8 @@ export function ProofMotion() {
       </div>
 
       <p className="eval-proof-disclaimer">
-        The visual values are synthetic examples that demonstrate product states. They are not verified customer savings.
+        The visual values are synthetic examples that demonstrate product
+        states. They are not verified customer savings.
       </p>
     </section>
   );

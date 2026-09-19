@@ -48,7 +48,8 @@ export function Section2DashboardScroll() {
               Your AI economics, in one view.
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-white/45 md:text-base">
-              Spend, usage, cost drivers, optimization opportunities, benchmarks and verified outcomes — brought together in one decision surface.
+              Spend, usage, cost drivers, optimization opportunities, benchmarks
+              and verified outcomes — brought together in one decision surface.
             </p>
           </motion.div>
 

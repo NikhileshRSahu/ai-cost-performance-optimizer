@@ -45,9 +45,7 @@ export default function LlmCostCalculatorPage() {
           </p>
           <h2 className="mt-3 !text-[clamp(2rem,4vw,3.5rem)] !leading-[.98] !tracking-[-.05em] text-white">
             The Work MRI answers:
-            <span className="block text-white/45">
-              “what should I change?”
-            </span>
+            <span className="block text-white/45">“what should I change?”</span>
           </h2>
         </div>
 

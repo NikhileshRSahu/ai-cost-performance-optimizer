@@ -14,8 +14,8 @@ export default function SecurityPage() {
         <p className="eyebrow">Security model</p>
         <h1>Trust is a release gate, not a marketing claim.</h1>
         <p className="lede">
-          Evalomics keeps the launch beta deliberately bounded. CSV analysis
-          and supported OpenAI or Anthropic organization-usage connections are
+          Evalomics keeps the launch beta deliberately bounded. CSV analysis and
+          supported OpenAI or Anthropic organization-usage connections are
           available; broader workspace connectors and automatic production
           changes remain outside the current product boundary.
         </p>

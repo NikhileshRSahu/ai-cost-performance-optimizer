@@ -24,9 +24,7 @@ export default function Page() {
           className="mt-4 !text-[clamp(3.2rem,7vw,6.4rem)] !leading-[.9] !tracking-[-.07em] text-white"
         >
           Prompt caching,
-          <span className="block text-white/45">
-            with the premium exposed.
-          </span>
+          <span className="block text-white/45">with the premium exposed.</span>
         </h1>
         <p className="mt-7 max-w-2xl text-base leading-7 text-white/45">
           Compare the uncached and cached rates you actually pay. If caching

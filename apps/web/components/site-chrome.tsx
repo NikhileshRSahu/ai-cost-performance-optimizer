@@ -190,9 +190,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
           <div className="max-w-md">
             <div className="flex items-center gap-2.5">
               <EvalomicsMark size={26} />
-              <strong className={'text-white'}>
-                Evalomics
-              </strong>
+              <strong className={'text-white'}>Evalomics</strong>
             </div>
             <p className="m-0 mt-3 leading-6">
               AI Efficiency Intelligence that keeps modeled, tested, and

@@ -28,5 +28,10 @@ export default async function StartPage({
     );
   }
 
-  return <StartFlow organizationId={organizationId} intent={query.intent === 'analyze' ? 'analyze' : 'start'} />;
+  return (
+    <StartFlow
+      organizationId={organizationId}
+      intent={query.intent === 'analyze' ? 'analyze' : 'start'}
+    />
+  );
 }

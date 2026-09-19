@@ -54,7 +54,10 @@ export default async function AccountPage({
         </div>
 
         <div className="mt-6">
-          <Link href="/" className="text-sm font-semibold text-white/55 hover:text-white">
+          <Link
+            href="/"
+            className="text-sm font-semibold text-white/55 hover:text-white"
+          >
             Return to Evalomics
           </Link>
         </div>

@@ -43,8 +43,7 @@ export default function PrivacyPage() {
             CSV analysis does not require a provider key. A provider Admin API
             key is only required when you explicitly choose an OpenAI or
             Anthropic connection. Gmail, Google Drive, Slack, and other
-            workspace connectors are not part of the current core analysis
-            flow.
+            workspace connectors are not part of the current core analysis flow.
           </p>
         </article>
         <article>
@@ -52,8 +51,8 @@ export default function PrivacyPage() {
           <p>
             Raw prompt and response bodies are not requested by the supported
             organization-usage connections and are not required for the core
-            usage MRI. A separate sanitized-history workflow may analyze
-            content deliberately supplied by the customer after redaction.
+            usage MRI. A separate sanitized-history workflow may analyze content
+            deliberately supplied by the customer after redaction.
           </p>
         </article>
         <article>
@@ -106,8 +105,8 @@ export default function PrivacyPage() {
         <article>
           <h2>Connected sources</h2>
           <p>
-            OpenAI and Anthropic organization-usage connections are supported
-            in the current beta. Other workspace connectors remain unavailable
+            OpenAI and Anthropic organization-usage connections are supported in
+            the current beta. Other workspace connectors remain unavailable
             unless they are separately released with explicit authorization and
             documented data boundaries.
           </p>

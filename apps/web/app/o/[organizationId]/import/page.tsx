@@ -271,7 +271,8 @@ export default async function ImportPage({
                             placeholder={label + ' Admin key'}
                           />
                           <small className="text-[10px] leading-4 text-white/32">
-                            Encrypted before storage. Disconnecting clears the saved credential.
+                            Encrypted before storage. Disconnecting clears the
+                            saved credential.
                           </small>
                         </label>
                         <button
@@ -295,7 +296,9 @@ export default async function ImportPage({
                       </p>
                       <p className="m-0 mt-1 text-[11px] text-white/35">
                         Last checked{' '}
-                        {displayUtc(connection.lastSyncAt ?? connection.connectedAt)}
+                        {displayUtc(
+                          connection.lastSyncAt ?? connection.connectedAt,
+                        )}
                       </p>
                     </div>
                     {owner ? (
