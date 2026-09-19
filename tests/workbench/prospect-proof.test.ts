@@ -24,7 +24,7 @@ function recommendation(): DashboardRecommendationView {
     confidenceBand: 'MEDIUM',
     principalLimitation: null,
     nextAction: 'Run the bounded benchmark.',
-    stateLabel: 'Potential saving',
+    stateLabel: 'Found',
   };
 }
 
