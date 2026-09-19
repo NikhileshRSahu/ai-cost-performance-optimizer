@@ -20,30 +20,22 @@ test('founder gets one direct answer before optional evidence details', async ({
 }) => {
   await page.goto('/o/demo-org');
   await expect(
-    page.getByRole('heading', { name: /we analyzed your ai usage/i }),
+    page.getByRole('heading', { name: /your ai spend at a glance/i }),
   ).toBeVisible();
   await expect(page.getByText(demoDisclaimer)).toBeVisible();
-  await expect(page.getByText(/recommended action/i)).toBeVisible();
-  await expect(page.getByText(/evaluated saving/i)).toBeVisible();
+  await expect(page.getByText('Best change', { exact: true })).toBeVisible();
+  await expect(
+    page.getByText('Estimated savings', { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText('Is this safe?', { exact: true })).toBeVisible();
+  await expect(page.getByText('Next step', { exact: true })).toBeVisible();
+  await expectAccessible(page);
 
-  const detectionConfidence = page.getByText('Detection confidence', {
-    exact: true,
-  });
-  const savingsConfidence = page.getByText('Savings confidence', {
-    exact: true,
-  });
-  await expect(detectionConfidence).toBeVisible();
-  await expect(page.getByText('HIGH', { exact: true })).toBeVisible();
-  await expect(savingsConfidence).toBeVisible();
-  await expect(page.getByText('TESTED', { exact: true })).toBeVisible();
+  await page.getByRole('link', { name: 'Optimization' }).click();
   await expect(
     page.getByRole('link', { name: /prepare safe rollout/i }),
   ).toBeVisible();
   await expect(page.getByText(/see details/i)).toBeVisible();
-  await expect(page.getByText(/what should we test next/i)).toHaveCount(0);
-  await expect(page.getByText(/evidence: import:/i)).toHaveCount(0);
-  await expectAccessible(page);
-
   await page.getByText(/see details/i).click();
   await expect(
     page.getByRole('heading', { name: 'Current versus candidate' }),
