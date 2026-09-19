@@ -11,7 +11,7 @@ const startFlow = readFileSync(
   'utf8',
 );
 const demo = readFileSync(
-  'apps/web/components/marketing/public-demo-experience.tsx',
+  'apps/web/components/marketing/public-demo-dashboard.tsx',
   'utf8',
 );
 const csv = readFileSync(
@@ -36,9 +36,9 @@ describe('guided product flow', () => {
   });
 
   it('provides a no-login demo and product-related login continuation', () => {
-    expect(demo).toContain('No login');
-    expect(demo).toContain('Reading 22,380 requests');
-    expect(demo).toContain('Analyze your usage');
+    expect(demo).toContain('Demo data · synthetic · not customer results');
+    expect(demo).toContain('22,380 requests');
+    expect(demo).toContain('Analyze my usage');
     expect(login).toContain('LoginProductMotion');
   });
 
