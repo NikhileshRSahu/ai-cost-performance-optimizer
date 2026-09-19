@@ -52,28 +52,27 @@ async function reachVerification(
     new RegExp(`/o/${organizationId}\\?source=import`),
   );
   await expect(
-    page.getByRole('heading', { name: 'We analyzed your AI usage' }),
+    page.getByRole('heading', { name: 'Your AI spend at a glance' }),
   ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
 
   if (await page.locator('.state-badge.state-verified').first().isVisible()) {
     return 'ALREADY_VERIFIED';
   }
 
+  await expect(page.getByText('Best change', { exact: true })).toBeVisible();
   await expect(
-    page.getByText('Recommended action', { exact: true }),
+    page.getByText('Estimated savings', { exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByText('Savings estimate', { exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByText('Estimate pending', { exact: true }).first(),
-  ).toBeVisible();
-  await expect(
-    page.getByRole('link', { name: 'Review Evalomics evaluation' }),
+    page.getByText('Production result', { exact: true }),
   ).toBeVisible();
   await expectAccessible(page);
 
   // Optional proof follows the same customer-facing path as the product.
+  await page.getByRole('link', { name: 'Optimization' }).click();
+  await expect(
+    page.getByRole('link', { name: 'Review Evalomics evaluation' }),
+  ).toBeVisible();
   await page.getByRole('link', { name: 'Review Evalomics evaluation' }).click();
   await expect(
     page.getByRole('heading', {
@@ -247,7 +246,7 @@ test('hard customer journey reaches verified savings', async ({ page }) => {
     page.locator('.state-badge.state-verified').first(),
   ).toBeVisible();
   await expect(
-    page.getByText('Evaluation status', { exact: true }),
+    page.getByText('Production result', { exact: true }),
   ).toBeVisible();
 });
 
