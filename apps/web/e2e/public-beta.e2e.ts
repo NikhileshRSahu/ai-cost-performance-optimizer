@@ -14,10 +14,10 @@ test('public beta trust path is visible without authentication', async ({
   await expect(page.getByText('Public beta', { exact: true })).toBeVisible();
   await expect(page.getByText('No credit card', { exact: true })).toBeVisible();
   await expect(
-    page.getByRole('link', { name: 'Analyze my AI usage' }).first(),
+    page.getByRole('link', { name: 'Analyze my own AI usage' }).first(),
   ).toBeVisible();
   await expect(
-    page.getByRole('link', { name: 'Explore live demo' }).first(),
+    page.getByRole('link', { name: 'Try with demo data' }).first(),
   ).toBeVisible();
 
   await page
@@ -63,7 +63,7 @@ test('public CTA foregrounds remain readable on their backgrounds', async ({
 
   const heroPrimary = page
     .getByRole('link', {
-      name: 'Analyze my AI usage',
+      name: 'Analyze my own AI usage',
     })
     .first();
   await expect(heroPrimary).toBeVisible();
@@ -73,7 +73,7 @@ test('public CTA foregrounds remain readable on their backgrounds', async ({
   });
   expect(heroStyles.color).not.toBe(heroStyles.backgroundColor);
 
-  const demoCta = page.getByRole('link', { name: 'Explore live demo' }).first();
+  const demoCta = page.getByRole('link', { name: 'Try with demo data' }).first();
   await expect(demoCta).toBeVisible();
   const demoStyles = await demoCta.evaluate((element) => {
     const style = getComputedStyle(element);
