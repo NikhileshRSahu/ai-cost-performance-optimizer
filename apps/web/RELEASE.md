@@ -49,3 +49,5 @@ Green-gate rerun after final customer journey E2E formatting — 2026-09-19.
 Final green gate after dashboard accessibility and customer journey fixes — 2026-09-19.
 
 Production publish marker for green unified-story release — 2026-09-19.
+
+Human-designed dashboard release: customer-question cards, neutral visual system, compact journey, restrained motion, and simplified workspace shell — 2026-09-19.
