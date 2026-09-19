@@ -91,8 +91,8 @@ export default function PricingPage() {
           Free during public beta while we validate the workflow.
         </h2>
         <p className="mt-3 text-sm leading-6 text-white/45">
-          Early AI teams can use the core workflow with real data while we make the
-          end-to-end experience dependable across more workloads. No card or
+          Early AI teams can use the core workflow with real data while we make
+          the end-to-end experience dependable across more workloads. No card or
           subscription is required during the public beta; any future paid plan
           will be presented separately before a charge or commitment.
         </p>
