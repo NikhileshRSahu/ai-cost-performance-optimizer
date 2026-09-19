@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 const home = readFileSync('apps/web/app/page.tsx', 'utf8');
 const hero = readFileSync(
-  'apps/web/components/marketing/cinematic-video-hero.tsx',
+  'apps/web/components/marketing/launch-template-evalomics.tsx',
   'utf8',
 );
 const login = readFileSync('apps/web/app/login/page.tsx', 'utf8');
@@ -19,7 +19,7 @@ describe('public first-value copy', () => {
       'Anthropic',
       'CSV',
       'Analyze my AI usage',
-      'Try the live demo',
+      'Try with demo data',
     ]) {
       expect(publicExperience).toContain(expected);
     }
