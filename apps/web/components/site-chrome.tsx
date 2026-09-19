@@ -16,7 +16,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
   }
 
   if (isFocusedStart) {
-    return <div className="min-h-screen bg-[#f5f7fa]">{children}</div>;
+    return <div className="eval-ambient-page">{children}</div>;
   }
 
   if (isHome) {
@@ -35,7 +35,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
         className={
           isHome
             ? 'sticky top-0 z-50 -mb-20 bg-gradient-to-b from-[#050510] via-[#050510]/92 to-transparent px-3 pb-5 pt-3 text-white'
-            : 'sticky top-0 z-50 border-b border-slate-200/80 bg-white/88 px-3 py-3 backdrop-blur-xl'
+            : 'eval-public-header sticky top-0 z-50 px-3 py-3 backdrop-blur-2xl'
         }
       >
         <div
@@ -49,7 +49,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
             className={
               isHome
                 ? 'flex items-center gap-2.5 font-semibold tracking-[-0.025em] text-white no-underline'
-                : 'flex items-center gap-2.5 font-semibold tracking-[-0.025em] text-slate-950 no-underline'
+                : 'flex items-center gap-2.5 font-semibold tracking-[-0.025em] text-white no-underline'
             }
             href="/"
             aria-label="Evalomics home"
@@ -62,7 +62,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
             className={
               isHome
                 ? 'hidden items-center gap-1 rounded-xl border border-white/[0.06] bg-white/[0.025] p-1 text-sm font-medium text-white/52 lg:flex'
-                : 'hidden items-center gap-6 text-sm font-medium text-slate-600 lg:flex'
+                : 'hidden items-center gap-6 text-sm font-medium text-white/55 lg:flex'
             }
             aria-label="Public"
           >
@@ -72,7 +72,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
                 className={
                   isHome
                     ? 'rounded-lg px-3 py-2 transition hover:bg-white/[0.05] hover:text-white'
-                    : 'transition hover:text-slate-950'
+                    : 'transition hover:text-white'
                 }
                 href={link.href}
               >
@@ -86,7 +86,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
               className={
                 isHome
                   ? 'rounded-lg px-3 py-2 text-sm font-semibold text-white/52 transition hover:text-white'
-                  : 'rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition hover:text-slate-950'
+                  : 'rounded-lg px-3 py-2 text-sm font-semibold text-white/55 transition hover:text-white'
               }
               href="/login"
             >
@@ -101,7 +101,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
               className={
                 isHome
                   ? 'rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_8px_26px_rgba(255,255,255,.08)] transition hover:-translate-y-0.5 hover:bg-violet-100'
-                  : 'rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800'
+                  : 'rounded-xl border border-orange-200/20 bg-orange-200/[0.09] px-4 py-2.5 text-sm font-semibold text-white shadow-[0_10px_34px_rgba(249,115,22,.10)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-orange-200/[0.15]'
               }
               href="/start"
             >
@@ -114,7 +114,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
               className={
                 isHome
                   ? 'cursor-pointer list-none rounded-xl border border-white/[0.09] bg-white/[0.04] px-3 py-2 text-sm font-semibold text-white'
-                  : 'cursor-pointer list-none rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-800'
+                  : 'cursor-pointer list-none rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-sm font-semibold text-white backdrop-blur-xl'
               }
             >
               Menu
@@ -123,7 +123,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
               className={
                 isHome
                   ? 'absolute right-0 mt-2 grid min-w-52 gap-1 rounded-2xl border border-white/[0.10] bg-[#0d0d1b]/96 p-2 text-sm text-white shadow-2xl backdrop-blur-xl'
-                  : 'absolute right-0 mt-2 grid min-w-52 gap-1 rounded-2xl border border-slate-200 bg-white p-2 text-sm text-slate-800 shadow-xl'
+                  : 'absolute right-0 mt-2 grid min-w-52 gap-1 rounded-2xl border border-white/10 bg-[#120d0a]/88 p-2 text-sm text-white shadow-2xl backdrop-blur-2xl'
               }
               aria-label="Mobile public navigation"
             >
@@ -133,7 +133,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
                   className={
                     isHome
                       ? 'rounded-lg px-3 py-2.5 text-white/68 hover:bg-white/[0.05] hover:text-white'
-                      : 'rounded-lg px-3 py-2.5 hover:bg-slate-50'
+                      : 'rounded-lg px-3 py-2.5 text-white/70 hover:bg-white/[0.06] hover:text-white'
                   }
                   href={link.href}
                 >
@@ -154,7 +154,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
                 className={
                   isHome
                     ? 'mt-1 rounded-xl bg-white px-3 py-2.5 text-center font-semibold text-slate-950'
-                    : 'mt-1 rounded-xl bg-slate-950 px-3 py-2.5 text-center font-semibold text-white'
+                    : 'mt-1 rounded-xl border border-orange-200/20 bg-orange-200/[0.10] px-3 py-2.5 text-center font-semibold text-white'
                 }
                 href="/start"
               >
@@ -168,7 +168,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
       {isHome ? (
         <div className="min-h-[70vh]">{children}</div>
       ) : (
-        <div className="mx-auto min-h-[70vh] w-[min(1180px,calc(100%-2rem))] py-8 md:py-12">
+        <div className="relative z-[1] mx-auto min-h-[70vh] w-[min(1180px,calc(100%-2rem))] py-8 md:py-12">
           {children}
         </div>
       )}
@@ -177,20 +177,20 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
         className={
           isHome
             ? 'border-t border-white/[0.07] bg-[#050510] text-white'
-            : 'border-t border-slate-200 bg-white'
+            : 'eval-public-footer border-t border-white/[0.08]'
         }
       >
         <div
           className={
             isHome
               ? 'mx-auto grid w-[min(1180px,calc(100%-2rem))] gap-8 py-10 text-sm text-white/40 md:grid-cols-[1fr_auto] md:items-end'
-              : 'mx-auto grid w-[min(1180px,calc(100%-2rem))] gap-8 py-10 text-sm text-slate-500 md:grid-cols-[1fr_auto] md:items-end'
+              : 'relative z-[1] mx-auto grid w-[min(1180px,calc(100%-2rem))] gap-8 py-10 text-sm text-white/45 md:grid-cols-[1fr_auto] md:items-end'
           }
         >
           <div className="max-w-md">
             <div className="flex items-center gap-2.5">
               <EvalomicsMark size={26} />
-              <strong className={isHome ? 'text-white' : 'text-slate-900'}>
+              <strong className={'text-white'}>
                 Evalomics
               </strong>
             </div>
