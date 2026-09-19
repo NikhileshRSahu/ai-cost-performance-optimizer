@@ -30,13 +30,14 @@ export async function resolveRuntimeWorkspace():Promise<RuntimeWorkspace|null>{
   const email=webSession?.user?.email?.trim().toLowerCase();
   if(!email) return null;
   const name=webSession?.user?.name?.trim() || email;
+  const providerSubject=(webSession?.user as (typeof webSession.user & {providerSubject?:string}) | undefined)?.providerSubject?.trim() || email;
   const database=createDatabase(databaseUrl());
   try{
     return await database.db.transaction(async(tx)=>{
       let user=(await tx.select().from(users).where(eq(users.email,email)).limit(1)).at(0);
       if(!user){
-        const userId=stableId('usr','authjs/google\n'+email);
-        await tx.insert(users).values({id:userId,email,authProvider:'authjs/google',authSubject:email}).onConflictDoNothing();
+        const userId=stableId('usr','authjs/google\n'+providerSubject);
+        await tx.insert(users).values({id:userId,email,authProvider:'authjs/google',authSubject:providerSubject}).onConflictDoNothing();
         user=(await tx.select().from(users).where(eq(users.email,email)).limit(1)).at(0);
       }
       if(!user) throw new Error('USER_PROVISION_FAILED');

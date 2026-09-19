@@ -18,7 +18,8 @@ export async function POST(request:Request){
       })
     );
     return NextResponse.json({ok:true});
-  }catch{
+  }catch(error){
+    if(error instanceof Error && error.message==='AUTH_REQUIRED') return NextResponse.json({ok:false,error:'AUTH_REQUIRED'},{status:401});
     return NextResponse.json({ok:false,error:'DISCONNECT_FAILED'},{status:400});
   }
 }

@@ -21,6 +21,7 @@ export async function POST(request:Request){
     );
     return NextResponse.json({ok:true,result});
   }catch(error){
+    if(error instanceof Error && error.message==='AUTH_REQUIRED') return NextResponse.json({ok:false,error:'AUTH_REQUIRED'},{status:401});
     const safe=providerConnectionSafeError(error);
     return NextResponse.json({ok:false,error:safe},{status:400});
   }

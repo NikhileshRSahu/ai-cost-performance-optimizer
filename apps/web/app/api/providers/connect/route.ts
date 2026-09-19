@@ -27,6 +27,7 @@ export async function POST(request:Request){
     });
     return NextResponse.json({ok:true,result});
   }catch(error){
+    if(error instanceof Error && error.message==='AUTH_REQUIRED') return NextResponse.json({ok:false,error:'AUTH_REQUIRED'},{status:401});
     const safe=providerConnectionSafeError(error);
     const status=safe==='PROVIDER_CREDENTIAL_REJECTED'?401:safe==='PROVIDER_RATE_LIMITED'?429:400;
     return NextResponse.json({ok:false,error:safe},{status});
