@@ -12,20 +12,20 @@ describe('direct result hierarchy', () => {
     expect(page).toContain('We analyzed your AI usage');
     expect(page).toContain('Observed AI spend');
     expect(page).toContain('Opportunities found');
-    expect(page).toContain('Modeled upside');
-    expect(page).toContain('Verified savings');
+    expect(page).toContain('Estimated savings');
+    expect(page).toContain('Evaluation status');
     expect(page).toContain('Recommended action');
     expect(page).toContain('Supporting evidence summary');
     expect(page).not.toContain('<WorkMri');
 
     for (const expected of [
-      'Overview',
-      'Usage',
-      'Recommendations',
-      'Proof',
-      'Tools & settings',
-      'Prompt Optimizer',
-      'Model Calculator',
+      'Your Result',
+      '1 · Connect Data',
+      '2 · Next Action',
+      '3 · Results & Evidence',
+      'Evaluation tools',
+      'Prompt Evaluation',
+      'Model Evaluation',
       'Settings',
     ]) {
       expect(shell).toContain(expected);
