@@ -16,16 +16,16 @@ const freeFeatures = [
 
 export default function PricingPage() {
   return (
-    <div className="grid gap-14 pb-12">
+    <div className="relative grid gap-14 overflow-hidden rounded-[28px] border border-white/[0.08] bg-[#070b10] p-6 pb-12 text-white shadow-[0_38px_120px_rgba(0,0,0,.32)] sm:p-8">
       <section className="max-w-4xl pt-6 sm:pt-10">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300/75">
           Launch beta
         </p>
-        <h1 className="mt-4 !text-[clamp(3.2rem,7vw,6.8rem)] !leading-[.9] !tracking-[-.07em] text-slate-950">
+        <h1 className="mt-4 !text-[clamp(3.2rem,7vw,6.8rem)] !leading-[.9] !tracking-[-.07em] text-white">
           Everything is free.
-          <span className="block text-slate-600">Use real data. No card.</span>
+          <span className="block text-white/45">Use real data. No card.</span>
         </h1>
-        <p className="mt-7 max-w-2xl text-base leading-7 text-slate-600">
+        <p className="mt-7 max-w-2xl text-base leading-7 text-white/45">
           During the Evalomics launch beta, the complete product workflow is
           available for $0. Create a workspace, upload a usage CSV, diagnose AI
           waste, test a candidate, and verify the result without entering
@@ -68,7 +68,7 @@ export default function PricingPage() {
 
         <Link
           href="/login"
-          className="mt-8 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 no-underline transition hover:bg-emerald-100"
+          className="mt-8 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-white no-underline transition hover:bg-emerald-100"
           style={{ color: '#0b1017' }}
         >
           Start free with your data <ArrowRight className="size-4" />
@@ -82,14 +82,14 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section className="max-w-3xl rounded-[24px] border border-slate-200 bg-slate-50 p-6 sm:p-8">
-        <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-600">
+      <section className="max-w-3xl rounded-[24px] border border-white/[0.08] bg-white/[0.025] p-6 sm:p-8">
+        <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/45">
           Why free right now
         </p>
-        <h2 className="mt-3 text-2xl font-semibold tracking-[-0.035em] text-slate-950">
+        <h2 className="mt-3 text-2xl font-semibold tracking-[-0.035em] text-white">
           We want product evidence before pricing.
         </h2>
-        <p className="mt-3 text-sm leading-6 text-slate-600">
+        <p className="mt-3 text-sm leading-6 text-white/45">
           The current goal is to learn which workloads Evalomics helps most and
           make the end-to-end workflow dependable. Paid plans may be introduced
           later with clear notice; using the launch beta does not require a
