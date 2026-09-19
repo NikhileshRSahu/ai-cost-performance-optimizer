@@ -3497,3 +3497,130 @@ samp,
 .eval-proof-card__image-wrap{position:absolute;left:1.25rem;right:1.25rem;top:5.15rem;height:245px;overflow:hidden;border:1px solid rgba(255,255,255,.08);border-radius:16px;background:#071019;box-shadow:0 18px 55px rgba(0,0,0,.22)}
 .eval-proof-card__image{display:block;width:100%;height:100%;object-fit:cover;object-position:center;border-radius:inherit}
 @media(max-width:980px){.eval-proof-card__image-wrap{height:210px}}
+
+/* Shared Evalomics ambient glass system for public product pages */
+.eval-ambient-page {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 16% 12%, rgba(249, 115, 22, 0.20), transparent 30%),
+    radial-gradient(circle at 84% 18%, rgba(251, 146, 60, 0.13), transparent 26%),
+    radial-gradient(circle at 18% 78%, rgba(34, 211, 238, 0.07), transparent 28%),
+    linear-gradient(180deg, #090806 0%, #0d0907 44%, #070707 100%);
+  color: #ffffff;
+}
+
+.eval-ambient-page::before,
+.eval-ambient-page::after {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  border-radius: 999px;
+  pointer-events: none;
+  filter: blur(90px);
+  will-change: transform;
+}
+
+.eval-ambient-page::before {
+  width: min(46vw, 620px);
+  aspect-ratio: 1;
+  left: -8vw;
+  top: 5vh;
+  background: rgba(249, 115, 22, 0.17);
+  animation: eval-ambient-drift-a 16s ease-in-out infinite;
+}
+
+.eval-ambient-page::after {
+  width: min(40vw, 540px);
+  aspect-ratio: 1;
+  right: -5vw;
+  top: 24vh;
+  background: rgba(251, 146, 60, 0.12);
+  animation: eval-ambient-drift-b 20s ease-in-out infinite;
+}
+
+.eval-public-header {
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  background: rgba(11, 8, 6, .58);
+  box-shadow: inset 0 -1px rgba(255,255,255,.02);
+}
+
+.eval-public-footer {
+  position: relative;
+  z-index: 1;
+  background: rgba(8, 7, 6, .62);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+.eval-glass-panel {
+  border: 1px solid rgba(255,255,255,.09);
+  background:
+    linear-gradient(145deg, rgba(18, 16, 14, .72), rgba(8, 10, 13, .62));
+  box-shadow:
+    0 34px 110px rgba(0,0,0,.42),
+    0 0 100px rgba(249,115,22,.055),
+    inset 0 1px rgba(255,255,255,.055);
+  backdrop-filter: blur(28px) saturate(115%);
+  -webkit-backdrop-filter: blur(28px) saturate(115%);
+}
+
+.eval-glass-card {
+  border: 1px solid rgba(255,255,255,.085);
+  background:
+    linear-gradient(145deg, rgba(31, 27, 24, .58), rgba(9, 12, 16, .50));
+  box-shadow:
+    0 18px 48px rgba(0,0,0,.20),
+    inset 0 1px rgba(255,255,255,.045);
+  backdrop-filter: blur(20px) saturate(120%);
+  -webkit-backdrop-filter: blur(20px) saturate(120%);
+  transition:
+    transform 240ms cubic-bezier(.2,.8,.2,1),
+    border-color 240ms ease,
+    box-shadow 240ms ease,
+    background 240ms ease;
+}
+
+.eval-glass-card:hover {
+  border-color: rgba(251,146,60,.22);
+  background:
+    linear-gradient(145deg, rgba(42, 31, 24, .64), rgba(10, 13, 17, .54));
+  box-shadow:
+    0 24px 60px rgba(0,0,0,.27),
+    0 0 44px rgba(249,115,22,.07),
+    inset 0 1px rgba(255,255,255,.06);
+}
+
+.eval-glass-pill {
+  border: 1px solid rgba(255,255,255,.09);
+  background: rgba(255,255,255,.045);
+  box-shadow: inset 0 1px rgba(255,255,255,.04);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+@keyframes eval-ambient-drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  35% { transform: translate3d(5vw, 4vh, 0) scale(1.08); }
+  70% { transform: translate3d(2vw, 10vh, 0) scale(.96); }
+}
+
+@keyframes eval-ambient-drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  40% { transform: translate3d(-6vw, 6vh, 0) scale(1.07); }
+  72% { transform: translate3d(-2vw, -3vh, 0) scale(.98); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eval-ambient-page::before,
+  .eval-ambient-page::after {
+    animation: none;
+  }
+
+  .eval-glass-card {
+    transition: border-color 160ms ease, background 160ms ease;
+  }
+}
+
