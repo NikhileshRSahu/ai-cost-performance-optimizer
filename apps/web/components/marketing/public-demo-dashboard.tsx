@@ -4,11 +4,11 @@ import Link from 'next/link';
 import {
   ArrowRight,
   BadgeDollarSign,
-  Database,
   Gauge,
   ShieldCheck,
   Sparkles,
 } from 'lucide-react';
+import { DashboardDrilldown } from '../workbench/dashboard-drilldown';
 import { DashboardWidgetGrid } from '../workbench/dashboard-widget-grid';
 import { EvalomicsCopilot } from '../workbench/evalomics-copilot';
 import { ResultJourney } from '../workbench/result-journey';
@@ -30,42 +30,31 @@ function DemoBars({
   );
 }
 
-function DemoHeatmap() {
-  const intensities = [
-    1, 1, 1, 2, 2, 2, 3, 2, 1, 1, 2, 2, 1, 1, 2, 2, 3, 3, 4, 3, 2, 2, 2, 1, 1,
-    2, 2, 3, 4, 4, 4, 3, 3, 2, 2, 1,
-  ];
-
+function DemoEvidenceHeat() {
   return (
     <div
       className="mt-5 grid grid-cols-12 gap-1"
       role="img"
-      aria-label="Synthetic activity heatmap"
+      aria-label="Three of four demo evidence stages active"
     >
-      {intensities.map((value, index) => (
-        <span
-          key={index}
-          className={
-            value === 4
-              ? 'h-3 rounded-[3px] bg-sky-300'
-              : value === 3
-                ? 'h-3 rounded-[3px] bg-sky-500/75'
-                : value === 2
-                  ? 'h-3 rounded-[3px] bg-sky-500/35'
-                  : 'h-3 rounded-[3px] bg-white/[0.07]'
-          }
-        />
-      ))}
+      {Array.from({ length: 36 }).map((_, index) => {
+        const stage = Math.floor(index / 9);
+        return (
+          <span
+            key={index}
+            className={
+              stage < 3
+                ? index % 7 === 0
+                  ? 'h-3 rounded-[3px] bg-sky-300'
+                  : 'h-3 rounded-[3px] bg-sky-500/55'
+                : 'h-3 rounded-[3px] bg-white/[0.07]'
+            }
+          />
+        );
+      })}
     </div>
   );
 }
-
-const traceRows = [
-  ['req_8f21b', 'support_answer', '820ms'],
-  ['req_144ac', 'code_review', '1.42s'],
-  ['req_5ca90', 'search_agent', '2.18s'],
-  ['req_9d7e1', 'report_generation', '1.06s'],
-] as const;
 
 export function PublicDemoDashboard() {
   return (
@@ -76,8 +65,7 @@ export function PublicDemoDashboard() {
             Demo data · synthetic · not customer results
           </p>
           <p className="m-0 mt-1 text-xs text-white/45">
-            Explore the same dashboard structure before connecting your own
-            usage.
+            This uses the same story, cards, drill-downs, and Evalomics AI pattern as the real workspace.
           </p>
         </div>
         <Link
@@ -96,9 +84,7 @@ export function PublicDemoDashboard() {
           We analyzed this sample company&apos;s AI usage
         </h1>
         <p className="mt-2 max-w-3xl font-mono text-xs leading-5 text-slate-500">
-          30 days · 22,380 requests · synthetic evidence designed to show how
-          Evalomics follows the same Connected → Found → Evaluated → Ready → Proven
-          story you will see with real usage.
+          30 days · 22,380 requests · synthetic evidence showing the complete Evalomics decision story.
         </p>
       </section>
 
@@ -109,230 +95,226 @@ export function PublicDemoDashboard() {
           Outcome summary
         </p>
         <p className="m-0 mt-2 text-sm leading-6 text-white/65">
-          $1,774.78 observed spend → repeated-input waste found → cache the stable
-          prefix → estimated $286–$421 opportunity → Medium confidence → evaluate
-          against the 0.90 quality floor before rollout.
+          $1,774.78 observed spend → 3 supported opportunities → best change:
+          cache the stable repeated prompt prefix → estimated $286–$421 → Medium
+          confidence → next: stage the evaluated caching change.
         </p>
       </section>
 
       <DashboardWidgetGrid
         storageKey="evalomics-public-demo-dashboard"
         items={[
-          { id: 'traces', size: 'wide', label: 'Recent traces' },
-          { id: 'activity', size: 'wide', label: 'Usage activity' },
-          { id: 'spend', size: 'sm', label: 'Observed spend' },
-          { id: 'opportunity', size: 'sm', label: 'Estimated savings' },
-          { id: 'quality', size: 'sm', label: 'Quality score' },
-          { id: 'verified', size: 'sm', label: 'Evaluation status' },
           { id: 'recommendation', size: 'wide', label: 'Recommended action' },
-          { id: 'models', size: 'wide', label: 'Model usage' },
+          { id: 'evidence', size: 'wide', label: 'Evidence status' },
+          { id: 'spend', size: 'sm', label: 'Observed AI spend' },
+          { id: 'opportunities', size: 'sm', label: 'Opportunities found' },
+          { id: 'estimated', size: 'sm', label: 'Estimated savings' },
+          { id: 'evaluation', size: 'sm', label: 'Evaluation status' },
+          { id: 'diagnosis', size: 'lg', label: 'Usage diagnosis' },
         ]}
       >
-        <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
-          <div className="flex items-center justify-between gap-3">
-            <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
-              Recent traces
-            </p>
-            <span className="inline-flex items-center gap-1.5 text-[10px] text-emerald-300">
-              <span className="size-1.5 rounded-full bg-emerald-400" />
-              live sample
-            </span>
-          </div>
-          <p className="mt-3 text-3xl tracking-[-0.05em] text-white">1.37s</p>
-          <p className="m-0 text-[10px] text-slate-500">p50 latency</p>
-          <div className="mt-6 grid gap-3">
-            {traceRows.map(([id, workflow, latency], index) => (
-              <div
-                key={id}
-                className="grid grid-cols-[1fr_1.4fr_auto] items-center gap-3 text-[11px]"
-              >
-                <span className="text-white/80">
-                  <i className="mr-2 inline-block size-1.5 rounded-full bg-emerald-400" />
-                  {id}
-                </span>
-                <span className="text-slate-400">{workflow}</span>
-                <span
-                  className={index === 2 ? 'text-amber-200' : 'text-slate-300'}
-                >
-                  {latency}
-                </span>
+        <DashboardDrilldown
+          eyebrow="Recommended action"
+          title="Cache the stable repeated prompt prefix"
+          summary="Evalomics ranked this as the strongest supported action in the synthetic evidence window."
+          items={[
+            { label: 'Expected impact', value: '$87.42 sample opportunity' },
+            { label: 'Detection confidence', value: 'Medium' },
+            { label: 'Evaluation result', value: 'Candidate evaluated' },
+            { label: 'Quality floor', value: '0.90 minimum' },
+          ]}
+          insight="1,248 similar requests repeatedly send a stable prefix that is eligible for a caching strategy."
+          nextStep="Stage the caching change for this workload and keep the quality floor unchanged."
+        >
+          <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
+                  Recommended action
+                </p>
+                <h2 className="mt-2 text-lg font-medium text-white">
+                  Cache the stable repeated prompt prefix
+                </h2>
               </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
-          <div className="flex items-center justify-between gap-3">
-            <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
-              Usage activity
-            </p>
-            <span className="text-[10px] text-emerald-300">
-              ↑ 12% vs prior week
-            </span>
-          </div>
-          <p className="mt-3 text-3xl tracking-[-0.05em] text-white">22,380</p>
-          <p className="m-0 text-[10px] text-slate-500">
-            requests · last 30 days
-          </p>
-          <DemoHeatmap />
-          <div className="mt-3 flex justify-between text-[9px] text-slate-600">
-            <span>week 1</span>
-            <span>week 2</span>
-            <span>week 3</span>
-            <span>week 4</span>
-          </div>
-        </section>
-
-        <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
-          <div className="flex items-center justify-between">
-            <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
-              Observed spend
-            </p>
-            <BadgeDollarSign className="size-4 text-sky-300/70" />
-          </div>
-          <p className="mt-4 text-3xl tracking-[-0.05em] text-white">
-            $1,774.78
-          </p>
-          <p className="m-0 mt-1 text-[10px] text-slate-500">
-            measured from sample usage
-          </p>
-          <DemoBars values={[42, 53, 47, 58, 63, 55, 71, 66, 74, 69, 83, 88]} />
-        </article>
-
-        <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
-          <div className="flex items-center justify-between">
-            <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
-              Estimated savings
-            </p>
-            <Gauge className="size-4 text-emerald-300/70" />
-          </div>
-          <p className="mt-4 text-3xl tracking-[-0.05em] text-white">
-            $286–$421
-          </p>
-          <p className="m-0 mt-1 text-[10px] text-slate-500">
-            evidence-backed estimate
-          </p>
-          <DemoBars
-            values={[18, 24, 31, 28, 36, 42, 47, 53, 58, 62, 69, 76]}
-            accent="bg-emerald-400"
-          />
-        </article>
-
-        <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
-          <div className="flex items-center justify-between">
-            <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
-              Quality score
-            </p>
-            <ShieldCheck className="size-4 text-cyan-300/70" />
-          </div>
-          <p className="mt-4 text-3xl tracking-[-0.05em] text-white">0.91</p>
-          <p className="m-0 mt-1 text-[10px] text-emerald-300">
-            ↑ 0.03 sample benchmark
-          </p>
-          <div className="mt-auto grid gap-2 text-[10px]">
-            <div className="flex justify-between">
-              <span className="text-slate-400">Faithfulness</span>
-              <span>0.94</span>
+              <Sparkles className="size-4 text-emerald-300/70" />
             </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Relevancy</span>
-              <span>0.89</span>
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              {[
+                ['Expected impact', '$87.42'],
+                ['Confidence', 'Medium'],
+                ['Evaluation', 'Ready candidate'],
+              ].map(([label, value]) => (
+                <div
+                  key={label}
+                  className="rounded-lg border border-white/[0.07] bg-black/20 p-4"
+                >
+                  <p className="m-0 text-[9px] uppercase tracking-[0.12em] text-slate-500">
+                    {label}
+                  </p>
+                  <p className="m-0 mt-2 text-sm text-white">{value}</p>
+                </div>
+              ))}
             </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Correctness</span>
-              <span>0.91</span>
-            </div>
-          </div>
-        </article>
+            <p className="m-0 mt-auto pt-5 text-[11px] leading-5 text-slate-500">
+              Evalomics found repeated stable input and checked the candidate against the sample quality floor.
+            </p>
+          </section>
+        </DashboardDrilldown>
 
-        <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
-          <div className="flex items-center justify-between">
+        <DashboardDrilldown
+          eyebrow="Evidence status"
+          title="How far Evalomics has taken this sample result"
+          summary="The demo is currently at Evaluated: the opportunity was found and the candidate was checked."
+          items={[
+            { label: 'Connected', value: '22,380 requests loaded' },
+            { label: 'Found', value: '3 opportunities identified' },
+            { label: 'Evaluated', value: 'Caching candidate checked' },
+            { label: 'Proven', value: 'After rollout' },
+          ]}
+          insight="The sample candidate is useful before production proof because its evidence and quality guard are already visible."
+          nextStep="In a real workspace, Ready follows when the evaluated candidate is prepared for staged implementation."
+        >
+          <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="size-4 text-violet-300" />
+              <h2 className="text-sm font-medium text-slate-100">Evidence status</h2>
+            </div>
+            <DemoEvidenceHeat />
+            <p className="m-0 mt-4 text-xs leading-5 text-slate-500">
+              Connected → Found → Evaluated. Ready and Proven come next.
+            </p>
+          </section>
+        </DashboardDrilldown>
+
+        <DashboardDrilldown
+          eyebrow="Observed AI spend"
+          title="$1,774.78"
+          summary="Measured spend reconstructed from the synthetic usage window."
+          items={[
+            { label: 'Requests', value: '22,380' },
+            { label: 'Period', value: '30 days' },
+            { label: 'Source', value: 'Synthetic CSV' },
+            { label: 'Currency', value: 'USD' },
+          ]}
+          insight="This baseline anchors all later estimates in the demo."
+          nextStep="Compare the baseline against the ranked optimization opportunities."
+        >
+          <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
+            <div className="flex items-center justify-between">
+              <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
+                Observed AI spend
+              </p>
+              <BadgeDollarSign className="size-4 text-sky-300/70" />
+            </div>
+            <p className="mt-4 text-3xl tracking-[-0.05em] text-white">$1,774.78</p>
+            <p className="m-0 mt-1 text-[10px] text-slate-500">measured from sample usage</p>
+            <DemoBars values={[42, 53, 47, 58, 63, 55, 71, 66, 74, 69, 83, 88]} />
+          </article>
+        </DashboardDrilldown>
+
+        <DashboardDrilldown
+          eyebrow="Opportunities found"
+          title="3 supported opportunities"
+          summary="Evalomics ranked three optimization signals in the synthetic evidence."
+          items={[
+            { label: 'Strongest', value: 'Repeated-input caching' },
+            { label: 'Second', value: 'Model right-sizing' },
+            { label: 'Third', value: 'Context pruning' },
+            { label: 'Top confidence', value: 'Medium' },
+          ]}
+          insight="Repeated-input caching ranks first because the sample data contains a clear repeated-prefix pattern."
+          nextStep="Evaluate the strongest candidate before spending attention on lower-ranked ideas."
+        >
+          <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
+            <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
+              Opportunities found
+            </p>
+            <p className="mt-4 text-3xl tracking-[-0.05em] text-white">3</p>
+            <p className="m-0 mt-1 text-[10px] text-slate-500">ranked by supported evidence</p>
+            <DemoBars values={[25, 40, 58, 71, 63, 79, 68, 82]} accent="bg-violet-300" />
+          </article>
+        </DashboardDrilldown>
+
+        <DashboardDrilldown
+          eyebrow="Estimated savings"
+          title="$286–$421"
+          summary="This is the sample evidence-backed range used to prioritize optimization work."
+          items={[
+            { label: 'Low', value: '$286' },
+            { label: 'Base', value: '$354' },
+            { label: 'High', value: '$421' },
+            { label: 'Confidence', value: 'Medium' },
+          ]}
+          insight="The estimate is useful for prioritization now; the final Proven amount comes after rollout."
+          nextStep="Use the evaluated candidate and quality guard to decide whether to stage implementation."
+        >
+          <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
+            <div className="flex items-center justify-between">
+              <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
+                Estimated savings
+              </p>
+              <Gauge className="size-4 text-emerald-300/70" />
+            </div>
+            <p className="mt-4 text-3xl tracking-[-0.05em] text-white">$286–$421</p>
+            <p className="m-0 mt-1 text-[10px] text-slate-500">evidence-backed sample estimate</p>
+            <DemoBars values={[18, 24, 31, 28, 36, 42, 47, 53, 58, 62, 69, 76]} accent="bg-emerald-400" />
+          </article>
+        </DashboardDrilldown>
+
+        <DashboardDrilldown
+          eyebrow="Evaluation status"
+          title="Evaluated"
+          summary="The strongest sample candidate has been checked against the sample quality floor."
+          items={[
+            { label: 'Found', value: 'Yes' },
+            { label: 'Evaluated', value: 'Yes' },
+            { label: 'Ready', value: 'Next stage' },
+            { label: 'Proven', value: 'After rollout' },
+          ]}
+          insight="The candidate cleared the illustrated quality floor and is ready for implementation planning."
+          nextStep="Prepare the staged rollout and preserve the same production measurement basis."
+        >
+          <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
             <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
               Evaluation status
             </p>
-            <FlaskConical className="size-4 text-violet-300/70" />
-          </div>
-          <p className="mt-4 text-2xl font-semibold tracking-[-0.04em] text-white">
-            Evaluated
-          </p>
-          <p className="m-0 mt-1 text-[10px] text-slate-500">
-            candidate checked against sample quality evidence
-          </p>
-          <div className="mt-auto rounded-lg border border-violet-300/10 bg-violet-300/[0.035] p-3 text-[10px] leading-5 text-violet-100/65">
-            The candidate is useful now. Production proof becomes the final
-            Proven stage only after rollout.
-          </div>
-        </article>
+            <p className="mt-4 text-2xl font-semibold tracking-[-0.04em] text-white">Evaluated</p>
+            <p className="m-0 mt-1 text-[10px] text-emerald-300">quality floor passed in sample evidence</p>
+          </article>
+        </DashboardDrilldown>
 
-        <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
-                Recommended action
-              </p>
-              <h2 className="mt-2 text-lg font-medium text-white">
-                Benchmark repeated input against your quality floor
-              </h2>
-            </div>
-            <Sparkles className="size-4 text-emerald-300/70" />
-          </div>
-          <div className="mt-5 grid gap-3 sm:grid-cols-3">
-            {[
-              ['Repeated input', '1,248 similar requests'],
-              ['Estimated opportunity', '$87.42'],
-              ['Confidence', 'Medium'],
-            ].map(([label, value]) => (
-              <div
-                key={label}
-                className="rounded-lg border border-white/[0.07] bg-black/20 p-4"
-              >
-                <p className="m-0 text-[9px] uppercase tracking-[0.12em] text-slate-500">
-                  {label}
-                </p>
-                <p className="m-0 mt-2 text-sm text-white">{value}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-auto pt-5">
-            <p className="m-0 text-[11px] leading-5 text-slate-500">
-              Sample logic: Evalomics found repeated stable input, evaluated the
-              candidate against the sample quality floor, and prepared the next
-              implementation decision.
-            </p>
-          </div>
-        </section>
-
-        <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
-          <div className="flex items-center justify-between gap-3">
+        <DashboardDrilldown
+          eyebrow="Supporting evidence summary"
+          title="Why Evalomics reached this result"
+          summary="These synthetic facts support the recommendation without requiring the user to inspect raw rows first."
+          items={[
+            { label: 'Repeated requests', value: '1,248' },
+            { label: 'Quality score', value: '0.91' },
+            { label: 'Input + output tokens', value: '20.5M' },
+            { label: 'p50 latency', value: '1.37s' },
+          ]}
+          insight="Repeated stable input is the strongest waste signal in this sample."
+          nextStep="Open the recommendation or ask Evalomics AI to explain how the evidence connects to the next action."
+        >
+          <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
             <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
-              Token usage by model
+              Usage diagnosis
             </p>
-            <Database className="size-4 text-sky-300/60" />
-          </div>
-          <p className="mt-3 text-3xl tracking-[-0.05em] text-white">20.5M</p>
-          <p className="m-0 text-[10px] text-slate-500">
-            input + output tokens
-          </p>
-          <div className="mt-6 grid gap-3">
-            {[
-              ['gpt-4o', '42%', 'w-[42%]', 'bg-sky-400'],
-              ['claude-sonnet-4-5', '27%', 'w-[27%]', 'bg-cyan-300'],
-              ['gpt-4o-mini', '18%', 'w-[18%]', 'bg-violet-300'],
-              ['claude-haiku-4-5', '13%', 'w-[13%]', 'bg-white/30'],
-            ].map(([model, share, width, tone]) => (
-              <div
-                key={model}
-                className="grid grid-cols-[1fr_1.4fr_auto] items-center gap-3 text-[10px]"
-              >
-                <span className="text-slate-300">{model}</span>
-                <span className="h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
-                  <i className={`block h-full rounded-full ${width} ${tone}`} />
-                </span>
-                <span className="text-slate-400">{share}</span>
-              </div>
-            ))}
-          </div>
-        </section>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              {[
+                ['Repeated requests', '1,248'],
+                ['Quality score', '0.91'],
+                ['Token usage', '20.5M'],
+                ['p50 latency', '1.37s'],
+              ].map(([label, value]) => (
+                <div key={label} className="rounded-lg border border-white/[0.07] bg-black/20 p-4">
+                  <p className="m-0 text-[9px] uppercase tracking-[0.12em] text-slate-500">{label}</p>
+                  <p className="m-0 mt-2 text-sm text-white">{value}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        </DashboardDrilldown>
       </DashboardWidgetGrid>
 
       <EvalomicsCopilot organizationId="public-demo" demo />
@@ -347,9 +329,7 @@ export function PublicDemoDashboard() {
               The next dashboard can use your real usage.
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-white/40">
-              Connect OpenAI or Anthropic, or upload a CSV. Evalomics will
-              return to the same dashboard structure with your observed
-              evidence.
+              Connect OpenAI or Anthropic, or upload a CSV. Evalomics will return to the same story and dashboard with your evidence.
             </p>
           </div>
           <Link
