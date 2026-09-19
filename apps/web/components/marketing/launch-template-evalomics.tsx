@@ -21,6 +21,7 @@ import {
 import { EvalomicsMark } from '../evalomics-mark';
 import { HeroIntelligence } from './hero-intelligence';
 import { Section2DashboardScroll } from './section2-dashboard-scroll';
+import { ProofMotion } from './proof-motion';
 
 const capabilities = [
   ['Multi-provider ingestion', 'OpenAI, Anthropic, and CSV usage in one evidence model.', CloudUpload],
@@ -89,7 +90,7 @@ function MiniDashboard() {
             <span>Recommended next action</span>
             <strong>Benchmark repeated input against your quality floor.</strong>
           </div>
-          <span className="eval-template-link">See details <ArrowRight size={14} /></span>
+          <Link href="/demo#recommendation" className="eval-template-link">See details <ArrowRight size={14} /></Link>
         </div>
       </div>
     </div>
@@ -170,7 +171,7 @@ export function LaunchTemplateEvalomics() {
           <small>Public beta</small>
         </Link>
         <nav>
-          <Link href="#product">Product</Link>
+          <Link href="#product-story">Product</Link>
           <Link href="#capabilities">Capabilities</Link>
           <Link href="/methodology">Methodology</Link>
           <Link href="/pricing">Pricing</Link>
@@ -186,7 +187,7 @@ export function LaunchTemplateEvalomics() {
           <div className="eval-template-hero-copy">
             <div className="eval-template-pill">
               <Sparkles size={13} /> Evidence-first AI economics
-              <span>Read methodology <ArrowRight size={12} /></span>
+              <Link href="/methodology">Read methodology <ArrowRight size={12} /></Link>
             </div>
             <h1>Make the invisible economics of AI visible.</h1>
             <p>
@@ -304,6 +305,8 @@ export function LaunchTemplateEvalomics() {
             </div>
           </article>
         </section>
+
+        <ProofMotion />
 
         <section className="eval-template-capabilities" id="capabilities">
           <span>Everything you need</span>
