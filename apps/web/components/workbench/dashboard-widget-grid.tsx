@@ -27,7 +27,7 @@ function spanClass(size: DashboardWidgetSize): string {
     case 'tall':
       return 'md:row-span-2';
     case 'lg':
-      return 'md:col-span-2 md:row-span-2';
+      return 'md:col-span-3';
     default:
       return '';
   }
@@ -151,7 +151,7 @@ export function DashboardWidgetGrid({
         </div>
       </div>
 
-      <div className="grid auto-rows-[minmax(150px,auto)] grid-cols-1 gap-3 md:grid-cols-4">
+      <div className="grid auto-rows-[minmax(154px,auto)] grid-cols-1 gap-3 md:grid-cols-3">
         {order.map((id) => {
           const item = itemById.get(id);
           if (item === undefined) return null;
