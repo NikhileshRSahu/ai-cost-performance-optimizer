@@ -25,6 +25,7 @@ export function Section2DashboardScroll() {
 
   return (
     <section
+      id="product-story"
       ref={containerRef}
       className="relative flex h-[60rem] items-center justify-center overflow-visible px-4 md:h-[80rem] md:px-8"
       aria-label="Evalomics AI economics dashboard"
