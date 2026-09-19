@@ -1,12 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Sparkles, X } from 'lucide-react';
+import { ArrowRight, Info, Sparkles, X } from 'lucide-react';
 import {
   useEffect,
   useState,
-  type KeyboardEvent,
-  type MouseEvent,
+   type MouseEvent,
   type ReactNode,
 } from 'react';
 
@@ -60,29 +59,31 @@ export function DashboardDrilldown({
     );
   }
 
-  function handleClick(event: MouseEvent<HTMLDivElement>) {
+  function handleCardMouseUp(event: MouseEvent<HTMLDivElement>) {
     if (isInteractive(event.target)) return;
-    setOpen(true);
-  }
-
-  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-    if (event.key !== 'Enter' && event.key !== ' ') return;
-    if (isInteractive(event.target)) return;
-    event.preventDefault();
     setOpen(true);
   }
 
   return (
     <>
       <div
-        className="h-full cursor-pointer rounded-[22px] outline-none transition focus-visible:ring-2 focus-visible:ring-sky-300/50"
-        role="button"
-        tabIndex={0}
-        aria-label={'Open details for ' + title}
-        onClick={handleClick}
-        onKeyDown={handleKeyDown}
+        className="relative h-full cursor-pointer rounded-[22px]"
+        role="group"
+        aria-label={eyebrow}
+        onMouseUp={handleCardMouseUp}
       >
         {children}
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            setOpen(true);
+          }}
+          className="absolute bottom-3 right-3 z-20 grid size-8 place-items-center rounded-full border border-white/[0.10] bg-[#0b0d11]/90 text-white/45 opacity-0 shadow-lg backdrop-blur transition hover:text-white focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/50 group-hover:opacity-100 md:opacity-0"
+          aria-label={'Open details for ' + title}
+        >
+          <Info className="size-3.5" />
+        </button>
       </div>
 
       {open ? (
