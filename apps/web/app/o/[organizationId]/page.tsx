@@ -584,7 +584,7 @@ export default async function CostDashboardPage({
               actionHref={`/o/${organizationId}/recommendations`}
               actionLabel="See calculation context"
             >
-
+            <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
                 Modeled upside
               </p>
@@ -637,7 +637,7 @@ export default async function CostDashboardPage({
               actionHref={`/o/${organizationId}/proof`}
               actionLabel="Inspect proof"
             >
-
+            <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
                 Verified savings
               </p>
@@ -667,7 +667,7 @@ export default async function CostDashboardPage({
               actionHref={`/o/${organizationId}/recommendations`}
               actionLabel="Open recommendation evidence"
             >
-
+            <section className="flex h-full flex-col overflow-auto rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
