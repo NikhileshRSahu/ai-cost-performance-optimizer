@@ -7,7 +7,7 @@ const baselineCsv = fileURLToPath(
 
 const JOURNEY_STATE_TIMEOUT_MS = 15_000;
 
-test('usage analysis opens with an AI Efficiency MRI and split confidence', async ({
+test('usage analysis opens with a customer-first optimization result', async ({
   page,
 }) => {
   const organizationId = 'journey-org';
@@ -25,15 +25,18 @@ test('usage analysis opens with an AI Efficiency MRI and split confidence', asyn
     new RegExp(`/o/${organizationId}\\?source=import`),
   );
   await expect(
-    page.getByRole('heading', { name: 'We analyzed your AI usage' }),
+    page.getByRole('heading', { name: 'Your AI spend at a glance' }),
   ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
+  await expect(page.getByText('Best change', { exact: true })).toBeVisible();
   await expect(
-    page.getByText('Recommended action', { exact: true }),
+    page.getByText('Estimated savings', { exact: true }),
   ).toBeVisible();
+  await expect(page.getByText('Is this safe?', { exact: true })).toBeVisible();
+  await expect(page.getByText('Next step', { exact: true })).toBeVisible();
   await expect(
     page.getByText('Detection confidence', { exact: true }),
-  ).toBeVisible();
+  ).toHaveCount(0);
   await expect(
     page.getByText('Savings confidence', { exact: true }),
-  ).toBeVisible();
+  ).toHaveCount(0);
 });
