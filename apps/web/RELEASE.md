@@ -19,3 +19,5 @@ Retry deployment for latest public-page visual system.
 Immediate redeploy requested for latest locked branch.
 
 Redeploy latest public ambient-shell fix.
+
+Production redeploy trigger after green release gate — 2026-09-19.
