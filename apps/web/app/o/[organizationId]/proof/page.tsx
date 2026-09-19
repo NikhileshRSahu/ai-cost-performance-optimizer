@@ -48,18 +48,18 @@ export default async function VerificationPage({
     <div className="workflow-page proof-page grid gap-6">
       <header className="workflow-header">
         <div>
-          <p className="eyebrow">Verify</p>
-          <h1>What has actually been proven?</h1>
+          <p className="eyebrow">Results & evidence</p>
+          <h1>How strong is the evidence behind this result?</h1>
           <p className="lede">
-            This screen separates measured production impact from opportunities
-            and benchmark results. If post-change evidence is not comparable,
-            Evalomics does not count the saving as Verified.
+            See what Evalomics found, what it evaluated, and whether post-change
+            production evidence has confirmed the result. Proof strengthens an
+            already useful recommendation rather than blocking it.
           </p>
         </div>
         <span className="trust-chip">
           {verified
             ? 'Verified production evidence'
-            : 'Verification incomplete'}
+            : 'Production proof pending'}
         </span>
       </header>
 
@@ -77,7 +77,7 @@ export default async function VerificationPage({
 
         <div className="rounded-2xl border border-amber-300/12 bg-amber-300/[0.035] p-5">
           <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.13em] text-amber-200/45">
-            Current state
+            Evaluation status
           </p>
           <p className="m-0 mt-3 text-lg font-semibold text-amber-50/82">
             {strongest?.stateLabel ?? 'No active finding'}
@@ -101,7 +101,7 @@ export default async function VerificationPage({
               }
             />
             <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.13em] text-white/30">
-              Verified net impact
+              Production result
             </p>
           </div>
           <p
@@ -112,7 +112,7 @@ export default async function VerificationPage({
             }
           >
             {pack.verifiedNetSavings === null || verifiedAmount === null
-              ? 'Not verified'
+              ? 'Pending after rollout'
               : `${pack.verifiedNetSavings.currency} ${verifiedAmount}`}
           </p>
         </div>
@@ -121,7 +121,7 @@ export default async function VerificationPage({
       {pack.limitations.length > 0 ? (
         <section className="rounded-2xl border border-amber-300/12 bg-amber-300/[0.035] p-5">
           <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-200/45">
-            Why verification is limited
+            What would strengthen this result
           </p>
           <ul className="mt-3 grid gap-1.5 pl-5 text-xs leading-5 text-amber-50/45">
             {pack.limitations.map((limitation) => (
@@ -156,8 +156,8 @@ export default async function VerificationPage({
             Evidence snapshot
           </p>
           <p className="m-0 mt-3 max-w-2xl text-sm leading-6 text-white/55">
-            No diagnostic evidence is available yet. Import usage evidence
-            before expecting a verification snapshot or downloadable proof pack.
+            No diagnostic evidence is available yet. Import usage evidence so
+            Evalomics can build an evidence-backed optimization result.
           </p>
         </section>
       )}
