@@ -296,9 +296,10 @@ export default async function CostDashboardPage({
                 Your data is now part of the Evalomics story.
               </h2>
               <p className="m-0 mt-2 max-w-3xl text-sm leading-6 text-white/50">
-                {query.accepted ?? '0'} usage rows were accepted. Evalomics
-                reconstructed the evidence, ranked supported opportunities, and
-                prepared the next decision below.
+                {query.accepted ?? '0'} usage rows analyzed → {moneyLabel(view.observedSpend)} spend
+                reconstructed → {view.recommendations.length} optimization signal
+                {view.recommendations.length === 1 ? '' : 's'} found → strongest opportunity:{' '}
+                {view.strongestAction?.title ?? 'still analyzing'}.
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-[10px] font-mono text-white/40">
                 <span className="rounded-full border border-white/[0.08] bg-black/15 px-3 py-1.5">
@@ -309,6 +310,9 @@ export default async function CostDashboardPage({
                 </span>
                 <span className="rounded-full border border-white/[0.08] bg-black/15 px-3 py-1.5">
                   warnings · {query.warnings ?? '0'}
+                </span>
+                <span className="rounded-full border border-white/[0.08] bg-black/15 px-3 py-1.5">
+                  next · {evaluationStatusLabel}
                 </span>
               </div>
             </section>
@@ -463,7 +467,7 @@ export default async function CostDashboardPage({
               items={[
                 { label: 'Observed', value: 'Usage + cost evidence loaded' },
                 {
-                  label: 'Potential',
+                  label: 'Found',
                   value:
                     view.strongestAction !== null
                       ? 'Opportunity identified'
