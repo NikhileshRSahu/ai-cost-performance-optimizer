@@ -27,7 +27,7 @@ export function Section2DashboardScroll() {
     <section
       ref={containerRef}
       className="relative flex h-[60rem] items-center justify-center overflow-visible px-4 md:h-[80rem] md:px-8"
-      aria-label="Evalomics product dashboard"
+      aria-label="Evalomics AI economics dashboard"
     >
       <div
         className="sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden"
