@@ -16,7 +16,9 @@ test('login page is usable when production auth is unavailable in local E2E', as
   ).toBeVisible();
 });
 
-test('chosen source survives the sign-in continuation path', async ({ page }) => {
+test('chosen source survives the sign-in continuation path', async ({
+  page,
+}) => {
   await page.goto(
     '/login?returnTo=%2Fstart%3Fmode%3Dconnect%26provider%3DOPENAI',
   );

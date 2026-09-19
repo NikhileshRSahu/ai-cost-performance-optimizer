@@ -21,7 +21,10 @@ test('public beta trust path is visible without authentication', async ({
     page.getByRole('link', { name: 'Explore live demo' }).first(),
   ).toBeVisible();
 
-  await page.getByRole('link', { name: 'Methodology', exact: true }).first().click();
+  await page
+    .getByRole('link', { name: 'Methodology', exact: true })
+    .first()
+    .click();
   await expect(
     page.getByRole('heading', {
       name: 'Every recommendation should survive an evidence audit.',
@@ -59,9 +62,11 @@ test('public CTA foregrounds remain readable on their backgrounds', async ({
 }) => {
   await page.goto('/');
 
-  const heroPrimary = page.getByRole('link', {
-    name: 'Analyze my AI usage',
-  }).first();
+  const heroPrimary = page
+    .getByRole('link', {
+      name: 'Analyze my AI usage',
+    })
+    .first();
   await expect(heroPrimary).toBeVisible();
   const heroStyles = await heroPrimary.evaluate((element) => {
     const style = getComputedStyle(element);

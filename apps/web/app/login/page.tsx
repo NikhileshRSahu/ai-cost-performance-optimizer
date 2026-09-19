@@ -40,8 +40,9 @@ export default async function LoginPage({
     !returnTo.startsWith('//')
       ? returnTo
       : '/start';
-  const backToChosenFlow =
-    callbackPath.startsWith('/start') ? callbackPath : '/start';
+  const backToChosenFlow = callbackPath.startsWith('/start')
+    ? callbackPath
+    : '/start';
   const requestHeaders = await headers();
   const host = requestHeaders.get('host');
   const authConfigured = hasSelfHostedAuthConfiguration();
