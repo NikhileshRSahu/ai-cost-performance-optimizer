@@ -372,7 +372,7 @@ export function WorkspaceModelCalculator({
         </div>
 
         <div className="mt-5 flex flex-wrap gap-2">
-          {result.delta < 0 && cheapestCandidate !== undefined ? (
+          {result.delta < 0 ? (
             <button
               type="button"
               onClick={() => {
