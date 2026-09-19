@@ -1,11 +1,33 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { ArrowRight, ExternalLink } from 'lucide-react';
+import { createDatabase } from '../../../../../../src/persistence/database';
+import { buildFounderDashboardView } from '../../../../../../src/workbench/dashboard-view';
 import { WorkspaceModelCalculator } from '../../../../components/workbench/workspace-model-calculator';
+import { loadFounderDashboardEvidence } from '../../../../lib/dashboard-data';
+import { resolveRuntimeSession } from '../../../../lib/runtime-session';
 
 export default async function ModelCalculatorPage({
   params,
 }: Readonly<{ params: Promise<{ organizationId: string }> }>) {
   const { organizationId } = await params;
+  const session = await resolveRuntimeSession();
+  const databaseUrl = process.env.DATABASE_URL;
+  if (session === null || databaseUrl === undefined) redirect('/unauthorized');
+
+  const database = createDatabase(databaseUrl);
+  let view;
+  try {
+    view = buildFounderDashboardView(
+      await loadFounderDashboardEvidence(database.db, session, organizationId),
+    );
+  } finally {
+    await database.close();
+  }
+
+  const currentModel = view.bestFirstMove?.currentConfigurationId ?? null;
+  const workloadName = view.bestFirstMove?.workloadName ?? null;
+
   return (
     <div className="space-y-7">
       <section>
@@ -46,7 +68,10 @@ export default async function ModelCalculatorPage({
         </div>
       </section>
 
-      <WorkspaceModelCalculator />
+      <WorkspaceModelCalculator
+        currentModel={currentModel}
+        workloadName={workloadName}
+      />
 
       <section className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
