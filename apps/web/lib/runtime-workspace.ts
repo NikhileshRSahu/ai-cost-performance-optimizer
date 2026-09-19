@@ -30,7 +30,7 @@ export async function resolveRuntimeWorkspace():Promise<RuntimeWorkspace|null>{
   const email=webSession?.user?.email?.trim().toLowerCase();
   if(!email) return null;
   const name=webSession?.user?.name?.trim() || email;
-  const providerSubject=(webSession?.user as (typeof webSession.user & {providerSubject?:string}) | undefined)?.providerSubject?.trim() || email;
+  const providerSubject=(webSession?.user as ({providerSubject?:string} & Record<string,unknown>) | undefined)?.providerSubject?.trim() || email;
   const database=createDatabase(databaseUrl());
   try{
     return await database.db.transaction(async(tx)=>{
