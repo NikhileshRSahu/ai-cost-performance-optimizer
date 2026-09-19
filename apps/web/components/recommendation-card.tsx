@@ -123,7 +123,7 @@ export function RecommendationCard({
 
         {recommendation.principalLimitation !== null ? (
           <details className="mt-4 rounded-xl border border-white/[0.06] bg-white/[0.018] px-4 py-3">
-            <summary className="cursor-pointer text-xs font-semibold text-white/48">
+            <summary className="flex min-h-6 cursor-pointer items-center text-xs font-semibold text-white/48">
               <Gauge className="mr-2 inline size-3.5" />
               Why confidence is not higher
             </summary>
