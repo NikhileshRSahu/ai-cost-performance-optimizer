@@ -34,18 +34,23 @@ export async function submitBenchmark(formData: FormData): Promise<never> {
   const configurations = [
     ...new Set(cases.map((record) => record.configurationId)),
   ];
-  const evaluators = [...new Set(cases.map((record) => record.evaluatorVersion))];
+  const evaluators = [
+    ...new Set(cases.map((record) => record.evaluatorVersion)),
+  ];
   const requestedCurrent = textEntry(formData, 'currentConfigurationId').trim();
   const requestedCandidate = textEntry(
     formData,
     'candidateConfigurationId',
   ).trim();
   const currentConfigurationId =
-    requestedCurrent.length > 0 ? requestedCurrent : (configurations.at(0) ?? '');
+    requestedCurrent.length > 0
+      ? requestedCurrent
+      : (configurations.at(0) ?? '');
   const candidateConfigurationId =
     requestedCandidate.length > 0
       ? requestedCandidate
-      : (configurations.find((value) => value !== currentConfigurationId) ?? '');
+      : (configurations.find((value) => value !== currentConfigurationId) ??
+        '');
   const evaluatorVersion =
     textEntry(formData, 'evaluatorVersion').trim() || (evaluators.at(0) ?? '');
 

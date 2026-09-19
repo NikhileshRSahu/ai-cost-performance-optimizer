@@ -227,7 +227,10 @@ export default async function BenchmarkPage({
                     defaultValue={knownCurrentConfiguration}
                     placeholder="Auto-detect from uploaded CSV"
                   />
-                  <small>Leave blank to infer the first configuration in the paired file.</small>
+                  <small>
+                    Leave blank to infer the first configuration in the paired
+                    file.
+                  </small>
                 </label>
                 <label>
                   <span>Candidate configuration</span>
@@ -236,12 +239,21 @@ export default async function BenchmarkPage({
                     defaultValue={knownCandidateConfiguration}
                     placeholder="Auto-detect from uploaded CSV"
                   />
-                  <small>Leave blank to infer the other configuration in the paired file.</small>
+                  <small>
+                    Leave blank to infer the other configuration in the paired
+                    file.
+                  </small>
                 </label>
                 <label>
                   <span>Evaluator version</span>
-                  <input name="evaluatorVersion" placeholder="Auto-detect from CSV" />
-                  <small>Leave blank to use the evaluator version in the uploaded cases.</small>
+                  <input
+                    name="evaluatorVersion"
+                    placeholder="Auto-detect from CSV"
+                  />
+                  <small>
+                    Leave blank to use the evaluator version in the uploaded
+                    cases.
+                  </small>
                 </label>
                 <label>
                   <span>Currency</span>

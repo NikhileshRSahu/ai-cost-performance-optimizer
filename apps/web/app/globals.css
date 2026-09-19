@@ -5285,7 +5285,6 @@ samp,
   color: #fecdd3;
 }
 
-
 /* Final accessibility safeguards for mixed light/dark recovery and telemetry surfaces. */
 .org-workbench .telemetry-page .mri-action .telemetry-token-kicker {
   color: #334155 !important;
