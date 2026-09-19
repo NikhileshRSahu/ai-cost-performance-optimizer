@@ -15,6 +15,7 @@ import {
   X,
 } from 'lucide-react';
 import { EvalomicsMark } from '../evalomics-mark';
+import { EvalomicsCopilot } from './evalomics-copilot';
 import { cn } from '../../lib/utils';
 
 const primaryNavigation = [
@@ -217,6 +218,7 @@ export function WorkbenchShell({
           {children}
         </div>
       </div>
+      <EvalomicsCopilot organizationId={organizationId} />
     </div>
   );
 }
