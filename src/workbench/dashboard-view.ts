@@ -100,7 +100,7 @@ export type DashboardRecommendationView = Readonly<
     detectionConfidence: DashboardConfidenceBand;
     savingsConfidence: SavingsConfidence;
     confidenceBand: DashboardConfidenceBand;
-    stateLabel: 'Potential saving' | 'Tested saving' | 'Verified saving';
+    stateLabel: 'Found' | 'Evaluated' | 'Proven';
   }
 >;
 
@@ -148,11 +148,11 @@ function savingsStateLabel(
 ): DashboardRecommendationView['stateLabel'] {
   switch (state) {
     case 'OPPORTUNITY':
-      return 'Potential saving';
+      return 'Found';
     case 'TESTED':
-      return 'Tested saving';
+      return 'Evaluated';
     case 'VERIFIED':
-      return 'Verified saving';
+      return 'Proven';
   }
 }
 
