@@ -1,0 +1,33 @@
+name: Format story release once
+
+on:
+  push:
+    paths:
+      - '.github/workflows/format-story-release-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Format story release files
+        run: |
+          npx prettier --write             "apps/web/app/o/[organizationId]/page.tsx"             "apps/web/app/o/[organizationId]/recommendations/page.tsx"             "apps/web/app/o/[organizationId]/proof/page.tsx"             "apps/web/app/o/[organizationId]/import/page.tsx"             "apps/web/app/o/[organizationId]/import/action.ts"             "apps/web/app/o/[organizationId]/prompts/page.tsx"             "apps/web/app/o/[organizationId]/calculator/page.tsx"             "apps/web/app/methodology/page.tsx"             "apps/web/app/pricing/page.tsx"             "apps/web/components/workbench/workbench-shell.tsx"             "apps/web/components/workbench/result-journey.tsx"             "apps/web/components/workbench/workspace-model-calculator.tsx"             "apps/web/components/recommendation-card.tsx"             "apps/web/components/evidence-state-pill.tsx"
+      - run: rm .github/workflows/format-story-release-once.yml
+      - name: Commit formatted story release
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "style: format final story release"
+          git push origin HEAD:main
