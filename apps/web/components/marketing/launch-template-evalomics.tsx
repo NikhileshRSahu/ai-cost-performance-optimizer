@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { EvalomicsMark } from '../evalomics-mark';
 import { HeroIntelligence } from './hero-intelligence';
+import { Section2ImageScroll } from './section2-image-scroll';
 
 const capabilities = [
   ['Multi-provider ingestion', 'OpenAI, Anthropic, and CSV usage in one evidence model.', CloudUpload],
@@ -229,6 +230,8 @@ export function LaunchTemplateEvalomics() {
             <div className="eval-template-hero-note">From AI usage<br />to verified savings <ArrowRight size={15} /></div>
           </div>
         </section>
+
+        <Section2ImageScroll />
 
         <section className="eval-template-intro">
           <span>How Evalomics works</span>
