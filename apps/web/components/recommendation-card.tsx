@@ -13,15 +13,15 @@ export function RecommendationCard({
   const hasSaving = recommendation.saving !== null;
   const saving = hasSaving
     ? recommendation.saving.currency + ' ' + recommendation.saving.amount
-    : 'Not measured yet';
+    : 'Estimate pending';
   const savingLabel =
     recommendation.state === 'VERIFIED'
-      ? 'Verified net impact'
+      ? 'Proven result'
       : recommendation.state === 'TESTED'
-        ? 'Tested saving'
+        ? 'Evaluated saving'
         : recommendation.savingsConfidence === 'MODELED'
-          ? 'Modeled upside'
-          : 'Saving status';
+          ? 'Estimated saving'
+          : 'Savings estimate';
 
   const primaryHref =
     recommendation.state === 'TESTED' && recommendation.decision === 'OPTIMIZE'
@@ -33,7 +33,7 @@ export function RecommendationCard({
     recommendation.state === 'TESTED' && recommendation.decision === 'OPTIMIZE'
       ? 'Prepare safe rollout'
       : recommendation.state === 'VERIFIED'
-        ? 'View verified savings'
+        ? 'View proven result'
         : 'Review Evalomics evaluation';
 
   return (
@@ -102,9 +102,9 @@ export function RecommendationCard({
       <div className="flex flex-col gap-3 border-t border-white/[0.07] bg-black/15 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-7">
         <p className="m-0 text-xs text-white/35">
           {recommendation.state === 'VERIFIED'
-            ? 'Production evidence supports this claim.'
+            ? 'Production evidence confirms this result.'
             : recommendation.state === 'TESTED'
-              ? 'Evalomics benchmark supports this candidate; production proof is next.'
+              ? 'Evalomics evaluated this candidate successfully; staged implementation is next.'
               : 'Evalomics found the opportunity. It will evaluate the candidate when comparable evidence is available.'}
         </p>
         <div className="flex flex-wrap items-center gap-2">
