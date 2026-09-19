@@ -77,10 +77,33 @@ async function reachVerification(
     .getByRole('link', { name: 'Measure exact savings', exact: true })
     .click();
 
+  await expect(
+    page.getByRole('heading', {
+      name: 'Test whether a cheaper setup is safe',
+    }),
+  ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
+
   const defineConstraints = page.getByRole('link', {
     name: 'Define constraints',
   });
-  if (await defineConstraints.isVisible()) {
+  const benchmarkUpload = page.getByLabel(/Upload paired test cases/i);
+
+  const benchmarkState = await expect
+    .poll(
+      async () => {
+        if (await benchmarkUpload.isVisible()) return 'ready';
+        if (await defineConstraints.isVisible()) return 'constraints';
+        return 'loading';
+      },
+      { timeout: JOURNEY_STATE_TIMEOUT_MS },
+    )
+    .not.toBe('loading')
+    .then(async () => {
+      if (await benchmarkUpload.isVisible()) return 'ready';
+      return 'constraints';
+    });
+
+  if (benchmarkState === 'constraints') {
     await defineConstraints.click();
     await page.getByLabel('Workload name').fill('classification');
     await page.getByLabel('Environment').fill('production');
@@ -98,17 +121,18 @@ async function reachVerification(
     await page
       .getByRole('button', { name: 'Save safety floor and continue' })
       .click();
+
+    await expect(
+      page.getByRole('heading', {
+        name: 'Test whether a cheaper setup is safe',
+      }),
+    ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
   }
 
-  await expect(
-    page.getByRole('heading', {
-      name: 'Test whether a cheaper setup is safe',
-    }),
-  ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
-  const benchmarkChooserPromise = page.waitForEvent('filechooser');
-  await page.locator('label.benchmark-upload').click();
-  const benchmarkChooser = await benchmarkChooserPromise;
-  await benchmarkChooser.setFiles(benchmarkCsv);
+  await expect(benchmarkUpload).toBeVisible({
+    timeout: JOURNEY_STATE_TIMEOUT_MS,
+  });
+  await benchmarkUpload.setInputFiles(benchmarkCsv);
   if (demo) {
     await page.locator('input[name="isDemo"]').check();
   }
@@ -237,6 +261,7 @@ test('non-demo customer path reaches verified savings without demo provenance', 
 });
 
 test('failed post-change quality never becomes verified', async ({ page }) => {
+  test.setTimeout(JOURNEY_TEST_TIMEOUT_MS);
   await reachVerification(page, 'journey-bad-org');
   await submitPostChange(page, '0.80');
 
