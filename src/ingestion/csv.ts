@@ -74,6 +74,7 @@ function normalizeCompatibilityCsv(rows: string[][]): string[][] {
   const canonicalHeaders: string[] = [];
   const sources: Array<
     | { kind: 'source'; index: number }
+    | { kind: 'timestamp_start'; index: number }
     | { kind: 'timestamp_end'; startIndex: number }
     | { kind: 'currency' }
     | {
@@ -108,7 +109,11 @@ function normalizeCompatibilityCsv(rows: string[][]): string[][] {
       throw new Error(`DUPLICATE_CANONICAL_COLUMN:${canonical}`);
     }
     canonicalHeaders.push(canonical);
-    sources.push({ kind: 'source', index });
+    sources.push(
+      header === 'timestamp'
+        ? { kind: 'timestamp_start', index }
+        : { kind: 'source', index },
+    );
   }
 
   const timestampIndex = rawHeaders.indexOf('timestamp');
@@ -158,15 +163,27 @@ function normalizeCompatibilityCsv(rows: string[][]): string[][] {
   const normalizedRows = rows.slice(1).map((row) =>
     sources.map((source) => {
       if (source.kind === 'source') return row[source.index] ?? '';
+      if (source.kind === 'timestamp_start') {
+        const raw = (row[source.index] ?? '').trim();
+        if (raw === '') return raw;
+        if (/(Z|[+-]\d\d:\d\d)$/.test(raw)) return raw;
+
+        const parsed = Date.parse(raw + 'Z');
+        return Number.isFinite(parsed) ? new Date(parsed).toISOString() : raw;
+      }
       if (source.kind === 'currency') return 'USD';
       if (source.kind === 'granularity') return 'REQUEST';
 
       if (source.kind === 'timestamp_end') {
-        const start = row[source.startIndex] ?? '';
-        const parsed = Date.parse(start);
+        const rawStart = (row[source.startIndex] ?? '').trim();
+        const normalizedStart =
+          rawStart !== '' && !/(Z|[+-]\d\d:\d\d)$/.test(rawStart)
+            ? rawStart + 'Z'
+            : rawStart;
+        const parsed = Date.parse(normalizedStart);
         return Number.isFinite(parsed)
           ? new Date(parsed + 1).toISOString()
-          : start;
+          : rawStart;
       }
 
       const successValue =
