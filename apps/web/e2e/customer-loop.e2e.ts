@@ -66,7 +66,7 @@ async function reachVerification(
     page.getByText('Savings estimate', { exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByText('Estimate pending', { exact: true }),
+    page.getByText('Estimate pending', { exact: true }).first(),
   ).toBeVisible();
   await expect(
     page.getByRole('link', { name: 'Review Evalomics evaluation' }),
