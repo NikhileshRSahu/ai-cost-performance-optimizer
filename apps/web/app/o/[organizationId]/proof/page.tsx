@@ -48,12 +48,12 @@ export default async function VerificationPage({
     <div className="workflow-page proof-page grid gap-6">
       <header className="workflow-header">
         <div>
-          <p className="eyebrow">Results & evidence</p>
-          <h1>How strong is the evidence behind this result?</h1>
+          <p className="eyebrow">Production result</p>
+          <h1>What did the change actually achieve?</h1>
           <p className="lede">
-            See what Evalomics found, what it evaluated, and whether post-change
-            production evidence has confirmed the result. Proof strengthens an
-            already useful recommendation rather than blocking it.
+            See the measured production outcome after rollout. If the change has
+            not been deployed yet, Evalomics will show exactly what is still
+            missing instead of pretending there is a result.
           </p>
         </div>
         <span className="trust-chip">
@@ -77,7 +77,7 @@ export default async function VerificationPage({
 
         <div className="rounded-2xl border border-amber-300/12 bg-amber-300/[0.035] p-5">
           <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.13em] text-amber-200/45">
-            Evaluation status
+            Can I trust this yet?
           </p>
           <p className="m-0 mt-3 text-lg font-semibold text-amber-50/82">
             {strongest?.stateLabel ?? 'No active finding'}
@@ -101,7 +101,7 @@ export default async function VerificationPage({
               }
             />
             <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.13em] text-white/30">
-              Production result
+              What changed in production?
             </p>
           </div>
           <p
