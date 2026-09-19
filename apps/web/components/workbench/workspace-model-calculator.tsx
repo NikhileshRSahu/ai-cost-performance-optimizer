@@ -232,7 +232,7 @@ export function WorkspaceModelCalculator() {
           >
             <div className="flex items-center justify-between gap-3">
               <p className="m-0 text-[10px] uppercase tracking-[0.14em] text-slate-500">
-                Modeled monthly delta
+                Estimated monthly difference
               </p>
               {result.delta >= 0 ? (
                 <ArrowDownRight className="size-4 text-emerald-300" />
@@ -257,9 +257,9 @@ export function WorkspaceModelCalculator() {
         </div>
 
         <p className="m-0 mt-5 text-[11px] leading-5 text-slate-500">
-          Planning estimate only. This compares the token rates and workload
-          values you entered; it does not prove equivalent quality, latency, or
-          production savings.
+          This is the economics part of the evaluation. Evalomics still checks
+          quality, latency, and failure-rate evidence before a cheaper candidate
+          becomes a recommended production change.
         </p>
       </section>
     </div>
