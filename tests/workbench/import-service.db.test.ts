@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { createDatabase } from '../../src/persistence/database.js';
+import { sha256Bytes } from '../../src/usage/fingerprint.js';
 import {
   importRuns,
   organizations,
@@ -114,6 +115,43 @@ describe('customer usage import service', () => {
     expect(second.reused).toBe(true);
     expect(await database.db.select().from(importRuns)).toHaveLength(1);
     expect(await database.db.select().from(usageRecords)).toHaveLength(28);
+  });
+
+  it('reprocesses the same checksum when the previous import failed', async () => {
+    const bytes = await fixture('fixtures/demo/customer-loop-tough.csv');
+    const checksum = sha256Bytes(bytes);
+
+    await database.db.insert(importRuns).values({
+      id: `import-${checksum.slice(0, 24)}`,
+      organizationId: 'org-a',
+      source: 'CSV',
+      checksum,
+      status: 'FAILED',
+      rangeStart: null,
+      rangeEnd: null,
+      receivedAt: '2026-09-13T18:00:00Z',
+      acceptedRows: 0,
+      skippedRows: 0,
+      rejectedRows: 1,
+      warningCount: 0,
+      safeErrorCategory: 'ALL_ROWS_REJECTED',
+      isDemo: true,
+    });
+
+    const result = await importCustomerUsage({
+      db: database.db,
+      session: owner,
+      organizationId: 'org-a',
+      fileName: 'customer-loop-tough.csv',
+      bytes,
+      isDemo: true,
+      receivedAt: '2026-09-13T18:30:00Z',
+    });
+
+    expect(result.blocked).toBe(false);
+    expect(result.reused).toBe(false);
+    expect(result.accepted).toBeGreaterThan(0);
+    expect(await database.db.select().from(importRuns)).toHaveLength(1);
   });
 
   it('rejects a viewer before writing evidence', async () => {
