@@ -115,7 +115,9 @@ export function DashboardDrilldown({
               </div>
               <button
                 type="button"
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setOpen(false);
+                }}
                 className="grid size-10 shrink-0 place-items-center rounded-full border border-white/[0.10] bg-white/[0.035] text-white/55 transition hover:text-white"
                 aria-label="Close details"
               >
