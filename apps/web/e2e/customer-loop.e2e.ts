@@ -62,7 +62,9 @@ async function reachVerification(
   await expect(
     page.getByText('Recommended action', { exact: true }),
   ).toBeVisible();
-  await expect(page.getByText('Savings estimate', { exact: true })).toBeVisible();
+  await expect(
+    page.getByText('Savings estimate', { exact: true }),
+  ).toBeVisible();
   await expect(
     page.getByText('Estimate pending', { exact: true }),
   ).toBeVisible();
@@ -72,11 +74,11 @@ async function reachVerification(
   await expectAccessible(page);
 
   // Optional proof follows the same customer-facing path as the product.
-  await page
-    .getByRole('link', { name: 'Review Evalomics evaluation' })
-    .click();
+  await page.getByRole('link', { name: 'Review Evalomics evaluation' }).click();
   await expect(
-    page.getByRole('heading', { name: 'Let Evalomics evaluate this candidate' }),
+    page.getByRole('heading', {
+      name: 'Let Evalomics evaluate this candidate',
+    }),
   ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
   await page
     .getByRole('link', {
