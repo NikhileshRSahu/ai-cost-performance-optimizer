@@ -1,0 +1,33 @@
+name: Format final accessibility fixes once
+
+on:
+  push:
+    paths:
+      - '.github/workflows/format-a11y-green-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Format final accessibility files
+        run: |
+          npx prettier --write             "apps/web/components/workbench/dashboard-drilldown.tsx"             "apps/web/components/recommendation-card.tsx"             "apps/web/app/o/[organizationId]/page.tsx"             "apps/web/e2e/customer-loop.e2e.ts"
+      - run: rm .github/workflows/format-a11y-green-once.yml
+      - name: Commit formatted fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "style: format final accessibility fixes"
+          git push origin HEAD:main
