@@ -3836,3 +3836,91 @@ body {
 }
 .recovery-state h1 { color: #fff; }
 .recovery-state .lede { color: rgba(255,255,255,.45); }
+
+
+/* Interactive evidence dashboard — adapted from the draggable widget motion reference. */
+.eval-metric-widget {
+  position: relative;
+  min-height: 174px;
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-y;
+  overflow: hidden;
+  border: 1px solid var(--eval-border);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 78% 18%, rgba(99,222,244,.045), transparent 34%),
+    linear-gradient(145deg, rgba(15,23,33,.97), rgba(8,12,17,.99));
+  padding: 1.25rem;
+  color: rgba(255,255,255,.86);
+  box-shadow: inset 0 1px rgba(255,255,255,.025), 0 14px 42px rgba(0,0,0,.12);
+  will-change: transform;
+}
+.eval-metric-widget:active { cursor: grabbing; }
+.eval-metric-widget--potential {
+  border-color: rgba(240,163,91,.16);
+  background:
+    radial-gradient(circle at 80% 12%, rgba(240,163,91,.08), transparent 34%),
+    linear-gradient(145deg, rgba(15,23,33,.97), rgba(8,12,17,.99));
+}
+.eval-metric-widget--tested {
+  border-color: rgba(147,180,255,.16);
+  background:
+    radial-gradient(circle at 80% 12%, rgba(147,180,255,.07), transparent 34%),
+    linear-gradient(145deg, rgba(15,23,33,.97), rgba(8,12,17,.99));
+}
+.eval-metric-widget--verified {
+  border-color: rgba(110,231,183,.18);
+  background:
+    radial-gradient(circle at 80% 12%, rgba(110,231,183,.08), transparent 34%),
+    linear-gradient(145deg, rgba(15,23,33,.97), rgba(8,12,17,.99));
+}
+.eval-metric-widget__state {
+  border: 1px solid rgba(255,255,255,.075);
+  border-radius: 999px;
+  background: rgba(255,255,255,.025);
+  padding: .32rem .48rem;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 9px;
+  font-weight: 760;
+  letter-spacing: .09em;
+  color: rgba(255,255,255,.42);
+}
+.eval-metric-widget--potential .eval-metric-widget__state { color: var(--eval-amber); }
+.eval-metric-widget--tested .eval-metric-widget__state { color: var(--eval-tested); }
+.eval-metric-widget--verified .eval-metric-widget__state { color: var(--eval-verified); }
+.eval-metric-widget__grip {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 14px;
+  letter-spacing: .08em;
+  color: rgba(255,255,255,.18);
+}
+.eval-metric-widget__label {
+  margin: 1.45rem 0 0;
+  font-size: 10px;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: rgba(255,255,255,.32);
+}
+.eval-metric-widget__value {
+  margin: .5rem 0 0;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: clamp(1.45rem,2.2vw,2rem);
+  line-height: 1;
+  letter-spacing: -.045em;
+  color: #fff;
+}
+.eval-metric-widget--potential .eval-metric-widget__value { color: var(--eval-amber); }
+.eval-metric-widget--tested .eval-metric-widget__value { color: var(--eval-tested); }
+.eval-metric-widget--verified .eval-metric-widget__value { color: var(--eval-verified); }
+.eval-metric-widget__note {
+  margin: .62rem 0 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgba(255,255,255,.28);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eval-metric-widget { cursor: default; }
+}
