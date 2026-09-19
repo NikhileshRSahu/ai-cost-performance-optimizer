@@ -64,6 +64,34 @@ describe('canonical CSV ingestion', () => {
     expect(result.run.accepted).toBe(2);
   });
 
+  it('accepts common request-level AI usage export aliases', () => {
+    const csv =
+      'timestamp,provider,model,request_id,workspace,user_or_service,input_tokens,output_tokens,cached_input_tokens,requests,cost_usd,latency_ms,status,retry_count,tool_calls,workflow,prompt_category,quality_score,success\n' +
+      '2026-09-19T10:00:00Z,OpenAI,gpt-4o,req_001,support,support_agent,1200,240,0,1,0.42,1380,success,0,2,support_answer,generation,0.94,true\n';
+
+    const parsed = parseUsageCsv(enc.encode(csv), 'org');
+
+    expect(parsed.records).toHaveLength(1);
+    expect(parsed.records[0]).toMatchObject({
+      provider: 'OpenAI',
+      model: 'gpt-4o',
+      sourceEventId: 'req_001',
+      workspace: 'support',
+      workload: 'support_answer',
+      requests: '1',
+      totalCost: '0.42',
+      currency: 'USD',
+      latencyP50Ms: '1380',
+      successes: '1',
+      failures: '0',
+      granularity: 'REQUEST',
+    });
+    expect(parsed.records[0]?.intervalStart).toBe('2026-09-19T10:00:00Z');
+    expect(Date.parse(parsed.records[0]?.intervalEnd ?? '')).toBe(
+      Date.parse('2026-09-19T10:00:00Z') + 1,
+    );
+  });
+
   it('rejects server-owned and unknown CSV columns', () => {
     expect(() =>
       parseUsageCsv(
