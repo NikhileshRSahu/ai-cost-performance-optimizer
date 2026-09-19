@@ -1,4 +1,1 @@
-export {
-  requireOrganizationContext,
-  type OrganizationContext,
-} from '../../../src/workbench/web-session';
+export { requireOrganizationContext } from '../../../src/workbench/web-session';
