@@ -8,6 +8,7 @@ import {
   Shapes,
   Sparkles,
 } from 'lucide-react';
+import { PromptEvaluationWorkbench } from '../../../../components/workbench/prompt-evaluation-workbench';
 
 const tips = [
   {
@@ -80,7 +81,13 @@ export default async function PromptOptimizerPage({
         </div>
       </section>
 
-      <section className="grid gap-4 lg:grid-cols-2">
+      <PromptEvaluationWorkbench />
+
+      <section>
+        <p className="m-0 mb-3 font-mono text-[9px] font-semibold uppercase tracking-[0.15em] text-white/30">
+          Supporting patterns
+        </p>
+        <div className="grid gap-4 lg:grid-cols-2">
         {tips.map(({ icon: Icon, category, title, before, after, note }) => (
           <article
             key={title}
@@ -120,6 +127,7 @@ export default async function PromptOptimizerPage({
             <p className="mt-4 text-xs leading-5 text-slate-500">{note}</p>
           </article>
         ))}
+        </div>
       </section>
 
       <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-4 text-xs leading-5 text-slate-500">
