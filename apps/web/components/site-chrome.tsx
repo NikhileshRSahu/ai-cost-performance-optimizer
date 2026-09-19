@@ -29,7 +29,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
   ] as const;
 
   return (
-    <>
+    <div className="eval-ambient-page">
       <header className="eval-public-header sticky top-0 z-50 px-3 py-3 backdrop-blur-2xl">
         <div className="mx-auto flex min-h-12 w-[min(1180px,100%)] items-center justify-between gap-5">
           <Link
@@ -132,6 +132,6 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
           </nav>
         </div>
       </footer>
-    </>
+    </div>
   );
 }
