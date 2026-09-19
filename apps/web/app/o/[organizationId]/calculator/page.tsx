@@ -39,8 +39,8 @@ export default async function ModelCalculatorPage({
             Would switching models actually help?
           </h1>
           <p className="m-0 mt-2 max-w-2xl text-sm leading-6 text-white/42">
-            Compare your current workload with another model. Evalomics will tell
-            you whether the switch saves money or makes things worse.
+            Compare your current workload with another model. Evalomics will
+            tell you whether the switch saves money or makes things worse.
           </p>
         </div>
         <Link
@@ -55,7 +55,6 @@ export default async function ModelCalculatorPage({
         currentModel={currentModel}
         workloadName={workloadName}
       />
-
     </div>
   );
 }

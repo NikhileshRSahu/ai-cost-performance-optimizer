@@ -136,24 +136,24 @@ export function DashboardDrilldown({
                   The numbers behind this answer
                 </p>
                 <div className="grid gap-3 sm:grid-cols-2">
-                {items.map((item) => (
-                  <article
-                    key={item.label}
-                    className="rounded-2xl border border-white/[0.08] bg-black/20 p-4"
-                  >
-                    <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-white/35">
-                      {item.label}
-                    </p>
-                    <p className="m-0 mt-2 font-mono text-base text-white">
-                      {item.value}
-                    </p>
-                    {item.note ? (
-                      <p className="m-0 mt-2 text-xs leading-5 text-white/38">
-                        {item.note}
+                  {items.map((item) => (
+                    <article
+                      key={item.label}
+                      className="rounded-2xl border border-white/[0.08] bg-black/20 p-4"
+                    >
+                      <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-white/35">
+                        {item.label}
                       </p>
-                    ) : null}
-                  </article>
-                ))}
+                      <p className="m-0 mt-2 font-mono text-base text-white">
+                        {item.value}
+                      </p>
+                      {item.note ? (
+                        <p className="m-0 mt-2 text-xs leading-5 text-white/38">
+                          {item.note}
+                        </p>
+                      ) : null}
+                    </article>
+                  ))}
                 </div>
               </div>
 
@@ -178,43 +178,44 @@ export function DashboardDrilldown({
 
               <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.07] pt-2">
                 <p className="m-0 max-w-sm text-xs leading-5 text-white/28">
-                  Need the reasoning in plain language? Evalomics AI already has this exact result attached.
+                  Need the reasoning in plain language? Evalomics AI already has
+                  this exact result attached.
                 </p>
                 <div className="flex flex-wrap justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    window.dispatchEvent(
-                      new CustomEvent('evalomics:ask', {
-                        detail: {
-                          context:
-                            eyebrow +
-                            ': ' +
-                            title +
-                            '. ' +
-                            summary +
-                            ' Evalomics identified: ' +
-                            insight +
-                            ' Next step: ' +
-                            nextStep,
-                        },
-                      }),
-                    );
-                    setOpen(false);
-                  }}
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-sky-300/15 bg-sky-300/[0.05] px-4 py-3 text-sm font-semibold text-sky-200"
-                >
-                  <Sparkles className="size-4" />
-                  Ask Evalomics about this
-                </button>
-                {actionHref && actionLabel ? (
-                  <Link
-                    href={actionHref}
-                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 no-underline"
+                  <button
+                    type="button"
+                    onClick={() => {
+                      window.dispatchEvent(
+                        new CustomEvent('evalomics:ask', {
+                          detail: {
+                            context:
+                              eyebrow +
+                              ': ' +
+                              title +
+                              '. ' +
+                              summary +
+                              ' Evalomics identified: ' +
+                              insight +
+                              ' Next step: ' +
+                              nextStep,
+                          },
+                        }),
+                      );
+                      setOpen(false);
+                    }}
+                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-sky-300/15 bg-sky-300/[0.05] px-4 py-3 text-sm font-semibold text-sky-200"
                   >
-                    {actionLabel} <ArrowRight className="size-4" />
-                  </Link>
-                ) : null}
+                    <Sparkles className="size-4" />
+                    Ask Evalomics about this
+                  </button>
+                  {actionHref && actionLabel ? (
+                    <Link
+                      href={actionHref}
+                      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 no-underline"
+                    >
+                      {actionLabel} <ArrowRight className="size-4" />
+                    </Link>
+                  ) : null}
                 </div>
               </div>
             </div>
