@@ -92,9 +92,9 @@ export function WorkspaceModelCalculator({
     setOutputTokens('250');
     setCurrentInputRate(matchedCurrent?.inputPerMillionUsd ?? '3');
     setCurrentOutputRate(matchedCurrent?.outputPerMillionUsd ?? '15');
-    setCandidatePresetId(defaultCandidate?.id ?? '');
-    setCandidateInputRate(defaultCandidate?.inputPerMillionUsd ?? '1.5');
-    setCandidateOutputRate(defaultCandidate?.outputPerMillionUsd ?? '8');
+    setCandidatePresetId(defaultCandidate.id);
+    setCandidateInputRate(defaultCandidate.inputPerMillionUsd);
+    setCandidateOutputRate(defaultCandidate.outputPerMillionUsd);
   }
 
   return (
