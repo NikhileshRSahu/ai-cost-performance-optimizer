@@ -102,7 +102,27 @@ export function StartFlow({
           </p>
         </div>
 
-        <div className="relative grid gap-4 px-6 pb-7 pt-5 sm:px-8 sm:pb-9 lg:grid-cols-3">
+        <div className="relative px-6 pt-5 sm:px-8">
+          <Link
+            href="/demo"
+            className="group flex items-center justify-between gap-4 rounded-[18px] border border-emerald-300/15 bg-emerald-300/[0.045] p-5 no-underline transition hover:border-emerald-300/25 hover:bg-emerald-300/[0.065]"
+          >
+            <div>
+              <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-emerald-200/75">
+                Recommended first step
+              </p>
+              <h2 className="m-0 mt-2 text-xl font-semibold tracking-[-0.03em] text-white">
+                Explore with demo data first
+              </h2>
+              <p className="m-0 mt-2 max-w-2xl text-sm leading-6 text-white/40">
+                See the populated Evalomics dashboard and recommendation flow before connecting anything.
+              </p>
+            </div>
+            <ArrowRight className="size-5 shrink-0 text-emerald-200 transition group-hover:translate-x-1" />
+          </Link>
+        </div>
+
+        <div className="relative grid gap-4 px-6 pb-7 pt-4 sm:px-8 sm:pb-9 lg:grid-cols-3">
           {sources.map((source, index) => (
             <motion.div
               key={source.id}
