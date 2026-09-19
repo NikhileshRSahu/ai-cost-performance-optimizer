@@ -17,3 +17,5 @@ Retry deployment for latest orange-glass public pages.
 Retry deployment for latest public-page visual system.
 
 Immediate redeploy requested for latest locked branch.
+
+Redeploy latest public ambient-shell fix.
