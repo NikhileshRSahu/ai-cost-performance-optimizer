@@ -12,7 +12,7 @@ import {
 import { motion } from 'framer-motion';
 import { GripVertical, RotateCcw } from 'lucide-react';
 
-export type DashboardWidgetSize = 'sm' | 'wide' | 'tall' | 'lg';
+type DashboardWidgetSize = 'sm' | 'wide' | 'tall' | 'lg';
 
 export type DashboardWidgetSpec = Readonly<{
   id: string;
