@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { PublicDemoExperience } from '../../components/marketing/public-demo-experience';
+import { PublicDemoDashboard } from '../../components/marketing/public-demo-dashboard';
 
 export const metadata: Metadata = {
   title: 'Live demo | Evalomics',
@@ -18,7 +18,7 @@ export default function DemoPage() {
       >
         <ArrowLeft className="size-3.5" /> Back to Evalomics
       </Link>
-      <PublicDemoExperience />
+      <PublicDemoDashboard />
     </div>
   );
 }
