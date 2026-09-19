@@ -53,82 +53,64 @@ export function ResultJourney({
 
   return (
     <section
-      className="rounded-[22px] border border-white/[0.08] bg-[#0f1115] px-4 py-4 sm:px-5"
+      className="rounded-xl border border-white/[0.07] bg-[#0e1013] px-4 py-3"
       aria-label="Evalomics optimization journey"
     >
-      <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-sky-300/65">
-            Your Evalomics story
-          </p>
-          <p className="m-0 mt-1 text-sm font-medium text-white/80">
-            Data in → decision out → result proven
-          </p>
+      <div className="flex items-center gap-3 overflow-x-auto">
+        <span className="shrink-0 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-white/28">
+          Progress
+        </span>
+        <div className="flex min-w-[520px] flex-1 items-center">
+          {steps.map((step, stepIndex) => {
+            const reached = stepIndex <= index;
+            const active = stepIndex === index;
+            const Icon = step.icon;
+
+            return (
+              <div key={step.label} className="flex min-w-0 flex-1 items-center">
+                <div className="flex items-center gap-2">
+                  <motion.span
+                    animate={
+                      reduceMotion
+                        ? undefined
+                        : active
+                          ? { scale: [0.96, 1.06, 1] }
+                          : { scale: 1 }
+                    }
+                    className={
+                      reached
+                        ? 'grid size-6 shrink-0 place-items-center rounded-full border border-emerald-300/25 bg-emerald-300/[0.07] text-emerald-200'
+                        : 'grid size-6 shrink-0 place-items-center rounded-full border border-white/[0.08] bg-black/15 text-white/25'
+                    }
+                  >
+                    <Icon className="size-3" />
+                  </motion.span>
+                  <span
+                    className={
+                      active
+                        ? 'whitespace-nowrap text-[10px] font-semibold text-white/85'
+                        : reached
+                          ? 'whitespace-nowrap text-[10px] font-medium text-white/48'
+                          : 'whitespace-nowrap text-[10px] font-medium text-white/24'
+                    }
+                  >
+                    {step.label}
+                  </span>
+                </div>
+                {stepIndex < steps.length - 1 ? (
+                  <span
+                    className={
+                      stepIndex < index
+                        ? 'mx-2 h-px flex-1 bg-emerald-300/35'
+                        : 'mx-2 h-px flex-1 bg-white/[0.07]'
+                    }
+                    aria-hidden="true"
+                  />
+                ) : null}
+              </div>
+            );
+          })}
         </div>
-        <p className="m-0 text-[10px] text-white/30">
-          Current stage: {current}
-        </p>
-      </div>
-
-      <div className="relative grid grid-cols-5 gap-2">
-        <div
-          className="absolute left-[7%] right-[7%] top-4 h-px bg-white/[0.08]"
-          aria-hidden="true"
-        />
-        <motion.div
-          className="absolute left-[7%] top-4 h-px bg-emerald-300/60"
-          initial={false}
-          animate={{ width: String((index / 4) * 86) + '%' }}
-          transition={
-            reduceMotion
-              ? { duration: 0 }
-              : { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
-          }
-          aria-hidden="true"
-        />
-
-        {steps.map((step, stepIndex) => {
-          const reached = stepIndex <= index;
-          const active = stepIndex === index;
-          const Icon = step.icon;
-
-          return (
-            <div
-              key={step.label}
-              className="relative z-10 grid justify-items-center text-center"
-            >
-              <motion.span
-                animate={
-                  reduceMotion
-                    ? undefined
-                    : active
-                      ? { scale: [0.94, 1.08, 1] }
-                      : { scale: 1 }
-                }
-                className={
-                  reached
-                    ? 'grid size-8 place-items-center rounded-full border border-emerald-300/30 bg-[#11241f] text-emerald-200'
-                    : 'grid size-8 place-items-center rounded-full border border-white/[0.09] bg-[#0b1017] text-white/28'
-                }
-              >
-                <Icon className="size-3.5" />
-              </motion.span>
-              <p
-                className={
-                  reached
-                    ? 'm-0 mt-2 text-[10px] font-semibold text-white/82'
-                    : 'm-0 mt-2 text-[10px] font-semibold text-white/32'
-                }
-              >
-                {step.label}
-              </p>
-              <p className="m-0 mt-0.5 hidden max-w-24 text-[9px] leading-4 text-white/28 md:block">
-                {step.caption}
-              </p>
-            </div>
-          );
-        })}
       </div>
     </section>
-  );
-}
+  );}
