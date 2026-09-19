@@ -132,6 +132,10 @@ export default async function CostDashboardPage({
     source?: string;
     importId?: string;
     provider?: string;
+    analysis?: string;
+    accepted?: string;
+    rejected?: string;
+    warnings?: string;
   }>;
 }>) {
   const { organizationId } = await params;
@@ -271,6 +275,35 @@ export default async function CostDashboardPage({
         </section>
       ) : (
         <>
+          {query.analysis === 'complete' ? (
+            <section
+              className="rounded-[22px] border border-emerald-300/15 bg-emerald-300/[0.045] p-5 sm:p-6"
+              role="status"
+            >
+              <p className="m-0 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-200/70">
+                Analysis complete
+              </p>
+              <h2 className="m-0 mt-2 text-2xl font-semibold tracking-[-0.04em] text-white">
+                Your data is now part of the Evalomics story.
+              </h2>
+              <p className="m-0 mt-2 max-w-3xl text-sm leading-6 text-white/50">
+                {query.accepted ?? '0'} usage rows were accepted. Evalomics reconstructed the evidence,
+                ranked supported opportunities, and prepared the next decision below.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2 text-[10px] font-mono text-white/40">
+                <span className="rounded-full border border-white/[0.08] bg-black/15 px-3 py-1.5">
+                  accepted · {query.accepted ?? '0'}
+                </span>
+                <span className="rounded-full border border-white/[0.08] bg-black/15 px-3 py-1.5">
+                  rejected · {query.rejected ?? '0'}
+                </span>
+                <span className="rounded-full border border-white/[0.08] bg-black/15 px-3 py-1.5">
+                  warnings · {query.warnings ?? '0'}
+                </span>
+              </div>
+            </section>
+          ) : null}
+
           <ResultJourney
             current={
               evaluationStatus === 'PROVEN'
