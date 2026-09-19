@@ -92,6 +92,18 @@ describe('canonical CSV ingestion', () => {
     );
   });
 
+  it('normalizes timezone-less request-level timestamps to UTC', () => {
+    const csv =
+      'timestamp,provider,model,request_id,workspace,input_tokens,output_tokens,cached_input_tokens,requests,cost_usd,latency_ms,status,retry_count,tool_calls,workflow,success\n' +
+      '2026-09-19T10:00:00,OpenAI,gpt-4o,req_utc_001,support,1200,240,0,1,0.42,1380,success,0,2,support_answer,true\n';
+
+    const parsed = parseUsageCsv(enc.encode(csv), 'org');
+
+    expect(parsed.records).toHaveLength(1);
+    expect(parsed.records[0]?.intervalStart).toBe('2026-09-19T10:00:00.000Z');
+    expect(parsed.records[0]?.intervalEnd).toBe('2026-09-19T10:00:00.001Z');
+  });
+
   it('rejects server-owned and unknown CSV columns', () => {
     expect(() =>
       parseUsageCsv(
