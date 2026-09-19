@@ -3,6 +3,7 @@ import { ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
 import { EvalButton } from '../ui/eval-button';
 import { EvalSurface } from '../ui/eval-surface';
 import { EvidenceBadge, type EvidenceState } from '../ui/evidence-badge';
+import { DraggableMetricGrid } from './draggable-metric-grid';
 
 export function DirectResult({
   periodLabel,
@@ -45,49 +46,13 @@ export function DirectResult({
         </p>
       </section>
 
-      <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-        <EvalSurface tone="raised" className="p-5">
-          <EvidenceBadge state="OBSERVED" />
-          <p className="mt-5 text-[10px] uppercase tracking-[0.14em] text-white/34">
-            Observed spend
-          </p>
-          <p className="mt-2 font-mono text-2xl text-white">{observedSpend}</p>
-          <p className="mt-2 text-[11px] text-white/30">{observedSource}</p>
-        </EvalSurface>
-
-        <EvalSurface tone="amber" className="p-5">
-          <EvidenceBadge state="POTENTIAL" />
-          <p className="mt-5 text-[10px] uppercase tracking-[0.14em] text-white/34">
-            Biggest modeled upside
-          </p>
-          <p className="mt-2 font-mono text-2xl text-[var(--eval-amber)]">
-            {modeledUpside}
-          </p>
-          <p className="mt-2 text-[11px] text-white/30">Planning evidence only</p>
-        </EvalSurface>
-
-        <EvalSurface className="p-5">
-          <EvidenceBadge state="TESTED" />
-          <p className="mt-5 text-[10px] uppercase tracking-[0.14em] text-white/34">
-            Tested saving
-          </p>
-          <p className="mt-2 font-mono text-2xl text-[var(--eval-tested)]">
-            {testedSavings}
-          </p>
-          <p className="mt-2 text-[11px] text-white/30">Quality-gated benchmark</p>
-        </EvalSurface>
-
-        <EvalSurface tone="verified" className="p-5">
-          <EvidenceBadge state="VERIFIED" />
-          <p className="mt-5 text-[10px] uppercase tracking-[0.14em] text-white/34">
-            Verified saving
-          </p>
-          <p className="mt-2 font-mono text-2xl text-[var(--eval-verified)]">
-            {verifiedSavings}
-          </p>
-          <p className="mt-2 text-[11px] text-white/30">Production reconciliation</p>
-        </EvalSurface>
-      </section>
+      <DraggableMetricGrid
+        observedSpend={observedSpend}
+        observedSource={observedSource}
+        modeledUpside={modeledUpside}
+        testedSavings={testedSavings}
+        verifiedSavings={verifiedSavings}
+      />
 
       <EvalSurface tone="raised" className="overflow-hidden">
         <div className="p-5 sm:p-7">
