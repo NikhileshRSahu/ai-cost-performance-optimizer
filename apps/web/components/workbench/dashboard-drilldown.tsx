@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, X } from 'lucide-react';
+import { ArrowRight, Sparkles, X } from 'lucide-react';
 import {
   useEffect,
   useState,
@@ -170,16 +170,42 @@ export function DashboardDrilldown({
                 </div>
               </div>
 
-              {actionHref && actionLabel ? (
-                <div className="flex justify-end">
+              <div className="flex flex-wrap justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    window.dispatchEvent(
+                      new CustomEvent('evalomics:ask', {
+                        detail: {
+                          context:
+                            eyebrow +
+                            ': ' +
+                            title +
+                            '. ' +
+                            summary +
+                            ' Evalomics identified: ' +
+                            insight +
+                            ' Next step: ' +
+                            nextStep,
+                        },
+                      }),
+                    );
+                    setOpen(false);
+                  }}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-sky-300/15 bg-sky-300/[0.05] px-4 py-3 text-sm font-semibold text-sky-200"
+                >
+                  <Sparkles className="size-4" />
+                  Ask Evalomics about this
+                </button>
+                {actionHref && actionLabel ? (
                   <Link
                     href={actionHref}
                     className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 no-underline"
                   >
                     {actionLabel} <ArrowRight className="size-4" />
                   </Link>
-                </div>
-              ) : null}
+                ) : null}
+              </div>
             </div>
           </section>
         </div>
