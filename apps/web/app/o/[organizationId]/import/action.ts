@@ -49,11 +49,12 @@ function importSafeError(error: unknown): string {
   if (message.startsWith('MISSING_COLUMN:')) {
     return `Missing required CSV column: ${message.slice('MISSING_COLUMN:'.length)}.`;
   }
-  if (message.startsWith('ALL_ROWS_REJECTED')) {
-    const code = message.split(':')[1];
-    return code === undefined
-      ? 'No valid usage rows were accepted. Check the CSV and try again.'
-      : `No valid usage rows were accepted. Main row error: ${code}.`;
+  if (message === 'ALL_ROWS_REJECTED') {
+    return 'No valid usage rows were accepted. Check the CSV and try again.';
+  }
+  if (message.startsWith('ALL_ROWS_REJECTED:')) {
+    const code = message.slice('ALL_ROWS_REJECTED:'.length);
+    return `No valid usage rows were accepted. Main row error: ${code}.`;
   }
   return 'The CSV could not be imported. Check the required columns and numeric formats, then try again.';
 }
@@ -179,12 +180,8 @@ async function analyzeBytes(
     });
 
     if (result.blocked) {
-      const primaryIssue = result.issues[0]?.code;
-      throw new Error(
-        primaryIssue === undefined
-          ? 'ALL_ROWS_REJECTED'
-          : `ALL_ROWS_REJECTED:${primaryIssue}`,
-      );
+      const primaryIssue = result.issues.at(0)?.code ?? 'UNKNOWN_ROW_ERROR';
+      throw new Error(`ALL_ROWS_REJECTED:${primaryIssue}`);
     }
 
     await analyzeImportedUsage({
