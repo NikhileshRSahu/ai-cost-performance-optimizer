@@ -1,4 +1,5 @@
 name: Send-ready gate
+# final release verification retry after lint fixes
 
 on:
   push:
