@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Download, ShieldCheck } from 'lucide-react';
-import { redirect } from 'next/navigation';\nimport { formatDecimal, rational } from '../../../../../../src/economics/exact';
+import { redirect } from 'next/navigation';
+import { formatDecimal, rational } from '../../../../../../src/economics/exact';
 import { createDatabase } from '../../../../../../src/persistence/database';
 import { buildFounderDashboardView } from '../../../../../../src/workbench/dashboard-view';
 import { buildProspectProofPack } from '../../../../../../src/workbench/prospect-proof';
