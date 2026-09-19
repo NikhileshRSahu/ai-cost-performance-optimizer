@@ -94,6 +94,7 @@ function EvidenceHeat({ active }: Readonly<{ active: number }>) {
   return (
     <div
       className="mt-5 grid grid-cols-12 gap-1"
+      role="img"
       aria-label={String(active) + ' evidence stages active'}
     >
       {Array.from({ length: 36 }).map((_, index) => {
