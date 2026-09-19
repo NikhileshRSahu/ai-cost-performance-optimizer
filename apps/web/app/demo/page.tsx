@@ -11,10 +11,10 @@ export const metadata: Metadata = {
 
 export default function DemoPage() {
   return (
-    <div className="grid gap-5">
+    <div className="relative z-[1] grid gap-5">
       <Link
         href="/"
-        className="inline-flex w-fit items-center gap-2 text-xs font-semibold text-white/42 no-underline hover:text-white"
+        className="eval-glass-pill inline-flex w-fit items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold text-white/55 no-underline hover:text-white"
       >
         <ArrowLeft className="size-3.5" /> Back to Evalomics
       </Link>
