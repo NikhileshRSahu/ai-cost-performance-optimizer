@@ -30,7 +30,7 @@ const stages = [
 
 export default function MethodologyPage() {
   return (
-    <main className="relative mx-auto max-w-6xl overflow-hidden rounded-[28px] border border-white/[0.08] bg-[#070b10] px-6 py-8 text-white shadow-[0_38px_120px_rgba(0,0,0,.32)] sm:px-8 sm:py-10">
+    <main className="eval-glass-panel relative mx-auto max-w-6xl overflow-hidden rounded-[28px] px-6 py-8 text-white sm:px-8 sm:py-10">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_75%_10%,rgba(99,222,244,.08),transparent_28%),radial-gradient(circle_at_15%_80%,rgba(240,163,91,.08),transparent_30%)]" />
       <section className="relative max-w-4xl pt-4 sm:pt-8">
         <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-300/75">
@@ -48,7 +48,7 @@ export default function MethodologyPage() {
 
       <section className="relative mt-12 grid gap-4 md:grid-cols-2" aria-label="Decision methodology">
         {stages.map(({ step, title, body, icon: Icon }) => (
-          <article key={step} className="rounded-[20px] border border-white/[0.08] bg-[linear-gradient(145deg,rgba(15,23,33,.94),rgba(8,12,17,.98))] p-5">
+          <article key={step} className="eval-glass-card rounded-[20px] p-5">
             <div className="flex items-center justify-between gap-3">
               <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-cyan-300/65">{step}</span>
               <span className="grid size-9 place-items-center rounded-xl border border-white/[0.08] bg-white/[0.03] text-white/55">
@@ -61,7 +61,7 @@ export default function MethodologyPage() {
         ))}
       </section>
 
-      <section className="relative mt-14 rounded-[24px] border border-white/[0.08] bg-white/[0.02] p-6 sm:p-8">
+      <section className="eval-glass-card relative mt-14 rounded-[24px] p-6 sm:p-8">
         <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/30">Claim taxonomy</p>
         <h2 className="mt-3 text-3xl font-semibold tracking-[-0.045em] text-white">Potential ≠ Tested ≠ Verified.</h2>
         <div className="mt-7 grid gap-3 md:grid-cols-3">
