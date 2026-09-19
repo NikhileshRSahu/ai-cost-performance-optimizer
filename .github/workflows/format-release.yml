@@ -1,0 +1,37 @@
+name: Release Format
+
+on:
+  push:
+    branches:
+      - preview/section2-container-scroll
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: preview/section2-container-scroll
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Format release files
+        run: |
+          npx prettier --write             apps/web/app/account/page.tsx             apps/web/app/globals.css             apps/web/app/methodology/page.tsx             'apps/web/app/o/[organizationId]/import/page.tsx'             'apps/web/app/o/[organizationId]/proof/page.tsx'             apps/web/app/privacy/page.tsx             apps/web/app/security/page.tsx             apps/web/app/start/page.tsx             apps/web/app/terms/page.tsx             apps/web/app/tools/llm-cost-calculator/page.tsx             apps/web/app/tools/prompt-cache-savings/page.tsx             apps/web/components/marketing/launch-template-evalomics.tsx             apps/web/components/marketing/proof-motion.tsx             apps/web/components/marketing/section2-dashboard-scroll.tsx             apps/web/components/site-chrome.tsx
+      - name: Commit formatting
+        run: |
+          if git diff --quiet; then
+            echo "Already formatted"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/web
+          git commit -m "style: format final Evalomics release"
+          git push origin HEAD:preview/section2-container-scroll
