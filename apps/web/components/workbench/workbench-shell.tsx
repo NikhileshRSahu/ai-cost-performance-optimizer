@@ -19,15 +19,15 @@ import { EvalomicsCopilot } from './evalomics-copilot';
 import { cn } from '../../lib/utils';
 
 const primaryNavigation = [
-  { slug: '', label: 'Overview', icon: LayoutDashboard },
-  { slug: '/import', label: 'Usage', icon: FileInput },
-  { slug: '/recommendations', label: 'Recommendations', icon: Sparkles },
-  { slug: '/proof', label: 'Proof', icon: ShieldCheck },
+  { slug: '', label: 'Your Result', icon: LayoutDashboard },
+  { slug: '/import', label: '1 · Connect Data', icon: FileInput },
+  { slug: '/recommendations', label: '2 · Next Action', icon: Sparkles },
+  { slug: '/proof', label: '3 · Results & Evidence', icon: ShieldCheck },
 ] as const;
 
 const utilityNavigation = [
-  { slug: '/prompts', label: 'Prompt Optimizer', icon: BookOpen },
-  { slug: '/calculator', label: 'Model Calculator', icon: ArrowLeftRight },
+  { slug: '/prompts', label: 'Prompt Evaluation', icon: BookOpen },
+  { slug: '/calculator', label: 'Model Evaluation', icon: ArrowLeftRight },
   { slug: '/settings', label: 'Settings', icon: Settings2 },
 ] as const;
 
@@ -69,7 +69,7 @@ function NavLinks({
             >
               <Icon className="size-4" strokeWidth={1.8} aria-hidden="true" />
               <span>{label}</span>
-              {label === 'Recommendations' ? (
+              {label === '2 · Next Action' ? (
                 <span className="ml-auto rounded-full bg-emerald-400/10 px-2 py-0.5 font-mono text-[9px] text-emerald-300">
                   savings
                 </span>
@@ -84,7 +84,7 @@ function NavLinks({
         open={utilityActive}
       >
         <summary className="cursor-pointer list-none px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-          Tools & settings
+          Evaluation tools
         </summary>
         <div className="mt-2 grid gap-1">
           {utilityNavigation.map(({ slug, label, icon: Icon }) => {
