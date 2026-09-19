@@ -60,6 +60,5 @@
   },
   "workspaces": [
     "apps/web"
-  ],
-  "description": "Evalomics preview deployment trigger"
+  ]
 }
