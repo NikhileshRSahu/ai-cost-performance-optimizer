@@ -50,13 +50,31 @@ export function RecommendationCard({
           {recommendation.title}
         </h2>
 
-        <div className="mt-6 rounded-2xl border border-emerald-300/10 bg-emerald-300/[0.035] p-4 sm:p-5">
-          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-100/60">
-            What to do next
-          </p>
-          <p className="m-0 mt-2 max-w-4xl text-sm leading-6 text-white/72">
-            {recommendation.nextAction}
-          </p>
+        <div className="mt-6 grid gap-3 lg:grid-cols-[1.15fr_.85fr]">
+          <div className="rounded-2xl border border-emerald-300/10 bg-emerald-300/[0.035] p-4 sm:p-5">
+            <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-100/60">
+              What to change
+            </p>
+            <p className="m-0 mt-2 max-w-4xl text-sm leading-6 text-white/72">
+              {recommendation.nextAction}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-sky-300/10 bg-sky-300/[0.035] p-4 sm:p-5">
+            <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-sky-100/60">
+              Evaluation result
+            </p>
+            <p className="m-0 mt-2 text-sm font-semibold text-white/80">
+              {recommendation.state === 'VERIFIED'
+                ? 'Proven in production'
+                : recommendation.state === 'TESTED'
+                  ? recommendation.decision === 'OPTIMIZE'
+                    ? 'Ready to optimize'
+                    : recommendation.decision === 'DO_NOT_CHANGE'
+                      ? 'Keep current'
+                      : 'Evaluated'
+                  : 'Candidate identified'}
+            </p>
+          </div>
         </div>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-3">
@@ -86,6 +104,23 @@ export function RecommendationCard({
           </div>
         </div>
 
+        <div className="mt-4 rounded-xl border border-white/[0.06] bg-white/[0.018] px-4 py-4">
+          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/32">
+            Why Evalomics chose it
+          </p>
+          <p className="m-0 mt-2 text-xs leading-5 text-white/52">
+            {recommendation.measuredFact ??
+              recommendation.inference ??
+              'This recommendation was ranked from the strongest supported evidence in the selected usage window.'}
+          </p>
+          {recommendation.qualityGuard !== null &&
+          recommendation.qualityGuard !== undefined ? (
+            <p className="m-0 mt-2 text-xs leading-5 text-sky-100/45">
+              Quality guard: {recommendation.qualityGuard}
+            </p>
+          ) : null}
+        </div>
+
         {recommendation.principalLimitation !== null ? (
           <details className="mt-4 rounded-xl border border-white/[0.06] bg-white/[0.018] px-4 py-3">
             <summary className="cursor-pointer text-xs font-semibold text-white/48">
@@ -100,13 +135,18 @@ export function RecommendationCard({
       </div>
 
       <div className="flex flex-col gap-3 border-t border-white/[0.07] bg-black/15 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-7">
-        <p className="m-0 text-xs text-white/35">
+        <div>
+          <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-white/28">
+            How to implement
+          </p>
+          <p className="m-0 mt-1 text-xs text-white/35">
           {recommendation.state === 'VERIFIED'
             ? 'Production evidence confirms this result.'
             : recommendation.state === 'TESTED'
               ? 'Evalomics evaluated this candidate successfully; staged implementation is next.'
               : 'Evalomics found the opportunity. It will evaluate the candidate when comparable evidence is available.'}
-        </p>
+          </p>
+        </div>
         <div className="flex flex-wrap items-center gap-2">
           {primaryHref !==
           '/o/' + organizationId + '/lab/' + recommendation.recommendationId ? (
