@@ -31,3 +31,5 @@ Production redeploy for Evalomics brand/logo and landing-strip update — 2026-0
 Production redeploy retry for latest Evalomics auth + branding fixes — 2026-09-19.
 
 Production redeploy for draggable dashboard and calculator contrast fix — 2026-09-19.
+
+Production redeploy for draggable observability-style dashboard — 2026-09-19.
