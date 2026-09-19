@@ -71,6 +71,12 @@ export function PromptEvaluationWorkbench() {
       ? Math.max(0, ((originalTokens - candidateTokens) / originalTokens) * 100)
       : 0;
   const detected = useMemo(() => findings(prompt), [prompt]);
+  const promptDecision =
+    reduction >= 10
+      ? 'Worth quality-testing — this candidate is meaningfully leaner.'
+      : reduction >= 5
+        ? 'Small saving found — test it only if quality stays equal.'
+        : 'Keep the current prompt for now — no meaningful structural saving was found.';
 
   function analyze() {
     const draft = optimizedDraft(prompt);
@@ -79,7 +85,7 @@ export function PromptEvaluationWorkbench() {
   }
 
   return (
-    <section className="rounded-[22px] border border-violet-300/12 bg-[#10131b] p-5 sm:p-6">
+    <section className="rounded-[22px] border border-violet-300/12 bg-[#111214] p-5 sm:p-6">
       <div className="flex flex-col gap-3 border-b border-white/[0.07] pb-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.15em] text-violet-200/65">
@@ -169,7 +175,30 @@ export function PromptEvaluationWorkbench() {
       </div>
 
       {analyzed ? (
-        <div className="mt-5 grid gap-4 lg:grid-cols-[.8fr_1.2fr]">
+        <div className="mt-5 grid gap-4">
+          <section
+            className={
+              reduction >= 10
+                ? 'rounded-xl border border-emerald-300/14 bg-emerald-300/[0.045] p-4'
+                : reduction >= 5
+                  ? 'rounded-xl border border-amber-300/14 bg-amber-300/[0.04] p-4'
+                  : 'rounded-xl border border-white/[0.08] bg-white/[0.025] p-4'
+            }
+          >
+            <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.13em] text-white/30">
+              What should you do?
+            </p>
+            <p className="m-0 mt-2 text-lg font-semibold text-white">
+              {promptDecision}
+            </p>
+            <p className="m-0 mt-2 text-sm leading-6 text-white/45">
+              {reduction >= 5
+                ? 'Next: compare the current and candidate prompt on representative cases before replacing production behavior.'
+                : 'The deterministic pass did not find enough structural reduction to justify changing a working prompt.'}
+            </p>
+          </section>
+
+          <div className="grid gap-4 lg:grid-cols-[.8fr_1.2fr]">
           <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
             <div className="rounded-xl border border-white/[0.07] bg-black/20 p-4">
               <p className="m-0 text-[9px] uppercase tracking-[0.13em] text-white/30">
@@ -211,6 +240,7 @@ export function PromptEvaluationWorkbench() {
               cases before adopting the candidate.
             </div>
           </div>
+        </div>
         </div>
       ) : null}
     </section>
