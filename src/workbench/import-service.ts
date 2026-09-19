@@ -82,7 +82,7 @@ export async function importCustomerUsage(
       .limit(1)
   ).at(0);
 
-  if (existing !== undefined) {
+  if (existing !== undefined && existing.status !== 'FAILED') {
     return Object.freeze({
       importId: existing.id,
       fileName: input.fileName,
@@ -91,7 +91,7 @@ export async function importCustomerUsage(
       skippedDuplicates: existing.skippedRows,
       rejected: existing.rejectedRows,
       warnings: existing.warningCount,
-      blocked: existing.status === 'FAILED',
+      blocked: false,
       partial: existing.status === 'PARTIAL',
       reused: true,
       effectiveInterval:
@@ -103,6 +103,17 @@ export async function importCustomerUsage(
             }),
       issues: Object.freeze([]),
     });
+  }
+
+  if (existing?.status === 'FAILED') {
+    await input.db
+      .delete(importRuns)
+      .where(
+        and(
+          eq(importRuns.organizationId, input.organizationId),
+          eq(importRuns.id, existing.id),
+        ),
+      );
   }
 
   if (parsed.records.length > 0) {
