@@ -47,9 +47,9 @@ export default function MethodologyPage() {
           Every recommendation should survive an evidence audit.
         </h1>
         <p className="mt-6 max-w-3xl text-base leading-7 text-white/45">
-          Evalomics moves from observed usage to a ranked optimization, evaluates
-          the candidate when comparable evidence exists, guides implementation,
-          and later confirms the production result.
+          Evalomics moves from observed usage to a ranked optimization,
+          evaluates the candidate when comparable evidence exists, guides
+          implementation, and later confirms the production result.
         </p>
       </section>
 

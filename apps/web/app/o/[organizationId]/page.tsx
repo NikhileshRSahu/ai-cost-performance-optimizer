@@ -287,8 +287,9 @@ export default async function CostDashboardPage({
                 Your data is now part of the Evalomics story.
               </h2>
               <p className="m-0 mt-2 max-w-3xl text-sm leading-6 text-white/50">
-                {query.accepted ?? '0'} usage rows were accepted. Evalomics reconstructed the evidence,
-                ranked supported opportunities, and prepared the next decision below.
+                {query.accepted ?? '0'} usage rows were accepted. Evalomics
+                reconstructed the evidence, ranked supported opportunities, and
+                prepared the next decision below.
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-[10px] font-mono text-white/40">
                 <span className="rounded-full border border-white/[0.08] bg-black/15 px-3 py-1.5">
@@ -440,7 +441,9 @@ export default async function CostDashboardPage({
                 {
                   label: 'Potential',
                   value:
-                    view.strongestAction !== null ? 'Opportunity identified' : 'Still analyzing',
+                    view.strongestAction !== null
+                      ? 'Opportunity identified'
+                      : 'Still analyzing',
                 },
                 {
                   label: 'Evaluated',

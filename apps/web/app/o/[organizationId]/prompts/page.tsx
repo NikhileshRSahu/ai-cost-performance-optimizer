@@ -1,5 +1,13 @@
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, BookOpen, Copy, Scissors, Shapes, Sparkles } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  BookOpen,
+  Copy,
+  Scissors,
+  Shapes,
+  Sparkles,
+} from 'lucide-react';
 
 const tips = [
   {
@@ -42,9 +50,9 @@ export default async function PromptOptimizerPage({
           Improve the prompt only when the evidence points here.
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-          This page supports the main optimization story. Use these patterns when
-          Evalomics identifies prompt or context waste; the recommendation remains
-          the source of truth for what should be changed first.
+          This page supports the main optimization story. Use these patterns
+          when Evalomics identifies prompt or context waste; the recommendation
+          remains the source of truth for what should be changed first.
         </p>
       </section>
 
@@ -58,9 +66,9 @@ export default async function PromptOptimizerPage({
               Found → evaluate prompt change → return to the recommendation
             </h2>
             <p className="m-0 mt-2 max-w-2xl text-sm leading-6 text-white/45">
-              Do not optimize prompts just because you can. Start from the supported
-              finding, use this tool to shape the candidate, then let Evalomics
-              evaluate the result against the workload requirements.
+              Do not optimize prompts just because you can. Start from the
+              supported finding, use this tool to shape the candidate, then let
+              Evalomics evaluate the result against the workload requirements.
             </p>
           </div>
           <Link
@@ -116,9 +124,10 @@ export default async function PromptOptimizerPage({
 
       <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-4 text-xs leading-5 text-slate-500">
         <BookOpen className="mr-2 inline size-3.5 text-violet-300/70" />
-        When prompt-level evidence is unavailable, these remain general engineering
-        patterns. Evalomics AI can explain whether your current recommendation
-        actually requires prompt evidence before you change anything.
+        When prompt-level evidence is unavailable, these remain general
+        engineering patterns. Evalomics AI can explain whether your current
+        recommendation actually requires prompt evidence before you change
+        anything.
       </div>
 
       <Link

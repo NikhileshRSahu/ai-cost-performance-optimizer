@@ -139,9 +139,7 @@ export default async function ImportPage({
           className="rounded-xl border border-rose-300/20 bg-rose-300/[0.06] px-4 py-3 text-sm text-rose-100"
           role="alert"
         >
-          <p className="m-0">
-            {query.error}
-          </p>
+          <p className="m-0">{query.error}</p>
           <div className="mt-3 flex flex-wrap gap-3">
             <Link
               href="?mode=csv"

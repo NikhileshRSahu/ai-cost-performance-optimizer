@@ -38,11 +38,7 @@ const steps = [
 ] as const;
 
 export type ResultJourneyStage =
-  | 'Connected'
-  | 'Found'
-  | 'Evaluated'
-  | 'Ready'
-  | 'Proven';
+  'Connected' | 'Found' | 'Evaluated' | 'Ready' | 'Proven';
 
 export function ResultJourney({
   current,

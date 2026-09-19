@@ -16,9 +16,10 @@ export default async function ModelCalculatorPage({
           Evaluate a model candidate
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-          Use this when Evalomics identifies model choice as the likely optimization.
-          Compare the economics here, then return to the recommendation so the
-          candidate can be judged alongside quality and performance evidence.
+          Use this when Evalomics identifies model choice as the likely
+          optimization. Compare the economics here, then return to the
+          recommendation so the candidate can be judged alongside quality and
+          performance evidence.
         </p>
       </section>
 
@@ -54,7 +55,8 @@ export default async function ModelCalculatorPage({
               Supporting calculators
             </p>
             <p className="m-0 mt-1 text-[11px] text-slate-500">
-              Use these only when they support the optimization Evalomics already identified.
+              Use these only when they support the optimization Evalomics
+              already identified.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">

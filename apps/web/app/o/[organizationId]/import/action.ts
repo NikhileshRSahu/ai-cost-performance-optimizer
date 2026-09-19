@@ -162,12 +162,14 @@ async function analyzeBytes(
   fileName: string,
   bytes: Uint8Array,
   isDemo: boolean,
-): Promise<Readonly<{
-  importId: string;
-  accepted: number;
-  rejected: number;
-  warnings: number;
-}>> {
+): Promise<
+  Readonly<{
+    importId: string;
+    accepted: number;
+    rejected: number;
+    warnings: number;
+  }>
+> {
   const session = await resolveRuntimeSession();
   const databaseUrl = process.env.DATABASE_URL;
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');

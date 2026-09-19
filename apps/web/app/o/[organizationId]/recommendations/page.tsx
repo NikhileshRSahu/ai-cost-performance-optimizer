@@ -62,8 +62,8 @@ export default async function RecommendationsPage({
           What Evalomics recommends next.
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-          Ranked actions from the current evidence window, with the expected impact,
-          evaluation status, and next implementation step in one place.
+          Ranked actions from the current evidence window, with the expected
+          impact, evaluation status, and next implementation step in one place.
         </p>
       </section>
 
@@ -80,7 +80,9 @@ export default async function RecommendationsPage({
           <p className="text-[10px] uppercase tracking-[0.16em] text-emerald-300/70">
             Estimated savings
           </p>
-          <p className="mt-4 font-mono text-2xl text-emerald-300">{estimatedSavingLabel}</p>
+          <p className="mt-4 font-mono text-2xl text-emerald-300">
+            {estimatedSavingLabel}
+          </p>
           <p className="mt-1 text-[10px] text-slate-500">
             Best estimate supported by the current evidence.
           </p>
@@ -113,7 +115,8 @@ export default async function RecommendationsPage({
             Evalomics is still analyzing
           </p>
           <p className="mt-2 text-xs text-slate-500">
-            Add or refresh usage evidence so Evalomics can identify and rank the best optimization candidate.
+            Add or refresh usage evidence so Evalomics can identify and rank the
+            best optimization candidate.
           </p>
           <Link
             href={`/o/${organizationId}/import`}
@@ -127,7 +130,8 @@ export default async function RecommendationsPage({
 
       <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-4 text-xs leading-5 text-slate-500">
         <BadgeDollarSign className="mr-2 inline size-3.5 text-emerald-300/70" />
-        Evalomics separates estimated impact from post-change proof, while still giving you a useful recommendation as soon as the evidence supports one.
+        Evalomics separates estimated impact from post-change proof, while still
+        giving you a useful recommendation as soon as the evidence supports one.
       </div>
     </div>
   );
