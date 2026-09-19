@@ -13,7 +13,13 @@ test('usage analysis opens with an AI Efficiency MRI and split confidence', asyn
   const organizationId = 'journey-org';
 
   await page.goto(`/o/${organizationId}/import?mode=csv&demo=true`);
-  await page.locator('input[name="usageCsv"]').setInputFiles(baselineCsv);
+  const fileChooserPromise = page.waitForEvent('filechooser');
+  await page
+    .getByRole('button', { name: /Drop your usage CSV here/i })
+    .click();
+  const fileChooser = await fileChooserPromise;
+  await fileChooser.setFiles(baselineCsv);
+  await expect(page.getByText('Ready to analyze')).toBeVisible();
   await expect(page.locator('input[name="isDemo"]')).toHaveValue('true');
   await page.getByRole('button', { name: 'Analyze my AI usage' }).click();
 

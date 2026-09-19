@@ -5295,3 +5295,56 @@ samp,
   background: #0f172a !important;
   color: #ffffff !important;
 }
+
+
+/* Release gate: deterministic readable foregrounds on the locked marketing hero. */
+.eval-template-page .eval-template-pill,
+.eval-template-page .eval-template-pill a {
+  color: #b7c0cb !important;
+}
+.eval-template-page .eval-template-hero-copy > p {
+  color: #aeb8c4 !important;
+}
+.eval-template-page .eval-template-provider-row,
+.eval-template-page .eval-template-provider-row span {
+  color: #9ca8b6 !important;
+}
+.eval-template-page .eval-proof-disclaimer {
+  color: #94a3b8 !important;
+}
+.eval-template-page .eval-template-footer p,
+.eval-template-page .eval-template-footer nav a {
+  color: #9ca8b6 !important;
+}
+
+/* Telemetry credentials use a dedicated dark trust surface. */
+.org-workbench .telemetry-token-card {
+  margin-top: 1rem;
+  padding: 1.1rem;
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  border-radius: 1rem;
+  background: #0c1421;
+  color: #dbe4ee;
+}
+.org-workbench .telemetry-token-card .telemetry-token-kicker {
+  margin: 0 0 0.75rem;
+  color: #7dd3fc !important;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.org-workbench .telemetry-token-card h3 {
+  color: #f3f6fa !important;
+}
+.org-workbench .telemetry-token-card .token-display {
+  color: #cbd5e1 !important;
+}
+.org-workbench .telemetry-token-card textarea {
+  border-color: #334155;
+  background: #070b10;
+  color: #e2e8f0;
+}
+.org-workbench .telemetry-token-card .projection-note {
+  color: #aeb8c4 !important;
+}

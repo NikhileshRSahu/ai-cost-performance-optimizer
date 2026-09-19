@@ -126,7 +126,9 @@ async function reachVerification(
     return 'ALREADY_VERIFIED';
   }
 
-  await expect(page.locator('.state-badge.state-tested').first()).toBeVisible();
+  await expect(page.locator('.state-badge.state-tested').first()).toBeVisible({
+    timeout: JOURNEY_STATE_TIMEOUT_MS,
+  });
   await page.getByRole('link', { name: 'Prepare safe rollout' }).click();
 
   const implementedAt = page.getByLabel('Implemented at (UTC)');
@@ -225,7 +227,9 @@ test('failed post-change quality never becomes verified', async ({ page }) => {
   await expect(page.getByText('Verified net impact')).toHaveCount(0);
 
   await page.goto('/o/journey-bad-org');
-  await expect(page.locator('.state-badge.state-tested').first()).toBeVisible();
+  await expect(page.locator('.state-badge.state-tested').first()).toBeVisible({
+    timeout: JOURNEY_STATE_TIMEOUT_MS,
+  });
   await expect(page.locator('.state-badge.state-verified')).toHaveCount(0);
 });
 

@@ -1,7 +1,9 @@
 'use server';
 
+import { desc, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
+import { recommendations } from '../../../../../../src/persistence/schema';
 import { parseBenchmarkCsv } from '../../../../../../src/benchmarks/csv';
 import { evaluateAndPersistBenchmark } from '../../../../../../src/workbench/benchmark-service';
 import { assertUploadWithinLimit } from '../../../../../../src/workbench/upload-limits';
@@ -70,6 +72,35 @@ export async function submitBenchmark(formData: FormData): Promise<never> {
   const database = createDatabase(databaseUrl);
   let recommendationId: string;
   try {
+    const requestedSourceRecommendationId = textEntry(
+      formData,
+      'sourceRecommendationId',
+    ).trim();
+    let resolvedSourceRecommendationId =
+      requestedSourceRecommendationId.length > 0
+        ? requestedSourceRecommendationId
+        : null;
+
+    if (resolvedSourceRecommendationId === null) {
+      const recentRecommendations = await database.db
+        .select()
+        .from(recommendations)
+        .where(eq(recommendations.organizationId, organizationId))
+        .orderBy(desc(recommendations.createdAt))
+        .limit(50);
+
+      const evidenceBacked = recentRecommendations.find((row) => {
+        const sourceImportId = row.evidence.sourceImportId;
+        const sourceProviderSnapshotId = row.evidence.sourceProviderSnapshotId;
+        return (
+          (typeof sourceImportId === 'string' && sourceImportId.length > 0) ||
+          (typeof sourceProviderSnapshotId === 'string' &&
+            sourceProviderSnapshotId.length > 0)
+        );
+      });
+      resolvedSourceRecommendationId = evidenceBacked?.id ?? null;
+    }
+
     const result = await evaluateAndPersistBenchmark({
       db: database.db,
       session,
@@ -81,8 +112,7 @@ export async function submitBenchmark(formData: FormData): Promise<never> {
       evaluatorVersion,
       currency: textEntry(formData, 'currency', 'USD'),
       isDemo: formData.get('isDemo') === 'true',
-      sourceRecommendationId:
-        textEntry(formData, 'sourceRecommendationId').trim() || null,
+      sourceRecommendationId: resolvedSourceRecommendationId,
     });
     recommendationId = result.recommendationId;
   } catch (error) {
