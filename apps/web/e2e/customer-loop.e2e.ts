@@ -62,24 +62,24 @@ async function reachVerification(
   await expect(
     page.getByText('Recommended action', { exact: true }),
   ).toBeVisible();
-  await expect(page.getByText('Saving status', { exact: true })).toBeVisible();
+  await expect(page.getByText('Savings estimate', { exact: true })).toBeVisible();
   await expect(
-    page.getByText('Not measured yet', { exact: true }),
+    page.getByText('Estimate pending', { exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole('link', { name: 'Measure exact savings (optional)' }),
+    page.getByRole('link', { name: 'Review Evalomics evaluation' }),
   ).toBeVisible();
   await expectAccessible(page);
 
   // Optional proof follows the same customer-facing path as the product.
   await page
-    .getByRole('link', { name: 'Measure exact savings (optional)' })
+    .getByRole('link', { name: 'Review Evalomics evaluation' })
     .click();
   await expect(
-    page.getByRole('heading', { name: 'Measure exact savings' }),
+    page.getByRole('heading', { name: 'Let Evalomics evaluate this candidate' }),
   ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
   await page
-    .getByRole('link', { name: 'Measure exact savings', exact: true })
+    .getByRole('link', { name: 'Add evidence for Evalomics evaluation', exact: true })
     .click();
 
   await expect(
@@ -242,7 +242,7 @@ test('hard customer journey reaches verified savings', async ({ page }) => {
     page.locator('.state-badge.state-verified').first(),
   ).toBeVisible();
   await expect(
-    page.getByText('Verified savings', { exact: true }),
+    page.getByText('Evaluation status', { exact: true }),
   ).toBeVisible();
 });
 
