@@ -53,6 +53,8 @@ export type DashboardRecommendationEvidence = Readonly<{
   confidenceBand?: DashboardConfidenceBand;
   principalLimitation: string | null;
   nextAction: string;
+  workloadName?: string | null;
+  currentConfigurationId?: string | null;
 }>;
 
 export type VerifiedNetSavingsEvidence = Readonly<{
