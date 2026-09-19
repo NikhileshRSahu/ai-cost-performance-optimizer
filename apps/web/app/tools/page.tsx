@@ -41,16 +41,16 @@ const toolItems = [
 
 export default function ToolsPage() {
   return (
-    <div className="grid gap-14 pb-12">
+    <div className="grid gap-14 rounded-[28px] bg-[#090806] px-5 pb-12 sm:px-7">
       <section className="max-w-4xl pt-6 sm:pt-10">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-200/75">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-100">
           Free tools · no login
         </p>
         <h1 className="mt-4 !text-[clamp(3.2rem,7vw,6.6rem)] !leading-[.9] !tracking-[-.07em] text-white">
           Measure one thing
-          <span className="block text-white/45">before you optimize it.</span>
+          <span className="block text-white/70">before you optimize it.</span>
         </h1>
-        <p className="mt-7 max-w-2xl text-base leading-7 text-white/45">
+        <p className="mt-7 max-w-2xl text-base leading-7 text-white/70">
           These are small exact-arithmetic tools, not the main product. They
           help you understand one economic question before the Work MRI
           diagnoses what is actually worth changing.
@@ -75,7 +75,7 @@ export default function ToolsPage() {
             <h2 className="mt-12 text-xl font-semibold tracking-[-0.03em] text-white">
               {label}
             </h2>
-            <p className="mt-2 max-w-md text-sm leading-6 text-white/45">
+            <p className="mt-2 max-w-md text-sm leading-6 text-white/70">
               {description}
             </p>
             <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-orange-100">

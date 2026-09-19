@@ -23,7 +23,7 @@ test('founder gets one direct answer before optional evidence details', async ({
     page.getByRole('heading', { name: /we analyzed your ai usage/i }),
   ).toBeVisible();
   await expect(page.getByText(demoDisclaimer)).toBeVisible();
-  await expect(page.getByText(/best tested improvement/i)).toBeVisible();
+  await expect(page.getByText(/recommended action/i)).toBeVisible();
   await expect(page.getByText(/tested saving/i)).toBeVisible();
 
   const detectionConfidence = page.getByText('Detection confidence', {

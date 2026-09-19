@@ -3263,8 +3263,9 @@ samp,
   --et-amber: #f4a04d;
   --et-amber-soft: rgba(244, 160, 77, 0.22);
   min-height: 100vh;
-  overflow: hidden;
-  background:
+  overflow-x: hidden;
+  background-color: #090806;
+  background-image:
     radial-gradient(
       circle at 62% 13%,
       rgba(244, 160, 77, 0.11),
@@ -5281,4 +5282,16 @@ samp,
   border-color: rgba(251, 113, 133, 0.22);
   background: rgba(244, 63, 94, 0.06);
   color: #fecdd3;
+}
+
+
+/* Final accessibility safeguards for mixed light/dark recovery and telemetry surfaces. */
+.org-workbench .telemetry-page .mri-action .telemetry-token-kicker {
+  color: #334155 !important;
+}
+.org-workbench .recovery-state .recovery-primary-action,
+.org-workbench .empty-state .recovery-primary-action {
+  border-color: #0f172a !important;
+  background: #0f172a !important;
+  color: #ffffff !important;
 }

@@ -158,7 +158,7 @@ export function TelemetryCredentials({
 
         {issued !== null ? (
           <div className="mri-action" role="status">
-            <p className="eyebrow">Copy now</p>
+            <p className="eyebrow telemetry-token-kicker">Copy now</p>
             <h3>{issued.warning}</h3>
             <label className="token-display">
               Telemetry bearer token

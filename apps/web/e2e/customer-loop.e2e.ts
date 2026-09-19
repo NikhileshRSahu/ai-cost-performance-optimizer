@@ -39,7 +39,13 @@ async function reachVerification(
   await page.goto(
     `/o/${organizationId}/import?mode=csv${demo ? '&demo=true' : ''}`,
   );
-  await page.locator('input[name="usageCsv"]').setInputFiles(baselineCsv);
+  const fileChooserPromise = page.waitForEvent('filechooser');
+  await page
+    .getByRole('button', { name: /Drop your usage CSV here/i })
+    .click();
+  const fileChooser = await fileChooserPromise;
+  await fileChooser.setFiles(baselineCsv);
+  await expect(page.getByText('Ready to analyze')).toBeVisible();
   if (demo) {
     await expect(page.locator('input[name="isDemo"]')).toHaveValue('true');
   }
@@ -163,7 +169,7 @@ async function submitPostChange(
   await page.getByLabel('Post-change p95 latency (ms)').fill('844');
   await page.getByLabel('Post-change failure rate').fill('0.018');
   await page
-    .getByLabel('Performance evidence reference')
+    .getByLabel('Quality evidence reference')
     .fill('eval-suite:classification-v3');
   await page.getByLabel('Request/unit definition is unchanged.').check();
   await page.getByLabel('Workload mix is comparable to the baseline.').check();
