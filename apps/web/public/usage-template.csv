@@ -1,2 +1,0 @@
-timestamp_start,timestamp_end,provider,model,requests,total_cost,currency,source_event_id,workload,input_tokens,cached_input_tokens,output_tokens,successes,failures,latency_p50_ms,latency_p95_ms
-2026-09-01T00:00:00Z,2026-09-02T00:00:00Z,openai,example-model,100,12.34,USD,event-001,classification,50000,10000,8000,98,2,450,820

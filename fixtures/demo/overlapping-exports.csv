@@ -1,3 +1,0 @@
-timestamp_start,timestamp_end,provider,model,requests,total_cost,currency,workload,granularity
-2026-09-01T00:00:00Z,2026-09-02T00:00:00Z,openai,gpt-demo,100,10,USD,classification,AGGREGATE_BUCKET
-2026-09-01T12:00:00Z,2026-09-01T12:01:00Z,openai,gpt-demo,1,0.2,USD,classification,REQUEST

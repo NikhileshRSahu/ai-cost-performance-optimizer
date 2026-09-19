@@ -1,8 +1,0 @@
-timestamp_start,timestamp_end,provider,model,requests,total_cost,currency,source_event_id,workload,input_tokens,cached_input_tokens,output_tokens,successes,failures,latency_p50_ms,latency_p95_ms,granularity,configuration_id,operation_id,attempt_number,retry_count,stable_prefix_hash,stable_prefix_tokens,cache_eligible_input_tokens
-2026-09-02T00:00:00Z,2026-09-03T00:00:00Z,openai,model-b,1025,54.00,USD,post-cls-00,classification,799500,246000,82000,1007,18,540,820,AGGREGATE_BUCKET,model-b,post-op-00,1,0,hash-post-0,205000,738000
-2026-09-03T00:00:00Z,2026-09-04T00:00:00Z,openai,model-b,1031,54.25,USD,post-cls-01,classification,804180,247440,82480,1012,19,543,824,AGGREGATE_BUCKET,model-b,post-op-01,1,0,hash-post-1,206200,742320
-2026-09-04T00:00:00Z,2026-09-05T00:00:00Z,openai,model-b,1037,54.50,USD,post-cls-02,classification,808860,248880,82960,1019,18,546,828,AGGREGATE_BUCKET,model-b,post-op-02,1,0,hash-post-2,207400,746640
-2026-09-05T00:00:00Z,2026-09-06T00:00:00Z,openai,model-b,1043,54.75,USD,post-cls-03,classification,813540,250320,83440,1024,19,549,832,AGGREGATE_BUCKET,model-b,post-op-03,1,0,hash-post-0,208600,750960
-2026-09-06T00:00:00Z,2026-09-07T00:00:00Z,openai,model-b,1049,55.00,USD,post-cls-04,classification,818220,251760,83920,1031,18,552,836,AGGREGATE_BUCKET,model-b,post-op-04,1,0,hash-post-1,209800,755280
-2026-09-07T00:00:00Z,2026-09-08T00:00:00Z,openai,model-b,1055,55.25,USD,post-cls-05,classification,822900,253200,84400,1036,19,555,840,AGGREGATE_BUCKET,model-b,post-op-05,1,0,hash-post-2,211000,759600
-2026-09-08T00:00:00Z,2026-09-09T00:00:00Z,openai,model-b,1061,55.50,USD,post-cls-06,classification,827580,254640,84880,1043,18,558,844,AGGREGATE_BUCKET,model-b,post-op-06,1,0,hash-post-0,212200,763920

@@ -1,3 +1,0 @@
-case_id,repetition_id,configuration_id,outcome,quality_score,latency_ms,cost,evaluator_version
-case-01,rep-1,current,SUCCESS,0.94,900,0.08,eval-v1
-case-01,rep-1,candidate,SUCCESS,0.93,820,0.05,eval-v1

@@ -1,3 +1,0 @@
-timestamp_start,timestamp_end,provider,model,requests,total_cost,currency,source_event_id
-2026-09-01T00:00:00Z,2026-09-02T00:00:00Z,openai,gpt-demo,10,2.50,USD,same-event
-2026-09-01T00:00:00Z,2026-09-02T00:00:00Z,openai,gpt-demo,10,2.50,USD,same-event
