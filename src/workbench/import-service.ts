@@ -6,7 +6,7 @@ import { requireOrganizationAccess } from '../persistence/tenant.js';
 import type { ImportIssue } from '../usage/contracts.js';
 import type { AuthenticatedSession } from './authz.js';
 
-export type ImportCustomerUsageStatus = 'COMPLETED' | 'PARTIAL' | 'FAILED';
+type ImportCustomerUsageStatus = 'COMPLETED' | 'PARTIAL' | 'FAILED';
 
 export type ImportCustomerUsageResult = Readonly<{
   importId: string;
