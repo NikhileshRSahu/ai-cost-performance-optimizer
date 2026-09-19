@@ -73,6 +73,52 @@ function verifiedMoney(
   )}`;
 }
 
+
+function ConsoleBars({
+  values,
+  accent = 'bg-sky-400',
+}: Readonly<{ values: readonly number[]; accent?: string }>) {
+  return (
+    <div className="mt-auto flex h-12 items-end gap-1" aria-hidden="true">
+      {values.map((value, index) => (
+        <span
+          key={index}
+          className={index === values.length - 1 ? accent : 'bg-white/[0.16]'}
+          style={{ height: `${Math.max(14, value)}%`, width: '100%' }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function EvidenceHeat({
+  active,
+}: Readonly<{ active: number }>) {
+  return (
+    <div
+      className="mt-5 grid grid-cols-12 gap-1"
+      aria-label={`${active} evidence stages active`}
+    >
+      {Array.from({ length: 36 }).map((_, index) => {
+        const stage = Math.floor(index / 9);
+        const reached = stage < active;
+        return (
+          <span
+            key={index}
+            className={
+              reached
+                ? index % 7 === 0
+                  ? 'h-3 rounded-[3px] bg-sky-300'
+                  : 'h-3 rounded-[3px] bg-sky-500/55'
+                : 'h-3 rounded-[3px] bg-white/[0.07]'
+            }
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 export default async function CostDashboardPage({
   params,
   searchParams,
@@ -117,10 +163,10 @@ export default async function CostDashboardPage({
           <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-sky-300">
             AI Efficiency MRI
           </p>
-          <h1 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-slate-100 sm:text-3xl">
+          <h1 className="mt-3 font-mono text-2xl font-medium tracking-[-0.04em] text-slate-100 sm:text-3xl">
             Bring your first usage window into focus.
           </h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
+          <p className="mt-2 max-w-2xl font-mono text-xs leading-5 text-slate-500">
             Connect a supported provider or upload a CSV. Evalomics will analyze
             the evidence and bring you back here with one clear result.
           </p>
@@ -170,7 +216,7 @@ export default async function CostDashboardPage({
         </div>
       ) : null}
 
-      <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+      <section className="flex flex-col justify-between gap-4 border-b border-white/[0.06] pb-5 sm:flex-row sm:items-end">
         <div>
           <p className="mb-3 font-mono text-[11px] text-slate-500">
             {view.periodLabel}
@@ -230,13 +276,13 @@ export default async function CostDashboardPage({
               { id: 'diagnosis', size: 'lg', label: 'Usage diagnosis' },
             ]}
           >
-            <section className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">
+            <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.16em] text-emerald-300/70">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
                     Recommended action
                   </p>
-                  <h2 className="mt-2 text-base font-medium text-slate-100">
+                  <h2 className="mt-2 font-mono text-base font-medium text-white">
                     {view.strongestAction?.state === 'TESTED'
                       ? 'Best tested improvement'
                       : view.strongestAction?.state === 'VERIFIED'
@@ -271,13 +317,24 @@ export default async function CostDashboardPage({
               </Link>
             </section>
 
-            <section className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">
+            <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="size-4 text-violet-300" />
                 <h2 className="text-sm font-medium text-slate-100">
                   Evidence status
                 </h2>
               </div>
+              <EvidenceHeat
+                active={
+                  view.verifiedNetSavings !== null
+                    ? 4
+                    : view.strongestAction?.state === 'TESTED'
+                      ? 3
+                      : view.strongestAction !== null
+                        ? 2
+                        : 1
+                }
+              />
               <div className="mt-5 grid gap-3">
                 {[
                   ['Observed', 'Usage and cost evidence loaded', true],
@@ -306,7 +363,7 @@ export default async function CostDashboardPage({
                       <p className="text-xs font-medium text-slate-300">
                         {String(label)}
                       </p>
-                      <p className="mt-1 text-[10px] text-slate-600">
+                      <p className="mt-1 font-mono text-[10px] text-slate-500">
                         {String(detail)}
                       </p>
                     </div>
@@ -331,63 +388,67 @@ export default async function CostDashboardPage({
               </Link>
             </section>
 
-            <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
-              <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+            <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
                 Observed AI spend
               </p>
-              <p className="mt-4 font-mono text-2xl text-sky-300">
+              <p className="mt-4 font-mono text-3xl tracking-[-0.04em] text-white">
                 {moneyLabel(view.observedSpend)}
               </p>
-              <p className="mt-2 text-[10px] text-slate-600">
+              <p className="mt-2 font-mono text-[10px] text-slate-500">
                 {view.sourceKind === 'PROVIDER'
                   ? (view.providerName ?? 'Provider')
                   : view.sourceKind}
               </p>
+              <ConsoleBars values={[34, 48, 42, 61, 53, 67, 58, 72, 64, 78, 70, 88]} accent="bg-sky-400" />
             </article>
 
             <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
-              <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
                 Opportunities found
               </p>
-              <p className="mt-4 font-mono text-2xl text-slate-100">
+              <p className="mt-4 font-mono text-3xl tracking-[-0.04em] text-white">
                 {String(view.recommendations.length)}
               </p>
-              <p className="mt-2 text-[10px] text-slate-600">
+              <p className="mt-2 font-mono text-[10px] text-slate-500">
                 supported recommendations
               </p>
+              <ConsoleBars values={[18, 24, 20, 33, 29, 38, 31, 46, 42, 54, 51, 63]} accent="bg-emerald-400" />
             </article>
 
             <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
-              <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
                 Modeled upside
               </p>
-              <p className="mt-4 font-mono text-2xl text-emerald-300">
+              <p className="mt-4 font-mono text-3xl tracking-[-0.04em] text-white">
                 {modeled}
               </p>
-              <p className="mt-2 text-[10px] text-slate-600">
+              <p className="mt-2 font-mono text-[10px] text-slate-500">
                 planning evidence only
               </p>
+              <ConsoleBars values={[24, 31, 27, 39, 36, 48, 44, 52, 57, 61, 68, 74]} accent="bg-amber-300" />
             </article>
 
             <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
-              <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
                 Verified savings
               </p>
-              <p className="mt-4 font-mono text-2xl text-violet-300">
+              <p className="mt-4 font-mono text-3xl tracking-[-0.04em] text-white">
                 {verifiedMoney(view.verifiedNetSavings)}
               </p>
-              <p className="mt-2 text-[10px] text-slate-600">
+              <p className="mt-2 font-mono text-[10px] text-slate-500">
                 production evidence
               </p>
+              <ConsoleBars values={[16, 16, 18, 18, 20, 20, 22, 23, 23, 25, 26, 28]} accent="bg-violet-300" />
             </article>
 
-            <section className="overflow-auto rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">
+            <section className="flex h-full flex-col overflow-auto rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
                     Usage diagnosis
                   </p>
-                  <h2 className="mt-2 text-base font-medium text-slate-100">
+                  <h2 className="mt-2 font-mono text-base font-medium text-white">
                     Signals Evalomics can support
                   </h2>
                 </div>
@@ -399,7 +460,7 @@ export default async function CostDashboardPage({
                   {view.diagnosticFacts.slice(0, 4).map((fact) => (
                     <article
                       key={fact.label}
-                      className="rounded-lg border border-white/[0.06] bg-[#0c1421] p-4"
+                      className="rounded-lg border border-white/[0.07] bg-black/20 p-4"
                     >
                       <p className="text-[10px] uppercase tracking-[0.12em] text-slate-600">
                         {fact.label}
