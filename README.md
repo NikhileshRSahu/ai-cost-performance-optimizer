@@ -46,3 +46,8 @@ The preserved Vercel project may also supply the legacy `BETTER_AUTH_SECRET`; th
 ## Production boundaries
 
 Authentication is real. The current product data and provider/experiment flows are a clearly labeled sample workspace and safe interaction model. Real provider credential persistence, production traffic mutation, payment processing, custom production SMTP, and customer-owned Google OAuth branding require their respective production credentials and commercial configuration and are not faked in this repository.
+
+
+## Backend isolation
+
+The public demo is static and read-only. Authenticated workspaces use tenant-scoped Neon Postgres data only; production database constraints reject demo rows.
