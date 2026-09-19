@@ -14,7 +14,7 @@ export default function DemoPage() {
     <div className="grid gap-5">
       <Link
         href="/"
-        className="inline-flex w-fit items-center gap-2 text-xs font-semibold text-slate-600 no-underline hover:text-slate-950"
+        className="inline-flex w-fit items-center gap-2 text-xs font-semibold text-white/42 no-underline hover:text-white"
       >
         <ArrowLeft className="size-3.5" /> Back to Evalomics
       </Link>
