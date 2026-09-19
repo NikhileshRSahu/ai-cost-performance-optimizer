@@ -1,5 +1,5 @@
 name: Send-ready gate
-# final release verification retry after accessibility fixes
+# final release verification retry after demo-first E2E alignment
 
 on:
   push:
