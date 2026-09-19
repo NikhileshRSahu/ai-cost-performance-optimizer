@@ -115,7 +115,8 @@ export function StartFlow({
                 Explore with demo data first
               </h2>
               <p className="m-0 mt-2 max-w-2xl text-sm leading-6 text-white/40">
-                See the populated Evalomics dashboard and recommendation flow before connecting anything.
+                See the populated Evalomics dashboard and recommendation flow
+                before connecting anything.
               </p>
             </div>
             <ArrowRight className="size-5 shrink-0 text-emerald-200 transition group-hover:translate-x-1" />

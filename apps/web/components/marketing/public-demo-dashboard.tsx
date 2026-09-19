@@ -31,13 +31,15 @@ function DemoBars({
 
 function DemoHeatmap() {
   const intensities = [
-    1, 1, 1, 2, 2, 2, 3, 2, 1, 1, 2, 2,
-    1, 1, 2, 2, 3, 3, 4, 3, 2, 2, 2, 1,
-    1, 2, 2, 3, 4, 4, 4, 3, 3, 2, 2, 1,
+    1, 1, 1, 2, 2, 2, 3, 2, 1, 1, 2, 2, 1, 1, 2, 2, 3, 3, 4, 3, 2, 2, 2, 1, 1,
+    2, 2, 3, 4, 4, 4, 3, 3, 2, 2, 1,
   ];
 
   return (
-    <div className="mt-5 grid grid-cols-12 gap-1" aria-label="Synthetic activity heatmap">
+    <div
+      className="mt-5 grid grid-cols-12 gap-1"
+      aria-label="Synthetic activity heatmap"
+    >
       {intensities.map((value, index) => (
         <span
           key={index}
@@ -72,7 +74,8 @@ export function PublicDemoDashboard() {
             Demo data · synthetic · not customer results
           </p>
           <p className="m-0 mt-1 text-xs text-white/45">
-            Explore the same dashboard structure before connecting your own usage.
+            Explore the same dashboard structure before connecting your own
+            usage.
           </p>
         </div>
         <Link
@@ -91,7 +94,9 @@ export function PublicDemoDashboard() {
           We analyzed this sample company&apos;s AI usage
         </h1>
         <p className="mt-2 max-w-3xl font-mono text-xs leading-5 text-slate-500">
-          30 days · 22,380 requests · synthetic evidence designed to show how Evalomics separates observed spend, opportunities, testing, and verification.
+          30 days · 22,380 requests · synthetic evidence designed to show how
+          Evalomics separates observed spend, opportunities, testing, and
+          verification.
         </p>
       </section>
 
@@ -122,13 +127,20 @@ export function PublicDemoDashboard() {
           <p className="m-0 text-[10px] text-slate-500">p50 latency</p>
           <div className="mt-6 grid gap-3">
             {traceRows.map(([id, workflow, latency], index) => (
-              <div key={id} className="grid grid-cols-[1fr_1.4fr_auto] items-center gap-3 text-[11px]">
+              <div
+                key={id}
+                className="grid grid-cols-[1fr_1.4fr_auto] items-center gap-3 text-[11px]"
+              >
                 <span className="text-white/80">
                   <i className="mr-2 inline-block size-1.5 rounded-full bg-emerald-400" />
                   {id}
                 </span>
                 <span className="text-slate-400">{workflow}</span>
-                <span className={index === 2 ? 'text-amber-200' : 'text-slate-300'}>{latency}</span>
+                <span
+                  className={index === 2 ? 'text-amber-200' : 'text-slate-300'}
+                >
+                  {latency}
+                </span>
               </div>
             ))}
           </div>
@@ -139,59 +151,99 @@ export function PublicDemoDashboard() {
             <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
               Usage activity
             </p>
-            <span className="text-[10px] text-emerald-300">↑ 12% vs prior week</span>
+            <span className="text-[10px] text-emerald-300">
+              ↑ 12% vs prior week
+            </span>
           </div>
           <p className="mt-3 text-3xl tracking-[-0.05em] text-white">22,380</p>
-          <p className="m-0 text-[10px] text-slate-500">requests · last 30 days</p>
+          <p className="m-0 text-[10px] text-slate-500">
+            requests · last 30 days
+          </p>
           <DemoHeatmap />
           <div className="mt-3 flex justify-between text-[9px] text-slate-600">
-            <span>week 1</span><span>week 2</span><span>week 3</span><span>week 4</span>
+            <span>week 1</span>
+            <span>week 2</span>
+            <span>week 3</span>
+            <span>week 4</span>
           </div>
         </section>
 
         <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
           <div className="flex items-center justify-between">
-            <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">Observed spend</p>
+            <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
+              Observed spend
+            </p>
             <BadgeDollarSign className="size-4 text-sky-300/70" />
           </div>
-          <p className="mt-4 text-3xl tracking-[-0.05em] text-white">$1,774.78</p>
-          <p className="m-0 mt-1 text-[10px] text-slate-500">measured from sample usage</p>
+          <p className="mt-4 text-3xl tracking-[-0.05em] text-white">
+            $1,774.78
+          </p>
+          <p className="m-0 mt-1 text-[10px] text-slate-500">
+            measured from sample usage
+          </p>
           <DemoBars values={[42, 53, 47, 58, 63, 55, 71, 66, 74, 69, 83, 88]} />
         </article>
 
         <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
           <div className="flex items-center justify-between">
-            <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">Modeled upside</p>
+            <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
+              Modeled upside
+            </p>
             <Gauge className="size-4 text-emerald-300/70" />
           </div>
-          <p className="mt-4 text-3xl tracking-[-0.05em] text-white">$286–$421</p>
-          <p className="m-0 mt-1 text-[10px] text-slate-500">potential · not verified savings</p>
-          <DemoBars values={[18, 24, 31, 28, 36, 42, 47, 53, 58, 62, 69, 76]} accent="bg-emerald-400" />
+          <p className="mt-4 text-3xl tracking-[-0.05em] text-white">
+            $286–$421
+          </p>
+          <p className="m-0 mt-1 text-[10px] text-slate-500">
+            potential · not verified savings
+          </p>
+          <DemoBars
+            values={[18, 24, 31, 28, 36, 42, 47, 53, 58, 62, 69, 76]}
+            accent="bg-emerald-400"
+          />
         </article>
 
         <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
           <div className="flex items-center justify-between">
-            <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">Quality score</p>
+            <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
+              Quality score
+            </p>
             <ShieldCheck className="size-4 text-cyan-300/70" />
           </div>
           <p className="mt-4 text-3xl tracking-[-0.05em] text-white">0.91</p>
-          <p className="m-0 mt-1 text-[10px] text-emerald-300">↑ 0.03 sample benchmark</p>
+          <p className="m-0 mt-1 text-[10px] text-emerald-300">
+            ↑ 0.03 sample benchmark
+          </p>
           <div className="mt-auto grid gap-2 text-[10px]">
-            <div className="flex justify-between"><span className="text-slate-400">Faithfulness</span><span>0.94</span></div>
-            <div className="flex justify-between"><span className="text-slate-400">Relevancy</span><span>0.89</span></div>
-            <div className="flex justify-between"><span className="text-slate-400">Correctness</span><span>0.91</span></div>
+            <div className="flex justify-between">
+              <span className="text-slate-400">Faithfulness</span>
+              <span>0.94</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-400">Relevancy</span>
+              <span>0.89</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-400">Correctness</span>
+              <span>0.91</span>
+            </div>
           </div>
         </article>
 
         <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
           <div className="flex items-center justify-between">
-            <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">Verified savings</p>
+            <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
+              Verified savings
+            </p>
             <FlaskConical className="size-4 text-violet-300/70" />
           </div>
           <p className="mt-4 text-3xl tracking-[-0.05em] text-white">$0.00</p>
-          <p className="m-0 mt-1 text-[10px] text-slate-500">not yet production-verified</p>
+          <p className="m-0 mt-1 text-[10px] text-slate-500">
+            not yet production-verified
+          </p>
           <div className="mt-auto rounded-lg border border-violet-300/10 bg-violet-300/[0.035] p-3 text-[10px] leading-5 text-violet-100/65">
-            Evalomics does not convert modeled upside into verified savings without post-change evidence.
+            Evalomics does not convert modeled upside into verified savings
+            without post-change evidence.
           </div>
         </article>
 
@@ -213,26 +265,37 @@ export function PublicDemoDashboard() {
               ['Modeled opportunity', '$87.42'],
               ['Confidence', 'Medium'],
             ].map(([label, value]) => (
-              <div key={label} className="rounded-lg border border-white/[0.07] bg-black/20 p-4">
-                <p className="m-0 text-[9px] uppercase tracking-[0.12em] text-slate-500">{label}</p>
+              <div
+                key={label}
+                className="rounded-lg border border-white/[0.07] bg-black/20 p-4"
+              >
+                <p className="m-0 text-[9px] uppercase tracking-[0.12em] text-slate-500">
+                  {label}
+                </p>
                 <p className="m-0 mt-2 text-sm text-white">{value}</p>
               </div>
             ))}
           </div>
           <div className="mt-auto pt-5">
             <p className="m-0 text-[11px] leading-5 text-slate-500">
-              Sample logic: repeated stable input suggests a caching experiment, but the cheaper path still needs benchmark evidence before any production claim.
+              Sample logic: repeated stable input suggests a caching experiment,
+              but the cheaper path still needs benchmark evidence before any
+              production claim.
             </p>
           </div>
         </section>
 
         <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
           <div className="flex items-center justify-between gap-3">
-            <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">Token usage by model</p>
+            <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
+              Token usage by model
+            </p>
             <Database className="size-4 text-sky-300/60" />
           </div>
           <p className="mt-3 text-3xl tracking-[-0.05em] text-white">20.5M</p>
-          <p className="m-0 text-[10px] text-slate-500">input + output tokens</p>
+          <p className="m-0 text-[10px] text-slate-500">
+            input + output tokens
+          </p>
           <div className="mt-6 grid gap-3">
             {[
               ['gpt-4o', '42%', 'w-[42%]', 'bg-sky-400'],
@@ -240,7 +303,10 @@ export function PublicDemoDashboard() {
               ['gpt-4o-mini', '18%', 'w-[18%]', 'bg-violet-300'],
               ['claude-haiku-4-5', '13%', 'w-[13%]', 'bg-white/30'],
             ].map(([model, share, width, tone]) => (
-              <div key={model} className="grid grid-cols-[1fr_1.4fr_auto] items-center gap-3 text-[10px]">
+              <div
+                key={model}
+                className="grid grid-cols-[1fr_1.4fr_auto] items-center gap-3 text-[10px]"
+              >
                 <span className="text-slate-300">{model}</span>
                 <span className="h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
                   <i className={`block h-full rounded-full ${width} ${tone}`} />
@@ -262,7 +328,9 @@ export function PublicDemoDashboard() {
               The next dashboard can use your real usage.
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-white/40">
-              Connect OpenAI or Anthropic, or upload a CSV. Evalomics will return to the same dashboard structure with your observed evidence.
+              Connect OpenAI or Anthropic, or upload a CSV. Evalomics will
+              return to the same dashboard structure with your observed
+              evidence.
             </p>
           </div>
           <Link

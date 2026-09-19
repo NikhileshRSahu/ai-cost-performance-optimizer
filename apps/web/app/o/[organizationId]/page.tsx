@@ -73,7 +73,6 @@ function verifiedMoney(
   )}`;
 }
 
-
 function ConsoleBars({
   values,
   accent = 'bg-sky-400',
@@ -91,9 +90,7 @@ function ConsoleBars({
   );
 }
 
-function EvidenceHeat({
-  active,
-}: Readonly<{ active: number }>) {
+function EvidenceHeat({ active }: Readonly<{ active: number }>) {
   return (
     <div
       className="mt-5 grid grid-cols-12 gap-1"
@@ -400,7 +397,10 @@ export default async function CostDashboardPage({
                   ? (view.providerName ?? 'Provider')
                   : view.sourceKind}
               </p>
-              <ConsoleBars values={[34, 48, 42, 61, 53, 67, 58, 72, 64, 78, 70, 88]} accent="bg-sky-400" />
+              <ConsoleBars
+                values={[34, 48, 42, 61, 53, 67, 58, 72, 64, 78, 70, 88]}
+                accent="bg-sky-400"
+              />
             </article>
 
             <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
@@ -413,7 +413,10 @@ export default async function CostDashboardPage({
               <p className="mt-2 font-mono text-[10px] text-slate-500">
                 supported recommendations
               </p>
-              <ConsoleBars values={[18, 24, 20, 33, 29, 38, 31, 46, 42, 54, 51, 63]} accent="bg-emerald-400" />
+              <ConsoleBars
+                values={[18, 24, 20, 33, 29, 38, 31, 46, 42, 54, 51, 63]}
+                accent="bg-emerald-400"
+              />
             </article>
 
             <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
@@ -426,7 +429,10 @@ export default async function CostDashboardPage({
               <p className="mt-2 font-mono text-[10px] text-slate-500">
                 planning evidence only
               </p>
-              <ConsoleBars values={[24, 31, 27, 39, 36, 48, 44, 52, 57, 61, 68, 74]} accent="bg-amber-300" />
+              <ConsoleBars
+                values={[24, 31, 27, 39, 36, 48, 44, 52, 57, 61, 68, 74]}
+                accent="bg-amber-300"
+              />
             </article>
 
             <article className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
@@ -439,7 +445,10 @@ export default async function CostDashboardPage({
               <p className="mt-2 font-mono text-[10px] text-slate-500">
                 production evidence
               </p>
-              <ConsoleBars values={[16, 16, 18, 18, 20, 20, 22, 23, 23, 25, 26, 28]} accent="bg-violet-300" />
+              <ConsoleBars
+                values={[16, 16, 18, 18, 20, 20, 22, 23, 23, 25, 26, 28]}
+                accent="bg-violet-300"
+              />
             </article>
 
             <section className="flex h-full flex-col overflow-auto rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">

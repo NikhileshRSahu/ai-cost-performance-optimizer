@@ -59,12 +59,7 @@ export function DashboardWidgetGrid({
   const childArray = Children.toArray(children);
   const contentById = useMemo(
     () =>
-      new Map(
-        items.map((item, index) => [
-          item.id,
-          childArray[index] ?? null,
-        ]),
-      ),
+      new Map(items.map((item, index) => [item.id, childArray[index] ?? null])),
     [items, childArray],
   );
   const itemById = useMemo(
@@ -85,8 +80,7 @@ export function DashboardWidgetGrid({
         Array.isArray(parsed) &&
         parsed.length === initialOrder.length &&
         parsed.every(
-          (value) =>
-            typeof value === 'string' && initialOrder.includes(value),
+          (value) => typeof value === 'string' && initialOrder.includes(value),
         )
       ) {
         setOrder(parsed);

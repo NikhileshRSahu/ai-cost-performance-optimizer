@@ -76,8 +76,16 @@ function normalizeCompatibilityCsv(rows: string[][]): string[][] {
     | { kind: 'source'; index: number }
     | { kind: 'timestamp_end'; startIndex: number }
     | { kind: 'currency' }
-    | { kind: 'successes'; successIndex: number | null; statusIndex: number | null }
-    | { kind: 'failures'; successIndex: number | null; statusIndex: number | null }
+    | {
+        kind: 'successes';
+        successIndex: number | null;
+        statusIndex: number | null;
+      }
+    | {
+        kind: 'failures';
+        successIndex: number | null;
+        statusIndex: number | null;
+      }
     | { kind: 'granularity' }
   > = [];
 
@@ -104,10 +112,7 @@ function normalizeCompatibilityCsv(rows: string[][]): string[][] {
   }
 
   const timestampIndex = rawHeaders.indexOf('timestamp');
-  if (
-    timestampIndex >= 0 &&
-    !canonicalHeaders.includes('timestamp_end')
-  ) {
+  if (timestampIndex >= 0 && !canonicalHeaders.includes('timestamp_end')) {
     canonicalHeaders.push('timestamp_end');
     sources.push({ kind: 'timestamp_end', startIndex: timestampIndex });
   }
@@ -145,10 +150,7 @@ function normalizeCompatibilityCsv(rows: string[][]): string[][] {
     });
   }
 
-  if (
-    timestampIndex >= 0 &&
-    !canonicalHeaders.includes('granularity')
-  ) {
+  if (timestampIndex >= 0 && !canonicalHeaders.includes('granularity')) {
     canonicalHeaders.push('granularity');
     sources.push({ kind: 'granularity' });
   }
