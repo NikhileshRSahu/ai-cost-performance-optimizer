@@ -1,7 +1,5 @@
 'use server';
 
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
 import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { createDatabase } from '../../../../../../src/persistence/database';
@@ -238,36 +236,5 @@ export async function uploadUsageCsv(formData: FormData): Promise<never> {
 
   redirect(
     `/o/${organizationId}?source=import&importId=${encodeURIComponent(analysis.importId)}&analysis=complete&accepted=${String(analysis.accepted)}&rejected=${String(analysis.rejected)}&warnings=${String(analysis.warnings)}`,
-  );
-}
-
-export async function analyzeDemoUsage(formData: FormData): Promise<never> {
-  const organizationId = textEntry(formData, 'organizationId');
-  if (organizationId.length === 0) throw new Error('ORGANIZATION_ID_REQUIRED');
-
-  let analysis: Readonly<{
-    importId: string;
-    accepted: number;
-    rejected: number;
-    warnings: number;
-  }>;
-  try {
-    const bytes = await readFile(
-      join(process.cwd(), 'public', 'demo-usage.csv'),
-    );
-    analysis = await analyzeBytes(
-      organizationId,
-      'demo-usage.csv',
-      new Uint8Array(bytes),
-      true,
-    );
-  } catch (error) {
-    redirect(
-      `/o/${organizationId}/import?error=${encodeURIComponent(importSafeError(error))}`,
-    );
-  }
-
-  redirect(
-    `/o/${organizationId}?source=demo&importId=${encodeURIComponent(analysis.importId)}&analysis=complete&accepted=${String(analysis.accepted)}&rejected=${String(analysis.rejected)}&warnings=${String(analysis.warnings)}`,
   );
 }
