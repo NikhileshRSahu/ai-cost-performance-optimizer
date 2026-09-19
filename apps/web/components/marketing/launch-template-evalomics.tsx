@@ -228,7 +228,7 @@ export function LaunchTemplateEvalomics() {
             <div className="eval-template-layer eval-template-layer--flow eval-motion-decorative">
               <RequestFlow />
             </div>
-            <div className="eval-template-hero-note">From AI usage<br />to verified savings <ArrowRight size={15} /></div>
+            <div className="eval-template-hero-note">From AI usage<br />to verified outcomes <ArrowRight size={15} /></div>
           </div>
         </section>
 
@@ -270,13 +270,13 @@ export function LaunchTemplateEvalomics() {
             </div>
             <div className="eval-template-quality-visual">
               <div className="eval-template-quality-side">
-                <span>Current</span><b>$1.00 / request</b>
+                <span>Current · sample</span><b>$1.00 / request</b>
               </div>
               <div className="eval-template-quality-lines left eval-motion-decorative" />
               <div className="eval-template-quality-gate eval-motion-decorative"><ShieldCheck size={25} /></div>
               <div className="eval-template-quality-lines right eval-motion-decorative" />
               <div className="eval-template-quality-side right">
-                <span>Optimized</span><b>$0.28 / request</b>
+                <span>Candidate · sample</span><b>$0.28 / request</b>
               </div>
             </div>
           </article>

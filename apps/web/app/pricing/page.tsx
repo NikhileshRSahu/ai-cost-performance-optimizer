@@ -26,10 +26,11 @@ export default function PricingPage() {
           <span className="block text-white/45">Use real data. No card.</span>
         </h1>
         <p className="mt-7 max-w-2xl text-base leading-7 text-white/45">
-          During the Evalomics launch beta, the complete product workflow is
-          available for $0. Create a workspace, upload a usage CSV, diagnose AI
-          waste, test a candidate, and verify the result without entering
-          payment details.
+          During the Evalomics launch beta, the core analysis and verification
+          workflow is available for $0. Create a workspace, connect supported
+          provider usage or upload a CSV, diagnose supported inefficiency, test
+          a candidate, and verify post-change impact without entering payment
+          details.
         </p>
       </section>
 
@@ -43,7 +44,7 @@ export default function PricingPage() {
               Evalomics launch beta
             </p>
             <h2 className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">
-              Full product access
+              Core beta workflow
             </h2>
           </div>
           <div className="sm:text-right">

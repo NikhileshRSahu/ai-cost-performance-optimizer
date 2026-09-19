@@ -62,7 +62,7 @@ export function RecommendationCard({
         <div className="mt-5 grid gap-3 sm:grid-cols-3">
           <div className="rounded-2xl border border-white/[0.07] bg-black/15 p-4">
             <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-white/32">
-              Savings
+              {savingLabel}
             </p>
             <p className="m-0 mt-2 font-mono text-lg font-semibold text-white/86">
               {saving}

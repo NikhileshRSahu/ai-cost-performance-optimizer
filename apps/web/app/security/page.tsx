@@ -14,9 +14,10 @@ export default function SecurityPage() {
         <p className="eyebrow">Security model</p>
         <h1>Trust is a release gate, not a marketing claim.</h1>
         <p className="lede">
-          Evalomics keeps the free launch beta deliberately narrower than the
-          long-term connector roadmap. Features that require deeper credentials
-          stay disabled until their controls pass review.
+          Evalomics keeps the launch beta deliberately bounded. CSV analysis
+          and supported OpenAI or Anthropic organization-usage connections are
+          available; broader workspace connectors and automatic production
+          changes remain outside the current product boundary.
         </p>
       </section>
 
@@ -26,7 +27,7 @@ export default function SecurityPage() {
           <strong>Session-derived authorization</strong>
           <p>
             Google sign-in maps verified identities into tenant-scoped
-            membership roles. OWNER, OPERATOR, and VIEWER permissions remain
+            membership roles. OWNER, OPERATOR, and VIEWER permissions are
             enforced by the application authorization model.
           </p>
         </article>
@@ -34,26 +35,28 @@ export default function SecurityPage() {
           <span>TENANCY</span>
           <strong>Organization isolation</strong>
           <p>
-            Persistence and E2E tests cover tenant access boundaries, including
-            cross-organization denial.
+            Persistence and browser tests cover tenant access boundaries,
+            including cross-organization denial.
           </p>
         </article>
         <article>
           <span>SECRETS</span>
-          <strong>Encrypted OAuth tokens</strong>
+          <strong>Encrypted authentication and provider credentials</strong>
           <p>
-            Google authentication tokens are configured for encrypted storage.
-            Provider-admin and workspace-connector secrets are not collected in
-            the launch beta.
+            Google OAuth tokens are configured for encrypted storage. Supported
+            provider Admin API keys are encrypted before persistence, restricted
+            to credential-management permissions, and cleared when the
+            connection is revoked.
           </p>
         </article>
         <article>
           <span>CI</span>
           <strong>Release security checks</strong>
           <p>
-            Release CI includes formatting, linting, type checking, unit tests,
-            database tests, browser E2E, dependency audit, production container
-            build, backup/restore drill, and secret scanning.
+            Repository CI is configured to run formatting, linting, type
+            checking, unit and database tests, browser E2E, dependency audit, a
+            production container build, a backup/restore drill, and secret
+            scanning.
           </p>
         </article>
         <article>
@@ -66,23 +69,23 @@ export default function SecurityPage() {
         </article>
         <article>
           <span>CONNECTORS</span>
-          <strong>Gated by design</strong>
+          <strong>Bounded connector scope</strong>
           <p>
-            Workspace connectors remain unavailable until encrypted connector
-            secret storage, rotation/revocation, least-privilege scope review,
-            and connector-specific threat modeling are complete.
+            OpenAI and Anthropic organization-usage connections are the
+            supported provider connectors in the current beta. Gmail, Drive,
+            Slack, and other workspace connectors remain unavailable unless
+            separately released.
           </p>
         </article>
       </section>
 
       <section className="evidence-note">
-        <strong>Reporting:</strong> security, privacy, billing, and product
-        issues can be submitted through the persisted support route. Requests
-        receive a reference ID and are routed to the configured operations alert
-        channel.
+        <strong>Reporting:</strong> product, privacy, account, bug, and security
+        issues can be submitted through the persisted support route. A
+        successful submission returns a reference ID.
         <div className="mt-4">
           <Link className="primary-action" href="/support">
-            Open support & security
+            Open support &amp; security
           </Link>
         </div>
       </section>

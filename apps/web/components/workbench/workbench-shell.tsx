@@ -109,7 +109,7 @@ export function WorkbenchShell({
           <span>Workspace</span>
           <span className="flex items-center gap-1 font-mono normal-case tracking-normal text-emerald-400">
             <span className="size-1.5 rounded-full bg-emerald-400" />
-            live
+            workspace
           </span>
         </div>
 

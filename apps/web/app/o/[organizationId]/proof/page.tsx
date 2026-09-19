@@ -32,6 +32,16 @@ export default async function VerificationPage({
 
   const verified = pack.verifiedNetSavings !== null;
   const strongest = pack.strongestFinding;
+  const verifiedAmount =
+    pack.verifiedNetSavings === null
+      ? null
+      : formatDecimal(
+          rational(
+            BigInt(pack.verifiedNetSavings.numerator),
+            BigInt(pack.verifiedNetSavings.denominator),
+          ),
+          2,
+        );
 
   return (
     <div className="workflow-page proof-page grid gap-6">
@@ -100,9 +110,9 @@ export default async function VerificationPage({
                 : 'm-0 mt-3 font-mono text-2xl font-medium text-white/55'
             }
           >
-            {pack.verifiedNetSavings === null
+            {pack.verifiedNetSavings === null || verifiedAmount === null
               ? 'Not verified'
-              : `${pack.verifiedNetSavings.currency} ${pack.verifiedNetSavings.numerator}/${pack.verifiedNetSavings.denominator}`}
+              : `${pack.verifiedNetSavings.currency} ${verifiedAmount}`}
           </p>
         </div>
       </section>
