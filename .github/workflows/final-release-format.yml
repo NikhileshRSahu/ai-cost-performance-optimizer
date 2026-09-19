@@ -1,0 +1,37 @@
+name: Final Release Format
+
+on:
+  push:
+    branches:
+      - preview/section2-container-scroll
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: preview/section2-container-scroll
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Format final release files
+        run: |
+          npx prettier --write             apps/web/app/globals.css             'apps/web/app/o/[organizationId]/benchmark/action.ts'             'apps/web/app/o/[organizationId]/benchmark/page.tsx'             apps/web/e2e/customer-loop.e2e.ts
+      - name: Commit formatting
+        run: |
+          if git diff --quiet; then
+            echo "Already formatted"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/web
+          git commit -m "style: format final release"
+          git push origin HEAD:preview/section2-container-scroll
