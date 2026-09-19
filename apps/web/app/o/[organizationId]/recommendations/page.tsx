@@ -3,6 +3,10 @@ import { redirect } from 'next/navigation';
 import { BadgeDollarSign, Database, Sparkles } from 'lucide-react';
 import { createDatabase } from '../../../../../../src/persistence/database';
 import { buildFounderDashboardView } from '../../../../../../src/workbench/dashboard-view';
+import {
+  dashboardEstimatedSaving,
+  dashboardEvaluationStatus,
+} from '../../../../../../src/workbench/evalomics-ai';
 import { RecommendationCard } from '../../../../components/recommendation-card';
 import { loadFounderDashboardEvidence } from '../../../../lib/dashboard-data';
 import { resolveRuntimeSession } from '../../../../lib/runtime-session';
@@ -32,30 +36,41 @@ export default async function RecommendationsPage({
     await database.close();
   }
 
-  const modeled =
-    view.nonOverlappingModeledTotal === null
-      ? 'Not measured'
-      : `${view.nonOverlappingModeledTotal.currency} ${view.nonOverlappingModeledTotal.base}`;
+  const estimatedSaving = dashboardEstimatedSaving(view);
+  const estimatedSavingLabel = estimatedSaving ?? 'Estimate pending';
+  const evaluationStatus = dashboardEvaluationStatus(view);
+  const evaluationStatusLabel =
+    evaluationStatus === 'PROVEN'
+      ? 'Proven'
+      : evaluationStatus === 'READY_TO_OPTIMIZE'
+        ? 'Ready to optimize'
+        : evaluationStatus === 'KEEP_CURRENT'
+          ? 'Keep current'
+          : evaluationStatus === 'EVALUATED'
+            ? 'Evaluated'
+            : evaluationStatus === 'CANDIDATE_IDENTIFIED'
+              ? 'Candidate identified'
+              : 'Analyzing evidence';
 
   return (
     <div className="space-y-7">
       <section>
         <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-300">
-          Savings signal engine
+          Optimization decisions
         </p>
         <h1 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-slate-100 sm:text-3xl">
-          Recommendations without the dashboard maze.
+          What Evalomics recommends next.
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-          Ranked actions from the current evidence window. Potential, tested,
-          and verified savings remain different states.
+          Ranked actions from the current evidence window, with the expected impact,
+          evaluation status, and next implementation step in one place.
         </p>
       </section>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
           <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
-            Signals found
+            Opportunities found
           </p>
           <p className="mt-4 font-mono text-3xl text-slate-100">
             {view.recommendations.length}
@@ -63,20 +78,20 @@ export default async function RecommendationsPage({
         </div>
         <div className="rounded-xl border border-emerald-400/15 bg-emerald-400/[0.04] p-5">
           <p className="text-[10px] uppercase tracking-[0.16em] text-emerald-300/70">
-            Modeled upside
+            Estimated savings
           </p>
-          <p className="mt-4 font-mono text-2xl text-emerald-300">{modeled}</p>
+          <p className="mt-4 font-mono text-2xl text-emerald-300">{estimatedSavingLabel}</p>
           <p className="mt-1 text-[10px] text-slate-500">
-            Only shown when the evidence model supports it.
+            Best estimate supported by the current evidence.
           </p>
         </div>
         <div className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
           <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
-            Method
+            Evaluation status
           </p>
-          <p className="mt-4 text-sm text-slate-200">Evidence-ranked actions</p>
+          <p className="mt-4 text-sm text-slate-200">{evaluationStatusLabel}</p>
           <p className="mt-1 text-xs text-slate-500">
-            No black-box savings claim
+            Evalomics decision state
           </p>
         </div>
       </div>
@@ -95,10 +110,10 @@ export default async function RecommendationsPage({
         <section className="rounded-xl border border-dashed border-white/[0.08] bg-[#111a29] px-6 py-14 text-center">
           <Sparkles className="mx-auto size-7 text-slate-600" />
           <p className="mt-4 text-sm font-medium text-slate-300">
-            No supported recommendation yet
+            Evalomics is still analyzing
           </p>
           <p className="mt-2 text-xs text-slate-500">
-            Add usage evidence before Evalomics ranks a change.
+            Add or refresh usage evidence so Evalomics can identify and rank the best optimization candidate.
           </p>
           <Link
             href={`/o/${organizationId}/import`}
@@ -112,8 +127,7 @@ export default async function RecommendationsPage({
 
       <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-4 text-xs leading-5 text-slate-500">
         <BadgeDollarSign className="mr-2 inline size-3.5 text-emerald-300/70" />
-        Modeled savings are planning evidence. Tested or verified states appear
-        only after stronger proof exists.
+        Evalomics separates estimated impact from post-change proof, while still giving you a useful recommendation as soon as the evidence supports one.
       </div>
     </div>
   );
