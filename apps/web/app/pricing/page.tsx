@@ -16,7 +16,7 @@ const freeFeatures = [
 
 export default function PricingPage() {
   return (
-    <div className="relative grid gap-14 overflow-hidden rounded-[28px] border border-white/[0.08] bg-[#070b10] p-6 pb-12 text-white shadow-[0_38px_120px_rgba(0,0,0,.32)] sm:p-8">
+    <div className="eval-glass-panel relative grid gap-14 overflow-hidden rounded-[28px] p-6 pb-12 text-white sm:p-8">
       <section className="max-w-4xl pt-6 sm:pt-10">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300/75">
           Launch beta
@@ -34,7 +34,7 @@ export default function PricingPage() {
       </section>
 
       <section
-        className="max-w-3xl rounded-[28px] border border-emerald-300/30 bg-slate-950 p-6 text-white shadow-[0_30px_90px_rgba(15,23,42,.16)] sm:p-9"
+        className="eval-glass-card max-w-3xl rounded-[28px] p-6 text-white sm:p-9"
         aria-label="Launch beta pricing"
       >
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
@@ -82,7 +82,7 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section className="max-w-3xl rounded-[24px] border border-white/[0.08] bg-white/[0.025] p-6 sm:p-8">
+      <section className="eval-glass-card max-w-3xl rounded-[24px] p-6 sm:p-8">
         <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/45">
           Why free right now
         </p>
