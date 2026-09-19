@@ -74,10 +74,10 @@ export default function LlmCostCalculatorPage() {
         </div>
       </section>
 
-      <div className="flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-white/45">
-        <ShieldCheck className="mt-1 size-4 shrink-0 text-orange-200/70" />
+      <div className="eval-glass-card flex gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.035] p-4 text-sm leading-6 text-white/55">
+        <ShieldCheck className="mt-1 size-4 shrink-0 text-orange-200/80" />
         <p className="m-0">
-          <strong className="text-white/80">Calculation boundary:</strong>{' '}
+          <strong className="text-white/90">Calculation boundary:</strong>{' '}
           inference cost only from the values you enter. Tool calls, vector
           databases, infrastructure, taxes, discounts, caching rules, and
           provider-specific billing behavior are excluded unless reflected in
