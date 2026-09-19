@@ -163,21 +163,13 @@ export function DashboardWidgetGrid({
           const validContent = isValidElement(content) ? content : content;
 
           return (
-            <motion.div
+            <div
               key={id}
-              layout
               draggable={editable}
               onDragStart={(event) => handleDragStart(event, id)}
               onDragOver={(event) => handleDragOver(event, id)}
               onDrop={handleDrop}
               onDragEnd={() => setDraggingId(null)}
-              transition={{
-                layout: {
-                  type: 'spring',
-                  stiffness: 420,
-                  damping: 38,
-                },
-              }}
               className={[
                 'group relative min-w-0',
                 spanClass(item.size),
@@ -185,14 +177,26 @@ export function DashboardWidgetGrid({
               ].join(' ')}
               aria-label={item.label}
             >
-              {editable ? (
-                <div className="pointer-events-none absolute right-2 top-2 z-20 inline-flex items-center gap-1 rounded-md border border-white/[0.07] bg-[#08101c]/85 px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.1em] text-white/35 opacity-0 backdrop-blur transition group-hover:opacity-100">
-                  <GripVertical className="size-3" />
-                  drag
-                </div>
-              ) : null}
-              <div className="h-full [&>*]:h-full">{validContent}</div>
-            </motion.div>
+              <motion.div
+                layout
+                transition={{
+                  layout: {
+                    type: 'spring',
+                    stiffness: 420,
+                    damping: 38,
+                  },
+                }}
+                className="relative h-full"
+              >
+                {editable ? (
+                  <div className="pointer-events-none absolute right-2 top-2 z-20 inline-flex items-center gap-1 rounded-md border border-white/[0.07] bg-[#08101c]/85 px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.1em] text-white/35 opacity-0 backdrop-blur transition group-hover:opacity-100">
+                    <GripVertical className="size-3" />
+                    drag
+                  </div>
+                ) : null}
+                <div className="h-full [&>*]:h-full">{validContent}</div>
+              </motion.div>
+            </div>
           );
         })}
       </div>
