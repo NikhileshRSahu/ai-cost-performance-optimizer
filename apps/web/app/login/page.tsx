@@ -46,7 +46,7 @@ export default async function LoginPage({
   const canSignIn = authConfigured && authHostAllowed(host);
 
   return (
-    <div className="relative mx-auto grid min-h-[620px] max-w-5xl overflow-hidden rounded-[28px] border border-white/[0.08] bg-[#070b10] text-white shadow-[0_38px_120px_rgba(0,0,0,.36)] lg:grid-cols-[1fr_.9fr]">
+    <div className="eval-glass-panel relative mx-auto grid min-h-[620px] max-w-5xl overflow-hidden rounded-[28px] text-white lg:grid-cols-[1fr_.9fr]">
       <section className="flex flex-col justify-between p-7 sm:p-10 lg:p-12">
         <div>
           <Link
@@ -103,7 +103,7 @@ export default async function LoginPage({
         </div>
       </section>
 
-      <section className="relative flex items-center bg-[radial-gradient(circle_at_50%_15%,rgba(240,163,91,.12),transparent_38%),#050708] p-7 text-white sm:p-10 lg:p-12">
+      <section className="relative flex items-center border-l border-white/[0.06] bg-[radial-gradient(circle_at_50%_15%,rgba(249,115,22,.18),transparent_40%),rgba(5,7,8,.46)] p-7 text-white backdrop-blur-2xl sm:p-10 lg:p-12">
         <div className="w-full">
           <LoginProductMotion />
         </div>
