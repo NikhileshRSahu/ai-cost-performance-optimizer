@@ -42,7 +42,7 @@ export function RecommendationCard({
         <div className="flex flex-wrap items-center gap-2.5">
           <EvidenceStatePill state={recommendation.state} />
           <span className="text-[10px] font-semibold uppercase tracking-[0.13em] text-white/35">
-            supported recommendation
+            Best supported change
           </span>
         </div>
 
@@ -61,7 +61,7 @@ export function RecommendationCard({
           </div>
           <div className="rounded-2xl border border-sky-300/10 bg-sky-300/[0.035] p-4 sm:p-5">
             <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-sky-100/60">
-              Evaluation result
+              Can I act on it?
             </p>
             <p className="m-0 mt-2 text-sm font-semibold text-white/80">
               {recommendation.state === 'VERIFIED'
@@ -88,7 +88,7 @@ export function RecommendationCard({
           </div>
           <div className="rounded-2xl border border-white/[0.07] bg-black/15 p-4">
             <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-white/32">
-              Detection confidence
+              How sure is this?
             </p>
             <p className="m-0 mt-2 text-lg font-semibold text-white/86">
               {recommendation.detectionConfidence}
@@ -96,7 +96,7 @@ export function RecommendationCard({
           </div>
           <div className="rounded-2xl border border-white/[0.07] bg-black/15 p-4">
             <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-white/32">
-              Savings confidence
+              How sure is the saving?
             </p>
             <p className="m-0 mt-2 text-lg font-semibold text-white/86">
               {recommendation.savingsConfidence}
@@ -137,7 +137,7 @@ export function RecommendationCard({
       <div className="flex flex-col gap-3 border-t border-white/[0.07] bg-black/15 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-7">
         <div>
           <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-white/28">
-            How to implement
+            What happens next
           </p>
           <p className="m-0 mt-1 text-xs text-white/35">
             {recommendation.state === 'VERIFIED'
@@ -159,7 +159,7 @@ export function RecommendationCard({
               }
               className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.035] px-4 py-2.5 text-sm font-semibold text-white/70 no-underline transition hover:bg-white/[0.07] hover:text-white"
             >
-              See details
+              Why this recommendation
             </Link>
           ) : null}
           <Link
