@@ -174,7 +174,9 @@ export function EvalomicsCopilot({
                   {answer.action !== null ? (
                     <Link
                       href={answer.action.href}
-                      onClick={() => setOpen(false)}
+                      onClick={() => {
+                        setOpen(false);
+                      }}
                       className="inline-flex min-h-11 items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-semibold text-slate-950 no-underline"
                     >
                       {answer.action.label}
