@@ -73,9 +73,7 @@ test('public CTA foregrounds remain readable on their backgrounds', async ({
   });
   expect(heroStyles.color).not.toBe(heroStyles.backgroundColor);
 
-  const demoCta = page
-    .getByRole('link', { name: 'Explore live demo' })
-    .first();
+  const demoCta = page.getByRole('link', { name: 'Explore live demo' }).first();
   await expect(demoCta).toBeVisible();
   const demoStyles = await demoCta.evaluate((element) => {
     const style = getComputedStyle(element);

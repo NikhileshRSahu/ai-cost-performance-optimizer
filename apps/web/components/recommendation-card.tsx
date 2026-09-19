@@ -109,10 +109,7 @@ export function RecommendationCard({
         </p>
         <div className="flex flex-wrap items-center gap-2">
           {primaryHref !==
-          '/o/' +
-            organizationId +
-            '/lab/' +
-            recommendation.recommendationId ? (
+          '/o/' + organizationId + '/lab/' + recommendation.recommendationId ? (
             <Link
               href={
                 '/o/' +

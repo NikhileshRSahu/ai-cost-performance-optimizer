@@ -186,7 +186,8 @@ export default async function CostDashboardPage({
             We analyzed your AI usage
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-            Here is the spend we observed, the strongest supported action, and what has actually been proven.
+            Here is the spend we observed, the strongest supported action, and
+            what has actually been proven.
           </p>
         </div>
         {hasSelfHostedAuthConfiguration() ? <SignOutButton /> : null}

@@ -36,7 +36,9 @@ async function reachVerification(
   organizationId: string,
   demo = true,
 ): Promise<'READY' | 'ALREADY_VERIFIED'> {
-  await page.goto(`/o/${organizationId}/import?mode=csv${demo ? '&demo=true' : ''}`);
+  await page.goto(
+    `/o/${organizationId}/import?mode=csv${demo ? '&demo=true' : ''}`,
+  );
   await page.locator('input[name="usageCsv"]').setInputFiles(baselineCsv);
   if (demo) {
     await expect(page.locator('input[name="isDemo"]')).toHaveValue('true');
