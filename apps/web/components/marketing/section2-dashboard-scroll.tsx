@@ -64,7 +64,7 @@ export function Section2DashboardScroll() {
           >
             <div className="overflow-hidden rounded-[30px] border border-white/10 bg-[#060a0f] p-2 shadow-[0_0_100px_rgba(35,191,236,0.08)] md:p-3">
               <img
-                src="/section2/evalomics-dashboard.jpg"
+                src="/section2/evalomics-dashboard.webp"
                 alt="Evalomics dashboard showing AI spend, usage, cost drivers, optimization opportunities, benchmarks and verified savings"
                 className="block h-auto w-full rounded-[22px]"
                 draggable={false}
