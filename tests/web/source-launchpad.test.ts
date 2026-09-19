@@ -13,10 +13,11 @@ const importPage = readFileSync(
 describe('source intake flow', () => {
   it('keeps source choice before the authenticated intake details', () => {
     for (const expected of [
-      'Connect provider',
-      'Upload CSV',
+      'Connect workspace',
+      'Upload file',
       'Anthropic',
       'OpenAI',
+      'Choose a source to continue.',
     ]) {
       expect(start).toContain(expected);
     }
