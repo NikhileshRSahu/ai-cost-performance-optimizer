@@ -131,13 +131,7 @@ export async function analyzeImportedUsage(
       ),
     ),
   ];
-  const models = [
-    ...new Set(
-      canonicalRecords.flatMap((record) =>
-        record.model === null ? [] : [record.model],
-      ),
-    ),
-  ];
+  const models = [...new Set(canonicalRecords.map((record) => record.model))];
   const concentratedModel =
     diagnosis.facts.find((fact) => fact.key === 'TOP_MODEL_COST_SHARE')
       ?.evidence.model ?? null;

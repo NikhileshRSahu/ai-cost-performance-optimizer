@@ -8,28 +8,22 @@ test('public beta trust path is visible without authentication', async ({
 
   await expect(
     page.getByRole('heading', {
-      name: 'Find AI waste. Prove the fix.',
+      name: 'Make the invisible economics of AI visible.',
     }),
   ).toBeVisible();
-  await expect(page.getByText('Full launch beta · $0')).toBeVisible();
+  await expect(page.getByText('Public beta', { exact: true })).toBeVisible();
   await expect(page.getByText('No credit card', { exact: true })).toBeVisible();
-  await expect(page.getByText('No invented savings')).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Research' })).toBeVisible();
   await expect(
-    page
-      .getByRole('navigation', { name: 'Public' })
-      .getByRole('link', { name: 'Methodology', exact: true }),
+    page.getByRole('link', { name: 'Analyze my AI usage' }).first(),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'Explore live demo' }).first(),
   ).toBeVisible();
 
-  await page.getByRole('link', { name: 'Research' }).first().click();
-  await expect(
-    page.getByRole('heading', {
-      name: 'Real public evidence, visibly separated from customer proof.',
-    }),
-  ).toBeVisible();
-  await expect(page.getByText('BurstGPT v2.0')).toBeVisible();
-
-  await page.getByRole('link', { name: 'Read the claim methodology' }).click();
+  await page
+    .getByRole('link', { name: 'Methodology', exact: true })
+    .first()
+    .click();
   await expect(
     page.getByRole('heading', {
       name: 'Every recommendation should survive an evidence audit.',
@@ -51,7 +45,7 @@ test('public beta trust path is visible without authentication', async ({
       name: 'Trust is a release gate, not a marketing claim.',
     }),
   ).toBeVisible();
-  await expect(page.getByText('Gated by design')).toBeVisible();
+  await expect(page.getByText('Bounded connector scope')).toBeVisible();
 
   await page.getByRole('link', { name: 'Terms' }).click();
   await expect(
@@ -67,9 +61,11 @@ test('public CTA foregrounds remain readable on their backgrounds', async ({
 }) => {
   await page.goto('/');
 
-  const heroPrimary = page.getByRole('link', {
-    name: 'Start free — run the Work MRI',
-  });
+  const heroPrimary = page
+    .getByRole('link', {
+      name: 'Analyze my AI usage',
+    })
+    .first();
   await expect(heroPrimary).toBeVisible();
   const heroStyles = await heroPrimary.evaluate((element) => {
     const style = getComputedStyle(element);
@@ -77,15 +73,13 @@ test('public CTA foregrounds remain readable on their backgrounds', async ({
   });
   expect(heroStyles.color).not.toBe(heroStyles.backgroundColor);
 
-  const calculatorCta = page.getByRole('link', {
-    name: 'Free cost calculator',
-  });
-  await expect(calculatorCta).toBeVisible();
-  const calculatorStyles = await calculatorCta.evaluate((element) => {
+  const demoCta = page.getByRole('link', { name: 'Explore live demo' }).first();
+  await expect(demoCta).toBeVisible();
+  const demoStyles = await demoCta.evaluate((element) => {
     const style = getComputedStyle(element);
     return { color: style.color, backgroundColor: style.backgroundColor };
   });
-  expect(calculatorStyles.color).not.toBe(calculatorStyles.backgroundColor);
+  expect(demoStyles.color).not.toBe(demoStyles.backgroundColor);
 
   await page.goto('/pricing');
 

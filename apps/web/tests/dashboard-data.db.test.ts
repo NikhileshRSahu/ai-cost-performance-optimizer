@@ -1,19 +1,19 @@
 import { readFile } from 'node:fs/promises';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { loadFounderDashboardEvidence } from '../../apps/web/lib/dashboard-data.js';
-import { createDatabase } from '../../src/persistence/database.js';
-import { providerConnections } from '../../src/persistence/provider-connections-schema.js';
-import { providerEvidenceSnapshots } from '../../src/persistence/provider-evidence-schema.js';
+import { loadFounderDashboardEvidence } from '../lib/dashboard-data';
+import { createDatabase } from '../../../src/persistence/database.js';
+import { providerConnections } from '../../../src/persistence/provider-connections-schema.js';
+import { providerEvidenceSnapshots } from '../../../src/persistence/provider-evidence-schema.js';
 import {
   importRuns,
   ledgerEvents,
   organizations,
   recommendations,
   usageRecords,
-} from '../../src/persistence/schema.js';
-import { analyzeImportedUsage } from '../../src/workbench/analysis-service.js';
-import type { AuthenticatedSession } from '../../src/workbench/authz.js';
-import { importCustomerUsage } from '../../src/workbench/import-service.js';
+} from '../../../src/persistence/schema.js';
+import { analyzeImportedUsage } from '../../../src/workbench/analysis-service.js';
+import type { AuthenticatedSession } from '../../../src/workbench/authz.js';
+import { importCustomerUsage } from '../../../src/workbench/import-service.js';
 
 const databaseUrl = process.env.DATABASE_URL;
 if (databaseUrl === undefined) {
@@ -29,7 +29,10 @@ const session: AuthenticatedSession = {
 async function demoFixture(): Promise<Uint8Array> {
   return new Uint8Array(
     await readFile(
-      new URL('../../fixtures/demo/customer-loop-tough.csv', import.meta.url),
+      new URL(
+        '../../../fixtures/demo/customer-loop-tough.csv',
+        import.meta.url,
+      ),
     ),
   );
 }
@@ -114,8 +117,9 @@ describe('dashboard analysis context selection', () => {
     expect(explicitDemo.isDemo).toBe(true);
     expect(explicitDemo.dataQuality).not.toBe('ZERO_USAGE');
     expect(explicitDemo.observedSpend).not.toBeNull();
+    expect(explicitDemo.recommendations).toBeDefined();
     expect(
-      explicitDemo.recommendations?.every(
+      (explicitDemo.recommendations ?? []).every(
         (recommendation) => recommendation.recommendationId.length > 0,
       ),
     ).toBe(true);

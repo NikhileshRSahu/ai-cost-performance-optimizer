@@ -12,19 +12,23 @@ test('usage analysis opens with an AI Efficiency MRI and split confidence', asyn
 }) => {
   const organizationId = 'journey-org';
 
-  await page.goto(`/o/${organizationId}/import`);
-  await page.locator('input[name="usageCsv"]').setInputFiles(baselineCsv);
-  await page.locator('input[name="isDemo"]').check();
-  await page.getByRole('button', { name: 'Analyze this usage' }).click();
+  await page.goto(`/o/${organizationId}/import?mode=csv&demo=true`);
+  const fileChooserPromise = page.waitForEvent('filechooser');
+  await page.getByRole('button', { name: /Drop your usage CSV here/i }).click();
+  const fileChooser = await fileChooserPromise;
+  await fileChooser.setFiles(baselineCsv);
+  await expect(page.getByText('Ready to analyze')).toBeVisible();
+  await expect(page.locator('input[name="isDemo"]')).toHaveValue('true');
+  await page.getByRole('button', { name: 'Analyze my AI usage' }).click();
 
   await expect(page).toHaveURL(
     new RegExp(`/o/${organizationId}\\?source=import`),
   );
   await expect(
-    page.getByRole('heading', { name: 'AI Efficiency MRI' }),
+    page.getByRole('heading', { name: 'We analyzed your AI usage' }),
   ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
   await expect(
-    page.getByText('Best first move', { exact: true }),
+    page.getByText('Recommended action', { exact: true }),
   ).toBeVisible();
   await expect(
     page.getByText('Detection confidence', { exact: true }),

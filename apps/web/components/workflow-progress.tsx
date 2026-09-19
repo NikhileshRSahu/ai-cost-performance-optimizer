@@ -30,44 +30,62 @@ export function WorkflowProgress({
               : index === currentIndex
                 ? 'current'
                 : 'upcoming';
-          const href =
-            step.id === 'implement' || step.id === 'verify'
-              ? `/o/${organizationId}`
-              : `/o/${organizationId}/${step.id}`;
+          const requiresRecommendation =
+            step.id === 'implement' || step.id === 'verify';
+          const href = requiresRecommendation
+            ? null
+            : `/o/${organizationId}/${step.id}`;
+          const content = (
+            <>
+              <span
+                className={
+                  'grid size-5 shrink-0 place-items-center rounded-full border ' +
+                  (state === 'complete'
+                    ? 'border-emerald-300/25 bg-emerald-300/10'
+                    : state === 'current'
+                      ? 'border-white/25 bg-white/[0.08]'
+                      : 'border-white/10')
+                }
+                aria-hidden="true"
+              >
+                {state === 'complete' ? (
+                  <Check className="size-3" />
+                ) : (
+                  <Circle className="size-2" />
+                )}
+              </span>
+              {step.label}
+            </>
+          );
+          const className =
+            'flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold no-underline transition ' +
+            (state === 'current'
+              ? 'bg-white/[0.085] text-white'
+              : state === 'complete'
+                ? 'text-emerald-200/70 hover:bg-white/[0.04]'
+                : requiresRecommendation
+                  ? 'cursor-default text-white/32'
+                  : 'text-white/70 hover:bg-white/[0.04] hover:text-white/90');
 
           return (
             <li key={step.id} data-state={state}>
-              <Link
-                href={href}
-                aria-current={state === 'current' ? 'step' : undefined}
-                className={
-                  'flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold no-underline transition ' +
-                  (state === 'current'
-                    ? 'bg-white/[0.085] text-white'
-                    : state === 'complete'
-                      ? 'text-emerald-200/70 hover:bg-white/[0.04]'
-                      : 'text-white/70 hover:bg-white/[0.04] hover:text-white/90')
-                }
-              >
+              {href === null ? (
                 <span
-                  className={
-                    'grid size-5 shrink-0 place-items-center rounded-full border ' +
-                    (state === 'complete'
-                      ? 'border-emerald-300/25 bg-emerald-300/10'
-                      : state === 'current'
-                        ? 'border-white/25 bg-white/[0.08]'
-                        : 'border-white/10')
-                  }
-                  aria-hidden="true"
+                  className={className}
+                  aria-current={state === 'current' ? 'step' : undefined}
+                  title="Available after you choose a tested recommendation"
                 >
-                  {state === 'complete' ? (
-                    <Check className="size-3" />
-                  ) : (
-                    <Circle className="size-2" />
-                  )}
+                  {content}
                 </span>
-                {step.label}
-              </Link>
+              ) : (
+                <Link
+                  href={href}
+                  aria-current={state === 'current' ? 'step' : undefined}
+                  className={className}
+                >
+                  {content}
+                </Link>
+              )}
             </li>
           );
         })}

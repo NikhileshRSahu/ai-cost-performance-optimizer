@@ -131,6 +131,7 @@ try {
 
   const evidence = {
     priorityRank: 1,
+    sourceImportId: 'import-1',
     title: 'Move the ranked workload to model-b',
     evidenceRef: 'recommendation:rec-1',
     principalLimitation:

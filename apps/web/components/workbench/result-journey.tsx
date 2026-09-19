@@ -33,7 +33,7 @@ export function ResultJourney({
         <motion.div
           className="absolute left-[8%] top-4 h-px bg-emerald-300/60"
           initial={false}
-          animate={{ width: (index / 3) * 84 + '%' }}
+          animate={{ width: String((index / 3) * 84) + '%' }}
           transition={
             reduceMotion
               ? { duration: 0 }

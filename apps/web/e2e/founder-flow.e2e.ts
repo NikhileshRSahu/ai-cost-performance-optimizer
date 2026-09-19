@@ -23,7 +23,7 @@ test('founder gets one direct answer before optional evidence details', async ({
     page.getByRole('heading', { name: /we analyzed your ai usage/i }),
   ).toBeVisible();
   await expect(page.getByText(demoDisclaimer)).toBeVisible();
-  await expect(page.getByText(/best tested improvement/i)).toBeVisible();
+  await expect(page.getByText(/recommended action/i)).toBeVisible();
   await expect(page.getByText(/tested saving/i)).toBeVisible();
 
   const detectionConfidence = page.getByText('Detection confidence', {
@@ -45,8 +45,16 @@ test('founder gets one direct answer before optional evidence details', async ({
   await expectAccessible(page);
 
   await page.getByText(/see details/i).click();
-  await expect(page.getByText(/what evalomics can see/i)).toBeVisible();
-  await expect(page.getByText(/evidence limitations/i)).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Current versus candidate' }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Performance gate' }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Same-volume economics' }),
+  ).toBeVisible();
+  await expect(page.getByText('Show evidence details')).toBeVisible();
 
   await page.goto('/o/demo-org/lab/rec-1');
   await expect(
@@ -74,6 +82,12 @@ test('founder gets one direct answer before optional evidence details', async ({
   ]) {
     await expect(page.getByRole('heading', { name: section })).toBeVisible();
   }
+  await expect(
+    page.getByRole('link', { name: 'Back to verification' }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'View proof status' }),
+  ).toBeVisible();
   await expectAccessible(page);
 });
 

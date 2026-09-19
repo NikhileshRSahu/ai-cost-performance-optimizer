@@ -5,7 +5,7 @@ import { resolveRuntimeSession } from '../../lib/runtime-session';
 export default async function StartPage({
   searchParams,
 }: Readonly<{
-  searchParams: Promise<{ mode?: string; provider?: string }>;
+  searchParams: Promise<{ mode?: string; provider?: string; intent?: string }>;
 }>) {
   const query = await searchParams;
   const session = await resolveRuntimeSession();
@@ -28,5 +28,10 @@ export default async function StartPage({
     );
   }
 
-  return <StartFlow organizationId={organizationId} />;
+  return (
+    <StartFlow
+      organizationId={organizationId}
+      intent={query.intent === 'analyze' ? 'analyze' : 'start'}
+    />
+  );
 }

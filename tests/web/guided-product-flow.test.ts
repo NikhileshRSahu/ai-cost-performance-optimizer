@@ -1,9 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-const home = readFileSync('apps/web/app/page.tsx', 'utf8');
-const hero = readFileSync(
-  'apps/web/components/marketing/cinematic-video-hero.tsx',
+const landing = readFileSync(
+  'apps/web/components/marketing/launch-template-evalomics.tsx',
   'utf8',
 );
 const start = readFileSync('apps/web/app/start/page.tsx', 'utf8');
@@ -22,15 +21,17 @@ const csv = readFileSync(
 const login = readFileSync('apps/web/app/login/page.tsx', 'utf8');
 
 describe('guided product flow', () => {
-  it('keeps public actions inside the product before authentication', () => {
-    expect(home).toContain('href="/start"');
-    expect(hero).toContain('href="/demo"');
+  it('keeps source choice inside the product before authentication', () => {
+    expect(landing).toContain('href="/start?intent=analyze"');
+    expect(landing).toContain('href="/start?intent=start"');
+    expect(landing).toContain('href="/demo"');
     expect(start).toContain('StartFlow');
     expect(start).not.toContain("redirect('/login')");
-    expect(startFlow).toContain('Connect provider');
-    expect(startFlow).toContain('Upload CSV');
+    expect(startFlow).toContain('Connect usage');
+    expect(startFlow).toContain('Upload file');
     expect(startFlow).toContain('Anthropic');
     expect(startFlow).toContain('OpenAI');
+    expect(startFlow).toContain("'/login?returnTo='");
     expect(startFlow).not.toContain('GitHub');
   });
 

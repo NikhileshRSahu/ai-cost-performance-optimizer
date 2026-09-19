@@ -275,7 +275,7 @@ export async function loadLatestProviderDashboardEvidence(
   const recommendationViews = Object.freeze(
     currentRows.slice(0, 3).map(recommendationView),
   );
-  const strongest = recommendationViews[0] ?? null;
+  const strongest = recommendationViews.at(0) ?? null;
 
   let verifiedNetSavings: DashboardEvidence['verifiedNetSavings'] = null;
   if (strongest !== null) {

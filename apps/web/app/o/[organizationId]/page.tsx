@@ -114,14 +114,14 @@ export default async function CostDashboardPage({
       <div className="space-y-7">
         <section>
           <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-sky-300">
-            Cost dashboard
+            AI Efficiency MRI
           </p>
           <h1 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-slate-100 sm:text-3xl">
             Bring your first usage window into focus.
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-            Connect a supported provider or upload a CSV. Once evidence exists,
-            this page becomes the compact cost dashboard.
+            Connect a supported provider or upload a CSV. Evalomics will analyze
+            the evidence and bring you back here with one clear result.
           </p>
         </section>
 
@@ -171,19 +171,18 @@ export default async function CostDashboardPage({
 
       <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <div className="mb-3 flex items-center gap-2">
-            <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-semibold text-emerald-300">
-              ● Cost intelligence
-            </span>
-            <span className="font-mono text-[11px] text-slate-500">
-              {view.periodLabel}
-            </span>
-          </div>
-          <h1 className="text-2xl font-semibold tracking-[-0.04em] text-slate-100 sm:text-3xl">
-            Cost Dashboard
+          <p className="mb-3 font-mono text-[11px] text-slate-500">
+            {view.periodLabel}
+          </p>
+          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-sky-300">
+            AI Efficiency MRI
+          </p>
+          <h1 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-slate-100 sm:text-3xl">
+            We analyzed your AI usage
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-            One screen for spend, supported opportunities, and proof state.
+            Here is the spend we observed, the strongest supported action, and
+            what has actually been proven.
           </p>
         </div>
         {hasSelfHostedAuthConfiguration() ? <SignOutButton /> : null}
@@ -210,58 +209,19 @@ export default async function CostDashboardPage({
         </section>
       ) : (
         <>
-          <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {[
-              {
-                label: 'Observed AI spend',
-                value: moneyLabel(view.observedSpend),
-                detail:
-                  view.sourceKind === 'PROVIDER'
-                    ? (view.providerName ?? 'Provider')
-                    : view.sourceKind,
-                tone: 'text-sky-300',
-              },
-              {
-                label: 'Savings signals',
-                value: String(view.recommendations.length),
-                detail: 'ranked recommendations',
-                tone: 'text-slate-100',
-              },
-              {
-                label: 'Modeled upside',
-                value: modeled,
-                detail: 'planning evidence only',
-                tone: 'text-emerald-300',
-              },
-              {
-                label: 'Verified savings',
-                value: verifiedMoney(view.verifiedNetSavings),
-                detail: 'production evidence',
-                tone: 'text-violet-300',
-              },
-            ].map(({ label, value, detail, tone }) => (
-              <article
-                key={label}
-                className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5"
-              >
-                <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
-                  {label}
-                </p>
-                <p className={`mt-4 font-mono text-2xl ${tone}`}>{value}</p>
-                <p className="mt-2 text-[10px] text-slate-600">{detail}</p>
-              </article>
-            ))}
-          </section>
-
           <section className="grid gap-6 xl:grid-cols-[1.25fr_.75fr]">
             <div className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.16em] text-emerald-300/70">
-                    Top recommendation
+                    Recommended action
                   </p>
                   <h2 className="mt-2 text-base font-medium text-slate-100">
-                    Strongest supported action
+                    {view.strongestAction?.state === 'TESTED'
+                      ? 'Best tested improvement'
+                      : view.strongestAction?.state === 'VERIFIED'
+                        ? 'Best verified improvement'
+                        : 'Strongest supported action'}
                   </h2>
                 </div>
                 <Sparkles className="size-4 text-emerald-300/60" />
@@ -344,9 +304,58 @@ export default async function CostDashboardPage({
                 href={`/o/${organizationId}/proof`}
                 className="mt-5 inline-flex items-center gap-2 text-xs font-semibold text-violet-300 no-underline"
               >
-                Open verified savings <ArrowRight className="size-3.5" />
+                {view.verifiedNetSavings === null
+                  ? 'View proof status'
+                  : 'Open verified savings'}{' '}
+                <ArrowRight className="size-3.5" />
               </Link>
             </div>
+          </section>
+
+          <section
+            className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
+            aria-label="Supporting evidence summary"
+          >
+            {[
+              {
+                label: 'Observed AI spend',
+                value: moneyLabel(view.observedSpend),
+                detail:
+                  view.sourceKind === 'PROVIDER'
+                    ? (view.providerName ?? 'Provider')
+                    : view.sourceKind,
+                tone: 'text-sky-300',
+              },
+              {
+                label: 'Opportunities found',
+                value: String(view.recommendations.length),
+                detail: 'supported recommendations',
+                tone: 'text-slate-100',
+              },
+              {
+                label: 'Modeled upside',
+                value: modeled,
+                detail: 'planning evidence only',
+                tone: 'text-emerald-300',
+              },
+              {
+                label: 'Verified savings',
+                value: verifiedMoney(view.verifiedNetSavings),
+                detail: 'production evidence',
+                tone: 'text-violet-300',
+              },
+            ].map(({ label, value, detail, tone }) => (
+              <article
+                key={label}
+                className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5"
+              >
+                <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+                  {label}
+                </p>
+                <p className={`mt-4 font-mono text-2xl ${tone}`}>{value}</p>
+                <p className="mt-2 text-[10px] text-slate-600">{detail}</p>
+              </article>
+            ))}
           </section>
 
           <section className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">

@@ -17,13 +17,16 @@ import {
 import { EvalomicsMark } from '../evalomics-mark';
 import { cn } from '../../lib/utils';
 
-const navigation = [
-  { slug: '', label: 'Cost Dashboard', icon: LayoutDashboard },
-  { slug: '/import', label: 'Usage & Import', icon: FileInput },
+const primaryNavigation = [
+  { slug: '', label: 'Overview', icon: LayoutDashboard },
+  { slug: '/import', label: 'Usage', icon: FileInput },
   { slug: '/recommendations', label: 'Recommendations', icon: Sparkles },
+  { slug: '/proof', label: 'Proof', icon: ShieldCheck },
+] as const;
+
+const utilityNavigation = [
   { slug: '/prompts', label: 'Prompt Optimizer', icon: BookOpen },
   { slug: '/calculator', label: 'Model Calculator', icon: ArrowLeftRight },
-  { slug: '/proof', label: 'Verified Savings', icon: ShieldCheck },
   { slug: '/settings', label: 'Settings', icon: Settings2 },
 ] as const;
 
@@ -33,6 +36,9 @@ function NavLinks({
 }: Readonly<{ organizationId: string; onNavigate?: () => void }>) {
   const pathname = usePathname();
   const base = `/o/${organizationId}`;
+  const utilityActive = utilityNavigation.some(({ slug }) =>
+    pathname.startsWith(base + slug),
+  );
 
   function linkClass(href: string): string {
     const active =
@@ -51,7 +57,7 @@ function NavLinks({
   return (
     <>
       <div className="grid gap-1">
-        {navigation.map(({ slug, label, icon: Icon }) => {
+        {primaryNavigation.map(({ slug, label, icon: Icon }) => {
           const href = base + slug;
           return (
             <Link
@@ -71,6 +77,31 @@ function NavLinks({
           );
         })}
       </div>
+
+      <details
+        className="mt-5 border-t border-white/[0.06] pt-4"
+        open={utilityActive}
+      >
+        <summary className="cursor-pointer list-none px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+          Tools & settings
+        </summary>
+        <div className="mt-2 grid gap-1">
+          {utilityNavigation.map(({ slug, label, icon: Icon }) => {
+            const href = base + slug;
+            return (
+              <Link
+                key={label}
+                href={href}
+                onClick={onNavigate}
+                className={linkClass(href)}
+              >
+                <Icon className="size-4" strokeWidth={1.8} aria-hidden="true" />
+                <span>{label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </details>
     </>
   );
 }
@@ -100,16 +131,15 @@ export function WorkbenchShell({
               Evalomics
             </p>
             <p className="m-0 mt-0.5 text-[11px] text-slate-500">
-              AI cost intelligence
+              AI efficiency intelligence
             </p>
           </div>
         </div>
 
         <div className="mb-3 flex items-center justify-between px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">
           <span>Workspace</span>
-          <span className="flex items-center gap-1 font-mono normal-case tracking-normal text-emerald-400">
-            <span className="size-1.5 rounded-full bg-emerald-400" />
-            live
+          <span className="font-mono normal-case tracking-normal text-slate-500">
+            {role.toLowerCase()}
           </span>
         </div>
 
@@ -142,7 +172,9 @@ export function WorkbenchShell({
             open ? 'Close workspace navigation' : 'Open workspace navigation'
           }
           aria-expanded={open}
-          onClick={() => setOpen((value) => !value)}
+          onClick={() => {
+            setOpen((value) => !value);
+          }}
           className="grid size-9 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-white"
         >
           {open ? <X className="size-4" /> : <Menu className="size-4" />}
@@ -152,11 +184,15 @@ export function WorkbenchShell({
       {open ? (
         <div
           className="fixed inset-0 z-20 bg-black/55 lg:hidden"
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            setOpen(false);
+          }}
         >
           <aside
             className="absolute left-0 top-14 h-[calc(100%-3.5rem)] w-[min(86vw,300px)] border-r border-white/10 bg-[#0d1420] p-4"
-            onClick={(event) => event.stopPropagation()}
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
           >
             <div className="mb-5">
               <p className="truncate text-sm font-semibold">
@@ -167,7 +203,9 @@ export function WorkbenchShell({
             <nav aria-label="Evalomics workspace mobile">
               <NavLinks
                 organizationId={organizationId}
-                onNavigate={() => setOpen(false)}
+                onNavigate={() => {
+                  setOpen(false);
+                }}
               />
             </nav>
           </aside>

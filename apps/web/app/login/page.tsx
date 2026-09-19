@@ -40,30 +40,33 @@ export default async function LoginPage({
     !returnTo.startsWith('//')
       ? returnTo
       : '/start';
+  const backToChosenFlow = callbackPath.startsWith('/start')
+    ? callbackPath
+    : '/start';
   const requestHeaders = await headers();
   const host = requestHeaders.get('host');
   const authConfigured = hasSelfHostedAuthConfiguration();
   const canSignIn = authConfigured && authHostAllowed(host);
 
   return (
-    <div className="mx-auto grid min-h-[620px] max-w-5xl overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_30px_100px_rgba(15,23,42,.08)] lg:grid-cols-[1fr_.9fr]">
+    <div className="eval-glass-panel relative mx-auto grid min-h-[620px] max-w-5xl overflow-hidden rounded-[28px] text-white lg:grid-cols-[1fr_.9fr]">
       <section className="flex flex-col justify-between p-7 sm:p-10 lg:p-12">
         <div>
           <Link
-            href="/start"
-            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 no-underline hover:text-slate-900"
+            href={backToChosenFlow}
+            className="inline-flex items-center gap-2 text-xs font-semibold text-white/42 no-underline hover:text-white"
           >
             <ArrowLeft className="size-3.5" /> Back to your chosen flow
           </Link>
 
           <div className="mt-14 max-w-xl">
-            <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+            <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300/75">
               Private workspace
             </p>
-            <h1 className="mt-4 text-[clamp(3rem,6vw,5.2rem)] font-semibold leading-[.92] tracking-[-.065em] text-slate-950">
+            <h1 className="mt-4 text-[clamp(3rem,6vw,5.2rem)] font-semibold leading-[.92] tracking-[-.065em] text-white">
               Give us usage. Get one answer.
             </h1>
-            <p className="mt-6 text-base leading-7 text-slate-600">
+            <p className="mt-6 text-base leading-7 text-white/42">
               You already chose what you want to do. Sign in only to create the
               private workspace for OpenAI, Anthropic, CSV, or demo evidence.
             </p>
@@ -89,7 +92,7 @@ export default async function LoginPage({
           </div>
         </div>
 
-        <div className="mt-12 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-medium text-slate-600">
+        <div className="mt-12 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-medium text-white/42">
           {[
             'Full beta · free',
             'No credit card',
@@ -103,7 +106,7 @@ export default async function LoginPage({
         </div>
       </section>
 
-      <section className="relative flex items-center bg-[#070a0f] p-7 text-white sm:p-10 lg:p-12">
+      <section className="relative flex items-center border-l border-white/[0.06] bg-[radial-gradient(circle_at_50%_15%,rgba(249,115,22,.18),transparent_40%),rgba(5,7,8,.46)] p-7 text-white backdrop-blur-2xl sm:p-10 lg:p-12">
         <div className="w-full">
           <LoginProductMotion />
         </div>

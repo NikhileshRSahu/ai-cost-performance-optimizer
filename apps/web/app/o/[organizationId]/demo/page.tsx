@@ -52,7 +52,7 @@ export default async function GuidedDemoPage({
           </Link>
           <Link
             className="primary-action"
-            href={'/o/' + organizationId + '/import?demo=true'}
+            href={'/o/' + organizationId + '/import?mode=csv&demo=true'}
           >
             Open demo import
           </Link>

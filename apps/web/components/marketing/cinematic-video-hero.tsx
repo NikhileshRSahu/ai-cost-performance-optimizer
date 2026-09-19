@@ -24,8 +24,12 @@ export function CinematicVideoHero() {
     }
 
     void video.play().then(
-      () => setPlaying(true),
-      () => setPlaying(false),
+      () => {
+        setPlaying(true);
+      },
+      () => {
+        setPlaying(false);
+      },
     );
   }, [reduceMotion]);
 
@@ -34,7 +38,9 @@ export function CinematicVideoHero() {
     if (video === null) return;
 
     if (video.paused) {
-      void video.play().then(() => setPlaying(true));
+      void video.play().then(() => {
+        setPlaying(true);
+      });
     } else {
       video.pause();
       setPlaying(false);

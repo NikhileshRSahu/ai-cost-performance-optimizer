@@ -36,22 +36,33 @@ async function reachVerification(
   organizationId: string,
   demo = true,
 ): Promise<'READY' | 'ALREADY_VERIFIED'> {
-  await page.goto(`/o/${organizationId}/import`);
-  await page.locator('input[name="usageCsv"]').setInputFiles(baselineCsv);
+  await page.goto(
+    `/o/${organizationId}/import?mode=csv${demo ? '&demo=true' : ''}`,
+  );
+  const fileChooserPromise = page.waitForEvent('filechooser');
+  await page.getByRole('button', { name: /Drop your usage CSV here/i }).click();
+  const fileChooser = await fileChooserPromise;
+  await fileChooser.setFiles(baselineCsv);
+  await expect(page.getByText('Ready to analyze')).toBeVisible();
   if (demo) {
-    await page.locator('input[name="isDemo"]').check();
+    await expect(page.locator('input[name="isDemo"]')).toHaveValue('true');
   }
-  await page.getByRole('button', { name: 'Analyze this usage' }).click();
+  await page.getByRole('button', { name: 'Analyze my AI usage' }).click();
   await expect(page).toHaveURL(
     new RegExp(`/o/${organizationId}\\?source=import`),
   );
   await expect(
     page.getByRole('heading', { name: 'We analyzed your AI usage' }),
   ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
+
+  if (await page.locator('.state-badge.state-verified').first().isVisible()) {
+    return 'ALREADY_VERIFIED';
+  }
+
   await expect(
     page.getByText('Recommended action', { exact: true }),
   ).toBeVisible();
-  await expect(page.getByText('Savings amount', { exact: true })).toBeVisible();
+  await expect(page.getByText('Saving status', { exact: true })).toBeVisible();
   await expect(
     page.getByText('Not measured yet', { exact: true }),
   ).toBeVisible();
@@ -60,23 +71,15 @@ async function reachVerification(
   ).toBeVisible();
   await expectAccessible(page);
 
-  // Advanced validation remains available without being the default customer path.
-  await page.goto(`/o/${organizationId}/workloads`);
-  await page.getByLabel('Workload name').fill('classification');
-  await page.getByLabel('Environment').fill('production');
-  await page.getByLabel('Minimum quality').fill('0.90');
-
-  const latencyField = page.getByLabel('Maximum p95 latency (ms)');
-  if (await latencyField.isVisible()) {
-    await latencyField.fill('1000');
-  }
-  const failureRateField = page.getByLabel('Maximum failure rate');
-  if (await failureRateField.isVisible()) {
-    await failureRateField.fill('0.05');
-  }
-
+  // Optional proof follows the same customer-facing path as the product.
   await page
-    .getByRole('button', { name: 'Save safety floor and continue' })
+    .getByRole('link', { name: 'Measure exact savings (optional)' })
+    .click();
+  await expect(
+    page.getByRole('heading', { name: 'Measure exact savings' }),
+  ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
+  await page
+    .getByRole('link', { name: 'Measure exact savings', exact: true })
     .click();
 
   await expect(
@@ -84,7 +87,57 @@ async function reachVerification(
       name: 'Test whether a cheaper setup is safe',
     }),
   ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
-  await page.locator('input[name="benchmarkCsv"]').setInputFiles(benchmarkCsv);
+
+  const defineConstraints = page.getByRole('link', {
+    name: 'Define constraints',
+  });
+  const benchmarkUpload = page.getByLabel(/Upload paired test cases/i);
+
+  const benchmarkState = await expect
+    .poll(
+      async () => {
+        if (await benchmarkUpload.isVisible()) return 'ready';
+        if (await defineConstraints.isVisible()) return 'constraints';
+        return 'loading';
+      },
+      { timeout: JOURNEY_STATE_TIMEOUT_MS },
+    )
+    .not.toBe('loading')
+    .then(async () => {
+      if (await benchmarkUpload.isVisible()) return 'ready';
+      return 'constraints';
+    });
+
+  if (benchmarkState === 'constraints') {
+    await defineConstraints.click();
+    await page.getByLabel('Workload name').fill('classification');
+    await page.getByLabel('Environment').fill('production');
+    await page.getByLabel('Minimum quality').fill('0.90');
+
+    const latencyField = page.getByLabel('Maximum p95 latency (ms)');
+    if (await latencyField.isVisible()) {
+      await latencyField.fill('1000');
+    }
+    const failureRateField = page.getByLabel('Maximum failure rate');
+    if (await failureRateField.isVisible()) {
+      await failureRateField.fill('0.05');
+    }
+
+    await page
+      .getByRole('button', { name: 'Save safety floor and continue' })
+      .click();
+
+    await expect(
+      page.getByRole('heading', {
+        name: 'Test whether a cheaper setup is safe',
+      }),
+    ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
+  }
+
+  await expect(benchmarkUpload).toBeVisible({
+    timeout: JOURNEY_STATE_TIMEOUT_MS,
+  });
+  await benchmarkUpload.setInputFiles(benchmarkCsv);
   if (demo) {
     await page.locator('input[name="isDemo"]').check();
   }
@@ -120,7 +173,9 @@ async function reachVerification(
     return 'ALREADY_VERIFIED';
   }
 
-  await expect(page.locator('.state-badge.state-tested').first()).toBeVisible();
+  await expect(page.locator('.state-badge.state-tested').first()).toBeVisible({
+    timeout: JOURNEY_STATE_TIMEOUT_MS,
+  });
   await page.getByRole('link', { name: 'Prepare safe rollout' }).click();
 
   const implementedAt = page.getByLabel('Implemented at (UTC)');
@@ -161,7 +216,7 @@ async function submitPostChange(
   await page.getByLabel('Post-change p95 latency (ms)').fill('844');
   await page.getByLabel('Post-change failure rate').fill('0.018');
   await page
-    .getByLabel('Performance evidence reference')
+    .getByLabel('Quality evidence reference')
     .fill('eval-suite:classification-v3');
   await page.getByLabel('Request/unit definition is unchanged.').check();
   await page.getByLabel('Workload mix is comparable to the baseline.').check();
@@ -187,7 +242,7 @@ test('hard customer journey reaches verified savings', async ({ page }) => {
     page.locator('.state-badge.state-verified').first(),
   ).toBeVisible();
   await expect(
-    page.getByText('Verified net saving', { exact: true }),
+    page.getByText('Verified savings', { exact: true }),
   ).toBeVisible();
 });
 
@@ -211,6 +266,7 @@ test('non-demo customer path reaches verified savings without demo provenance', 
 });
 
 test('failed post-change quality never becomes verified', async ({ page }) => {
+  test.setTimeout(90_000);
   await reachVerification(page, 'journey-bad-org');
   await submitPostChange(page, '0.80');
 
@@ -219,7 +275,9 @@ test('failed post-change quality never becomes verified', async ({ page }) => {
   await expect(page.getByText('Verified net impact')).toHaveCount(0);
 
   await page.goto('/o/journey-bad-org');
-  await expect(page.locator('.state-badge.state-tested').first()).toBeVisible();
+  await expect(page.locator('.state-badge.state-tested').first()).toBeVisible({
+    timeout: JOURNEY_STATE_TIMEOUT_MS,
+  });
   await expect(page.locator('.state-badge.state-verified')).toHaveCount(0);
 });
 
@@ -231,7 +289,8 @@ test('guided synthetic walkthrough preselects demo mode', async ({ page }) => {
     }),
   ).toBeVisible();
   await page.getByRole('link', { name: 'Open demo import' }).click();
-  await expect(page.locator('input[name="isDemo"]')).toBeChecked();
+  await expect(page).toHaveURL(/\/import\?mode=csv&demo=true$/);
+  await expect(page.locator('input[name="isDemo"]')).toHaveValue('true');
   await expect(
     page.getByText('Synthetic demo data — not a customer result.'),
   ).toHaveCount(0);

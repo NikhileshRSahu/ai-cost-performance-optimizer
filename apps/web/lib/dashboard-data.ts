@@ -186,7 +186,7 @@ export async function loadFounderDashboardEvidence(
         ).at(0)
       : explicitImport;
 
-  const latestUsable =
+  let latestUsable =
     explicitImportId === null
       ? (
           await db
@@ -210,6 +210,50 @@ export async function loadFounderDashboardEvidence(
           (selection.source !== 'DEMO' || explicitImport.isDemo)
         ? explicitImport
         : undefined;
+
+  if (selection.source === 'AUTO' && latestUsable !== undefined) {
+    const recentVerifications = await db
+      .select({ evidence: verificationWindows.evidence })
+      .from(verificationWindows)
+      .where(eq(verificationWindows.organizationId, organizationId))
+      .orderBy(desc(verificationWindows.createdAt))
+      .limit(50);
+
+    const verificationForLatestImport = recentVerifications.find(
+      (row) =>
+        evidenceString(row.evidence, 'postImportId') === latestUsable?.id,
+    );
+    const baselineImportId =
+      verificationForLatestImport === undefined
+        ? null
+        : evidenceString(
+            verificationForLatestImport.evidence,
+            'baselineImportId',
+          );
+
+    if (baselineImportId !== null) {
+      const baselineImport = (
+        await db
+          .select()
+          .from(importRuns)
+          .where(
+            and(
+              eq(importRuns.organizationId, organizationId),
+              eq(importRuns.id, baselineImportId),
+              or(
+                eq(importRuns.status, 'COMPLETED'),
+                eq(importRuns.status, 'PARTIAL'),
+              ),
+            ),
+          )
+          .limit(1)
+      ).at(0);
+
+      if (baselineImport !== undefined) {
+        latestUsable = baselineImport;
+      }
+    }
+  }
 
   if (selection.source === 'PROVIDER') {
     const providerEvidence = await loadLatestProviderDashboardEvidence(

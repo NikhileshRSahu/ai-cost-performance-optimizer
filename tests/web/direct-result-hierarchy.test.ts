@@ -7,23 +7,25 @@ const shell = readFileSync(
   'utf8',
 );
 
-describe('cost dashboard hierarchy', () => {
-  it('keeps the default workspace focused on spend, recommendations, and proof', () => {
-    expect(page).toContain('Cost Dashboard');
+describe('direct result hierarchy', () => {
+  it('keeps the default workspace answer-first and moves utilities behind secondary navigation', () => {
+    expect(page).toContain('We analyzed your AI usage');
     expect(page).toContain('Observed AI spend');
-    expect(page).toContain('Savings signals');
+    expect(page).toContain('Opportunities found');
     expect(page).toContain('Modeled upside');
     expect(page).toContain('Verified savings');
-    expect(page).toContain('Top recommendation');
+    expect(page).toContain('Recommended action');
+    expect(page).toContain('Supporting evidence summary');
     expect(page).not.toContain('<WorkMri');
 
     for (const expected of [
-      'Cost Dashboard',
-      'Usage & Import',
+      'Overview',
+      'Usage',
       'Recommendations',
+      'Proof',
+      'Tools & settings',
       'Prompt Optimizer',
       'Model Calculator',
-      'Verified Savings',
       'Settings',
     ]) {
       expect(shell).toContain(expected);
