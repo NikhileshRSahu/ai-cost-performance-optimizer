@@ -265,16 +265,16 @@ export function LaunchTemplateEvalomics() {
             </p>
             <div className="eval-template-hero-actions">
               <Link
-                href="/start?intent=analyze"
+                href="/demo"
                 className="eval-template-button eval-template-button--light"
               >
-                Analyze my AI usage <ArrowRight size={16} />
+                Try with demo data <ArrowRight size={16} />
               </Link>
               <Link
-                href="/demo"
+                href="/start?intent=analyze"
                 className="eval-template-button eval-template-button--glass"
               >
-                Explore live demo
+                Analyze my own AI usage
               </Link>
             </div>
             <div className="eval-template-provider-row">
@@ -452,16 +452,16 @@ export function LaunchTemplateEvalomics() {
             </p>
             <div>
               <Link
-                href="/start?intent=analyze"
+                href="/demo"
                 className="eval-template-button eval-template-button--light"
               >
-                Analyze my AI usage <ArrowRight size={16} />
+                Try with demo data <ArrowRight size={16} />
               </Link>
               <Link
-                href="/demo"
+                href="/start?intent=analyze"
                 className="eval-template-button eval-template-button--glass"
               >
-                Explore live demo
+                Analyze my own AI usage
               </Link>
             </div>
           </div>
