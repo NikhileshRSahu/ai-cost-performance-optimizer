@@ -120,7 +120,7 @@ export default async function OptimizationReportPage({
             className="secondary-action"
             href={`/o/${organizationId}/proof`}
           >
-            View proof status
+            View result evidence
           </Link>
         </div>
         <PrintReportButton />
