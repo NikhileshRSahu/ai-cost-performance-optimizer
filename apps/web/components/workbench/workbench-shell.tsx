@@ -11,7 +11,6 @@ import {
   LayoutDashboard,
   Menu,
   Settings2,
-  ShieldCheck,
   Sparkles,
   X,
 } from 'lucide-react';
