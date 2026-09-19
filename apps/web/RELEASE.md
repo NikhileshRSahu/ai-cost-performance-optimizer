@@ -33,3 +33,5 @@ Production redeploy retry for latest Evalomics auth + branding fixes — 2026-09
 Production redeploy for draggable dashboard and calculator contrast fix — 2026-09-19.
 
 Production redeploy for draggable observability-style dashboard — 2026-09-19.
+
+Final send-ready gate: demo-first flow, CSV compatibility, auth, and draggable observability dashboard — 2026-09-19.
