@@ -1,35 +1,48 @@
 # Evalomics
 
-AI cost & performance optimization with an evidence ladder: **Observed → Potential → Tested → Verified**.
+Evalomics is an AI cost & performance optimization product built around one evidence rule:
 
-## What is included
+**Observed → Potential → Tested → Verified**
 
-- Marketing site and interactive evidence-ladder demo
-- Real email/password authentication using Neon Managed Better Auth
-- Protected onboarding and dashboard routes
-- Provider connection / CSV onboarding UI, partial-sync state, honest empty state
-- Dashboard, opportunities, experiment flow, reports, alerts, integrations, team/RBAC, billing, settings
-- Responsive desktop/mobile layout matching the locked Evalomics visual direction
-- Health endpoint at `/api/health`
+A detected opportunity is not called savings. A test result is not called savings. A number becomes savings only after rollout and a production verification window show the delta in observed spend while guardrails remain intact.
 
-## Required production environment variables
+## Production app
+
+The deployable Next.js application lives in `apps/web` because the preserved Vercel project uses that root directory.
+
+It includes:
+
+- evidence-led marketing site and pricing
+- real Neon Managed Better Auth sign-up / sign-in / sign-out
+- protected onboarding and dashboard routes
+- read-only provider/CSV onboarding UX
+- partial-sync and honest empty states
+- dashboard evidence ladder
+- opportunity evidence detail
+- controlled experiment and Approver-only rollout flow
+- verification window and finance-ready verified report
+- alerts, integrations, team/RBAC, billing, settings
+- responsive desktop/mobile UI
+- `/api/health` deployment health endpoint
+
+## Local development
+
+```bash
+cd apps/web
+npm install
+cp ../../.env.example .env.local
+npm run dev
+```
+
+## Required environment
 
 ```bash
 NEON_AUTH_BASE_URL=https://ep-green-night-b4iaryax.neonauth.c-6.us-east-2.aws.neon.tech/evalomics/auth
 NEON_AUTH_COOKIE_SECRET=<32+ character random secret>
 ```
 
-The existing Neon Auth project already trusts `https://evalomics.vercel.app`.
+The preserved Vercel project may also supply the legacy `BETTER_AUTH_SECRET`; the app accepts it as a backwards-compatible secure cookie secret.
 
-## Local development
+## Production boundaries
 
-```bash
-npm install
-npm run dev
-```
-
-Then open `http://localhost:3000`.
-
-## Product integrity rule
-
-Potential and Tested values are never labeled saved. A number is called savings only after rollout and a production verification window shows the delta in observed spend with guardrails intact.
+Authentication is real. The current product data and provider/experiment flows are a clearly labeled sample workspace and safe interaction model. Real provider credential persistence, production traffic mutation, payment processing, custom production SMTP, and customer-owned Google OAuth branding require their respective production credentials and commercial configuration and are not faked in this repository.
