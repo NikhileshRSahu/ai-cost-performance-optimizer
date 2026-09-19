@@ -69,7 +69,7 @@ export function DashboardWidgetGrid({
 
   const [order, setOrder] = useState<string[]>(initialOrder);
   const [draggingId, setDraggingId] = useState<string | null>(null);
-  const [editable, setEditable] = useState(true);
+  const [editable, setEditable] = useState(false);
 
   useEffect(() => {
     try {
@@ -128,7 +128,7 @@ export function DashboardWidgetGrid({
     <section aria-label="Customizable Evalomics dashboard">
       <div className="mb-3 flex items-center justify-between gap-3 border-b border-white/[0.05] pb-3">
         <p className="m-0 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-          Dashboard widgets
+          Your overview
         </p>
         <div className="flex items-center gap-2">
           <button
@@ -136,14 +136,14 @@ export function DashboardWidgetGrid({
             onClick={() => {
               setEditable((value) => !value);
             }}
-            className="rounded-md border border-white/[0.09] bg-[#111214] px-3 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-400 transition hover:border-white/[0.16] hover:text-white"
+            className="rounded-md border border-white/[0.07] bg-transparent px-2.5 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-slate-500 transition hover:border-white/[0.14] hover:text-white"
           >
-            {editable ? 'Lock layout' : 'Edit layout'}
+            {editable ? 'Done' : 'Customize'}
           </button>
           <button
             type="button"
             onClick={resetLayout}
-            className="inline-flex items-center gap-1.5 rounded-md border border-white/[0.09] bg-[#111214] px-3 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-400 transition hover:border-white/[0.16] hover:text-white"
+            className="inline-flex items-center gap-1.5 rounded-md border border-white/[0.07] bg-transparent px-2.5 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-slate-500 transition hover:border-white/[0.14] hover:text-white"
           >
             <RotateCcw className="size-3" />
             Reset
@@ -151,7 +151,7 @@ export function DashboardWidgetGrid({
         </div>
       </div>
 
-      <div className="grid auto-rows-[minmax(170px,auto)] grid-cols-1 gap-3 md:grid-cols-4">
+      <div className="grid auto-rows-[minmax(150px,auto)] grid-cols-1 gap-3 md:grid-cols-4">
         {order.map((id) => {
           const item = itemById.get(id);
           if (item === undefined) return null;
