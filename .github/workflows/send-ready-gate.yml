@@ -1,5 +1,5 @@
 name: Send-ready gate
-# final release verification retry after demo-first E2E alignment
+# final release verification retry after E2E formatting
 
 on:
   push:
