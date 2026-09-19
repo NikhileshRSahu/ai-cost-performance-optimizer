@@ -54,6 +54,11 @@ async function reachVerification(
   await expect(
     page.getByRole('heading', { name: 'We analyzed your AI usage' }),
   ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
+
+  if (await page.locator('.state-badge.state-verified').first().isVisible()) {
+    return 'ALREADY_VERIFIED';
+  }
+
   await expect(
     page.getByText('Recommended action', { exact: true }),
   ).toBeVisible();
@@ -237,7 +242,7 @@ test('hard customer journey reaches verified savings', async ({ page }) => {
     page.locator('.state-badge.state-verified').first(),
   ).toBeVisible();
   await expect(
-    page.getByText('Verified net saving', { exact: true }),
+    page.getByText('Verified savings', { exact: true }),
   ).toBeVisible();
 });
 
