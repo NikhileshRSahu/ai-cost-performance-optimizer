@@ -224,11 +224,6 @@ function EvidenceSteps() {
 export function LaunchTemplateEvalomics() {
   return (
     <div className="eval-template-page">
-      <div className="eval-template-announcement">
-        Evidence-first AI cost optimization <span>·</span> Potential ≠ Tested ≠
-        Verified
-      </div>
-
       <header className="eval-template-nav">
         <Link href="/" className="eval-template-brand">
           <EvalomicsMark size={25} />
