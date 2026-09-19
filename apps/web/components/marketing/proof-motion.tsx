@@ -10,7 +10,7 @@ const proofCards = [
     body: 'Requests, models, repeated input, and cost drivers become one readable operating picture.',
     accent: 'cyan',
     icon: ScanSearch,
-    image: '/proof/evalomics-proof-visibility.webp',
+    image: '/proof/evalomics-proof-visibility.svg',
     alt: 'Evalomics proof visual showing AI usage, total spend, model mix, and cost-driver analysis.',
   },
   {
@@ -19,7 +19,7 @@ const proofCards = [
     body: 'Candidate optimizations move through a declared quality floor before they can become a stronger claim.',
     accent: 'amber',
     icon: FlaskConical,
-    image: '/proof/evalomics-proof-testing.webp',
+    image: '/proof/evalomics-proof-testing.svg',
     alt: 'Evalomics proof visual comparing current and optimized model cost and quality before applying a recommendation.',
   },
   {
@@ -28,7 +28,7 @@ const proofCards = [
     body: 'Evalomics keeps modeled, tested, and production-verified outcomes visibly separate.',
     accent: 'verified',
     icon: ShieldCheck,
-    image: '/proof/evalomics-proof-verification.webp',
+    image: '/proof/evalomics-proof-verification.svg',
     alt: 'Evalomics proof visual showing potential, tested, and verified savings as separate evidence states.',
   },
 ] as const;
@@ -91,8 +91,8 @@ export function ProofMotion() {
                 <img
                   src={card.image}
                   alt={card.alt}
-                  width={360}
-                  height={290}
+                  width={1200}
+                  height={800}
                   loading="lazy"
                   decoding="async"
                   className="eval-proof-card__image"

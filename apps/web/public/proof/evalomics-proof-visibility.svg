@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07111b"/><stop offset="1" stop-color="#05090f"/></linearGradient><filter id="g"><feGaussianBlur stdDeviation="18"/></filter></defs>
+<rect width="1200" height="800" rx="38" fill="url(#bg)"/>
+<circle cx="930" cy="120" r="120" fill="#0da9d8" opacity=".08" filter="url(#g)"/>
+<text x="58" y="62" class="t">AI Spend Overview</text><text x="58" y="96" class="s">Synthetic usage · last 30 days</text>
+<rect x="58" y="130" width="1084" height="210" rx="26" class="box"/>
+<text x="86" y="174" class="k">TOTAL AI SPEND</text><text x="86" y="246" class="n">$1,774.78</text><text x="86" y="290" class="green" font-size="24" font-weight="700">↓ 28% vs previous period</text>
+<g transform="translate(680 170)"><rect x="0" y="100" width="56" height="50" rx="8" fill="#27769a"/><rect x="76" y="75" width="56" height="75" rx="8" fill="#2d98bc"/><rect x="152" y="42" width="56" height="108" rx="8" fill="#35b6d5"/><rect x="228" y="12" width="56" height="138" rx="8" fill="#45d9ff"/><rect x="304" y="52" width="56" height="98" rx="8" fill="#35b6d5"/></g>
+<text x="58" y="390" class="k">CONNECTED SOURCES</text>
+<g><rect x="58" y="414" width="330" height="112" rx="22" class="box2"/><text x="84" y="454" class="sm">OpenAI</text><text x="84" y="500" class="t">$912.32</text><circle cx="348" cy="452" r="7" fill="#62f0bb"/></g>
+<g><rect x="414" y="414" width="330" height="112" rx="22" class="box2"/><text x="440" y="454" class="sm">Anthropic</text><text x="440" y="500" class="t">$632.18</text><circle cx="704" cy="452" r="7" fill="#62f0bb"/></g>
+<g><rect x="770" y="414" width="372" height="112" rx="22" class="box2"/><text x="796" y="454" class="sm">CSV upload</text><text x="796" y="500" class="t">$230.28</text><circle cx="1102" cy="452" r="7" fill="#62f0bb"/></g>
+<text x="58" y="586" class="k">TOP COST DRIVERS</text>
+<g><text x="58" y="632" class="sm">GPT-4o</text><line x1="250" y1="624" x2="930" y2="624" class="muted"/><line x1="250" y1="624" x2="746" y2="624" class="line"/><text x="980" y="632" class="t">42%</text></g>
+<g><text x="58" y="690" class="sm">Claude 3.5</text><line x1="250" y1="682" x2="930" y2="682" class="muted"/><line x1="250" y1="682" x2="618" y2="682" class="line"/><text x="980" y="690" class="t">28%</text></g>
+<g><text x="58" y="748" class="sm">GPT-4 Turbo</text><line x1="250" y1="740" x2="930" y2="740" class="muted"/><line x1="250" y1="740" x2="492" y2="740" stroke="#8bc8ff" stroke-width="18" stroke-linecap="round"/><text x="980" y="748" class="t">18%</text></g>
+</svg>
