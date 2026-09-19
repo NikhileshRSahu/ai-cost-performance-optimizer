@@ -34,7 +34,7 @@ export function RecommendationCard({
       ? 'Prepare safe rollout'
       : recommendation.state === 'VERIFIED'
         ? 'View verified savings'
-        : 'Measure exact savings (optional)';
+        : 'Review Evalomics evaluation';
 
   return (
     <article className="mt-3 overflow-hidden rounded-[24px] border border-white/[0.08] bg-[linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012))]">
@@ -104,8 +104,8 @@ export function RecommendationCard({
           {recommendation.state === 'VERIFIED'
             ? 'Production evidence supports this claim.'
             : recommendation.state === 'TESTED'
-              ? 'Benchmark-supported; production proof is next.'
-              : 'Finding first. Savings remain unmeasured until you test it.'}
+              ? 'Evalomics benchmark supports this candidate; production proof is next.'
+              : 'Evalomics found the opportunity. It will evaluate the candidate when comparable evidence is available.'}
         </p>
         <div className="flex flex-wrap items-center gap-2">
           {primaryHref !==
