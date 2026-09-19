@@ -24,7 +24,7 @@ const workloadInputSchema = z
 
 export type WorkloadConstraintInput = z.infer<typeof workloadInputSchema>;
 
-export type PersistedWorkloadConstraintSet = Readonly<{
+type PersistedWorkloadConstraintSet = Readonly<{
   requiredQuality: string;
   maxP95LatencyMs: string | null;
   maxFailureRate: string | null;
