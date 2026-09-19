@@ -30,17 +30,37 @@ function createAuthPool(connectionString: string): Pool {
   return pool;
 }
 
+function productionVercelOrigin(): string | null {
+  if (process.env.VERCEL_ENV !== 'production') return null;
+
+  const deploymentHost = process.env.VERCEL_URL?.trim();
+  if (!deploymentHost) return null;
+
+  try {
+    return new URL(
+      deploymentHost.startsWith('http')
+        ? deploymentHost
+        : `https://${deploymentHost}`,
+    ).origin;
+  } catch {
+    return null;
+  }
+}
+
 function createWebAuth() {
   const configuration = requireSelfHostedAuthConfiguration();
+  const vercelOrigin = productionVercelOrigin();
+  const trustedOrigins = [
+    new URL(configuration.baseUrl).origin,
+    'https://evalomics.vercel.app',
+    ...(vercelOrigin === null ? [] : [vercelOrigin]),
+  ];
 
   return betterAuth({
     appName: 'Evalomics',
     baseURL: configuration.baseUrl,
     secret: configuration.secret,
-    trustedOrigins: [
-      new URL(configuration.baseUrl).origin,
-      'https://evalomics.vercel.app',
-    ],
+    trustedOrigins: [...new Set(trustedOrigins)],
     database: createAuthPool(configuration.databaseUrl),
     socialProviders: {
       google: {
