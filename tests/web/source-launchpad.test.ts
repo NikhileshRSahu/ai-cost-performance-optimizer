@@ -13,7 +13,7 @@ const importPage = readFileSync(
 describe('source intake flow', () => {
   it('keeps source choice before the authenticated intake details', () => {
     for (const expected of [
-      'Connect workspace',
+      'Connect usage',
       'Upload file',
       'Anthropic',
       'OpenAI',

@@ -88,13 +88,13 @@ export default function PricingPage() {
           Why free right now
         </p>
         <h2 className="mt-3 text-2xl font-semibold tracking-[-0.035em] text-white">
-          We want product evidence before pricing.
+          Free during public beta while we validate the workflow.
         </h2>
         <p className="mt-3 text-sm leading-6 text-white/45">
-          The current goal is to learn which workloads Evalomics helps most and
-          make the end-to-end workflow dependable. Paid plans may be introduced
-          later with clear notice; using the launch beta does not require a
-          subscription.
+          Early AI teams can use the core workflow with real data while we make the
+          end-to-end experience dependable across more workloads. No card or
+          subscription is required during the public beta; any future paid plan
+          will be presented separately before a charge or commitment.
         </p>
       </section>
     </div>

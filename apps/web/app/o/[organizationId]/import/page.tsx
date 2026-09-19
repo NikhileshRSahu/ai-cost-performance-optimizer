@@ -117,7 +117,7 @@ export default async function ImportPage({
         </h1>
         <p className="m-0 mt-3 max-w-2xl text-sm leading-6 text-white/45">
           {mode === 'connect'
-            ? 'Choose a provider, connect the Admin API, and analyze the returned usage.'
+            ? 'Choose a provider, connect usage and cost access, and let Evalomics analyze the returned evidence.'
             : demoMode
               ? 'This path is synthetic and stays labeled as demo evidence throughout the workflow.'
               : mode === 'csv'

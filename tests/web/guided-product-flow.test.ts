@@ -27,7 +27,7 @@ describe('guided product flow', () => {
     expect(landing).toContain('href="/demo"');
     expect(start).toContain('StartFlow');
     expect(start).not.toContain("redirect('/login')");
-    expect(startFlow).toContain('Connect workspace');
+    expect(startFlow).toContain('Connect usage');
     expect(startFlow).toContain('Upload file');
     expect(startFlow).toContain('Anthropic');
     expect(startFlow).toContain('OpenAI');

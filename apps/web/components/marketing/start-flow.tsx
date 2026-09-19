@@ -50,7 +50,7 @@ export function StartFlow({
       action: 'Connect usage',
       href: realHref('connect', 'OPENAI'),
       icon: <BrandIcon brand="openai" />,
-      meta: 'Admin API',
+      meta: 'Usage + cost',
     },
     {
       id: 'anthropic',
@@ -58,7 +58,7 @@ export function StartFlow({
       action: 'Connect usage',
       href: realHref('connect', 'ANTHROPIC'),
       icon: <BrandIcon brand="anthropic" />,
-      meta: 'Admin API',
+      meta: 'Usage + cost',
     },
     {
       id: 'csv',

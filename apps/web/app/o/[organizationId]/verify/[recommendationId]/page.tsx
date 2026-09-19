@@ -202,7 +202,7 @@ export default async function VerifyPage({
               Open evidence report
             </Link>
             <Link className="secondary-action" href={`/o/${organizationId}`}>
-              Back to dashboard
+              Back to overview
             </Link>
           </div>
         </section>

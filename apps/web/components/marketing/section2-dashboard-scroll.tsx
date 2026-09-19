@@ -1,11 +1,22 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from 'framer-motion';
+
+const dashboardArtwork =
+  'https://d2ol7oe51mr4n9.cloudfront.net/user_3JOZbCBwNL9bBW0BUCVzdU7w8RP/0260a811-a6bc-4554-96bb-e2e6f5074b6e.webp';
+const dashboardFallback = '/proof/evalomics-proof-visibility.webp';
 
 export function Section2DashboardScroll() {
   const containerRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
   const [isMobile, setIsMobile] = useState(false);
+  const [artworkSrc, setArtworkSrc] = useState(dashboardArtwork);
   const { scrollYProgress } = useScroll({ target: containerRef });
 
   useEffect(() => {
@@ -31,18 +42,26 @@ export function Section2DashboardScroll() {
     <section
       id="product-story"
       ref={containerRef}
-      className="relative flex h-[60rem] items-center justify-center overflow-visible px-4 md:h-[80rem] md:px-8"
+      className={
+        reduceMotion
+          ? 'relative flex items-center justify-center px-4 py-20 md:px-8 md:py-28'
+          : 'relative flex h-[60rem] items-center justify-center overflow-visible px-4 md:h-[80rem] md:px-8'
+      }
       aria-label="Evalomics AI economics dashboard"
     >
       <div
-        className="sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden"
+        className={
+          reduceMotion
+            ? 'relative flex w-full items-center justify-center overflow-hidden'
+            : 'sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden'
+        }
         style={{ perspective: '1000px' }}
       >
         <div className="pointer-events-none absolute inset-x-[8%] top-[12%] h-[58%] rounded-full bg-[radial-gradient(circle,rgba(35,191,236,.12),transparent_68%)] blur-3xl" />
 
         <div className="relative w-full max-w-[1440px] py-10 md:py-24">
           <motion.div
-            style={{ translateY: translate }}
+            style={{ translateY: reduceMotion ? 0 : translate }}
             className="relative z-10 mx-auto mb-7 max-w-4xl text-center md:mb-10"
           >
             <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-cyan-300/75">
@@ -51,7 +70,7 @@ export function Section2DashboardScroll() {
             <h2 className="mt-4 text-balance text-4xl font-medium tracking-[-0.045em] text-white md:text-6xl">
               Your AI economics, in one view.
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-white/45 md:text-base">
+            <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-white/55 md:text-base">
               Spend, usage, cost drivers, optimization opportunities, benchmarks
               and verified outcomes — brought together in one decision surface.
             </p>
@@ -59,8 +78,8 @@ export function Section2DashboardScroll() {
 
           <motion.div
             style={{
-              rotateX: rotate,
-              scale,
+              rotateX: reduceMotion ? 0 : rotate,
+              scale: reduceMotion ? 1 : scale,
               transformStyle: 'preserve-3d',
               transformOrigin: '50% 60%',
               boxShadow:
@@ -70,13 +89,18 @@ export function Section2DashboardScroll() {
           >
             <div className="overflow-hidden rounded-[30px] border border-white/10 bg-[#060a0f] p-2 shadow-[0_0_100px_rgba(35,191,236,0.08)] md:p-3">
               <img
-                src="https://d2ol7oe51mr4n9.cloudfront.net/user_3JOZbCBwNL9bBW0BUCVzdU7w8RP/0260a811-a6bc-4554-96bb-e2e6f5074b6e.webp"
-                alt="Evalomics dashboard showing AI spend, usage, cost drivers, optimization opportunities, benchmarks and verified savings"
+                src={artworkSrc}
+                alt="Illustrative Evalomics workspace showing AI spend, usage, optimization opportunities, benchmarks, and proof state"
                 width={1200}
                 height={675}
-                loading="eager"
-                fetchPriority="high"
+                loading="lazy"
+                fetchPriority="auto"
                 decoding="async"
+                onError={() => {
+                  if (artworkSrc !== dashboardFallback) {
+                    setArtworkSrc(dashboardFallback);
+                  }
+                }}
                 className="block aspect-video h-auto w-full rounded-[22px] object-contain"
                 draggable={false}
               />
