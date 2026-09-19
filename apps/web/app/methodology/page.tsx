@@ -16,21 +16,21 @@ const stages = [
     icon: SearchCheck,
   },
   {
-    step: '02 · DETECT',
-    title: 'Only diagnose supported inefficiency',
-    body: 'Missing denominators, mixed currencies, incomplete retry evidence, and unsupported fields produce withheld claims instead of guesses.',
+    step: '02 · FIND',
+    title: 'Find the optimization worth acting on',
+    body: 'Evalomics identifies supported waste patterns, ranks the strongest opportunity, and shows the evidence behind the recommendation instead of making a black-box claim.',
     icon: Gauge,
   },
   {
-    step: '03 · TEST',
-    title: 'Make the quality floor explicit',
-    body: 'A cheaper configuration is not recommended merely because it costs less. Candidate changes must be benchmarked against declared performance constraints.',
+    step: '03 · EVALUATE',
+    title: 'Let Evalomics evaluate the candidate',
+    body: 'When comparable evidence is available, Evalomics checks the cheaper candidate against quality, latency, failure-rate, and cost requirements before recommending a change.',
     icon: FlaskConical,
   },
   {
-    step: '04 · VERIFY',
-    title: 'Measure the post-change result',
-    body: 'Potential, tested, and verified states remain separate. Negative verified impact remains visible and rollback guidance is retained.',
+    step: '04 · IMPLEMENT & PROVE',
+    title: 'Apply carefully, then prove the result',
+    body: 'Evalomics guides a staged implementation and later compares production evidence so the expected impact can become a proven result without hiding negative outcomes.',
     icon: ShieldCheck,
   },
 ] as const;
@@ -47,9 +47,9 @@ export default function MethodologyPage() {
           Every recommendation should survive an evidence audit.
         </h1>
         <p className="mt-6 max-w-3xl text-base leading-7 text-white/45">
-          Evalomics separates observation, diagnosis, benchmark evidence,
-          implementation, and production verification so an attractive estimate
-          cannot quietly become a customer-savings claim.
+          Evalomics moves from observed usage to a ranked optimization, evaluates
+          the candidate when comparable evidence exists, guides implementation,
+          and later confirms the production result.
         </p>
       </section>
 
@@ -77,26 +77,26 @@ export default function MethodologyPage() {
 
       <section className="eval-glass-card relative mt-14 rounded-[24px] p-6 sm:p-8">
         <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/30">
-          Claim taxonomy
+          Customer decision states
         </p>
         <h2 className="mt-3 text-3xl font-semibold tracking-[-0.045em] text-white">
-          Potential ≠ Tested ≠ Verified.
+          Found → Evaluated → Proven.
         </h2>
         <div className="mt-7 grid gap-3 md:grid-cols-3">
           {[
             [
-              'Potential',
-              'A bounded opportunity derived from available evidence. Not savings.',
+              'Found',
+              'Evalomics found a supported optimization opportunity and can explain why it matters.',
               'text-[var(--eval-opportunity)]',
             ],
             [
-              'Tested',
-              'A candidate that passed the declared benchmark constraints. Still not production savings.',
+              'Evaluated',
+              'Evalomics compared the candidate against the available quality, performance, and cost requirements.',
               'text-[var(--eval-tested)]',
             ],
             [
-              'Verified',
-              'Comparable post-change production evidence supports the recorded net impact.',
+              'Proven',
+              'Comparable post-change production evidence confirms the recorded result.',
               'text-[var(--eval-verified)]',
             ],
           ].map(([label, body, tone]) => (
@@ -115,8 +115,9 @@ export default function MethodologyPage() {
         <div className="flex items-start gap-3">
           <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-200" />
           <p className="m-0 max-w-3xl text-sm leading-6 text-white/55">
-            Synthetic, projected, historical replay, research, or inferred
-            savings cannot be labeled as verified customer savings.
+            Estimated impact is useful for deciding what to do next. Evalomics
+            labels a result Proven only after comparable post-change production
+            evidence supports it.
           </p>
         </div>
         <Link
