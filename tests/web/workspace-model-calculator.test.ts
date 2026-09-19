@@ -13,11 +13,11 @@ const calculator = readFileSync(
 describe('workspace model calculator', () => {
   it('keeps model comparison inside the authenticated workspace', () => {
     expect(page).toContain('WorkspaceModelCalculator');
-    expect(page).toContain('Model Calculator');
+    expect(page).toContain('Evaluate a model candidate');
     expect(calculator).toContain('Compare two model-price scenarios');
     expect(calculator).toContain('Current monthly inference cost');
     expect(calculator).toContain('Candidate monthly inference cost');
-    expect(calculator).toContain('Modeled monthly delta');
-    expect(calculator).toContain('Planning estimate only');
+    expect(calculator).toContain('Estimated monthly difference');
+    expect(calculator).toContain('economics part of the evaluation');
   });
 });
