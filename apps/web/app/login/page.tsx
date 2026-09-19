@@ -40,6 +40,8 @@ export default async function LoginPage({
     !returnTo.startsWith('//')
       ? returnTo
       : '/start';
+  const backToChosenFlow =
+    callbackPath.startsWith('/start') ? callbackPath : '/start';
   const requestHeaders = await headers();
   const host = requestHeaders.get('host');
   const authConfigured = hasSelfHostedAuthConfiguration();
@@ -50,7 +52,7 @@ export default async function LoginPage({
       <section className="flex flex-col justify-between p-7 sm:p-10 lg:p-12">
         <div>
           <Link
-            href="/start"
+            href={backToChosenFlow}
             className="inline-flex items-center gap-2 text-xs font-semibold text-white/42 no-underline hover:text-white"
           >
             <ArrowLeft className="size-3.5" /> Back to your chosen flow
