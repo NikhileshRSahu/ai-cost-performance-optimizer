@@ -128,6 +128,7 @@ export function PublicDemoExperience() {
           <AnimatePresence mode="wait">
             {done ? (
               <motion.div
+                id="recommendation"
                 key="result"
                 initial={
                   reduceMotion ? false : { opacity: 0, y: 16, scale: 0.985 }
