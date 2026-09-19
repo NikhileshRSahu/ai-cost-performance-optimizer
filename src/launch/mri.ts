@@ -26,7 +26,7 @@ export type LaunchMriPolicy = Readonly<{
   maximumModelRequestShare: string;
 }>;
 
-export type LaunchMriOpportunity = Readonly<{
+type LaunchMriOpportunity = Readonly<{
   kind: 'PROMPT_CACHING' | 'OUTPUT_BUDGET' | 'MODEL_CONCENTRATION';
   title: string;
   why: string;
