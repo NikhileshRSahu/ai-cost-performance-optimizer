@@ -14,10 +14,6 @@ import {
   requireSelfHostedAuthConfiguration,
 } from './auth-config';
 
-export function hasGoogleAuthConfiguration(): boolean {
-  return hasSelfHostedAuthConfiguration();
-}
-
 function createAuthPool(connectionString: string): Pool {
   const pool = new Pool({
     connectionString,
