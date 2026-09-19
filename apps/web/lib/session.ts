@@ -1,4 +1,1 @@
-export {
-  resolveWebSession,
-  type WebIdentityProvider,
-} from '../../../src/workbench/web-session';
+export { resolveWebSession } from '../../../src/workbench/web-session';
