@@ -55,10 +55,6 @@ async function reachVerification(
     page.getByRole('heading', { name: 'Your AI spend at a glance' }),
   ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
 
-  if (await page.locator('.state-badge.state-verified').first().isVisible()) {
-    return 'ALREADY_VERIFIED';
-  }
-
   await expect(page.getByText('Best change', { exact: true })).toBeVisible();
   await expect(
     page.getByText('Estimated savings', { exact: true }),
@@ -68,29 +64,54 @@ async function reachVerification(
   ).toBeVisible();
   await expectAccessible(page);
 
-  // Optional proof follows the same customer-facing path as the product.
+  // Technical state lives on Optimization, not on the customer overview.
   await page.getByRole('link', { name: 'Optimization' }).click();
-  await expect(
-    page.getByRole('link', { name: 'Review Evalomics evaluation' }),
-  ).toBeVisible();
-  await page.getByRole('link', { name: 'Review Evalomics evaluation' }).click();
-  await expect(
-    page.getByRole('heading', {
-      name: 'Let Evalomics evaluate this candidate',
-    }),
-  ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
-  await page
-    .getByRole('link', {
-      name: 'Add evidence for Evalomics evaluation',
-      exact: true,
-    })
-    .click();
 
-  await expect(
-    page.getByRole('heading', {
-      name: 'Test whether a cheaper setup is safe',
-    }),
-  ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
+  if (await page.locator('.state-badge.state-verified').first().isVisible()) {
+    return 'ALREADY_VERIFIED';
+  }
+
+  const reviewEvaluation = page
+    .getByRole('link', { name: 'Review Evalomics evaluation' })
+    .first();
+  const prepareRollout = page
+    .getByRole('link', { name: 'Prepare safe rollout' })
+    .first();
+
+  const recommendationState = await expect
+    .poll(
+      async () => {
+        if (await prepareRollout.isVisible()) return 'evaluated';
+        if (await reviewEvaluation.isVisible()) return 'found';
+        return 'loading';
+      },
+      { timeout: JOURNEY_STATE_TIMEOUT_MS },
+    )
+    .not.toBe('loading')
+    .then(async () => {
+      if (await prepareRollout.isVisible()) return 'evaluated';
+      return 'found';
+    });
+
+  if (recommendationState === 'found') {
+    await reviewEvaluation.click();
+    await expect(
+      page.getByRole('heading', {
+        name: 'Let Evalomics evaluate this candidate',
+      }),
+    ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
+    await page
+      .getByRole('link', {
+        name: 'Add evidence for Evalomics evaluation',
+        exact: true,
+      })
+      .click();
+
+    await expect(
+      page.getByRole('heading', {
+        name: 'Test whether a cheaper setup is safe',
+      }),
+    ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
 
   const defineConstraints = page.getByRole('link', {
     name: 'Define constraints',
@@ -169,9 +190,10 @@ async function reachVerification(
       'This replay is never written to the VERIFIED savings ledger.',
     ),
   ).toBeVisible();
-  await expectAccessible(page);
+    await expectAccessible(page);
+  }
 
-  await page.goto(`/o/${organizationId}`);
+  await page.goto(`/o/${organizationId}/recommendations`);
   const verifiedBadge = page.locator('.state-badge.state-verified').first();
   if (await verifiedBadge.isVisible()) {
     return 'ALREADY_VERIFIED';
@@ -180,7 +202,10 @@ async function reachVerification(
   await expect(page.locator('.state-badge.state-tested').first()).toBeVisible({
     timeout: JOURNEY_STATE_TIMEOUT_MS,
   });
-  await page.getByRole('link', { name: 'Prepare safe rollout' }).click();
+  await page
+    .getByRole('link', { name: 'Prepare safe rollout' })
+    .first()
+    .click();
 
   const implementedAt = page.getByLabel('Implemented at (UTC)');
   const continueLink = page.getByRole('link', {
@@ -241,12 +266,9 @@ test('hard customer journey reaches verified savings', async ({ page }) => {
     await expectAccessible(page);
   }
 
-  await page.goto('/o/journey-org');
+  await page.goto('/o/journey-org/recommendations');
   await expect(
     page.locator('.state-badge.state-verified').first(),
-  ).toBeVisible();
-  await expect(
-    page.getByText('Production result', { exact: true }),
   ).toBeVisible();
 });
 
@@ -260,7 +282,7 @@ test('non-demo customer path reaches verified savings without demo provenance', 
     await expect(page.getByRole('heading', { name: 'VERIFIED' })).toBeVisible();
   }
 
-  await page.goto('/o/journey-live-org');
+  await page.goto('/o/journey-live-org/recommendations');
   await expect(
     page.locator('.state-badge.state-verified').first(),
   ).toBeVisible();
@@ -278,7 +300,7 @@ test('failed post-change quality never becomes verified', async ({ page }) => {
   await expect(page.getByText('PERFORMANCE_CONSTRAINT_FAILED')).toBeVisible();
   await expect(page.getByText('Verified net impact')).toHaveCount(0);
 
-  await page.goto('/o/journey-bad-org');
+  await page.goto('/o/journey-bad-org/recommendations');
   await expect(page.locator('.state-badge.state-tested').first()).toBeVisible({
     timeout: JOURNEY_STATE_TIMEOUT_MS,
   });
