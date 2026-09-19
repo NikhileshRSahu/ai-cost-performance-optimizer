@@ -136,14 +136,14 @@ export function DashboardWidgetGrid({
             onClick={() => {
               setEditable((value) => !value);
             }}
-            className="rounded-md border border-white/[0.07] bg-transparent px-2.5 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-slate-500 transition hover:border-white/[0.14] hover:text-white"
+            className="rounded-md border border-white/[0.07] bg-transparent px-2.5 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-slate-400 transition hover:border-white/[0.14] hover:text-white"
           >
             {editable ? 'Done' : 'Customize'}
           </button>
           <button
             type="button"
             onClick={resetLayout}
-            className="inline-flex items-center gap-1.5 rounded-md border border-white/[0.07] bg-transparent px-2.5 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-slate-500 transition hover:border-white/[0.14] hover:text-white"
+            className="inline-flex items-center gap-1.5 rounded-md border border-white/[0.07] bg-transparent px-2.5 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-slate-400 transition hover:border-white/[0.14] hover:text-white"
           >
             <RotateCcw className="size-3" />
             Reset
