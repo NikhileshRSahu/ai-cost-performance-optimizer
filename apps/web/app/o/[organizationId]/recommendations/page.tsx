@@ -56,21 +56,22 @@ export default async function RecommendationsPage({
     <div className="space-y-7">
       <section>
         <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-300">
-          Optimization decisions
+          Optimization
         </p>
         <h1 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-slate-100 sm:text-3xl">
-          What Evalomics recommends next.
+          What should I change?
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-          Ranked actions from the current evidence window, with the expected
-          impact, evaluation status, and next implementation step in one place.
+          Start with the highest-impact supported change. Each recommendation
+          tells you the expected benefit, why Evalomics chose it, and what to do
+          next.
         </p>
       </section>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
           <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
-            Opportunities found
+            Changes found
           </p>
           <p className="mt-4 font-mono text-3xl text-slate-100">
             {view.recommendations.length}
@@ -89,11 +90,11 @@ export default async function RecommendationsPage({
         </div>
         <div className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5">
           <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
-            Evaluation status
+            Can I act on it?
           </p>
           <p className="mt-4 text-sm text-slate-200">{evaluationStatusLabel}</p>
           <p className="mt-1 text-xs text-slate-500">
-            Evalomics decision state
+            Current recommendation status
           </p>
         </div>
       </div>
