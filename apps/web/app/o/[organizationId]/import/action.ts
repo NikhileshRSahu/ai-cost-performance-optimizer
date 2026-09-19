@@ -162,7 +162,12 @@ async function analyzeBytes(
   fileName: string,
   bytes: Uint8Array,
   isDemo: boolean,
-): Promise<string> {
+): Promise<Readonly<{
+  importId: string;
+  accepted: number;
+  rejected: number;
+  warnings: number;
+}>> {
   const session = await resolveRuntimeSession();
   const databaseUrl = process.env.DATABASE_URL;
   if (session === null || databaseUrl === undefined) redirect('/unauthorized');
@@ -191,7 +196,12 @@ async function analyzeBytes(
       importId: result.importId,
     });
     await completeOnboarding(database, organizationId);
-    return result.importId;
+    return Object.freeze({
+      importId: result.importId,
+      accepted: result.accepted,
+      rejected: result.rejected,
+      warnings: result.warnings,
+    });
   } finally {
     await database.close();
   }
@@ -205,9 +215,14 @@ export async function uploadUsageCsv(formData: FormData): Promise<never> {
   }
   assertUploadWithinLimit({ kind: 'USAGE_CSV', sizeBytes: upload.size });
 
-  let importId: string;
+  let analysis: Readonly<{
+    importId: string;
+    accepted: number;
+    rejected: number;
+    warnings: number;
+  }>;
   try {
-    importId = await analyzeBytes(
+    analysis = await analyzeBytes(
       organizationId,
       upload.name,
       new Uint8Array(await upload.arrayBuffer()),
@@ -220,7 +235,7 @@ export async function uploadUsageCsv(formData: FormData): Promise<never> {
   }
 
   redirect(
-    `/o/${organizationId}?source=import&importId=${encodeURIComponent(importId)}`,
+    `/o/${organizationId}?source=import&importId=${encodeURIComponent(analysis.importId)}&analysis=complete&accepted=${String(analysis.accepted)}&rejected=${String(analysis.rejected)}&warnings=${String(analysis.warnings)}`,
   );
 }
 
@@ -228,12 +243,17 @@ export async function analyzeDemoUsage(formData: FormData): Promise<never> {
   const organizationId = textEntry(formData, 'organizationId');
   if (organizationId.length === 0) throw new Error('ORGANIZATION_ID_REQUIRED');
 
-  let importId: string;
+  let analysis: Readonly<{
+    importId: string;
+    accepted: number;
+    rejected: number;
+    warnings: number;
+  }>;
   try {
     const bytes = await readFile(
       join(process.cwd(), 'public', 'demo-usage.csv'),
     );
-    importId = await analyzeBytes(
+    analysis = await analyzeBytes(
       organizationId,
       'demo-usage.csv',
       new Uint8Array(bytes),
@@ -246,6 +266,6 @@ export async function analyzeDemoUsage(formData: FormData): Promise<never> {
   }
 
   redirect(
-    `/o/${organizationId}?source=demo&importId=${encodeURIComponent(importId)}`,
+    `/o/${organizationId}?source=demo&importId=${encodeURIComponent(analysis.importId)}&analysis=complete&accepted=${String(analysis.accepted)}&rejected=${String(analysis.rejected)}&warnings=${String(analysis.warnings)}`,
   );
 }
