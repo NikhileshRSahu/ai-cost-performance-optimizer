@@ -6,7 +6,7 @@ const freeFeatures = [
   'CSV Work MRI',
   'Evidence-bounded waste diagnosis',
   'Ranked optimization recommendation',
-  'Benchmark and quality-floor workflow',
+  'Evalomics candidate evaluation',
   'Implementation tracking',
   'Post-change verification',
   'Workspace members and invite links',
@@ -28,9 +28,9 @@ export default function PricingPage() {
         <p className="mt-7 max-w-2xl text-base leading-7 text-white/45">
           During the Evalomics launch beta, the core analysis and verification
           workflow is available for $0. Create a workspace, connect supported
-          provider usage or upload a CSV, diagnose supported inefficiency, test
-          a candidate, and verify post-change impact without entering payment
-          details.
+          provider usage or upload a CSV, identify the strongest optimization,
+          let Evalomics evaluate supported candidates, receive implementation
+          guidance, and track post-change impact without entering payment details.
         </p>
       </section>
 
@@ -77,9 +77,9 @@ export default function PricingPage() {
 
         <div className="mt-5 flex items-start gap-2.5 rounded-xl border border-white/10 bg-white/[0.035] p-4 text-xs leading-5 text-white/75">
           <ShieldCheck className="mt-0.5 size-4 shrink-0 text-emerald-200/70" />
-          Evalomics does not require prompt content for the CSV workflow, and
-          Potential, Tested, and Verified savings remain separate evidence
-          states.
+          Evalomics does not require prompt content for the basic CSV workflow.
+          It shows what was Found, what has been Evaluated, and what later becomes
+          Proven after comparable production evidence exists.
         </div>
       </section>
 
