@@ -24,7 +24,7 @@ test('founder gets one direct answer before optional evidence details', async ({
   ).toBeVisible();
   await expect(page.getByText(demoDisclaimer)).toBeVisible();
   await expect(page.getByText(/recommended action/i)).toBeVisible();
-  await expect(page.getByText(/tested saving/i)).toBeVisible();
+  await expect(page.getByText(/evaluated saving/i)).toBeVisible();
 
   const detectionConfidence = page.getByText('Detection confidence', {
     exact: true,
@@ -86,7 +86,7 @@ test('founder gets one direct answer before optional evidence details', async ({
     page.getByRole('link', { name: 'Back to verification' }),
   ).toBeVisible();
   await expect(
-    page.getByRole('link', { name: 'View proof status' }),
+    page.getByRole('link', { name: 'View result evidence' }),
   ).toBeVisible();
   await expectAccessible(page);
 });
