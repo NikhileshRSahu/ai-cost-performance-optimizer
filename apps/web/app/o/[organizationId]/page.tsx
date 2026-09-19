@@ -83,7 +83,7 @@ function ConsoleBars({
         <span
           key={index}
           className={index === values.length - 1 ? accent : 'bg-white/[0.16]'}
-          style={{ height: `${Math.max(14, value)}%`, width: '100%' }}
+          style={{ height: String(Math.max(14, value)) + '%', width: '100%' }}
         />
       ))}
     </div>
@@ -94,7 +94,7 @@ function EvidenceHeat({ active }: Readonly<{ active: number }>) {
   return (
     <div
       className="mt-5 grid grid-cols-12 gap-1"
-      aria-label={`${active} evidence stages active`}
+      aria-label={String(active) + ' evidence stages active'}
     >
       {Array.from({ length: 36 }).map((_, index) => {
         const stage = Math.floor(index / 9);
