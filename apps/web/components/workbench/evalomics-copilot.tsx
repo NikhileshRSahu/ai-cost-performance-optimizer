@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Bot, Send, Sparkles, X } from 'lucide-react';
-import { FormEvent, useState } from 'react';
+import { useState, type SyntheticEvent } from 'react';
 
 type AiAnswer = Readonly<{
   answer: string;
@@ -56,7 +56,7 @@ export function EvalomicsCopilot({
     }
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
     void ask(question);
   }
@@ -65,7 +65,9 @@ export function EvalomicsCopilot({
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setOpen(true);
+        }}
         className="fixed bottom-5 right-5 z-[70] inline-flex min-h-12 items-center gap-2 rounded-full border border-sky-300/20 bg-[#111827]/95 px-4 py-3 text-sm font-semibold text-white shadow-[0_18px_70px_rgba(0,0,0,.45)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-sky-300/35"
         aria-label="Open Evalomics AI"
       >
@@ -99,7 +101,9 @@ export function EvalomicsCopilot({
               </div>
               <button
                 type="button"
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setOpen(false);
+                }}
                 className="grid size-9 place-items-center rounded-full border border-white/[0.08] bg-white/[0.03] text-white/45 hover:text-white"
                 aria-label="Close Evalomics AI"
               >
@@ -179,7 +183,9 @@ export function EvalomicsCopilot({
 
                   <button
                     type="button"
-                    onClick={() => setAnswer(null)}
+                    onClick={() => {
+                      setAnswer(null);
+                    }}
                     className="text-left text-xs font-semibold text-sky-300/70"
                   >
                     Ask another question
@@ -201,7 +207,9 @@ export function EvalomicsCopilot({
               <div className="flex items-end gap-2 rounded-2xl border border-white/[0.09] bg-black/20 p-2">
                 <textarea
                   value={question}
-                  onChange={(event) => setQuestion(event.target.value)}
+                  onChange={(event) => {
+                    setQuestion(event.target.value);
+                  }}
                   rows={2}
                   maxLength={1000}
                   placeholder="Ask Evalomics about this workspace…"
