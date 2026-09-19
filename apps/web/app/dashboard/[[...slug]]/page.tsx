@@ -1,7 +1,11 @@
-import { auth } from '@/lib/auth/server';
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
 import DashboardApp from '@/components/DashboardApp';
+
 export const dynamic='force-dynamic';
+
 export default async function DashboardPage(){
-  const {data:session}=await auth.getSession();
-  return <DashboardApp userName={session?.user?.name || 'Evalomics user'} userEmail={session?.user?.email || 'user@company.com'}/>;
+  const session=await auth();
+  if(!session?.user?.email) redirect('/auth/sign-in');
+  return <DashboardApp userName={session.user.name || 'Evalomics user'} userEmail={session.user.email}/>;
 }

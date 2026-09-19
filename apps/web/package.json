@@ -11,6 +11,7 @@
   "dependencies": {
     "@neondatabase/auth": "latest",
     "next": "^16.0.0",
+    "next-auth": "latest",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
