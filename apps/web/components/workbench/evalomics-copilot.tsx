@@ -106,7 +106,9 @@ export function EvalomicsCopilot({
         body: JSON.stringify({
           organizationId,
           question:
-            context === null ? trimmed : context + '\n\nUser question: ' + trimmed,
+            context === null
+              ? trimmed
+              : context + '\n\nUser question: ' + trimmed,
         }),
       });
 

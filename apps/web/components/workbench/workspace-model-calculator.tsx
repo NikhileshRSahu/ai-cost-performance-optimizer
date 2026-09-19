@@ -111,7 +111,9 @@ export function WorkspaceModelCalculator({
             <p className="m-0 mt-1 text-[11px] text-slate-500">
               {workloadName === null ? 'Workspace workload' : workloadName}
               {' · '}
-              {currentModel === null ? 'current model not identified' : 'current: ' + currentModel}
+              {currentModel === null
+                ? 'current model not identified'
+                : 'current: ' + currentModel}
             </p>
           </div>
           <button

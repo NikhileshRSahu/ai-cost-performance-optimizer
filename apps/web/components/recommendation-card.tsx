@@ -140,11 +140,11 @@ export function RecommendationCard({
             How to implement
           </p>
           <p className="m-0 mt-1 text-xs text-white/35">
-          {recommendation.state === 'VERIFIED'
-            ? 'Production evidence confirms this result.'
-            : recommendation.state === 'TESTED'
-              ? 'Evalomics evaluated this candidate successfully; staged implementation is next.'
-              : 'Evalomics found the opportunity. It will evaluate the candidate when comparable evidence is available.'}
+            {recommendation.state === 'VERIFIED'
+              ? 'Production evidence confirms this result.'
+              : recommendation.state === 'TESTED'
+                ? 'Evalomics evaluated this candidate successfully; staged implementation is next.'
+                : 'Evalomics found the opportunity. It will evaluate the candidate when comparable evidence is available.'}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">

@@ -296,10 +296,11 @@ export default async function CostDashboardPage({
                 Your data is now part of the Evalomics story.
               </h2>
               <p className="m-0 mt-2 max-w-3xl text-sm leading-6 text-white/50">
-                {query.accepted ?? '0'} usage rows analyzed → {moneyLabel(view.observedSpend)} spend
-                reconstructed → {view.recommendations.length} optimization signal
-                {view.recommendations.length === 1 ? '' : 's'} found → strongest opportunity:{' '}
-                {view.strongestAction?.title ?? 'still analyzing'}.
+                {query.accepted ?? '0'} usage rows analyzed →{' '}
+                {moneyLabel(view.observedSpend)} spend reconstructed →{' '}
+                {view.recommendations.length} optimization signal
+                {view.recommendations.length === 1 ? '' : 's'} found → strongest
+                opportunity: {view.strongestAction?.title ?? 'still analyzing'}.
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-[10px] font-mono text-white/40">
                 <span className="rounded-full border border-white/[0.08] bg-black/15 px-3 py-1.5">
@@ -341,8 +342,8 @@ export default async function CostDashboardPage({
               You spent {moneyLabel(view.observedSpend)} → Evalomics found{' '}
               {view.recommendations.length} supported opportunity
               {view.recommendations.length === 1 ? '' : 'ies'} → best change:{' '}
-              {view.strongestAction?.title ?? 'still analyzing'} → expected impact:{' '}
-              {estimatedSavingLabel} → confidence:{' '}
+              {view.strongestAction?.title ?? 'still analyzing'} → expected
+              impact: {estimatedSavingLabel} → confidence:{' '}
               {view.strongestAction?.detectionConfidence ?? 'pending'} → next:{' '}
               {view.strongestAction?.nextAction ?? 'keep evidence connected'}.
             </p>

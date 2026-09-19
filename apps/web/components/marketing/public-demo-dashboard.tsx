@@ -65,7 +65,8 @@ export function PublicDemoDashboard() {
             Demo data · synthetic · not customer results
           </p>
           <p className="m-0 mt-1 text-xs text-white/45">
-            This uses the same story, cards, drill-downs, and Evalomics AI pattern as the real workspace.
+            This uses the same story, cards, drill-downs, and Evalomics AI
+            pattern as the real workspace.
           </p>
         </div>
         <Link
@@ -84,7 +85,8 @@ export function PublicDemoDashboard() {
           We analyzed this sample company&apos;s AI usage
         </h1>
         <p className="mt-2 max-w-3xl font-mono text-xs leading-5 text-slate-500">
-          30 days · 22,380 requests · synthetic evidence showing the complete Evalomics decision story.
+          30 days · 22,380 requests · synthetic evidence showing the complete
+          Evalomics decision story.
         </p>
       </section>
 
@@ -156,7 +158,8 @@ export function PublicDemoDashboard() {
               ))}
             </div>
             <p className="m-0 mt-auto pt-5 text-[11px] leading-5 text-slate-500">
-              Evalomics found repeated stable input and checked the candidate against the sample quality floor.
+              Evalomics found repeated stable input and checked the candidate
+              against the sample quality floor.
             </p>
           </section>
         </DashboardDrilldown>
@@ -177,7 +180,9 @@ export function PublicDemoDashboard() {
           <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
             <div className="flex items-center gap-2">
               <ShieldCheck className="size-4 text-violet-300" />
-              <h2 className="text-sm font-medium text-slate-100">Evidence status</h2>
+              <h2 className="text-sm font-medium text-slate-100">
+                Evidence status
+              </h2>
             </div>
             <DemoEvidenceHeat />
             <p className="m-0 mt-4 text-xs leading-5 text-slate-500">
@@ -206,9 +211,15 @@ export function PublicDemoDashboard() {
               </p>
               <BadgeDollarSign className="size-4 text-sky-300/70" />
             </div>
-            <p className="mt-4 text-3xl tracking-[-0.05em] text-white">$1,774.78</p>
-            <p className="m-0 mt-1 text-[10px] text-slate-500">measured from sample usage</p>
-            <DemoBars values={[42, 53, 47, 58, 63, 55, 71, 66, 74, 69, 83, 88]} />
+            <p className="mt-4 text-3xl tracking-[-0.05em] text-white">
+              $1,774.78
+            </p>
+            <p className="m-0 mt-1 text-[10px] text-slate-500">
+              measured from sample usage
+            </p>
+            <DemoBars
+              values={[42, 53, 47, 58, 63, 55, 71, 66, 74, 69, 83, 88]}
+            />
           </article>
         </DashboardDrilldown>
 
@@ -230,8 +241,13 @@ export function PublicDemoDashboard() {
               Opportunities found
             </p>
             <p className="mt-4 text-3xl tracking-[-0.05em] text-white">3</p>
-            <p className="m-0 mt-1 text-[10px] text-slate-500">ranked by supported evidence</p>
-            <DemoBars values={[25, 40, 58, 71, 63, 79, 68, 82]} accent="bg-violet-300" />
+            <p className="m-0 mt-1 text-[10px] text-slate-500">
+              ranked by supported evidence
+            </p>
+            <DemoBars
+              values={[25, 40, 58, 71, 63, 79, 68, 82]}
+              accent="bg-violet-300"
+            />
           </article>
         </DashboardDrilldown>
 
@@ -255,9 +271,16 @@ export function PublicDemoDashboard() {
               </p>
               <Gauge className="size-4 text-emerald-300/70" />
             </div>
-            <p className="mt-4 text-3xl tracking-[-0.05em] text-white">$286–$421</p>
-            <p className="m-0 mt-1 text-[10px] text-slate-500">evidence-backed sample estimate</p>
-            <DemoBars values={[18, 24, 31, 28, 36, 42, 47, 53, 58, 62, 69, 76]} accent="bg-emerald-400" />
+            <p className="mt-4 text-3xl tracking-[-0.05em] text-white">
+              $286–$421
+            </p>
+            <p className="m-0 mt-1 text-[10px] text-slate-500">
+              evidence-backed sample estimate
+            </p>
+            <DemoBars
+              values={[18, 24, 31, 28, 36, 42, 47, 53, 58, 62, 69, 76]}
+              accent="bg-emerald-400"
+            />
           </article>
         </DashboardDrilldown>
 
@@ -278,8 +301,12 @@ export function PublicDemoDashboard() {
             <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
               Evaluation status
             </p>
-            <p className="mt-4 text-2xl font-semibold tracking-[-0.04em] text-white">Evaluated</p>
-            <p className="m-0 mt-1 text-[10px] text-emerald-300">quality floor passed in sample evidence</p>
+            <p className="mt-4 text-2xl font-semibold tracking-[-0.04em] text-white">
+              Evaluated
+            </p>
+            <p className="m-0 mt-1 text-[10px] text-emerald-300">
+              quality floor passed in sample evidence
+            </p>
           </article>
         </DashboardDrilldown>
 
@@ -307,8 +334,13 @@ export function PublicDemoDashboard() {
                 ['Token usage', '20.5M'],
                 ['p50 latency', '1.37s'],
               ].map(([label, value]) => (
-                <div key={label} className="rounded-lg border border-white/[0.07] bg-black/20 p-4">
-                  <p className="m-0 text-[9px] uppercase tracking-[0.12em] text-slate-500">{label}</p>
+                <div
+                  key={label}
+                  className="rounded-lg border border-white/[0.07] bg-black/20 p-4"
+                >
+                  <p className="m-0 text-[9px] uppercase tracking-[0.12em] text-slate-500">
+                    {label}
+                  </p>
                   <p className="m-0 mt-2 text-sm text-white">{value}</p>
                 </div>
               ))}
@@ -329,7 +361,8 @@ export function PublicDemoDashboard() {
               The next dashboard can use your real usage.
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-white/40">
-              Connect OpenAI or Anthropic, or upload a CSV. Evalomics will return to the same story and dashboard with your evidence.
+              Connect OpenAI or Anthropic, or upload a CSV. Evalomics will
+              return to the same story and dashboard with your evidence.
             </p>
           </div>
           <Link

@@ -88,45 +88,45 @@ export default async function PromptOptimizerPage({
           Supporting patterns
         </p>
         <div className="grid gap-4 lg:grid-cols-2">
-        {tips.map(({ icon: Icon, category, title, before, after, note }) => (
-          <article
-            key={title}
-            className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <span className="inline-flex items-center gap-2 rounded-full border border-violet-300/15 bg-violet-400/[0.08] px-2.5 py-1 text-[10px] font-semibold text-violet-200">
-                  <Icon className="size-3.5" />
-                  {category}
-                </span>
-                <h2 className="mt-4 text-base font-medium text-slate-100">
-                  {title}
-                </h2>
+          {tips.map(({ icon: Icon, category, title, before, after, note }) => (
+            <article
+              key={title}
+              className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <span className="inline-flex items-center gap-2 rounded-full border border-violet-300/15 bg-violet-400/[0.08] px-2.5 py-1 text-[10px] font-semibold text-violet-200">
+                    <Icon className="size-3.5" />
+                    {category}
+                  </span>
+                  <h2 className="mt-4 text-base font-medium text-slate-100">
+                    {title}
+                  </h2>
+                </div>
+                <Sparkles className="size-4 text-violet-300/60" />
               </div>
-              <Sparkles className="size-4 text-violet-300/60" />
-            </div>
 
-            <div className="mt-5 grid gap-3">
-              <div className="rounded-lg border border-rose-400/10 bg-rose-400/[0.03] p-3">
-                <p className="mb-2 text-[10px] uppercase tracking-[0.14em] text-rose-300/70">
-                  Before
-                </p>
-                <p className="font-mono text-xs leading-5 text-slate-400">
-                  {before}
-                </p>
+              <div className="mt-5 grid gap-3">
+                <div className="rounded-lg border border-rose-400/10 bg-rose-400/[0.03] p-3">
+                  <p className="mb-2 text-[10px] uppercase tracking-[0.14em] text-rose-300/70">
+                    Before
+                  </p>
+                  <p className="font-mono text-xs leading-5 text-slate-400">
+                    {before}
+                  </p>
+                </div>
+                <div className="rounded-lg border border-emerald-400/10 bg-emerald-400/[0.03] p-3">
+                  <p className="mb-2 text-[10px] uppercase tracking-[0.14em] text-emerald-300/70">
+                    After
+                  </p>
+                  <p className="font-mono text-xs leading-5 text-slate-300">
+                    {after}
+                  </p>
+                </div>
               </div>
-              <div className="rounded-lg border border-emerald-400/10 bg-emerald-400/[0.03] p-3">
-                <p className="mb-2 text-[10px] uppercase tracking-[0.14em] text-emerald-300/70">
-                  After
-                </p>
-                <p className="font-mono text-xs leading-5 text-slate-300">
-                  {after}
-                </p>
-              </div>
-            </div>
-            <p className="mt-4 text-xs leading-5 text-slate-500">{note}</p>
-          </article>
-        ))}
+              <p className="mt-4 text-xs leading-5 text-slate-500">{note}</p>
+            </article>
+          ))}
         </div>
       </section>
 

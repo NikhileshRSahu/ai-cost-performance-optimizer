@@ -37,16 +37,24 @@ function findings(value: string): readonly string[] {
     result.push('Repeated instruction lines detected.');
   }
   if (value.length > 6000) {
-    result.push('Large prompt context detected; retrieval or context pruning may help.');
+    result.push(
+      'Large prompt context detected; retrieval or context pruning may help.',
+    );
   }
   if (/always|must|never/gi.test(value) && value.length > 1500) {
-    result.push('Constraint language is spread across a long prompt; consolidating rules may reduce repetition.');
+    result.push(
+      'Constraint language is spread across a long prompt; consolidating rules may reduce repetition.',
+    );
   }
   if (!/json|schema|format|output/i.test(value) && value.length > 1200) {
-    result.push('Output contract is not explicit; a compact schema may reduce repeated formatting instructions.');
+    result.push(
+      'Output contract is not explicit; a compact schema may reduce repeated formatting instructions.',
+    );
   }
   if (result.length === 0) {
-    result.push('No obvious structural waste found by the deterministic prompt checks.');
+    result.push(
+      'No obvious structural waste found by the deterministic prompt checks.',
+    );
   }
   return Object.freeze(result);
 }
@@ -78,11 +86,13 @@ export function PromptEvaluationWorkbench() {
             Prompt evaluation workflow
           </p>
           <h2 className="m-0 mt-2 text-xl font-semibold text-white">
-            Paste a prompt. Evalomics finds structural waste and drafts a leaner candidate.
+            Paste a prompt. Evalomics finds structural waste and drafts a leaner
+            candidate.
           </h2>
           <p className="m-0 mt-2 max-w-3xl text-sm leading-6 text-white/45">
-            This first pass is deterministic: token estimates and structural findings are calculated locally.
-            The candidate is a draft until it is compared against representative quality evidence.
+            This first pass is deterministic: token estimates and structural
+            findings are calculated locally. The candidate is a draft until it
+            is compared against representative quality evidence.
           </p>
         </div>
       </div>
@@ -165,13 +175,17 @@ export function PromptEvaluationWorkbench() {
               <p className="m-0 text-[9px] uppercase tracking-[0.13em] text-white/30">
                 Original tokens
               </p>
-              <p className="m-0 mt-2 font-mono text-xl text-white">{originalTokens}</p>
+              <p className="m-0 mt-2 font-mono text-xl text-white">
+                {originalTokens}
+              </p>
             </div>
             <div className="rounded-xl border border-white/[0.07] bg-black/20 p-4">
               <p className="m-0 text-[9px] uppercase tracking-[0.13em] text-white/30">
                 Candidate tokens
               </p>
-              <p className="m-0 mt-2 font-mono text-xl text-white">{candidateTokens}</p>
+              <p className="m-0 mt-2 font-mono text-xl text-white">
+                {candidateTokens}
+              </p>
             </div>
             <div className="rounded-xl border border-emerald-300/12 bg-emerald-300/[0.035] p-4">
               <p className="m-0 text-[9px] uppercase tracking-[0.13em] text-emerald-200/55">
@@ -193,7 +207,8 @@ export function PromptEvaluationWorkbench() {
               ))}
             </ul>
             <div className="mt-4 rounded-lg border border-amber-300/10 bg-amber-300/[0.035] p-3 text-xs leading-5 text-amber-50/55">
-              Token reduction alone is not a quality result. Use representative cases before adopting the candidate.
+              Token reduction alone is not a quality result. Use representative
+              cases before adopting the candidate.
             </div>
           </div>
         </div>
