@@ -55,3 +55,5 @@ Human-designed dashboard release: customer-question cards, neutral visual system
 Final gate rerun after formatting customer-loop state checks for the human-designed dashboard — 2026-09-19.
 
 Redeploy marker for cleaned customer-first dashboard — 2026-09-19.
+
+Satisfaction-first workspace release: answer-first drilldowns, user-decision model evaluation, simplified prompt/results/optimization pages, and contextual Evalomics AI — 2026-09-19.
