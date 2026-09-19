@@ -178,7 +178,7 @@ export function LaunchTemplateEvalomics() {
         </nav>
         <div className="eval-template-nav-actions">
           <Link href="/login">Sign in</Link>
-          <Link href="/start" className="eval-template-button eval-template-button--light">Start free</Link>
+          <Link href="/start?intent=start" className="eval-template-button eval-template-button--light">Start free</Link>
         </div>
       </header>
 
@@ -196,7 +196,7 @@ export function LaunchTemplateEvalomics() {
               alternatives against a required quality floor, and verify what actually improved.
             </p>
             <div className="eval-template-hero-actions">
-              <Link href="/start" className="eval-template-button eval-template-button--light">
+              <Link href="/start?intent=analyze" className="eval-template-button eval-template-button--light">
                 Analyze my AI usage <ArrowRight size={16} />
               </Link>
               <Link href="/demo" className="eval-template-button eval-template-button--glass">
@@ -330,7 +330,7 @@ export function LaunchTemplateEvalomics() {
             <h2>See what your AI usage costs.<br />And what is safe to change.</h2>
             <p>Turn AI spend into a measurable operating advantage with Evalomics.</p>
             <div>
-              <Link href="/start" className="eval-template-button eval-template-button--light">
+              <Link href="/start?intent=analyze" className="eval-template-button eval-template-button--light">
                 Analyze my AI usage <ArrowRight size={16} />
               </Link>
               <Link href="/demo" className="eval-template-button eval-template-button--glass">Explore live demo</Link>
