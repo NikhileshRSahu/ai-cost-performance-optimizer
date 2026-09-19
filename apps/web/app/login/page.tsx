@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { ArrowLeft, Check } from 'lucide-react';
 import { LoginProductMotion } from '../../components/marketing/login-product-motion';
 import { GoogleSignInButton } from '../../components/google-sign-in-button';
-import { hasSelfHostedAuthConfiguration } from '../../lib/auth-config';
+import {
+  hasSelfHostedAuthConfiguration,
+  resolveAuthBaseUrl,
+} from '../../lib/auth-config';
 
 export const metadata: Metadata = {
   title: 'Sign in | Evalomics',
@@ -43,9 +47,28 @@ export default async function LoginPage({
   const backToChosenFlow = callbackPath.startsWith('/start')
     ? callbackPath
     : '/start';
+
   const requestHeaders = await headers();
   const host = requestHeaders.get('host');
   const authConfigured = hasSelfHostedAuthConfiguration();
+
+  if (
+    authConfigured &&
+    process.env.VERCEL_ENV?.toLowerCase() === 'production' &&
+    host !== null
+  ) {
+    const canonicalAuthUrl = new URL(resolveAuthBaseUrl());
+    const requestHost = host.split(':')[0]?.toLowerCase() ?? '';
+
+    if (requestHost !== canonicalAuthUrl.hostname.toLowerCase()) {
+      const canonicalLogin = new URL('/login', canonicalAuthUrl);
+      if (callbackPath !== '/start') {
+        canonicalLogin.searchParams.set('returnTo', callbackPath);
+      }
+      redirect(canonicalLogin.toString());
+    }
+  }
+
   const canSignIn = authConfigured && authHostAllowed(host);
 
   return (
