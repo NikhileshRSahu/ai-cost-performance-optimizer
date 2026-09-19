@@ -62,7 +62,7 @@ export function DashboardDrilldown({
   return (
     <>
       <div
-        className="group relative h-full cursor-pointer rounded-[22px]"
+        className="group relative h-full cursor-pointer rounded-[18px] transition-transform duration-200 ease-out hover:-translate-y-px"
         role="group"
         aria-label={eyebrow}
         onMouseUp={handleCardMouseUp}
