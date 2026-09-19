@@ -122,11 +122,20 @@ export function DashboardDrilldown({
             </div>
 
             <div className="grid gap-6 p-5 sm:p-7">
-              <p className="m-0 max-w-2xl text-sm leading-7 text-white/55">
-                {summary}
-              </p>
+              <section className="rounded-2xl border border-white/[0.08] bg-white/[0.025] p-5">
+                <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-white/30">
+                  What this means
+                </p>
+                <p className="m-0 mt-3 max-w-2xl text-[15px] leading-7 text-white/72">
+                  {summary}
+                </p>
+              </section>
 
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <p className="m-0 mb-3 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-white/28">
+                  The numbers behind this answer
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2">
                 {items.map((item) => (
                   <article
                     key={item.label}
@@ -145,28 +154,33 @@ export function DashboardDrilldown({
                     ) : null}
                   </article>
                 ))}
+                </div>
               </div>
 
-              <div className="grid gap-3 md:grid-cols-2">
-                <div className="rounded-2xl border border-emerald-300/12 bg-emerald-300/[0.035] p-5">
-                  <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-emerald-200/70">
-                    What Evalomics identified
+              <section className="grid gap-4 rounded-2xl border border-white/[0.08] bg-black/20 p-5">
+                <div>
+                  <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-white/28">
+                    Why Evalomics reached this answer
                   </p>
-                  <p className="m-0 mt-3 text-sm leading-6 text-emerald-50/70">
+                  <p className="m-0 mt-2 text-sm leading-6 text-white/58">
                     {insight}
                   </p>
                 </div>
-                <div className="rounded-2xl border border-sky-300/12 bg-sky-300/[0.035] p-5">
-                  <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-sky-200/70">
-                    What to do next
+                <div className="border-t border-white/[0.07] pt-4">
+                  <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-emerald-200/60">
+                    Do this now
                   </p>
-                  <p className="m-0 mt-3 text-sm leading-6 text-sky-50/70">
+                  <p className="m-0 mt-2 text-base font-medium leading-7 text-white">
                     {nextStep}
                   </p>
                 </div>
-              </div>
+              </section>
 
-              <div className="flex flex-wrap justify-end gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.07] pt-2">
+                <p className="m-0 max-w-sm text-xs leading-5 text-white/28">
+                  Need the reasoning in plain language? Evalomics AI already has this exact result attached.
+                </p>
+                <div className="flex flex-wrap justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => {
@@ -201,6 +215,7 @@ export function DashboardDrilldown({
                     {actionLabel} <ArrowRight className="size-4" />
                   </Link>
                 ) : null}
+                </div>
               </div>
             </div>
           </section>
