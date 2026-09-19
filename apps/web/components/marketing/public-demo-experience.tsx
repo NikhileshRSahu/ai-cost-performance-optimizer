@@ -149,7 +149,7 @@ export function PublicDemoExperience() {
                         Opportunity
                       </span>
                       <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/35">
-                        strongest supported action
+                        supported recommendation
                       </span>
                     </div>
                     <span className="font-mono text-xs text-white/45">
@@ -189,7 +189,7 @@ export function PublicDemoExperience() {
                     savings.
                   </p>
                   <Link
-                    href="/start"
+                    href="/start?intent=analyze"
                     className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-white px-4 py-2 text-xs font-semibold text-slate-950 no-underline"
                   >
                     Analyze your usage <ArrowRight className="size-3.5" />

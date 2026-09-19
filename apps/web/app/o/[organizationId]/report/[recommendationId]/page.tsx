@@ -109,6 +109,20 @@ export default async function OptimizationReportPage({
   return (
     <article className="report-shell">
       <div className="report-toolbar" aria-label="Report actions">
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            className="secondary-action"
+            href={`/o/${organizationId}/verify/${recommendationId}`}
+          >
+            Back to verification
+          </Link>
+          <Link
+            className="secondary-action"
+            href={`/o/${organizationId}/proof`}
+          >
+            View proof status
+          </Link>
+        </div>
         <PrintReportButton />
       </div>
 
