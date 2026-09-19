@@ -70,7 +70,6 @@ function NavLinks({
             >
               <Icon className="size-4" strokeWidth={1.8} aria-hidden="true" />
               <span>{label}</span>
-
             </Link>
           );
         })}
@@ -133,8 +132,6 @@ export function WorkbenchShell({
             </p>
           </div>
         </div>
-
-
 
         <nav
           className="flex-1 overflow-y-auto"

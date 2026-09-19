@@ -1,11 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import {
-  ArrowRight,
-  Database,
-  Gauge,
-  Sparkles,
-} from 'lucide-react';
+import { ArrowRight, Database, Gauge, Sparkles } from 'lucide-react';
 import { formatDecimal, rational } from '../../../../../src/economics/exact';
 import { createDatabase } from '../../../../../src/persistence/database';
 import { buildFounderDashboardView } from '../../../../../src/workbench/dashboard-view';
@@ -333,7 +328,11 @@ export default async function CostDashboardPage({
               { id: 'change', size: 'sm', label: 'What should I change?' },
               { id: 'safe', size: 'sm', label: 'Is it safe?' },
               { id: 'next', size: 'sm', label: 'What do I do next?' },
-              { id: 'result', size: 'lg', label: 'What happened after rollout?' },
+              {
+                id: 'result',
+                size: 'lg',
+                label: 'What happened after rollout?',
+              },
             ]}
           >
             <DashboardDrilldown
@@ -364,7 +363,9 @@ export default async function CostDashboardPage({
                 <p className="m-0 mt-3 text-[30px] tracking-[-0.05em] text-white">
                   {moneyLabel(view.observedSpend)}
                 </p>
-                <p className="m-0 mt-1 text-[10px] text-white/30">{view.periodLabel}</p>
+                <p className="m-0 mt-1 text-[10px] text-white/30">
+                  {view.periodLabel}
+                </p>
                 <ConsoleBars
                   values={[34, 48, 42, 61, 53, 67, 58, 72, 64, 78, 70, 88]}
                   accent="bg-sky-400"
@@ -411,7 +412,8 @@ export default async function CostDashboardPage({
                   {estimatedSavingLabel}
                 </p>
                 <p className="m-0 mt-1 text-[10px] text-white/30">
-                  {view.strongestAction?.detectionConfidence ?? 'Pending'} confidence
+                  {view.strongestAction?.detectionConfidence ?? 'Pending'}{' '}
+                  confidence
                 </p>
                 <ConsoleBars
                   values={[24, 31, 27, 39, 36, 48, 44, 52, 57, 61, 68, 74]}
@@ -526,7 +528,8 @@ export default async function CostDashboardPage({
                 <div className="mt-auto flex flex-wrap gap-5 pt-5 font-mono text-[10px] text-white/38">
                   <span>impact · {estimatedSavingLabel}</span>
                   <span>
-                    confidence · {view.strongestAction?.detectionConfidence ?? 'pending'}
+                    confidence ·{' '}
+                    {view.strongestAction?.detectionConfidence ?? 'pending'}
                   </span>
                 </div>
               </article>
@@ -591,7 +594,8 @@ export default async function CostDashboardPage({
                           : 'Still evaluating'}
                 </p>
                 <p className="m-0 mt-2 font-mono text-[10px] text-white/30">
-                  {view.strongestAction?.qualityGuard ?? 'quality evidence pending'}
+                  {view.strongestAction?.qualityGuard ??
+                    'quality evidence pending'}
                 </p>
                 <div className="mt-auto flex items-center gap-2 pt-5">
                   <span
@@ -613,12 +617,16 @@ export default async function CostDashboardPage({
 
             <DashboardDrilldown
               eyebrow="What do I do next?"
-              title={view.strongestAction?.nextAction ?? 'Keep evidence connected'}
+              title={
+                view.strongestAction?.nextAction ?? 'Keep evidence connected'
+              }
               summary="The next action Evalomics wants you to take — no methodology required."
               items={[
                 {
                   label: 'Next action',
-                  value: view.strongestAction?.nextAction ?? 'Keep evidence connected',
+                  value:
+                    view.strongestAction?.nextAction ??
+                    'Keep evidence connected',
                 },
                 {
                   label: 'Recommended change',
@@ -650,7 +658,8 @@ export default async function CostDashboardPage({
                   Next step
                 </p>
                 <p className="m-0 mt-5 max-w-3xl text-xl font-semibold leading-7 tracking-[-0.03em] text-white">
-                  {view.strongestAction?.nextAction ?? 'Keep evidence connected'}
+                  {view.strongestAction?.nextAction ??
+                    'Keep evidence connected'}
                 </p>
                 <p className="m-0 mt-3 text-sm text-emerald-200/55">
                   {evaluationStatusLabel}
@@ -718,7 +727,11 @@ export default async function CostDashboardPage({
                 </div>
                 <div className="grid grid-cols-3 items-start gap-2">
                   {[
-                    ['Staged', evaluationStatus !== 'CANDIDATE_IDENTIFIED' && evaluationStatus !== 'ANALYZING'],
+                    [
+                      'Staged',
+                      evaluationStatus !== 'CANDIDATE_IDENTIFIED' &&
+                        evaluationStatus !== 'ANALYZING',
+                    ],
                     ['In production', evaluationStatus === 'PROVEN'],
                     ['Result', view.verifiedNetSavings !== null],
                   ].map(([label, reached], index) => (
@@ -733,7 +746,9 @@ export default async function CostDashboardPage({
                             : 'relative z-10 block size-3.5 rounded-full border border-white/20 bg-[#111214]'
                         }
                       />
-                      <p className="m-0 mt-3 text-[10px] text-white/34">{String(label)}</p>
+                      <p className="m-0 mt-3 text-[10px] text-white/34">
+                        {String(label)}
+                      </p>
                     </div>
                   ))}
                 </div>

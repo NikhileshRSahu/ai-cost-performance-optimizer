@@ -67,7 +67,10 @@ export function ResultJourney({
             const Icon = step.icon;
 
             return (
-              <div key={step.label} className="flex min-w-0 flex-1 items-center">
+              <div
+                key={step.label}
+                className="flex min-w-0 flex-1 items-center"
+              >
                 <div className="flex items-center gap-2">
                   <motion.span
                     animate={
@@ -113,4 +116,5 @@ export function ResultJourney({
         </div>
       </div>
     </section>
-  );}
+  );
+}
