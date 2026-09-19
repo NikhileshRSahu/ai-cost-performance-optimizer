@@ -9,6 +9,8 @@ export type SelfHostedAuthConfiguration = Readonly<{
   googleCallbackUrl: string;
 }>;
 
+const PRODUCTION_AUTH_URL = 'https://evalomics.vercel.app';
+
 function nonEmpty(value: string | undefined): string | null {
   const normalized = value?.trim();
   return normalized ? normalized : null;
@@ -34,11 +36,15 @@ export function resolveAuthDatabaseUrl(
 export function resolveAuthBaseUrl(
   environment: AuthEnvironment = process.env,
 ): string {
+  if (nonEmpty(environment.VERCEL_ENV)?.toLowerCase() === 'production') {
+    return PRODUCTION_AUTH_URL;
+  }
+
   const configured = nonEmpty(environment.BETTER_AUTH_URL);
   return (configured ?? 'http://localhost:3000').replace(/\/+$/, '');
 }
 
-// Google must always return to the Evalomics-owned callback.
+// Google must always return to the canonical Evalomics-owned callback in production.
 export function resolveGoogleCallbackUrl(
   environment: AuthEnvironment = process.env,
 ): string {
