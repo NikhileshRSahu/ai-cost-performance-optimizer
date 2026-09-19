@@ -5,12 +5,13 @@ import {
   ArrowRight,
   BadgeDollarSign,
   Database,
-  FlaskConical,
   Gauge,
   ShieldCheck,
   Sparkles,
 } from 'lucide-react';
 import { DashboardWidgetGrid } from '../workbench/dashboard-widget-grid';
+import { EvalomicsCopilot } from '../workbench/evalomics-copilot';
+import { ResultJourney } from '../workbench/result-journey';
 
 function DemoBars({
   values,
@@ -96,8 +97,21 @@ export function PublicDemoDashboard() {
         </h1>
         <p className="mt-2 max-w-3xl font-mono text-xs leading-5 text-slate-500">
           30 days · 22,380 requests · synthetic evidence designed to show how
-          Evalomics separates observed spend, opportunities, testing, and
-          verification.
+          Evalomics follows the same Connected → Found → Evaluated → Ready → Proven
+          story you will see with real usage.
+        </p>
+      </section>
+
+      <ResultJourney current="Evaluated" />
+
+      <section className="rounded-[22px] border border-white/[0.08] bg-[#0f1115] p-5">
+        <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.15em] text-sky-300/65">
+          Outcome summary
+        </p>
+        <p className="m-0 mt-2 text-sm leading-6 text-white/65">
+          $1,774.78 observed spend → repeated-input waste found → cache the stable
+          prefix → estimated $286–$421 opportunity → Medium confidence → evaluate
+          against the 0.90 quality floor before rollout.
         </p>
       </section>
 
@@ -107,9 +121,9 @@ export function PublicDemoDashboard() {
           { id: 'traces', size: 'wide', label: 'Recent traces' },
           { id: 'activity', size: 'wide', label: 'Usage activity' },
           { id: 'spend', size: 'sm', label: 'Observed spend' },
-          { id: 'opportunity', size: 'sm', label: 'Modeled upside' },
+          { id: 'opportunity', size: 'sm', label: 'Estimated savings' },
           { id: 'quality', size: 'sm', label: 'Quality score' },
-          { id: 'verified', size: 'sm', label: 'Verified savings' },
+          { id: 'verified', size: 'sm', label: 'Evaluation status' },
           { id: 'recommendation', size: 'wide', label: 'Recommended action' },
           { id: 'models', size: 'wide', label: 'Model usage' },
         ]}
@@ -188,7 +202,7 @@ export function PublicDemoDashboard() {
         <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
           <div className="flex items-center justify-between">
             <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
-              Modeled upside
+              Estimated savings
             </p>
             <Gauge className="size-4 text-emerald-300/70" />
           </div>
@@ -196,7 +210,7 @@ export function PublicDemoDashboard() {
             $286–$421
           </p>
           <p className="m-0 mt-1 text-[10px] text-slate-500">
-            potential · not verified savings
+            evidence-backed estimate
           </p>
           <DemoBars
             values={[18, 24, 31, 28, 36, 42, 47, 53, 58, 62, 69, 76]}
@@ -234,17 +248,19 @@ export function PublicDemoDashboard() {
         <article className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono">
           <div className="flex items-center justify-between">
             <p className="m-0 text-[10px] uppercase tracking-[0.18em] text-slate-400">
-              Verified savings
+              Evaluation status
             </p>
             <FlaskConical className="size-4 text-violet-300/70" />
           </div>
-          <p className="mt-4 text-3xl tracking-[-0.05em] text-white">$0.00</p>
+          <p className="mt-4 text-2xl font-semibold tracking-[-0.04em] text-white">
+            Evaluated
+          </p>
           <p className="m-0 mt-1 text-[10px] text-slate-500">
-            not yet production-verified
+            candidate checked against sample quality evidence
           </p>
           <div className="mt-auto rounded-lg border border-violet-300/10 bg-violet-300/[0.035] p-3 text-[10px] leading-5 text-violet-100/65">
-            Evalomics does not convert modeled upside into verified savings
-            without post-change evidence.
+            The candidate is useful now. Production proof becomes the final
+            Proven stage only after rollout.
           </div>
         </article>
 
@@ -263,7 +279,7 @@ export function PublicDemoDashboard() {
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
             {[
               ['Repeated input', '1,248 similar requests'],
-              ['Modeled opportunity', '$87.42'],
+              ['Estimated opportunity', '$87.42'],
               ['Confidence', 'Medium'],
             ].map(([label, value]) => (
               <div
@@ -279,9 +295,9 @@ export function PublicDemoDashboard() {
           </div>
           <div className="mt-auto pt-5">
             <p className="m-0 text-[11px] leading-5 text-slate-500">
-              Sample logic: repeated stable input suggests a caching experiment,
-              but the cheaper path still needs benchmark evidence before any
-              production claim.
+              Sample logic: Evalomics found repeated stable input, evaluated the
+              candidate against the sample quality floor, and prepared the next
+              implementation decision.
             </p>
           </div>
         </section>
@@ -318,6 +334,8 @@ export function PublicDemoDashboard() {
           </div>
         </section>
       </DashboardWidgetGrid>
+
+      <EvalomicsCopilot organizationId="public-demo" demo />
 
       <section className="rounded-[22px] border border-white/[0.08] bg-[#101114] p-5 sm:p-6">
         <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-center">
