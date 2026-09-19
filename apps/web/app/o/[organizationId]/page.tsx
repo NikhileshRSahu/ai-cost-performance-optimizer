@@ -171,14 +171,9 @@ export default async function CostDashboardPage({
 
       <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <div className="mb-3 flex items-center gap-2">
-            <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-semibold text-emerald-300">
-              ● Cost intelligence
-            </span>
-            <span className="font-mono text-[11px] text-slate-500">
-              {view.periodLabel}
-            </span>
-          </div>
+          <p className="mb-3 font-mono text-[11px] text-slate-500">
+            {view.periodLabel}
+          </p>
           <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-sky-300">
             AI Efficiency MRI
           </p>
@@ -214,49 +209,6 @@ export default async function CostDashboardPage({
         </section>
       ) : (
         <>
-          <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {[
-              {
-                label: 'Observed AI spend',
-                value: moneyLabel(view.observedSpend),
-                detail:
-                  view.sourceKind === 'PROVIDER'
-                    ? (view.providerName ?? 'Provider')
-                    : view.sourceKind,
-                tone: 'text-sky-300',
-              },
-              {
-                label: 'Opportunities found',
-                value: String(view.recommendations.length),
-                detail: 'supported recommendations',
-                tone: 'text-slate-100',
-              },
-              {
-                label: 'Modeled upside',
-                value: modeled,
-                detail: 'planning evidence only',
-                tone: 'text-emerald-300',
-              },
-              {
-                label: 'Verified savings',
-                value: verifiedMoney(view.verifiedNetSavings),
-                detail: 'production evidence',
-                tone: 'text-violet-300',
-              },
-            ].map(({ label, value, detail, tone }) => (
-              <article
-                key={label}
-                className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5"
-              >
-                <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
-                  {label}
-                </p>
-                <p className={`mt-4 font-mono text-2xl ${tone}`}>{value}</p>
-                <p className="mt-2 text-[10px] text-slate-600">{detail}</p>
-              </article>
-            ))}
-          </section>
-
           <section className="grid gap-6 xl:grid-cols-[1.25fr_.75fr]">
             <div className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">
               <div className="flex items-center justify-between gap-4">
@@ -358,6 +310,49 @@ export default async function CostDashboardPage({
                 <ArrowRight className="size-3.5" />
               </Link>
             </div>
+          </section>
+
+          <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Supporting evidence summary">
+            {[
+              {
+                label: 'Observed AI spend',
+                value: moneyLabel(view.observedSpend),
+                detail:
+                  view.sourceKind === 'PROVIDER'
+                    ? (view.providerName ?? 'Provider')
+                    : view.sourceKind,
+                tone: 'text-sky-300',
+              },
+              {
+                label: 'Opportunities found',
+                value: String(view.recommendations.length),
+                detail: 'supported recommendations',
+                tone: 'text-slate-100',
+              },
+              {
+                label: 'Modeled upside',
+                value: modeled,
+                detail: 'planning evidence only',
+                tone: 'text-emerald-300',
+              },
+              {
+                label: 'Verified savings',
+                value: verifiedMoney(view.verifiedNetSavings),
+                detail: 'production evidence',
+                tone: 'text-violet-300',
+              },
+            ].map(({ label, value, detail, tone }) => (
+              <article
+                key={label}
+                className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5"
+              >
+                <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+                  {label}
+                </p>
+                <p className={`mt-4 font-mono text-2xl ${tone}`}>{value}</p>
+                <p className="mt-2 text-[10px] text-slate-600">{detail}</p>
+              </article>
+            ))}
           </section>
 
           <section className="rounded-xl border border-white/[0.07] bg-[#111a29] p-5 sm:p-6">

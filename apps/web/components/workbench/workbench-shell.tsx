@@ -36,6 +36,9 @@ function NavLinks({
 }: Readonly<{ organizationId: string; onNavigate?: () => void }>) {
   const pathname = usePathname();
   const base = `/o/${organizationId}`;
+  const utilityActive = utilityNavigation.some(({ slug }) =>
+    pathname.startsWith(base + slug),
+  );
 
   function linkClass(href: string): string {
     const active =
@@ -75,7 +78,10 @@ function NavLinks({
         })}
       </div>
 
-      <details className="mt-5 border-t border-white/[0.06] pt-4">
+      <details
+        className="mt-5 border-t border-white/[0.06] pt-4"
+        open={utilityActive}
+      >
         <summary className="cursor-pointer list-none px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
           Tools & settings
         </summary>
