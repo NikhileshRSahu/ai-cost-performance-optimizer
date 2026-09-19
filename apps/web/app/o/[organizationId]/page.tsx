@@ -72,7 +72,7 @@ function verifiedMoney(
     currency: string;
   }> | null,
 ): string {
-  if (value === null) return 'Not verified';
+  if (value === null) return 'Production proof pending';
   return `${value.currency} ${formatDecimal(
     rational(BigInt(value.exactNumerator), BigInt(value.exactDenominator)),
     2,
@@ -353,7 +353,7 @@ export default async function CostDashboardPage({
                 {
                   label: 'Evidence state',
                   value: view.strongestAction?.state ?? 'Observed only',
-                  note: 'Potential, tested, and verified are kept separate.',
+                  note: 'Found, Evaluated, and Proven remain separate decision states.',
                 },
                 {
                   label: 'Detected saving',
@@ -397,9 +397,9 @@ export default async function CostDashboardPage({
                     </p>
                     <h2 className="mt-2 font-mono text-base font-medium text-white">
                       {view.strongestAction?.state === 'TESTED'
-                        ? 'Best tested improvement'
+                        ? 'Best evaluated improvement'
                         : view.strongestAction?.state === 'VERIFIED'
-                          ? 'Best verified improvement'
+                          ? 'Best proven improvement'
                           : 'Strongest supported action'}
                     </h2>
                   </div>
@@ -433,32 +433,32 @@ export default async function CostDashboardPage({
 
             <DashboardDrilldown
               eyebrow="Evidence status"
-              title="How far this finding has been proven"
-              summary="Evalomics separates observed evidence, modeled opportunity, benchmark evidence, and production verification so a promising estimate never looks like proven savings."
+              title="How far Evalomics has taken this result"
+              summary="Evalomics shows the complete path from observed usage to a found opportunity, candidate evaluation, and finally a proven production result."
               items={[
                 { label: 'Observed', value: 'Usage + cost evidence loaded' },
                 {
                   label: 'Potential',
                   value:
-                    view.strongestAction !== null ? 'Detected' : 'Not detected',
+                    view.strongestAction !== null ? 'Opportunity identified' : 'Still analyzing',
                 },
                 {
-                  label: 'Tested',
+                  label: 'Evaluated',
                   value:
                     view.strongestAction?.state === 'TESTED' ||
                     view.strongestAction?.state === 'VERIFIED'
-                      ? 'Benchmark-supported'
-                      : 'Not benchmarked',
+                      ? 'Candidate evaluated'
+                      : 'Evaluation pending',
                 },
                 {
-                  label: 'Verified',
+                  label: 'Proven',
                   value:
                     view.verifiedNetSavings !== null
                       ? verifiedMoney(view.verifiedNetSavings)
-                      : 'Not production-verified',
+                      : 'After rollout',
                 },
               ]}
-              insight="This evidence ladder is what prevents Evalomics from turning a modeled estimate into a claim."
+              insight="This journey lets Evalomics give a useful recommendation early while keeping final production proof honest."
               nextStep={
                 view.verifiedNetSavings === null
                   ? 'Open proof status to see exactly what evidence is still missing.'
@@ -467,8 +467,8 @@ export default async function CostDashboardPage({
               actionHref={`/o/${organizationId}/proof`}
               actionLabel={
                 view.verifiedNetSavings === null
-                  ? 'View proof status'
-                  : 'Open verified savings'
+                  ? 'View result evidence'
+                  : 'Open proven result'
               }
             >
               <section className="flex h-full flex-col rounded-[22px] border border-white/[0.10] bg-[#121316] p-5 font-mono sm:p-6">
@@ -494,17 +494,17 @@ export default async function CostDashboardPage({
                     ['Observed', 'Usage and cost evidence loaded', true],
                     [
                       'Potential',
-                      'Optimization detected',
+                      'Best opportunity identified',
                       view.strongestAction !== null,
                     ],
                     [
-                      'Tested',
-                      'Benchmark-supported',
+                      'Evaluated',
+                      'Candidate checked by Evalomics',
                       view.strongestAction?.state === 'TESTED' ||
                         view.strongestAction?.state === 'VERIFIED',
                     ],
                     [
-                      'Verified',
+                      'Proven',
                       'Production proof',
                       view.verifiedNetSavings !== null,
                     ],
@@ -536,8 +536,8 @@ export default async function CostDashboardPage({
                   className="mt-5 inline-flex items-center gap-2 text-xs font-semibold text-violet-300 no-underline"
                 >
                   {view.verifiedNetSavings === null
-                    ? 'View proof status'
-                    : 'Open verified savings'}{' '}
+                    ? 'View result evidence'
+                    : 'Open proven result'}{' '}
                   <ArrowRight className="size-3.5" />
                 </Link>
               </section>
