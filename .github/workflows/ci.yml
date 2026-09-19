@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm install
+      - run: npm run build
+        env:
+          NEON_AUTH_BASE_URL: https://ep-green-night-b4iaryax.neonauth.c-6.us-east-2.aws.neon.tech/evalomics/auth
+          NEON_AUTH_COOKIE_SECRET: ci-only-cookie-secret-that-is-long-enough-2026
