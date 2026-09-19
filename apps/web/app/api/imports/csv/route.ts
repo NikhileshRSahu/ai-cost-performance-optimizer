@@ -1,0 +1,40 @@
+import { NextResponse } from 'next/server';
+import { importCustomerUsage } from '../../../../../src/workbench/import-service';
+import { analyzeImportedUsage } from '../../../../../src/workbench/analysis-service';
+import { withRuntimeWorkspace } from '@/lib/runtime-workspace';
+
+export const runtime='nodejs';
+export const dynamic='force-dynamic';
+
+function safeError(error:unknown){
+  const message=error instanceof Error?error.message:'IMPORT_FAILED';
+  if(message.startsWith('MISSING_COLUMN:')) return message;
+  if(message.startsWith('UNSUPPORTED_COLUMN:')) return message;
+  if(message==='FILE_TOO_LARGE'||message==='TOO_MANY_ROWS'||message==='EMPTY_CSV') return message;
+  return 'IMPORT_FAILED';
+}
+
+export async function POST(request:Request){
+  try{
+    const form=await request.formData();
+    const file=form.get('file');
+    if(!(file instanceof File)) return NextResponse.json({ok:false,error:'CSV_REQUIRED'},{status:400});
+    if(file.size>10*1024*1024) return NextResponse.json({ok:false,error:'FILE_TOO_LARGE'},{status:413});
+    const bytes=new Uint8Array(await file.arrayBuffer());
+    const result=await withRuntimeWorkspace(async({workspace,database})=>{
+      const imported=await importCustomerUsage({
+        db:database.db,session:workspace.session,organizationId:workspace.organizationId,
+        fileName:file.name,bytes,isDemo:false,receivedAt:new Date().toISOString()
+      });
+      if(imported.blocked) throw new Error('IMPORT_FAILED');
+      await analyzeImportedUsage({
+        db:database.db,session:workspace.session,organizationId:workspace.organizationId,
+        importId:imported.importId
+      });
+      return imported;
+    });
+    return NextResponse.json({ok:true,result});
+  }catch(error){
+    return NextResponse.json({ok:false,error:safeError(error)},{status:400});
+  }
+}

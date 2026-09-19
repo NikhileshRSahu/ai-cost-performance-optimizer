@@ -5,6 +5,17 @@ import { useEffect, useMemo, useState } from 'react';
 import { signOutAction } from '@/app/actions';
 
 type Tier='observed'|'potential'|'tested'|'verified';
+type RealSummary=Readonly<{
+  organizationId:string;organizationName:string;role:string;onboardingCompleted:boolean;
+  observedSpend:string|null;currency:string;requests:string;completeImports:number;
+  providers:readonly Readonly<{provider:string;status:string;lastSyncAt:string|null}>[];
+  evidenceCounts:Readonly<{potential:number;tested:number;verified:number}>;
+  verifiedSavings:string|null;
+  members:readonly Readonly<{email:string;role:string}>[];
+  recommendations:readonly Readonly<{id:string;state:string;decision:string;confidence:string|null;amount:string|null;currency:string|null;title:string}>[];
+}>;
+
+
 const opps=[
   {id:'OPP-3118',tier:'potential' as Tier,title:'Ticket routing uses a flagship model',body:'61% of routing requests score below the complexity threshold for the current model. Sampled 8,412 requests.',value:'$3,800–4,900/mo est.',meta:'High confidence · routing / GPT-5 class'},
   {id:'OPP-3112',tier:'potential' as Tier,title:'14k-token system context resent uncached',body:'Identical prefix on 91% of agent steps. Cache write rate is 3% — caching only pays on repetition.',value:'$6,200–8,100/mo est.',meta:'Medium confidence · agent-assist'},
@@ -23,7 +34,7 @@ function SpendChart(){
 }
 function ModelBars(){const rows=[['GPT-5 class',88],['Claude Sonnet 5',52],['GPT-5 mini',31],['Claude Haiku 4.5',15],['Other',7]];return <div className="bars">{rows.map(([n,w])=><div key={String(n)}><span>{n}</span><i><b style={{width:w+'%'}}/></i></div>)}</div>}
 
-export default function DashboardApp({userName,userEmail,publicDemo=false,workspaceName='My workspace'}:{userName:string,userEmail:string,publicDemo?:boolean,workspaceName?:string}){
+export default function DashboardApp({userName,userEmail,publicDemo=false,workspaceName='My workspace',realSummary}:{userName:string,userEmail:string,publicDemo?:boolean,workspaceName?:string,realSummary?:RealSummary}){
   const path=usePathname(); const router=useRouter();
   const [role,setRole]=useState('Approver'); const [experiment,setExperiment]=useState<'running'|'complete'|'verification'|'verified'>('running');
   const section=useMemo(()=>path.split('/')[2]||'overview',[path]);
@@ -33,7 +44,7 @@ export default function DashboardApp({userName,userEmail,publicDemo=false,worksp
   const basePath=publicDemo?'/demo':'/dashboard';
 
   if(!publicDemo){
-    return <RealWorkspace userName={userName} userEmail={userEmail} workspaceName={workspaceName}/>;
+    return <RealWorkspace userName={userName} userEmail={userEmail} workspaceName={workspaceName} summary={realSummary}/>;
   }
 
   return <main className="app-shell">
@@ -54,9 +65,19 @@ export default function DashboardApp({userName,userEmail,publicDemo=false,worksp
 }
 
 
-function RealWorkspace({userName,userEmail,workspaceName}:{userName:string,userEmail:string,workspaceName:string}){
+function money(amount:string|null,currency:string){
+  if(amount===null) return '—';
+  const n=Number(amount);
+  if(!Number.isFinite(n)) return '—';
+  try{return new Intl.NumberFormat('en-US',{style:'currency',currency,maximumFractionDigits:2}).format(n)}
+  catch{return currency+' '+n.toFixed(2)}
+}
+
+function RealWorkspace({userName,userEmail,workspaceName,summary}:{userName:string,userEmail:string,workspaceName:string,summary?:RealSummary}){
   const path=usePathname();
   const section=useMemo(()=>path.split('/')[2]||'overview',[path]);
+  const providerCount=summary?.providers.length ?? 0;
+  const evidenceCount=(summary?.evidenceCounts.potential ?? 0)+(summary?.evidenceCounts.tested ?? 0)+(summary?.evidenceCounts.verified ?? 0);
   return <main className="app-shell">
     <header className="app-top">
       <Link className="logo app-logo" href="/"><span/>Evalomics</Link>
@@ -65,64 +86,92 @@ function RealWorkspace({userName,userEmail,workspaceName}:{userName:string,userE
     </header>
     <aside className="sidebar">
       <nav>{nav.map(([id,label])=><Link key={id} className={section===id || (section==='overview'&&id==='overview')?'active':''} href={id==='overview'?'/dashboard':'/dashboard/'+id}><span className="nav-icon">{id==='overview'?'▦':id==='opportunities'?'◇':id==='experiments'?'♜':id==='reports'?'□':id==='alerts'?'♧':id==='integrations'?'⌘':id==='team'?'♧':id==='billing'?'▭':'⚙'}</span>{label}</Link>)}</nav>
-      <div className="sync-note">No provider sync yet<br/>Your workspace contains no sample spend.</div>
+      <div className="sync-note">{providerCount>0?providerCount+' provider'+(providerCount===1?'':'s')+' connected':summary?.completeImports?summary.completeImports+' usage import'+(summary.completeImports===1?'':'s'):'No usage connected'}<br/>{evidenceCount} evidence item{evidenceCount===1?'':'s'} in this workspace</div>
     </aside>
     <section className="app-content">
-      {section==='overview' && <RealOverview userName={userName}/>}
-      {section==='integrations' && <RealIntegrations/>}
-      {section==='team' && <Team userEmail={userEmail}/>}
+      {section==='overview' && <RealOverview userName={userName} summary={summary}/>}
+      {section==='opportunities' && <RealOpportunities summary={summary}/>}
+      {section==='experiments' && <RealExperiments summary={summary}/>}
+      {section==='reports' && <RealReports summary={summary}/>}
+      {section==='alerts' && <WaitingSection section="alerts" hasData={Boolean(summary?.observedSpend)}/>}
+      {section==='integrations' && <RealIntegrations summary={summary}/>}
+      {section==='team' && <RealTeam summary={summary} userEmail={userEmail}/>}
+      {section==='billing' && <RealBilling summary={summary}/>}
       {section==='settings' && <Settings userName={userName} userEmail={userEmail}/>}
-      {section==='billing' && <RealBilling/>}
-      {!['overview','integrations','team','settings','billing'].includes(section) && <WaitingSection section={section}/>}
     </section>
   </main>
 }
 
-function RealOverview({userName}:{userName:string}){
+function RealOverview({userName,summary}:{userName:string,summary?:RealSummary}){
+  const hasData=Boolean(summary?.observedSpend)||Boolean(summary?.completeImports)||Boolean(summary?.providers.length);
+  if(!hasData){
+    return <>
+      <div className="page-head"><div><p className="eyebrow">YOUR WORKSPACE</p><h1>No production data yet.</h1><p>{userName ? userName+', ' : ''}Evalomics will not invent spend, opportunities, tests, or savings before your own usage arrives.</p></div></div>
+      <div className="real-empty-grid">
+        <article className="real-empty-main"><TierBadge tier="observed"/><h2>Connect usage to start observing</h2><p>Bring in OpenAI, Anthropic, or a CSV usage export. The first thing Evalomics will show is what actually happened — not an estimated saving.</p><div className="real-empty-actions"><Link className="btn black" href="/onboarding?step=3">Connect usage data</Link><Link className="btn outline" href="/demo">Explore sample data</Link></div></article>
+        <article><span className="tier observed">OBSERVED</span><strong>—</strong><p>No provider-reconciled spend yet.</p></article>
+        <article><span className="tier potential">POTENTIAL</span><strong>—</strong><p>No patterns claimed before enough evidence exists.</p></article>
+        <article><span className="tier tested">TESTED</span><strong>—</strong><p>No experiments have run on your traffic.</p></article>
+        <article><span className="tier verified">VERIFIED</span><strong>—</strong><p>No savings can be verified before rollout and observation.</p></article>
+      </div>
+      <RealNext/>
+    </>
+  }
   return <>
-    <div className="page-head"><div><p className="eyebrow">YOUR WORKSPACE</p><h1>No production data yet.</h1><p>{userName ? userName+', ' : ''}Evalomics will not invent spend, opportunities, tests, or savings before your own usage arrives.</p></div></div>
-    <div className="real-empty-grid">
-      <article className="real-empty-main">
-        <TierBadge tier="observed"/>
-        <h2>Connect usage to start observing</h2>
-        <p>Bring in OpenAI, Anthropic, or a CSV usage export. The first thing Evalomics will show is what actually happened — not an estimated saving.</p>
-        <div className="real-empty-actions"><Link className="btn black" href="/onboarding?step=3">Connect usage data</Link><Link className="btn outline" href="/demo">Explore sample data</Link></div>
-      </article>
-      <article><span className="tier observed">OBSERVED</span><strong>—</strong><p>No provider-reconciled spend yet.</p></article>
-      <article><span className="tier potential">POTENTIAL</span><strong>—</strong><p>No patterns claimed before enough evidence exists.</p></article>
-      <article><span className="tier tested">TESTED</span><strong>—</strong><p>No experiments have run on your traffic.</p></article>
-      <article><span className="tier verified">VERIFIED</span><strong>—</strong><p>No savings can be verified before rollout and observation.</p></article>
+    <p className="workspace-note">These figures come from this authenticated workspace only. The public demo is not stored in the production database.</p>
+    <div className="kpi-grid">
+      <article><div><span>Observed spend</span><TierBadge tier="observed"/></div><strong>{money(summary?.observedSpend??null,summary?.currency??'USD')}</strong><p>{summary?.requests && Number(summary.requests)>0?Number(summary.requests).toLocaleString()+' measured requests':'Provider or import evidence loaded'}</p></article>
+      <article><div><span>Identified, not yet proven</span><TierBadge tier="potential"/></div><strong>{summary?.evidenceCounts.potential ?? 0}</strong><p>Potential opportunities. Estimates are not counted as savings.</p></article>
+      <article><div><span>Tested</span><TierBadge tier="tested"/></div><strong>{summary?.evidenceCounts.tested ?? 0}</strong><p>Changes with test evidence.</p></article>
+      <article><div><span>Verified savings</span><TierBadge tier="verified"/></div><strong>{money(summary?.verifiedSavings??null,summary?.currency??'USD')}</strong><p>Only production verification contributes here.</p></article>
     </div>
-    <div className="real-next">
-      <p className="eyebrow">WHAT HAPPENS NEXT</p>
-      <div className="real-next-steps"><div><b>1</b><strong>Connect</strong><span>Read-only usage or CSV</span></div><div><b>2</b><strong>Observe</strong><span>Build a trustworthy baseline</span></div><div><b>3</b><strong>Detect</strong><span>Label estimates as Potential</span></div><div><b>4</b><strong>Test</strong><span>Measure changes on real traffic</span></div><div><b>5</b><strong>Verify</strong><span>Only then call it savings</span></div></div>
-    </div>
+    <div className="section-title-row"><h1>Your evidence</h1><p>Only records from {summary?.organizationName}.</p></div>
+    <RealRecommendationList summary={summary}/>
+    <RealNext/>
   </>
 }
 
-function RealIntegrations(){
+function RealNext(){return <div className="real-next"><p className="eyebrow">EVIDENCE PATH</p><div className="real-next-steps"><div><b>1</b><strong>Connect</strong><span>Read-only usage or CSV</span></div><div><b>2</b><strong>Observe</strong><span>Build a trustworthy baseline</span></div><div><b>3</b><strong>Detect</strong><span>Label estimates as Potential</span></div><div><b>4</b><strong>Test</strong><span>Measure changes on real traffic</span></div><div><b>5</b><strong>Verify</strong><span>Only then call it savings</span></div></div></div>}
+
+function RealRecommendationList({summary,filter}:{summary?:RealSummary,filter?:string}){
+  const items=(summary?.recommendations??[]).filter(r=>!filter||r.state===filter);
+  if(items.length===0) return <div className="workspace-empty-section"><h1>No evidence in this tier yet.</h1><p>Evalomics will keep this empty until your own data supports a claim.</p><Link className="btn black" href="/onboarding?step=3">Connect or import usage</Link></div>;
+  return <div className="table-list">{items.map(r=><div className="real-evidence-row" key={r.id}><div><TierBadge tier={r.state==='OPPORTUNITY'?'potential':r.state==='TESTED'?'tested':'verified'}/><strong>{r.title}</strong><span>{r.id}</span></div><p>{r.decision==='OPTIMIZE'?'Evidence supports investigating this change.':r.decision==='DO_NOT_CHANGE'?'Current evidence says keep the existing configuration.':'More evidence is required before a change is recommended.'}</p><footer><span>{r.confidence?r.confidence+' confidence':'Confidence not yet assigned'}</span><b>{r.amount?money(r.amount,r.currency??summary?.currency??'USD'):'No financial claim'}</b></footer></div>)}</div>
+}
+
+function RealOpportunities({summary}:{summary?:RealSummary}){return <><div className="page-head"><div><p className="eyebrow">YOUR EVIDENCE</p><h1>Opportunities</h1><p>Only tenant-scoped Potential evidence appears here.</p></div></div><RealRecommendationList summary={summary} filter="OPPORTUNITY"/></>}
+function RealExperiments({summary}:{summary?:RealSummary}){return <><div className="page-head"><div><p className="eyebrow">YOUR EVIDENCE</p><h1>Experiments</h1><p>Tested items appear only after measured experiment evidence exists.</p></div></div><RealRecommendationList summary={summary} filter="TESTED"/></>}
+function RealReports({summary}:{summary?:RealSummary}){return <><div className="page-head"><div><p className="eyebrow">FINANCE-READY</p><h1>Verified savings</h1><p>Potential and Tested values are excluded from the verified total.</p></div></div><div className="report-total"><span>Verified in this workspace</span><strong>{money(summary?.verifiedSavings??null,summary?.currency??'USD')}</strong><p>Derived only from verification windows with status VERIFIED.</p></div><RealRecommendationList summary={summary} filter="VERIFIED"/></>}
+
+function RealIntegrations({summary}:{summary?:RealSummary}){
+  const status=(provider:string)=>{
+    const p=summary?.providers.find(x=>x.provider===provider);
+    return p?p.status:'Not connected';
+  };
   return <>
-    <div className="page-head"><div><p className="eyebrow">DATA SOURCES</p><h1>Connect your usage.</h1><p>Your real workspace starts empty. Nothing here is marked connected until you connect it.</p></div></div>
+    <div className="page-head"><div><p className="eyebrow">DATA SOURCES</p><h1>Integrations</h1><p>Statuses below come from your tenant's backend records.</p></div><Link className="btn black" href="/onboarding?step=3">Connect usage</Link></div>
     <div className="integration-grid">
       {[
-        ['OpenAI','Not connected','Usage and cost metadata'],
-        ['Anthropic','Not connected','Usage and cost metadata'],
-        ['CSV import','Available','Upload an export without sharing a provider key'],
-        ['Slack','Not connected','Alerts after your workspace has real events'],
-        ['Email','Account only','Product and experiment notifications'],
-        ['Warehouse','Not connected','Enterprise evidence export']
-      ].map(([a,b,c])=><article key={a}><div><strong>{a}</strong><span>{b}</span></div><p>{c}</p>{a==='CSV import'?<Link className="btn outline small" href="/onboarding?step=3">Upload CSV</Link>:a==='OpenAI'||a==='Anthropic'?<Link className="btn outline small" href="/onboarding?step=3">Connect</Link>:<button className="btn outline small" disabled>Not configured</button>}</article>)}
+        ['OPENAI','OpenAI','Usage and cost metadata'],
+        ['ANTHROPIC','Anthropic','Usage and cost metadata'],
+        ['CSV','CSV import',(summary?.completeImports??0)+' completed/partial import'+((summary?.completeImports??0)===1?'':'s')]
+      ].map(([key,label,copy])=><article key={key}><div><strong>{label}</strong><span>{key==='CSV'?'Available':status(key)}</span></div><p>{copy}</p><Link className="btn outline small" href="/onboarding?step=3">{key==='CSV'?'Upload':'Manage'}</Link></article>)}
     </div>
   </>
 }
 
-function RealBilling(){
-  return <><div className="page-head"><div><p className="eyebrow">BILLING</p><h1>No paid plan selected.</h1><p>Billing should reflect your account, not the sample workspace.</p></div></div><div className="billing-card"><div><span>Current plan</span><strong>Observer</strong></div><div><span>Spend under observation</span><strong>—</strong></div><Link className="btn outline" href="/#pricing">View pricing</Link></div></>
+function RealTeam({summary,userEmail}:{summary?:RealSummary,userEmail:string}){
+  const members=summary?.members??[{email:userEmail,role:'OWNER'}];
+  return <><div className="page-head"><div><p className="eyebrow">TENANT ACCESS</p><h1>Team & roles</h1><p>Only actual memberships in this organization are listed.</p></div></div><div className="report-table"><div className="thead"><span>Member</span><span>Role</span><span>Can roll out</span><span>Status</span></div>{members.map(m=><div key={m.email}><strong>{m.email}</strong><span>{m.role}</span><b>{m.role==='OWNER'||m.role==='OPERATOR'?'Yes':'No'}</b><span>Active</span></div>)}</div></>
 }
 
-function WaitingSection({section}:{section:string}){
+function RealBilling({summary}:{summary?:RealSummary}){
+  return <><div className="page-head"><div><p className="eyebrow">BILLING</p><h1>Observer</h1><p>Billing state is separate from the public demo.</p></div></div><div className="billing-card"><div><span>Current plan</span><strong>Observer</strong></div><div><span>Spend currently observed</span><strong>{money(summary?.observedSpend??null,summary?.currency??'USD')}</strong></div><Link className="btn outline" href="/#pricing">View pricing</Link></div></>
+}
+
+function WaitingSection({section,hasData}:{section:string,hasData:boolean}){
   const label=section.charAt(0).toUpperCase()+section.slice(1);
-  return <div className="workspace-empty-section"><p className="eyebrow">YOUR WORKSPACE</p><h1>{label}</h1><p>This section will populate from your own production evidence. Sample opportunities and experiments are available only in the public demo.</p><Link className="btn black" href="/onboarding?step=3">Connect usage data</Link><Link className="btn outline" href="/demo">Open sample demo</Link></div>
+  return <div className="workspace-empty-section"><p className="eyebrow">YOUR WORKSPACE</p><h1>{label}</h1><p>{hasData?'No tenant-scoped events are available here yet.':'Connect usage first. This section never borrows events from the public demo.'}</p><Link className="btn black" href="/onboarding?step=3">Connect usage data</Link><Link className="btn outline" href="/demo">Open sample demo</Link></div>
 }
 
 function Overview({router,basePath}:{router:any,basePath:string}){return <><p className="workspace-note">Every number on this page carries its evidence tier. Sample workspace — every figure is illustrative, which is exactly how we treat an unverified number.</p><div className="kpi-grid"><article><div><span>Observed spend (30 days)</span><TierBadge tier="observed"/></div><strong>$41,208</strong><p>Prior 30 days: $43,930, down 6.2% after verified rollouts</p></article><article><div><span>Verified savings</span><TierBadge tier="verified"/></div><strong>$7,412/mo</strong><p>2 changes live, both holding in observed spend</p></article><article><div><span>Identified, not yet proven</span><TierBadge tier="potential"/></div><strong>$11.8k–15.6k/mo</strong><p>3 patterns detected. Estimates only — nothing claimed.</p></article><article><div><span>Experiments running</span><TierBadge tier="tested"/></div><strong>2</strong><p>EXP-1042 ends Jul 4, guardrails green</p></article></div><div className="section-title-row"><h1>The ladder</h1><p>A number only moves right when the evidence does.</p></div><div className="ladder-board">{(['observed','potential','tested','verified'] as Tier[]).map(t=><div className={'ladder-col '+t} key={t}><div className="ladder-col-head"><TierBadge tier={t}/><span>{opps.filter(o=>o.tier===t).length}</span></div>{opps.filter(o=>o.tier===t).map(o=><button className="opp-card" key={o.id} onClick={()=>o.id==='OPP-3118'?router.push(basePath+'/opportunities/OPP-3118'):undefined}><div><strong>{o.title}</strong><small>{o.id}</small></div><p>{o.body}</p><footer><span>{o.meta}</span><b>{o.value}</b></footer></button>)}</div>)}</div><div className="charts-grid"><article className="panel"><h2>Observed spend vs. counterfactual baseline</h2><p>The dashed line is what you would have spent with no changes. The gap after Jun 9 is the verified saving.</p><SpendChart/></article><article className="panel"><h2>Spend by model, 30 days</h2><p>Where the $41,208 actually goes.</p><ModelBars/></article></div></>}
