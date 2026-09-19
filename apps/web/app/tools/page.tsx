@@ -43,42 +43,42 @@ export default function ToolsPage() {
   return (
     <div className="grid gap-14 pb-12">
       <section className="max-w-4xl pt-6 sm:pt-10">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-200/75">
           Free tools · no login
         </p>
-        <h1 className="mt-4 !text-[clamp(3.2rem,7vw,6.6rem)] !leading-[.9] !tracking-[-.07em] text-slate-950">
+        <h1 className="mt-4 !text-[clamp(3.2rem,7vw,6.6rem)] !leading-[.9] !tracking-[-.07em] text-white">
           Measure one thing
-          <span className="block text-slate-600">before you optimize it.</span>
+          <span className="block text-white/45">before you optimize it.</span>
         </h1>
-        <p className="mt-7 max-w-2xl text-base leading-7 text-slate-600">
+        <p className="mt-7 max-w-2xl text-base leading-7 text-white/45">
           These are small exact-arithmetic tools, not the main product. They
           help you understand one economic question before the Work MRI
           diagnoses what is actually worth changing.
         </p>
       </section>
 
-      <section className="grid gap-px overflow-hidden rounded-[22px] border border-slate-200 bg-slate-200 sm:grid-cols-2">
+      <section className="grid gap-4 sm:grid-cols-2">
         {toolItems.map(({ href, label, description, icon: Icon }, index) => (
           <Link
             key={href}
             href={href}
-            className="group min-h-52 bg-white p-6 no-underline transition hover:bg-slate-50 sm:p-7"
+            className="eval-glass-card group min-h-52 rounded-[22px] p-6 no-underline sm:p-7"
           >
             <div className="flex items-start justify-between gap-4">
-              <div className="grid size-10 place-items-center rounded-xl border border-slate-200 bg-slate-50 text-slate-600 transition group-hover:border-slate-300 group-hover:text-slate-950">
+              <div className="grid size-10 place-items-center rounded-xl border border-white/10 bg-white/[0.04] text-white/55 transition group-hover:border-orange-200/20 group-hover:text-white">
                 <Icon className="size-4.5" />
               </div>
-              <span className="font-mono text-[10px] font-semibold text-slate-600">
+              <span className="font-mono text-[10px] font-semibold text-white/30">
                 0{index + 1}
               </span>
             </div>
-            <h2 className="mt-12 text-xl font-semibold tracking-[-0.03em] text-slate-950">
+            <h2 className="mt-12 text-xl font-semibold tracking-[-0.03em] text-white">
               {label}
             </h2>
-            <p className="mt-2 max-w-md text-sm leading-6 text-slate-600">
+            <p className="mt-2 max-w-md text-sm leading-6 text-white/45">
               {description}
             </p>
-            <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-slate-900">
+            <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-orange-100">
               Open tool{' '}
               <ArrowRight className="size-4 transition group-hover:translate-x-0.5" />
             </span>
@@ -86,7 +86,7 @@ export default function ToolsPage() {
         ))}
       </section>
 
-      <section className="grid gap-6 rounded-[24px] border border-slate-200 bg-slate-950 p-6 text-white sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center">
+      <section className="eval-glass-panel grid gap-6 rounded-[24px] p-6 text-white sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
           <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-emerald-200/90">
             From calculator to diagnosis
@@ -100,7 +100,7 @@ export default function ToolsPage() {
           </p>
         </div>
         <Link
-          href="/login"
+          href="/start?intent=analyze"
           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 no-underline transition hover:bg-emerald-100"
           style={{ color: '#0b1017' }}
         >

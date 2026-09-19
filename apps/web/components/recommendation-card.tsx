@@ -14,6 +14,15 @@ export function RecommendationCard({
   const saving = hasSaving
     ? recommendation.saving!.currency + ' ' + recommendation.saving!.amount
     : 'Not measured yet';
+  const savingLabel =
+    recommendation.state === 'VERIFIED'
+      ? 'Verified net impact'
+      : recommendation.state === 'TESTED'
+        ? 'Tested saving'
+        : recommendation.savingsConfidence === 'MODELED'
+          ? 'Modeled upside'
+          : 'Saving status';
+
   const primaryHref =
     recommendation.state === 'TESTED' && recommendation.decision === 'OPTIMIZE'
       ? '/o/' + organizationId + '/implement/' + recommendation.recommendationId
@@ -33,7 +42,7 @@ export function RecommendationCard({
         <div className="flex flex-wrap items-center gap-2.5">
           <EvidenceStatePill state={recommendation.state} />
           <span className="text-[10px] font-semibold uppercase tracking-[0.13em] text-white/35">
-            strongest supported action
+            supported recommendation
           </span>
         </div>
 

@@ -103,7 +103,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
                   ? 'rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_8px_26px_rgba(255,255,255,.08)] transition hover:-translate-y-0.5 hover:bg-violet-100'
                   : 'rounded-xl border border-orange-200/20 bg-orange-200/[0.09] px-4 py-2.5 text-sm font-semibold text-white shadow-[0_10px_34px_rgba(249,115,22,.10)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-orange-200/[0.15]'
               }
-              href="/start"
+              href="/start?intent=start"
             >
               Start free
             </Link>
@@ -156,7 +156,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
                     ? 'mt-1 rounded-xl bg-white px-3 py-2.5 text-center font-semibold text-slate-950'
                     : 'mt-1 rounded-xl border border-orange-200/20 bg-orange-200/[0.10] px-3 py-2.5 text-center font-semibold text-white'
                 }
-                href="/start"
+                href="/start?intent=start"
               >
                 Start free
               </Link>

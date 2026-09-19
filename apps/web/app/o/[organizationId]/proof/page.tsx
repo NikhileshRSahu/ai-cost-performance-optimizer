@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ArrowLeft, Download, ShieldCheck } from 'lucide-react';
-import { redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';\nimport { formatDecimal, rational } from '../../../../../../src/economics/exact';
 import { createDatabase } from '../../../../../../src/persistence/database';
 import { buildFounderDashboardView } from '../../../../../../src/workbench/dashboard-view';
 import { buildProspectProofPack } from '../../../../../../src/workbench/prospect-proof';
@@ -164,7 +164,7 @@ export default async function VerificationPage({
           href={`/o/${organizationId}`}
         >
           <ArrowLeft className="size-3.5" />
-          Back to Work MRI
+          Back to dashboard
         </Link>
       </div>
     </div>

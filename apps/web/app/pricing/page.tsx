@@ -22,7 +22,7 @@ export default function PricingPage() {
           Launch beta
         </p>
         <h1 className="mt-4 !text-[clamp(3.2rem,7vw,6.8rem)] !leading-[.9] !tracking-[-.07em] text-white">
-          Everything is free.
+          Launch beta is $0.
           <span className="block text-white/45">Use real data. No card.</span>
         </h1>
         <p className="mt-7 max-w-2xl text-base leading-7 text-white/45">
@@ -67,7 +67,7 @@ export default function PricingPage() {
         </ul>
 
         <Link
-          href="/login"
+          href="/start?intent=start"
           className="mt-8 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-white no-underline transition hover:bg-emerald-100"
           style={{ color: '#0b1017' }}
         >

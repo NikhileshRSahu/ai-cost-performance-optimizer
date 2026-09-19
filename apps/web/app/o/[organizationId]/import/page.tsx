@@ -30,6 +30,10 @@ function providerErrorCopy(code: string | undefined): string | null {
   return 'Evalomics could not validate this provider connection. Nothing was saved.';
 }
 
+function displayUtc(value: string): string {
+  return value.replace('T', ' ').slice(0, 16) + ' UTC';
+}
+
 function ProviderLogo({ provider }: { provider: 'OPENAI' | 'ANTHROPIC' }) {
   return (
     <img
@@ -204,7 +208,7 @@ export default async function ImportPage({
           className="grid gap-4 lg:grid-cols-2"
           aria-label="Provider choices"
         >
-          {(['ANTHROPIC', 'OPENAI'] as const).map((provider) => {
+          {(['OPENAI', 'ANTHROPIC'] as const).map((provider) => {
             const connection = connections.find(
               (candidate) =>
                 candidate.provider === provider && candidate.revokedAt === null,
@@ -266,6 +270,9 @@ export default async function ImportPage({
                             required
                             placeholder={label + ' Admin key'}
                           />
+                          <small className="text-[10px] leading-4 text-white/32">
+                            Encrypted before storage. Disconnecting clears the saved credential.
+                          </small>
                         </label>
                         <button
                           className="min-h-12 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-950"
@@ -288,7 +295,7 @@ export default async function ImportPage({
                       </p>
                       <p className="m-0 mt-1 text-[11px] text-white/35">
                         Last checked{' '}
-                        {connection.lastSyncAt ?? connection.connectedAt}
+                        {displayUtc(connection.lastSyncAt ?? connection.connectedAt)}
                       </p>
                     </div>
                     {owner ? (

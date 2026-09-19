@@ -3624,3 +3624,198 @@ samp,
   }
 }
 
+
+
+/* Final release coherence: ambient public pages + deep workbench */
+.eval-ambient-page .legal-page {
+  color: #fff;
+}
+.eval-ambient-page .legal-page .eyebrow {
+  color: rgba(253, 186, 116, .82);
+}
+.eval-ambient-page .legal-page h1,
+.eval-ambient-page .legal-page h2,
+.eval-ambient-page .legal-page strong {
+  color: rgba(255,255,255,.92);
+}
+.eval-ambient-page .legal-page .lede {
+  color: rgba(255,255,255,.52);
+}
+.eval-ambient-page .legal-page .evidence-note {
+  border-color: rgba(255,255,255,.09);
+  background: rgba(255,255,255,.035);
+  color: rgba(255,255,255,.58);
+  box-shadow: inset 0 1px rgba(255,255,255,.035);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+.eval-ambient-page .legal-sections article,
+.eval-ambient-page .privacy-levels article {
+  border-color: rgba(255,255,255,.08);
+  background: linear-gradient(145deg, rgba(31,27,24,.52), rgba(9,12,16,.46));
+  color: rgba(255,255,255,.88);
+  box-shadow: inset 0 1px rgba(255,255,255,.035);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+.eval-ambient-page .legal-sections p,
+.eval-ambient-page .privacy-levels p {
+  color: rgba(255,255,255,.48);
+}
+.eval-ambient-page .privacy-levels article > span {
+  color: rgba(253,186,116,.78);
+}
+.eval-ambient-page .recovery-state {
+  border-color: rgba(255,255,255,.09);
+  background: linear-gradient(145deg, rgba(31,27,24,.58), rgba(9,12,16,.50));
+  color: rgba(255,255,255,.9);
+  box-shadow: 0 24px 70px rgba(0,0,0,.26), inset 0 1px rgba(255,255,255,.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.eval-ambient-page .recovery-state .lede {
+  color: rgba(255,255,255,.5);
+}
+.eval-ambient-page .recovery-state .primary-action {
+  background: #fff;
+  color: #0b1017;
+}
+.eval-ambient-page .calculator-form,
+.eval-ambient-page .calculator-results {
+  color: #17202a;
+}
+
+.org-workbench .workflow-progress li {
+  border-color: rgba(255,255,255,.07);
+  background: #111a29;
+  color: #cbd5e1;
+}
+.org-workbench .workflow-progress li[data-state='complete'] {
+  border-color: rgba(52,211,153,.22);
+  background: rgba(16,185,129,.07);
+}
+.org-workbench .workflow-progress li[data-state='current'] {
+  border-color: rgba(56,189,248,.28);
+  background: rgba(56,189,248,.06);
+  box-shadow: inset 0 0 0 1px rgba(56,189,248,.14);
+}
+.org-workbench .workflow-index {
+  background: rgba(255,255,255,.06);
+  color: #cbd5e1;
+}
+.org-workbench .workflow-header h1,
+.org-workbench .lab-header h1,
+.org-workbench .workflow-card h2,
+.org-workbench .configuration-card h2,
+.org-workbench .lab-section h2,
+.org-workbench .empty-state h1,
+.org-workbench .empty-state h2 {
+  color: #f1f5f9;
+}
+.org-workbench .eyebrow {
+  color: rgba(125,211,252,.78);
+}
+.org-workbench .lede,
+.org-workbench .metric-detail,
+.org-workbench .metric-subtle {
+  color: #94a3b8;
+}
+.org-workbench .trust-chip {
+  border-color: rgba(125,211,252,.18);
+  background: rgba(56,189,248,.07);
+  color: #bae6fd;
+}
+.org-workbench .workflow-card,
+.org-workbench .configuration-card,
+.org-workbench .lab-section,
+.org-workbench .evidence-details,
+.org-workbench .metric-card,
+.org-workbench .recommendation-card,
+.org-workbench .empty-state,
+.org-workbench .limitations,
+.org-workbench .mri-panel,
+.org-workbench .mri-action,
+.org-workbench .lab-decision,
+.org-workbench .workload-list article,
+.org-workbench .benchmark-context {
+  border-color: rgba(255,255,255,.07);
+  background: #111a29;
+  color: #dbe4ee;
+  box-shadow: none;
+}
+.org-workbench .metric-label,
+.org-workbench .configuration-card dt,
+.org-workbench .evidence-details dt,
+.org-workbench .evidence-list dt,
+.org-workbench .summary-grid span {
+  color: #64748b;
+}
+.org-workbench .configuration-card dl div,
+.org-workbench .evidence-details dl div,
+.org-workbench .constraint-table th,
+.org-workbench .constraint-table td,
+.org-workbench .evidence-list div {
+  border-color: rgba(255,255,255,.07);
+}
+.org-workbench .summary-grid div {
+  background: #0c1421;
+}
+.org-workbench .file-drop {
+  border-color: rgba(148,163,184,.35);
+  background: #0c1421;
+  color: #e2e8f0;
+}
+.org-workbench .file-drop small {
+  color: #64748b;
+}
+.org-workbench .constraint-form input:not([type='checkbox']),
+.org-workbench .constraint-form textarea,
+.org-workbench .constraint-form select,
+.org-workbench .benchmark-form input:not([type='checkbox']),
+.org-workbench .benchmark-form textarea,
+.org-workbench .benchmark-form select {
+  border-color: rgba(255,255,255,.10);
+  background: #0c1421;
+  color: #e5edf6;
+}
+.org-workbench .constraint-form input::placeholder,
+.org-workbench .constraint-form textarea::placeholder,
+.org-workbench .benchmark-form input::placeholder,
+.org-workbench .benchmark-form textarea::placeholder {
+  color: #475569;
+}
+.org-workbench .primary-action,
+.org-workbench .primary-button {
+  background: #f8fafc;
+  color: #08101c;
+}
+.org-workbench .secondary-action {
+  border-color: rgba(255,255,255,.10);
+  background: rgba(255,255,255,.035);
+  color: #cbd5e1;
+}
+.org-workbench .decision-optimize {
+  border-color: rgba(52,211,153,.24);
+  background: rgba(16,185,129,.07);
+}
+.org-workbench .decision-do-not-change {
+  border-color: rgba(251,113,133,.22);
+  background: rgba(244,63,94,.06);
+}
+.org-workbench .decision-insufficient-evidence {
+  border-color: rgba(251,191,36,.22);
+  background: rgba(245,158,11,.06);
+}
+.org-workbench .constraint-pass { color: #6ee7b7; }
+.org-workbench .constraint-fail { color: #fda4af; }
+.org-workbench .constraint-missing { color: #fcd34d; }
+.org-workbench .demo-banner {
+  border-color: rgba(251,191,36,.20);
+  background: rgba(245,158,11,.06);
+  color: #fde68a;
+}
+.org-workbench .blocking-note {
+  border-color: rgba(251,113,133,.22);
+  background: rgba(244,63,94,.06);
+  color: #fecdd3;
+}

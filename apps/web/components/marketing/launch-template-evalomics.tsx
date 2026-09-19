@@ -30,7 +30,7 @@ const capabilities = [
   ['Benchmarking & testing', 'Compare alternatives against your required quality floor.', FlaskConical],
   ['Model & workflow optimization', 'Find safer routing, caching, context, and workflow changes.', Workflow],
   ['Verified savings', 'Reconcile tested changes against production evidence.', ShieldCheck],
-  ['Prompt & workflow insights', 'Surface repeated input, oversized context, and tool waste.', ScanSearch],
+  ['Prompt & workflow insights', 'Surface repeated input, oversized context, and tool-cost patterns when the source evidence supports them.', ScanSearch],
   ['Direct next actions', 'Rank the strongest supported move instead of showing endless charts.', Zap],
 ] as const;
 
@@ -64,7 +64,7 @@ function MiniDashboard() {
       <div className="eval-template-dashboard__main">
         <div className="eval-template-dashboard__topline">
           <div>
-            <span className="eval-template-kicker">OpenAI usage · analyzed</span>
+            <span className="eval-template-kicker">Illustrative usage · analyzed</span>
             <h3>Cost intelligence</h3>
           </div>
           <span className="eval-template-sync"><span /> Last 30 days</span>
@@ -143,9 +143,9 @@ function EvidenceSteps() {
   return (
     <div className="eval-template-proof-stack">
       {[
-        ['Potential', '$286–$421', 'is-potential'],
-        ['Tested', '$142.17', 'is-tested'],
-        ['Verified', '$109.32', 'is-verified'],
+        ['Potential · sample', '$286–$421', 'is-potential'],
+        ['Tested · sample', '$142.17', 'is-tested'],
+        ['Verified · sample', '$109.32', 'is-verified'],
       ].map(([label, value, className], index) => (
         <div className={'eval-template-proof ' + className} key={label}>
           <span>{index === 0 ? <Gauge size={16} /> : index === 1 ? <FlaskConical size={16} /> : <CheckCircle2 size={16} />}</span>
@@ -236,7 +236,7 @@ export function LaunchTemplateEvalomics() {
 
         <section className="eval-template-intro">
           <span>How Evalomics works</span>
-          <h2>From AI usage to real savings.</h2>
+          <h2>From AI usage to evidence-backed savings.</h2>
           <p>
             One evidence chain: observe what happened, detect supported opportunities,
             benchmark alternatives, implement carefully, then verify the production outcome.
@@ -252,9 +252,9 @@ export function LaunchTemplateEvalomics() {
             </div>
             <div className="eval-template-cluster-visual eval-motion-decorative">
               <div className="eval-template-cluster-tooltip">
-                <strong>Repeated input detected</strong>
+                <strong>Example: repeated input</strong>
                 <span>1,248 similar requests</span>
-                <b>$87.42 potential</b>
+                <b>$87.42 modeled</b>
               </div>
               {Array.from({ length: 18 }).map((_, index) => (
                 <i key={index} style={{ ['--n' as string]: index } as React.CSSProperties} />
