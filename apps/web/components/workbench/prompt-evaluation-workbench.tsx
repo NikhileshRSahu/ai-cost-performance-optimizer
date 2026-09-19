@@ -199,48 +199,48 @@ export function PromptEvaluationWorkbench() {
           </section>
 
           <div className="grid gap-4 lg:grid-cols-[.8fr_1.2fr]">
-          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-            <div className="rounded-xl border border-white/[0.07] bg-black/20 p-4">
-              <p className="m-0 text-[9px] uppercase tracking-[0.13em] text-white/30">
-                Original tokens
-              </p>
-              <p className="m-0 mt-2 font-mono text-xl text-white">
-                {originalTokens}
-              </p>
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+              <div className="rounded-xl border border-white/[0.07] bg-black/20 p-4">
+                <p className="m-0 text-[9px] uppercase tracking-[0.13em] text-white/30">
+                  Original tokens
+                </p>
+                <p className="m-0 mt-2 font-mono text-xl text-white">
+                  {originalTokens}
+                </p>
+              </div>
+              <div className="rounded-xl border border-white/[0.07] bg-black/20 p-4">
+                <p className="m-0 text-[9px] uppercase tracking-[0.13em] text-white/30">
+                  Candidate tokens
+                </p>
+                <p className="m-0 mt-2 font-mono text-xl text-white">
+                  {candidateTokens}
+                </p>
+              </div>
+              <div className="rounded-xl border border-emerald-300/12 bg-emerald-300/[0.035] p-4">
+                <p className="m-0 text-[9px] uppercase tracking-[0.13em] text-emerald-200/55">
+                  Structural reduction
+                </p>
+                <p className="m-0 mt-2 font-mono text-xl text-emerald-200">
+                  {reduction.toFixed(1)}%
+                </p>
+              </div>
             </div>
-            <div className="rounded-xl border border-white/[0.07] bg-black/20 p-4">
-              <p className="m-0 text-[9px] uppercase tracking-[0.13em] text-white/30">
-                Candidate tokens
-              </p>
-              <p className="m-0 mt-2 font-mono text-xl text-white">
-                {candidateTokens}
-              </p>
-            </div>
-            <div className="rounded-xl border border-emerald-300/12 bg-emerald-300/[0.035] p-4">
-              <p className="m-0 text-[9px] uppercase tracking-[0.13em] text-emerald-200/55">
-                Structural reduction
-              </p>
-              <p className="m-0 mt-2 font-mono text-xl text-emerald-200">
-                {reduction.toFixed(1)}%
-              </p>
-            </div>
-          </div>
 
-          <div className="rounded-xl border border-white/[0.07] bg-black/20 p-4">
-            <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.13em] text-white/30">
-              What Evalomics detected
-            </p>
-            <ul className="mt-3 grid gap-2 pl-5 text-sm leading-6 text-white/55">
-              {detected.map((finding) => (
-                <li key={finding}>{finding}</li>
-              ))}
-            </ul>
-            <div className="mt-4 rounded-lg border border-amber-300/10 bg-amber-300/[0.035] p-3 text-xs leading-5 text-amber-50/55">
-              Token reduction alone is not a quality result. Use representative
-              cases before adopting the candidate.
+            <div className="rounded-xl border border-white/[0.07] bg-black/20 p-4">
+              <p className="m-0 text-[9px] font-semibold uppercase tracking-[0.13em] text-white/30">
+                What Evalomics detected
+              </p>
+              <ul className="mt-3 grid gap-2 pl-5 text-sm leading-6 text-white/55">
+                {detected.map((finding) => (
+                  <li key={finding}>{finding}</li>
+                ))}
+              </ul>
+              <div className="mt-4 rounded-lg border border-amber-300/10 bg-amber-300/[0.035] p-3 text-xs leading-5 text-amber-50/55">
+                Token reduction alone is not a quality result. Use
+                representative cases before adopting the candidate.
+              </div>
             </div>
           </div>
-        </div>
         </div>
       ) : null}
     </section>
