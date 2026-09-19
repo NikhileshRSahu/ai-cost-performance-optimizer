@@ -455,10 +455,10 @@ export default async function CostDashboardPage({
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
-                    Usage diagnosis
+                    Supporting evidence summary
                   </p>
                   <h2 className="mt-2 font-mono text-base font-medium text-white">
-                    Signals Evalomics can support
+                    Usage diagnosis · signals Evalomics can support
                   </h2>
                 </div>
                 <BadgeDollarSign className="size-4 text-sky-300/60" />
