@@ -21,9 +21,11 @@ function SubmitButton({ ready }: { ready: boolean }) {
 export function CsvDropzone({
   organizationId,
   action,
+  demo = false,
 }: {
   organizationId: string;
   action: (formData: FormData) => void | Promise<void>;
+  demo?: boolean;
 }) {
   const reduceMotion = useReducedMotion();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -44,6 +46,7 @@ export function CsvDropzone({
   return (
     <form action={action} className="grid gap-4">
       <input type="hidden" name="organizationId" value={organizationId} />
+      {demo ? <input type="hidden" name="isDemo" value="true" /> : null}
       <input
         ref={inputRef}
         className="sr-only"

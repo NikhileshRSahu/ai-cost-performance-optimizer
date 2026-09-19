@@ -57,6 +57,7 @@ export default async function ImportPage({
     error?: string;
     providerError?: string;
     providerDisconnected?: string;
+    demo?: string;
   }>;
 }>) {
   const { organizationId } = await params;
@@ -82,8 +83,12 @@ export default async function ImportPage({
     (m) => m.organizationId === organizationId && m.role === 'OWNER',
   );
   const providerError = providerErrorCopy(query.providerError);
-  const mode =
-    query.mode === 'connect' || query.mode === 'csv' ? query.mode : null;
+  const demoMode = query.demo === 'true';
+  const mode = demoMode
+    ? 'csv'
+    : query.mode === 'connect' || query.mode === 'csv'
+      ? query.mode
+      : null;
   const selectedProvider =
     query.provider === 'OPENAI' || query.provider === 'ANTHROPIC'
       ? query.provider
@@ -104,16 +109,20 @@ export default async function ImportPage({
         <h1 className="m-0 mt-2 !text-[clamp(2rem,4vw,3.2rem)] !leading-[1] !tracking-[-.045em] text-white">
           {mode === 'connect'
             ? 'Connect the source you chose'
-            : mode === 'csv'
-              ? 'Upload your usage CSV'
-              : 'Choose how to continue'}
+            : demoMode
+              ? 'Upload the synthetic demo CSV'
+              : mode === 'csv'
+                ? 'Upload your usage CSV'
+                : 'Choose how to continue'}
         </h1>
         <p className="m-0 mt-3 max-w-2xl text-sm leading-6 text-white/45">
           {mode === 'connect'
             ? 'Choose a provider, connect the Admin API, and analyze the returned usage.'
-            : mode === 'csv'
-              ? 'Drop a usage export, validate it, then analyze it.'
-              : 'Connect a supported provider or upload a usage CSV.'}
+            : demoMode
+              ? 'This path is synthetic and stays labeled as demo evidence throughout the workflow.'
+              : mode === 'csv'
+                ? 'Drop a usage export, validate it, then analyze it.'
+                : 'Connect a supported provider or upload a usage CSV.'}
         </p>
       </header>
 
@@ -352,9 +361,15 @@ export default async function ImportPage({
       {mode === 'csv' ? (
         <section className="grid gap-5">
           <div className="rounded-[28px] border border-white/[0.08] bg-[#0a0f16] p-5 sm:p-7">
+            {demoMode ? (
+              <div className="mb-4 rounded-xl border border-amber-300/15 bg-amber-300/[0.05] px-4 py-3 text-xs font-semibold text-amber-100/80">
+                Synthetic demo mode · never customer proof
+              </div>
+            ) : null}
             <CsvDropzone
               organizationId={organizationId}
               action={uploadUsageCsv}
+              demo={demoMode}
             />
             <p className="m-0 mt-4 text-[11px] leading-5 text-white/35">
               No provider key required. We validate the file before adding it to

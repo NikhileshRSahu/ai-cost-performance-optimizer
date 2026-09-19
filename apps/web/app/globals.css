@@ -2518,12 +2518,21 @@ samp,
   color: #334155 !important;
 }
 
-/* Telemetry token reveal is intentionally a light card inside the dark workbench. */
-.org-workbench .mri-action,
+/* Telemetry token reveal is a deliberately light trust surface. */
+.org-workbench .telemetry-page .mri-action {
+  border-color: #cbd5e1 !important;
+  background: #f8fafc !important;
+}
+.org-workbench .telemetry-page .mri-action,
 .org-workbench
+  .telemetry-page
   .mri-action
   :is(p, span, small, dt, dd, li, h1, h2, h3, h4, strong, b, label, code) {
   color: #334155 !important;
+}
+.org-workbench .telemetry-page .mri-action textarea {
+  background: #ffffff !important;
+  color: #0f172a !important;
 }
 
 /* Light report surfaces must keep dark foregrounds inside the dark workbench. */
@@ -3563,7 +3572,7 @@ samp,
   margin: 0.2rem 0;
   padding: 0.58rem 0.65rem;
   border-radius: 0.5rem;
-  color: rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.64);
   font-size: 0.67rem;
 }
 .eval-template-dashboard__nav.is-active {
@@ -4957,15 +4966,15 @@ samp,
 }
 
 .eval-public-header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  background: rgba(11, 8, 6, 0.58);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(11, 8, 6, 0.94);
   box-shadow: inset 0 -1px rgba(255, 255, 255, 0.02);
 }
 
 .eval-public-footer {
   position: relative;
   z-index: 1;
-  background: rgba(8, 7, 6, 0.62);
+  background: rgba(8, 7, 6, 0.96);
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
 }

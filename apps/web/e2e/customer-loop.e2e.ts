@@ -36,12 +36,12 @@ async function reachVerification(
   organizationId: string,
   demo = true,
 ): Promise<'READY' | 'ALREADY_VERIFIED'> {
-  await page.goto(`/o/${organizationId}/import`);
+  await page.goto(`/o/${organizationId}/import?mode=csv${demo ? '&demo=true' : ''}`);
   await page.locator('input[name="usageCsv"]').setInputFiles(baselineCsv);
   if (demo) {
-    await page.locator('input[name="isDemo"]').check();
+    await expect(page.locator('input[name="isDemo"]')).toHaveValue('true');
   }
-  await page.getByRole('button', { name: 'Analyze this usage' }).click();
+  await page.getByRole('button', { name: 'Analyze my AI usage' }).click();
   await expect(page).toHaveURL(
     new RegExp(`/o/${organizationId}\\?source=import`),
   );
@@ -51,7 +51,7 @@ async function reachVerification(
   await expect(
     page.getByText('Recommended action', { exact: true }),
   ).toBeVisible();
-  await expect(page.getByText('Savings amount', { exact: true })).toBeVisible();
+  await expect(page.getByText('Saving status', { exact: true })).toBeVisible();
   await expect(
     page.getByText('Not measured yet', { exact: true }),
   ).toBeVisible();
@@ -231,7 +231,8 @@ test('guided synthetic walkthrough preselects demo mode', async ({ page }) => {
     }),
   ).toBeVisible();
   await page.getByRole('link', { name: 'Open demo import' }).click();
-  await expect(page.locator('input[name="isDemo"]')).toBeChecked();
+  await expect(page).toHaveURL(/\/import\?mode=csv&demo=true$/);
+  await expect(page.locator('input[name="isDemo"]')).toHaveValue('true');
   await expect(
     page.getByText('Synthetic demo data — not a customer result.'),
   ).toHaveCount(0);

@@ -179,11 +179,14 @@ export default async function CostDashboardPage({
               {view.periodLabel}
             </span>
           </div>
-          <h1 className="text-2xl font-semibold tracking-[-0.04em] text-slate-100 sm:text-3xl">
-            Cost Dashboard
+          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-sky-300">
+            AI Efficiency MRI
+          </p>
+          <h1 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-slate-100 sm:text-3xl">
+            We analyzed your AI usage
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-            One screen for spend, supported opportunities, and proof state.
+            Here is the spend we observed, the strongest supported action, and what has actually been proven.
           </p>
         </div>
         {hasSelfHostedAuthConfiguration() ? <SignOutButton /> : null}
@@ -258,10 +261,14 @@ export default async function CostDashboardPage({
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.16em] text-emerald-300/70">
-                    Top recommendation
+                    Recommended action
                   </p>
                   <h2 className="mt-2 text-base font-medium text-slate-100">
-                    Strongest supported action
+                    {view.strongestAction?.state === 'TESTED'
+                      ? 'Best tested improvement'
+                      : view.strongestAction?.state === 'VERIFIED'
+                        ? 'Best verified improvement'
+                        : 'Strongest supported action'}
                   </h2>
                 </div>
                 <Sparkles className="size-4 text-emerald-300/60" />

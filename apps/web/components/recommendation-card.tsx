@@ -34,7 +34,7 @@ export function RecommendationCard({
       ? 'Prepare safe rollout'
       : recommendation.state === 'VERIFIED'
         ? 'View verified savings'
-        : 'Test this optimization';
+        : 'Measure exact savings (optional)';
 
   return (
     <article className="mt-3 overflow-hidden rounded-[24px] border border-white/[0.08] bg-[linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012))]">
@@ -107,12 +107,31 @@ export function RecommendationCard({
               ? 'Benchmark-supported; production proof is next.'
               : 'Finding first. Savings remain unmeasured until you test it.'}
         </p>
-        <Link
-          href={primaryHref}
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 no-underline transition hover:bg-emerald-100"
-        >
-          {primaryLabel} <ArrowRight className="size-4" />
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          {primaryHref !==
+          '/o/' +
+            organizationId +
+            '/lab/' +
+            recommendation.recommendationId ? (
+            <Link
+              href={
+                '/o/' +
+                organizationId +
+                '/lab/' +
+                recommendation.recommendationId
+              }
+              className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.035] px-4 py-2.5 text-sm font-semibold text-white/70 no-underline transition hover:bg-white/[0.07] hover:text-white"
+            >
+              See details
+            </Link>
+          ) : null}
+          <Link
+            href={primaryHref}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 no-underline transition hover:bg-emerald-100"
+          >
+            {primaryLabel} <ArrowRight className="size-4" />
+          </Link>
+        </div>
       </div>
     </article>
   );

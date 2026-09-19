@@ -42,7 +42,7 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
           </Link>
 
           <nav
-            className="hidden items-center gap-6 text-sm font-medium text-white/55 lg:flex"
+            className="hidden items-center gap-6 text-sm font-medium text-white/80 lg:flex"
             aria-label="Public"
           >
             {publicLinks.map((link) => (
@@ -58,13 +58,13 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
 
           <div className="hidden items-center gap-2 md:flex">
             <Link
-              className="rounded-lg px-3 py-2 text-sm font-semibold text-white/55 transition hover:text-white"
+              className="rounded-lg px-3 py-2 text-sm font-semibold text-white/80 transition hover:text-white"
               href="/login"
             >
               Sign in
             </Link>
             <Link
-              className="rounded-xl border border-orange-200/20 bg-orange-200/[0.09] px-4 py-2.5 text-sm font-semibold text-white shadow-[0_10px_34px_rgba(249,115,22,.10)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-orange-200/[0.15]"
+              className="rounded-xl border border-orange-300/25 bg-orange-950/85 px-4 py-2.5 text-sm font-semibold text-orange-50 shadow-[0_10px_34px_rgba(249,115,22,.10)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-orange-200/[0.15]"
               href="/start?intent=start"
             >
               Start free
@@ -110,19 +110,19 @@ export function SiteChrome({ children }: Readonly<{ children: ReactNode }>) {
       </div>
 
       <footer className="eval-public-footer border-t border-white/[0.08]">
-        <div className="relative z-[1] mx-auto grid w-[min(1180px,calc(100%-2rem))] gap-8 py-10 text-sm text-white/45 md:grid-cols-[1fr_auto] md:items-end">
+        <div className="relative z-[1] mx-auto grid w-[min(1180px,calc(100%-2rem))] gap-8 py-10 text-sm text-white/75 md:grid-cols-[1fr_auto] md:items-end">
           <div className="max-w-md">
             <div className="flex items-center gap-2.5">
               <EvalomicsMark size={26} />
               <strong className="text-white">Evalomics</strong>
             </div>
-            <p className="m-0 mt-3 leading-6">
+            <p className="m-0 mt-3 leading-6 text-white/75">
               AI Efficiency Intelligence that keeps modeled, tested, and
               verified savings visibly separate.
             </p>
           </div>
           <nav
-            className="flex flex-wrap gap-x-5 gap-y-2"
+            className="flex flex-wrap gap-x-5 gap-y-2 text-white/80"
             aria-label="Trust and legal"
           >
             <Link href="/methodology">Methodology</Link>
