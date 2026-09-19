@@ -14,9 +14,7 @@ test('usage analysis opens with an AI Efficiency MRI and split confidence', asyn
 
   await page.goto(`/o/${organizationId}/import?mode=csv&demo=true`);
   const fileChooserPromise = page.waitForEvent('filechooser');
-  await page
-    .getByRole('button', { name: /Drop your usage CSV here/i })
-    .click();
+  await page.getByRole('button', { name: /Drop your usage CSV here/i }).click();
   const fileChooser = await fileChooserPromise;
   await fileChooser.setFiles(baselineCsv);
   await expect(page.getByText('Ready to analyze')).toBeVisible();
