@@ -189,6 +189,15 @@ export default async function CostDashboardPage({
             Connect a supported provider or upload a CSV. Evalomics will analyze
             the evidence and bring you back here with one clear result.
           </p>
+          <div className="mt-5 rounded-xl border border-white/[0.07] bg-white/[0.02] p-4">
+            <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-white/30">
+              What you will get
+            </p>
+            <p className="m-0 mt-2 text-sm leading-6 text-white/55">
+              Observed spend → strongest waste → estimated savings → recommended
+              change → exact next action.
+            </p>
+          </div>
         </section>
 
         <section className="grid gap-4 md:grid-cols-2">
@@ -319,6 +328,21 @@ export default async function CostDashboardPage({
                       : 'Connected'
             }
           />
+
+          <section className="rounded-[22px] border border-white/[0.08] bg-[#0f1115] p-5">
+            <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.15em] text-sky-300/65">
+              Outcome summary
+            </p>
+            <p className="m-0 mt-2 text-sm leading-6 text-white/65">
+              You spent {moneyLabel(view.observedSpend)} → Evalomics found{' '}
+              {view.recommendations.length} supported opportunity
+              {view.recommendations.length === 1 ? '' : 'ies'} → best change:{' '}
+              {view.strongestAction?.title ?? 'still analyzing'} → expected impact:{' '}
+              {estimatedSavingLabel} → confidence:{' '}
+              {view.strongestAction?.detectionConfidence ?? 'pending'} → next:{' '}
+              {view.strongestAction?.nextAction ?? 'keep evidence connected'}.
+            </p>
+          </section>
 
           <DashboardWidgetGrid
             storageKey={`evalomics-dashboard-${organizationId}`}
