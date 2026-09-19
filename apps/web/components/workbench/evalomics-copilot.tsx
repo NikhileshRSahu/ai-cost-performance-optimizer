@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Bot, Send, Sparkles, X } from 'lucide-react';
-import { useState, type SyntheticEvent } from 'react';
+import { useEffect, useState, type SyntheticEvent } from 'react';
 
 type AiAnswer = Readonly<{
   answer: string;
@@ -27,6 +27,26 @@ export function EvalomicsCopilot({
   const [answer, setAnswer] = useState<AiAnswer | null>(null);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [context, setContext] = useState<string | null>(null);
+
+  useEffect(() => {
+    const onContext = (event: Event) => {
+      const detail = (event as CustomEvent<{ context?: unknown }>).detail;
+      const nextContext =
+        typeof detail?.context === 'string' ? detail.context.trim() : '';
+      if (nextContext.length === 0) return;
+
+      setContext(nextContext);
+      setAnswer(null);
+      setQuestion('Explain this result and tell me what I should do next.');
+      setOpen(true);
+    };
+
+    window.addEventListener('evalomics:ask', onContext);
+    return () => {
+      window.removeEventListener('evalomics:ask', onContext);
+    };
+  }, []);
 
   async function ask(nextQuestion: string) {
     const trimmed = nextQuestion.trim();
@@ -38,7 +58,11 @@ export function EvalomicsCopilot({
       const response = await fetch('/api/evalomics-ai', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ organizationId, question: trimmed }),
+        body: JSON.stringify({
+          organizationId,
+          question:
+            context === null ? trimmed : context + '\n\nUser question: ' + trimmed,
+        }),
       });
 
       if (!response.ok) {
@@ -47,6 +71,7 @@ export function EvalomicsCopilot({
 
       setAnswer((await response.json()) as AiAnswer);
       setQuestion('');
+      setContext(null);
     } catch {
       setError(
         'Evalomics AI could not answer this right now. Your workspace data was not changed.',
@@ -112,6 +137,17 @@ export function EvalomicsCopilot({
             </header>
 
             <div className="flex-1 overflow-y-auto p-5">
+              {context !== null ? (
+                <div className="mb-4 rounded-xl border border-sky-300/12 bg-sky-300/[0.035] p-3">
+                  <p className="m-0 font-mono text-[9px] font-semibold uppercase tracking-[0.13em] text-sky-200/60">
+                    Context attached
+                  </p>
+                  <p className="m-0 mt-2 line-clamp-4 text-xs leading-5 text-white/45">
+                    {context}
+                  </p>
+                </div>
+              ) : null}
+
               {answer === null ? (
                 <div className="grid gap-5">
                   <div className="rounded-2xl border border-emerald-300/10 bg-emerald-300/[0.035] p-4">
