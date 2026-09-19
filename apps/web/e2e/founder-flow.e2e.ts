@@ -35,8 +35,8 @@ test('founder gets one direct answer before optional evidence details', async ({
   await expect(
     page.getByRole('link', { name: /prepare safe rollout/i }),
   ).toBeVisible();
-  await expect(page.getByText(/see details/i)).toBeVisible();
-  await page.getByText(/see details/i).click();
+  await expect(page.getByText(/why this recommendation/i)).toBeVisible();
+  await page.getByText(/why this recommendation/i).click();
   await expect(
     page.getByRole('heading', { name: 'Current versus candidate' }),
   ).toBeVisible();
