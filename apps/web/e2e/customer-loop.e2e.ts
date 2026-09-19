@@ -105,7 +105,10 @@ async function reachVerification(
       name: 'Test whether a cheaper setup is safe',
     }),
   ).toBeVisible({ timeout: JOURNEY_STATE_TIMEOUT_MS });
-  await page.locator('input[name="benchmarkCsv"]').setInputFiles(benchmarkCsv);
+  const benchmarkChooserPromise = page.waitForEvent('filechooser');
+  await page.locator('label.benchmark-upload').click();
+  const benchmarkChooser = await benchmarkChooserPromise;
+  await benchmarkChooser.setFiles(benchmarkCsv);
   if (demo) {
     await page.locator('input[name="isDemo"]').check();
   }
