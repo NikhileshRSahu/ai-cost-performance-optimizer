@@ -23,14 +23,18 @@ function SpendChart(){
 }
 function ModelBars(){const rows=[['GPT-5 class',88],['Claude Sonnet 5',52],['GPT-5 mini',31],['Claude Haiku 4.5',15],['Other',7]];return <div className="bars">{rows.map(([n,w])=><div key={String(n)}><span>{n}</span><i><b style={{width:w+'%'}}/></i></div>)}</div>}
 
-export default function DashboardApp({userName,userEmail,publicDemo=false}:{userName:string,userEmail:string,publicDemo?:boolean}){
+export default function DashboardApp({userName,userEmail,publicDemo=false,workspaceName='My workspace'}:{userName:string,userEmail:string,publicDemo?:boolean,workspaceName?:string}){
   const path=usePathname(); const router=useRouter();
   const [role,setRole]=useState('Approver'); const [experiment,setExperiment]=useState<'running'|'complete'|'verification'|'verified'>('running');
   const section=useMemo(()=>path.split('/')[2]||'overview',[path]);
   useEffect(()=>{const s=localStorage.getItem('evalomics:experiment') as any;if(s)setExperiment(s)},[]);
   const setExp=(s:typeof experiment)=>{setExperiment(s);localStorage.setItem('evalomics:experiment',s)};
-  const workspace='Meridian — Production';
+  const workspace=publicDemo?'Meridian — Production':workspaceName;
   const basePath=publicDemo?'/demo':'/dashboard';
+
+  if(!publicDemo){
+    return <RealWorkspace userName={userName} userEmail={userEmail} workspaceName={workspaceName}/>;
+  }
 
   return <main className="app-shell">
     <header className="app-top"><Link className="logo app-logo" href="/"><span/>Evalomics</Link><div className="workspace-title"><strong>{workspace}</strong><span className="quiet-chip">SAMPLE WORKSPACE</span></div><div className="app-head-actions"><span>Jun 1 – Jun 30, 2026</span><label>Role <select value={role} onChange={e=>setRole(e.target.value)}><option>Approver</option><option>Engineer</option><option>Analyst</option><option>Viewer</option></select></label><Link className="btn outline small" href="/">Back to site</Link></div></header>
@@ -47,6 +51,78 @@ export default function DashboardApp({userName,userEmail,publicDemo=false}:{user
       {section==='settings' && <Settings userName={userName} userEmail={userEmail}/>}
     </section>
   </main>
+}
+
+
+function RealWorkspace({userName,userEmail,workspaceName}:{userName:string,userEmail:string,workspaceName:string}){
+  const path=usePathname();
+  const section=useMemo(()=>path.split('/')[2]||'overview',[path]);
+  return <main className="app-shell">
+    <header className="app-top">
+      <Link className="logo app-logo" href="/"><span/>Evalomics</Link>
+      <div className="workspace-title"><strong>{workspaceName}</strong><span className="quiet-chip">YOUR WORKSPACE</span></div>
+      <div className="app-head-actions"><span>{userEmail}</span><Link className="btn outline small" href="/">Back to site</Link></div>
+    </header>
+    <aside className="sidebar">
+      <nav>{nav.map(([id,label])=><Link key={id} className={section===id || (section==='overview'&&id==='overview')?'active':''} href={id==='overview'?'/dashboard':'/dashboard/'+id}><span className="nav-icon">{id==='overview'?'▦':id==='opportunities'?'◇':id==='experiments'?'♜':id==='reports'?'□':id==='alerts'?'♧':id==='integrations'?'⌘':id==='team'?'♧':id==='billing'?'▭':'⚙'}</span>{label}</Link>)}</nav>
+      <div className="sync-note">No provider sync yet<br/>Your workspace contains no sample spend.</div>
+    </aside>
+    <section className="app-content">
+      {section==='overview' && <RealOverview userName={userName}/>}
+      {section==='integrations' && <RealIntegrations/>}
+      {section==='team' && <Team userEmail={userEmail}/>}
+      {section==='settings' && <Settings userName={userName} userEmail={userEmail}/>}
+      {section==='billing' && <RealBilling/>}
+      {!['overview','integrations','team','settings','billing'].includes(section) && <WaitingSection section={section}/>}
+    </section>
+  </main>
+}
+
+function RealOverview({userName}:{userName:string}){
+  return <>
+    <div className="page-head"><div><p className="eyebrow">YOUR WORKSPACE</p><h1>No production data yet.</h1><p>{userName ? userName+', ' : ''}Evalomics will not invent spend, opportunities, tests, or savings before your own usage arrives.</p></div></div>
+    <div className="real-empty-grid">
+      <article className="real-empty-main">
+        <TierBadge tier="observed"/>
+        <h2>Connect usage to start observing</h2>
+        <p>Bring in OpenAI, Anthropic, or a CSV usage export. The first thing Evalomics will show is what actually happened — not an estimated saving.</p>
+        <div className="real-empty-actions"><Link className="btn black" href="/onboarding?step=3">Connect usage data</Link><Link className="btn outline" href="/demo">Explore sample data</Link></div>
+      </article>
+      <article><span className="tier observed">OBSERVED</span><strong>—</strong><p>No provider-reconciled spend yet.</p></article>
+      <article><span className="tier potential">POTENTIAL</span><strong>—</strong><p>No patterns claimed before enough evidence exists.</p></article>
+      <article><span className="tier tested">TESTED</span><strong>—</strong><p>No experiments have run on your traffic.</p></article>
+      <article><span className="tier verified">VERIFIED</span><strong>—</strong><p>No savings can be verified before rollout and observation.</p></article>
+    </div>
+    <div className="real-next">
+      <p className="eyebrow">WHAT HAPPENS NEXT</p>
+      <div className="real-next-steps"><div><b>1</b><strong>Connect</strong><span>Read-only usage or CSV</span></div><div><b>2</b><strong>Observe</strong><span>Build a trustworthy baseline</span></div><div><b>3</b><strong>Detect</strong><span>Label estimates as Potential</span></div><div><b>4</b><strong>Test</strong><span>Measure changes on real traffic</span></div><div><b>5</b><strong>Verify</strong><span>Only then call it savings</span></div></div>
+    </div>
+  </>
+}
+
+function RealIntegrations(){
+  return <>
+    <div className="page-head"><div><p className="eyebrow">DATA SOURCES</p><h1>Connect your usage.</h1><p>Your real workspace starts empty. Nothing here is marked connected until you connect it.</p></div></div>
+    <div className="integration-grid">
+      {[
+        ['OpenAI','Not connected','Usage and cost metadata'],
+        ['Anthropic','Not connected','Usage and cost metadata'],
+        ['CSV import','Available','Upload an export without sharing a provider key'],
+        ['Slack','Not connected','Alerts after your workspace has real events'],
+        ['Email','Account only','Product and experiment notifications'],
+        ['Warehouse','Not connected','Enterprise evidence export']
+      ].map(([a,b,c])=><article key={a}><div><strong>{a}</strong><span>{b}</span></div><p>{c}</p>{a==='CSV import'?<Link className="btn outline small" href="/onboarding?step=3">Upload CSV</Link>:a==='OpenAI'||a==='Anthropic'?<Link className="btn outline small" href="/onboarding?step=3">Connect</Link>:<button className="btn outline small" disabled>Not configured</button>}</article>)}
+    </div>
+  </>
+}
+
+function RealBilling(){
+  return <><div className="page-head"><div><p className="eyebrow">BILLING</p><h1>No paid plan selected.</h1><p>Billing should reflect your account, not the sample workspace.</p></div></div><div className="billing-card"><div><span>Current plan</span><strong>Observer</strong></div><div><span>Spend under observation</span><strong>—</strong></div><Link className="btn outline" href="/#pricing">View pricing</Link></div></>
+}
+
+function WaitingSection({section}:{section:string}){
+  const label=section.charAt(0).toUpperCase()+section.slice(1);
+  return <div className="workspace-empty-section"><p className="eyebrow">YOUR WORKSPACE</p><h1>{label}</h1><p>This section will populate from your own production evidence. Sample opportunities and experiments are available only in the public demo.</p><Link className="btn black" href="/onboarding?step=3">Connect usage data</Link><Link className="btn outline" href="/demo">Open sample demo</Link></div>
 }
 
 function Overview({router,basePath}:{router:any,basePath:string}){return <><p className="workspace-note">Every number on this page carries its evidence tier. Sample workspace — every figure is illustrative, which is exactly how we treat an unverified number.</p><div className="kpi-grid"><article><div><span>Observed spend (30 days)</span><TierBadge tier="observed"/></div><strong>$41,208</strong><p>Prior 30 days: $43,930, down 6.2% after verified rollouts</p></article><article><div><span>Verified savings</span><TierBadge tier="verified"/></div><strong>$7,412/mo</strong><p>2 changes live, both holding in observed spend</p></article><article><div><span>Identified, not yet proven</span><TierBadge tier="potential"/></div><strong>$11.8k–15.6k/mo</strong><p>3 patterns detected. Estimates only — nothing claimed.</p></article><article><div><span>Experiments running</span><TierBadge tier="tested"/></div><strong>2</strong><p>EXP-1042 ends Jul 4, guardrails green</p></article></div><div className="section-title-row"><h1>The ladder</h1><p>A number only moves right when the evidence does.</p></div><div className="ladder-board">{(['observed','potential','tested','verified'] as Tier[]).map(t=><div className={'ladder-col '+t} key={t}><div className="ladder-col-head"><TierBadge tier={t}/><span>{opps.filter(o=>o.tier===t).length}</span></div>{opps.filter(o=>o.tier===t).map(o=><button className="opp-card" key={o.id} onClick={()=>o.id==='OPP-3118'?router.push(basePath+'/opportunities/OPP-3118'):undefined}><div><strong>{o.title}</strong><small>{o.id}</small></div><p>{o.body}</p><footer><span>{o.meta}</span><b>{o.value}</b></footer></button>)}</div>)}</div><div className="charts-grid"><article className="panel"><h2>Observed spend vs. counterfactual baseline</h2><p>The dashed line is what you would have spent with no changes. The gap after Jun 9 is the verified saving.</p><SpendChart/></article><article className="panel"><h2>Spend by model, 30 days</h2><p>Where the $41,208 actually goes.</p><ModelBars/></article></div></>}

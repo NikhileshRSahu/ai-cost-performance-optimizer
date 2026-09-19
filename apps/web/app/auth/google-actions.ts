@@ -7,5 +7,5 @@ export async function startGoogleSignIn() {
 }
 
 export async function startGoogleSignUp() {
-  await signIn('google', { redirectTo: '/onboarding' });
+  await signIn('google', { redirectTo: '/dashboard' });
 }

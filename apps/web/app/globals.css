@@ -30,3 +30,24 @@
 .auth-submit{margin-top:4px;height:46px}
 .auth-legal{text-align:center;color:#9a9aa1;font-size:9px;line-height:1.5;margin:18px 0 0}
 @media(max-width:650px){.auth-centered{padding-top:42px}.auth-product-card{padding:28px 22px}.site-nav .signin-button{display:inline-flex}}
+
+.real-empty-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.real-empty-main{grid-column:1/-1;background:#fff;border:1px solid #111;padding:28px}
+.real-empty-main h2{font-size:26px;letter-spacing:-.035em;margin:18px 0 8px}
+.real-empty-main p{max-width:700px;color:#666;font-size:13px;line-height:1.6}
+.real-empty-actions{display:flex;gap:10px;margin-top:22px}
+.real-empty-grid>article:not(.real-empty-main){background:#fff;border:1px solid var(--line);padding:20px;min-height:135px}
+.real-empty-grid>article:not(.real-empty-main) strong{display:block;font-size:28px;margin:17px 0 7px}
+.real-empty-grid>article:not(.real-empty-main) p{font-size:10px;color:#777;line-height:1.5}
+.real-next{margin-top:22px;background:#fff;border:1px solid var(--line);padding:22px}
+.real-next-steps{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.real-next-steps>div{padding:16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.real-next-steps b{display:block;font-size:10px;color:#888;margin-bottom:18px}
+.real-next-steps strong{display:block;font-size:12px}
+.real-next-steps span{display:block;font-size:9px;color:#888;margin-top:5px;line-height:1.4}
+.workspace-empty-section{background:#fff;border:1px solid var(--line);padding:36px;max-width:760px}
+.workspace-empty-section h1{font-size:34px;margin:0 0 10px;letter-spacing:-.04em}
+.workspace-empty-section>p:not(.eyebrow){color:#666;font-size:13px;line-height:1.6;max-width:580px}
+.workspace-empty-section .btn{margin-right:8px;margin-top:12px}
+@media(max-width:900px){.real-empty-grid{grid-template-columns:1fr 1fr}.real-next-steps{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.real-empty-grid{grid-template-columns:1fr}.real-next-steps{grid-template-columns:1fr}.real-empty-actions{flex-direction:column}}
