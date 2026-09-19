@@ -1,0 +1,34 @@
+name: Format release once
+
+on:
+  push:
+    paths:
+      - '.github/workflows/format-release-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Format release files
+        run: |
+          npx prettier --write             "apps/web/app/o/[organizationId]/page.tsx"             "apps/web/components/marketing/public-demo-dashboard.tsx"             "apps/web/components/marketing/start-flow.tsx"             "apps/web/components/workbench/dashboard-widget-grid.tsx"             "src/ingestion/csv.ts"
+      - name: Remove one-shot workflow
+        run: rm .github/workflows/format-release-once.yml
+      - name: Commit formatted release
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "style: format final release files"
+          git push origin HEAD:main
