@@ -138,6 +138,9 @@ function recommendationView(
       row.evidence,
       'currentConfigurationId',
     ),
+    measuredFact: evidenceString(row.evidence, 'measuredFact'),
+    inference: evidenceString(row.evidence, 'inference'),
+    qualityGuard: evidenceString(row.evidence, 'qualityGuard'),
   });
 }
 
