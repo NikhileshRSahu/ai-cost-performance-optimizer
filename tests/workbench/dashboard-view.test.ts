@@ -83,7 +83,7 @@ describe('founder dashboard MRI view model', () => {
 
     expect(view.recommendations).toHaveLength(1);
     expect(view.bestFirstMove?.recommendationId).toBe('rec-1');
-    expect(view.bestFirstMove?.stateLabel).toBe('Potential saving');
+    expect(view.bestFirstMove?.stateLabel).toBe('Found');
     expect(view.bestFirstMove?.detectionConfidence).toBe('HIGH');
     expect(view.bestFirstMove?.savingsConfidence).toBe('MODELED');
     expect(view.monthlyProjectionAllowed).toBe(true);
