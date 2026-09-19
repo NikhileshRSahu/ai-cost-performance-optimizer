@@ -1,5 +1,5 @@
 name: Send-ready gate
-# final release verification retry after hierarchy guard fix
+# final release verification retry after accessibility fixes
 
 on:
   push:
