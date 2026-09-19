@@ -48,7 +48,151 @@ const optional = [
 ] as const;
 
 const allowed = new Set<string>([...required, ...optional]);
+
+const compatibilityAliases = new Map<string, string>([
+  ['timestamp', 'timestamp_start'],
+  ['request_id', 'source_event_id'],
+  ['cost_usd', 'total_cost'],
+  ['latency_ms', 'latency_p50_ms'],
+  ['workflow', 'workload'],
+]);
+
+const compatibilityEnrichment = new Set([
+  'user_or_service',
+  'prompt_category',
+  'quality_score',
+  'status',
+  'success',
+]);
+
 const integer = /^(0|[1-9]\d{0,25})$/;
+
+function normalizeCompatibilityCsv(rows: string[][]): string[][] {
+  const rawHeaders = rows[0];
+  if (rawHeaders === undefined) return rows;
+
+  const canonicalHeaders: string[] = [];
+  const sources: Array<
+    | { kind: 'source'; index: number }
+    | { kind: 'timestamp_end'; startIndex: number }
+    | { kind: 'currency' }
+    | { kind: 'successes'; successIndex: number | null; statusIndex: number | null }
+    | { kind: 'failures'; successIndex: number | null; statusIndex: number | null }
+    | { kind: 'granularity' }
+  > = [];
+
+  for (let index = 0; index < rawHeaders.length; index++) {
+    const header = rawHeaders[index];
+    if (header === undefined) continue;
+
+    if (
+      !allowed.has(header) &&
+      !compatibilityAliases.has(header) &&
+      !compatibilityEnrichment.has(header)
+    ) {
+      throw new Error(`UNSUPPORTED_COLUMN:${header}`);
+    }
+
+    if (compatibilityEnrichment.has(header)) continue;
+
+    const canonical = compatibilityAliases.get(header) ?? header;
+    if (canonicalHeaders.includes(canonical)) {
+      throw new Error(`DUPLICATE_CANONICAL_COLUMN:${canonical}`);
+    }
+    canonicalHeaders.push(canonical);
+    sources.push({ kind: 'source', index });
+  }
+
+  const timestampIndex = rawHeaders.indexOf('timestamp');
+  if (
+    timestampIndex >= 0 &&
+    !canonicalHeaders.includes('timestamp_end')
+  ) {
+    canonicalHeaders.push('timestamp_end');
+    sources.push({ kind: 'timestamp_end', startIndex: timestampIndex });
+  }
+
+  if (
+    rawHeaders.includes('cost_usd') &&
+    !canonicalHeaders.includes('currency')
+  ) {
+    canonicalHeaders.push('currency');
+    sources.push({ kind: 'currency' });
+  }
+
+  const successIndex = rawHeaders.indexOf('success');
+  const statusIndex = rawHeaders.indexOf('status');
+  if (
+    (successIndex >= 0 || statusIndex >= 0) &&
+    !canonicalHeaders.includes('successes')
+  ) {
+    canonicalHeaders.push('successes');
+    sources.push({
+      kind: 'successes',
+      successIndex: successIndex >= 0 ? successIndex : null,
+      statusIndex: statusIndex >= 0 ? statusIndex : null,
+    });
+  }
+  if (
+    (successIndex >= 0 || statusIndex >= 0) &&
+    !canonicalHeaders.includes('failures')
+  ) {
+    canonicalHeaders.push('failures');
+    sources.push({
+      kind: 'failures',
+      successIndex: successIndex >= 0 ? successIndex : null,
+      statusIndex: statusIndex >= 0 ? statusIndex : null,
+    });
+  }
+
+  if (
+    timestampIndex >= 0 &&
+    !canonicalHeaders.includes('granularity')
+  ) {
+    canonicalHeaders.push('granularity');
+    sources.push({ kind: 'granularity' });
+  }
+
+  const normalizedRows = rows.slice(1).map((row) =>
+    sources.map((source) => {
+      if (source.kind === 'source') return row[source.index] ?? '';
+      if (source.kind === 'currency') return 'USD';
+      if (source.kind === 'granularity') return 'REQUEST';
+
+      if (source.kind === 'timestamp_end') {
+        const start = row[source.startIndex] ?? '';
+        const parsed = Date.parse(start);
+        return Number.isFinite(parsed)
+          ? new Date(parsed + 1).toISOString()
+          : start;
+      }
+
+      const successValue =
+        source.successIndex === null
+          ? null
+          : (row[source.successIndex] ?? '').trim().toLowerCase();
+      const statusValue =
+        source.statusIndex === null
+          ? null
+          : (row[source.statusIndex] ?? '').trim().toLowerCase();
+
+      const succeeded =
+        successValue === 'true' ||
+        successValue === '1' ||
+        (successValue === null && statusValue === 'success');
+
+      return source.kind === 'successes'
+        ? succeeded
+          ? '1'
+          : '0'
+        : succeeded
+          ? '0'
+          : '1';
+    }),
+  );
+
+  return [canonicalHeaders, ...normalizedRows];
+}
 
 function parseCsvText(text: string): string[][] {
   const rows: string[][] = [];
@@ -151,20 +295,15 @@ export function parseUsageCsv(
   if (bytes.byteLength > MAX_BYTES) throw new Error('FILE_TOO_LARGE');
 
   const text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
-  const rows = parseCsvText(text);
+  const parsedRows = parseCsvText(text);
 
-  if (rows.length === 0) throw new Error('EMPTY_CSV');
+  if (parsedRows.length === 0) throw new Error('EMPTY_CSV');
 
+  const rows = normalizeCompatibilityCsv(parsedRows);
   const headers = rows[0];
   if (headers === undefined) throw new Error('EMPTY_CSV');
   if (new Set(headers).size !== headers.length) {
     throw new Error('DUPLICATE_HEADER');
-  }
-
-  for (const header of headers) {
-    if (!allowed.has(header)) {
-      throw new Error(`UNSUPPORTED_COLUMN:${header}`);
-    }
   }
 
   for (const requiredHeader of required) {
