@@ -5,17 +5,17 @@ export type EvidenceState = 'OPPORTUNITY' | 'TESTED' | 'VERIFIED';
 
 const configuration = {
   OPPORTUNITY: {
-    label: 'Potential',
+    label: 'Found',
     icon: CircleDot,
     classes: 'border-amber-300/25 bg-amber-300/10 text-amber-200',
   },
   TESTED: {
-    label: 'Tested',
+    label: 'Evaluated',
     icon: FlaskConical,
     classes: 'border-blue-300/25 bg-blue-300/10 text-blue-200',
   },
   VERIFIED: {
-    label: 'Verified',
+    label: 'Proven',
     icon: ShieldCheck,
     classes: 'border-emerald-300/30 bg-emerald-300/10 text-emerald-200',
   },
