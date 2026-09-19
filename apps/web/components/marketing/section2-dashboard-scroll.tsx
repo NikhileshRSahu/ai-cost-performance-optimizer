@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 export function Section2DashboardScroll() {
@@ -60,7 +60,7 @@ export function Section2DashboardScroll() {
               boxShadow:
                 '0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003',
             }}
-            className="relative z-10 mx-auto w-full max-w-[1320px]"
+            className="relative z-10 mx-auto w-full max-w-[1320px] will-change-transform"
           >
             <div className="overflow-hidden rounded-[30px] border border-white/10 bg-[#060a0f] p-2 shadow-[0_0_100px_rgba(35,191,236,0.08)] md:p-3">
               <img
