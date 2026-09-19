@@ -1410,68 +1410,78 @@ h1 {
 
 .evalomics-mark {
   flex: none;
-  color: #12c7e8;
+  color: #22d3ee;
   overflow: visible;
 }
 
-.evalomics-mark-ring {
-  stroke-dasharray: 55 12;
-  transform-origin: 16px 16px;
-  animation: evalomics-ring 6s ease-in-out infinite;
+.evalomics-mark-frame {
+  stroke: #22d3ee;
+  opacity: 0.78;
 }
 
-.evalomics-mark-path {
-  stroke: #3c7bff;
+.evalomics-mark-e {
+  stroke: #60a5fa;
 }
 
-.evalomics-mark-proof {
-  stroke: #38d996;
-  stroke-dasharray: 12;
-  stroke-dashoffset: 12;
-  animation: evalomics-proof 6s ease-in-out infinite;
+.evalomics-mark-signal {
+  stroke: #34d399;
+  stroke-dasharray: 15;
+  stroke-dashoffset: 15;
+  animation: evalomics-signal 4.8s ease-in-out infinite;
 }
 
-@keyframes evalomics-ring {
-  0%,
-  72%,
-  100% {
-    transform: rotate(-14deg);
-  }
-
-  12%,
-  48% {
-    transform: rotate(0deg);
-  }
+.evalomics-mark-dot {
+  fill: #34d399;
+  animation: evalomics-dot 4.8s ease-in-out infinite;
 }
 
-@keyframes evalomics-proof {
+@keyframes evalomics-signal {
   0%,
   18% {
-    stroke-dashoffset: 12;
-    opacity: 0;
+    stroke-dashoffset: 15;
+    opacity: 0.35;
   }
 
-  28%,
-  78% {
+  35%,
+  82% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
 
-  92%,
   100% {
-    opacity: 0.7;
+    stroke-dashoffset: 0;
+    opacity: 0.72;
+  }
+}
+
+@keyframes evalomics-dot {
+  0%,
+  22% {
+    opacity: 0.35;
+    transform: scale(0.82);
+    transform-origin: 27px 16px;
+  }
+
+  38%,
+  82% {
+    opacity: 1;
+    transform: scale(1);
+    transform-origin: 27px 16px;
+  }
+
+  100% {
+    opacity: 0.72;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .evalomics-mark-ring,
-  .evalomics-mark-proof {
+  .evalomics-mark-signal,
+  .evalomics-mark-dot {
     animation: none;
   }
 
-  .evalomics-mark-proof {
+  .evalomics-mark-signal {
     stroke-dashoffset: 0;
-    opacity: 1;
   }
 }
 
