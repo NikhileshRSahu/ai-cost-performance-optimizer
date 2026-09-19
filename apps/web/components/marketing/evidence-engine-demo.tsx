@@ -42,8 +42,7 @@ const proofStates = [
     label: 'Verified',
     detail: 'Production evidence',
     icon: ShieldCheck,
-    classes:
-      'border-emerald-300/20 bg-emerald-300/[0.055] text-emerald-100',
+    classes: 'border-emerald-300/20 bg-emerald-300/[0.055] text-emerald-100',
   },
 ] as const;
 

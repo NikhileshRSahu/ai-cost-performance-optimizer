@@ -122,7 +122,9 @@ function MiniDashboard() {
               <span>{label}</span>
               <strong>{value}</strong>
               <small>{meta}</small>
-              <div className={'eval-template-sparkline spark-' + String(index)} />
+              <div
+                className={'eval-template-sparkline spark-' + String(index)}
+              />
             </div>
           ))}
         </div>

@@ -29,7 +29,10 @@ const session: AuthenticatedSession = {
 async function demoFixture(): Promise<Uint8Array> {
   return new Uint8Array(
     await readFile(
-      new URL('../../../fixtures/demo/customer-loop-tough.csv', import.meta.url),
+      new URL(
+        '../../../fixtures/demo/customer-loop-tough.csv',
+        import.meta.url,
+      ),
     ),
   );
 }
