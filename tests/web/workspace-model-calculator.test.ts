@@ -14,7 +14,9 @@ describe('workspace model calculator', () => {
   it('keeps model comparison inside the authenticated workspace', () => {
     expect(page).toContain('WorkspaceModelCalculator');
     expect(page).toContain('Evaluate a model candidate');
-    expect(calculator).toContain('Compare two model-price scenarios');
+    expect(calculator).toContain(
+      'Compare the detected workload against a candidate',
+    );
     expect(calculator).toContain('Current monthly inference cost');
     expect(calculator).toContain('Candidate monthly inference cost');
     expect(calculator).toContain('Estimated monthly difference');
