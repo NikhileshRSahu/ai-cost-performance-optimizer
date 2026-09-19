@@ -17,12 +17,12 @@ export const dynamic = 'force-dynamic';
 
 const VALIDATION_COPY = {
   intro:
-    'You already have an actionable usage-backed finding. This optional step measures the exact saving and tests whether the change preserves your quality and performance requirements.',
+    'You already have an actionable usage-backed finding. Evalomics uses comparable evidence here to evaluate the candidate against your quality and performance requirements and measure the exact saving.',
   known:
     'Evalomics found this opportunity from measured usage evidence. You can use the recommendation now as an optimization lead without claiming an exact financial saving.',
   needed:
-    'If you want a quantified saving or production-grade proof, provide comparable current-versus-candidate test cases and the quality or performance floor that must not get worse.',
-  note: 'This proof step is optional. It strengthens the claim from an actionable opportunity into a tested result; it is not required to receive the initial analysis.',
+    'If comparable current-versus-candidate evidence is not available yet, connect or provide it once. Evalomics handles the comparison, applies the quality/performance floor, and decides whether the candidate is safe enough to recommend.',
+  note: 'This evaluation step is optional for the initial analysis. When sufficient comparable evidence exists, Evalomics performs the candidate evaluation and upgrades the finding only when the evidence supports it.',
 } as const;
 
 function metric(value: string | null): string {
@@ -58,7 +58,7 @@ export default async function OptimizationLabPage({
             aria-labelledby="lab-validation-title"
           >
             <p className="eyebrow">Optional proof</p>
-            <h1 id="lab-validation-title">Measure exact savings</h1>
+            <h1 id="lab-validation-title">Let Evalomics evaluate this candidate</h1>
             <p>{VALIDATION_COPY.intro}</p>
 
             <div className="comparison-grid">
@@ -69,7 +69,7 @@ export default async function OptimizationLabPage({
               </article>
               <article className="configuration-card">
                 <p className="eyebrow">Only if you want stronger proof</p>
-                <h2>Comparable test evidence</h2>
+                <h2>Comparable evaluation evidence</h2>
                 <p>{VALIDATION_COPY.needed}</p>
               </article>
             </div>
@@ -79,7 +79,7 @@ export default async function OptimizationLabPage({
                 className="primary-action"
                 href={`/o/${organizationId}/benchmark?recommendationId=${encodeURIComponent(recommendationId)}`}
               >
-                Measure exact savings
+                Add evidence for Evalomics evaluation
               </Link>
               <Link className="secondary-action" href={`/o/${organizationId}`}>
                 Keep current result
@@ -152,8 +152,9 @@ export default async function OptimizationLabPage({
           <p className="eyebrow">{LAB_COPY.heading}</p>
           <h1>Current versus candidate</h1>
           <p className="lede">
-            Compare the same workload evidence before deciding whether a cheaper
-            configuration is safe enough to adopt.
+            Evalomics compares the same workload evidence and checks whether the
+            cheaper configuration stays inside your required quality and performance
+            floor before recommending adoption.
           </p>
         </div>
         <div
@@ -291,12 +292,12 @@ export default async function OptimizationLabPage({
             <p className="eyebrow">What next?</p>
             <h2>
               {view.decision === 'OPTIMIZE'
-                ? 'This candidate passed your safety test.'
+                ? 'Evalomics found this candidate safe enough to recommend.'
                 : 'Review the evidence before changing production.'}
             </h2>
             <p>
-              Tested savings are not counted as Verified. Apply the change only
-              when you are ready to collect comparable post-change evidence.
+              Evaluated savings are still not Verified. Apply the change only when
+              you are ready for Evalomics to compare post-change production evidence.
             </p>
           </div>
           <div className="action-row">
