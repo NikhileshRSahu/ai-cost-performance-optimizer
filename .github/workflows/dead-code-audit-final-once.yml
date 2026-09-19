@@ -1,0 +1,18 @@
+name: Final dead code audit once
+
+on:
+  push:
+    paths:
+      - '.github/workflows/dead-code-audit-final-once.yml'
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npx --yes knip --reporter compact --no-exit-code
