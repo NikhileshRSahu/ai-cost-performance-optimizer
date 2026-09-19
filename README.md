@@ -50,4 +50,4 @@ Authentication is real. The current product data and provider/experiment flows a
 
 ## Backend isolation
 
-The public demo is static and read-only. Authenticated workspaces use tenant-scoped Neon Postgres data only; production database constraints reject demo rows.
+The public demo is static and read-only. Authenticated workspaces use tenant-scoped Neon Postgres data only; production database constraints reject demo rows. The production build also exposes a health invariant that fails if demo records ever enter customer persistence.
