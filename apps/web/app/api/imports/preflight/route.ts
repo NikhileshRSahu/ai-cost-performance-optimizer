@@ -75,6 +75,7 @@ export async function POST(request:Request){
     }catch{
       const aggregate=profile.granularities.includes('AGGREGATE_BUCKET');
       const incomplete=profile.rejected>0||Boolean(profile.parserError);
+      const firstIssue=profile.issueGroups[0];
       doctor={
         answer:profile.canImport
           ? (incomplete?'I can understand part of this file, but it needs attention before you trust the totals.':'I can understand this file and the deterministic parser can import it.')
@@ -88,7 +89,7 @@ export async function POST(request:Request){
           'Rows understood: '+profile.accepted+(profile.totalRows?'/'+profile.totalRows:'')+'.',
           'Requests represented: '+profile.requests+'.',
           'Spend represented: '+(profile.currencies.length===1?profile.currencies[0]+' ':'')+profile.spend.toFixed(2)+'.',
-          ...(profile.issueGroups.length?['Top issue: '+profile.issueGroups[0].code+' × '+profile.issueGroups[0].count+'.']:[])
+          ...(firstIssue?['Top issue: '+firstIssue.code+' × '+firstIssue.count+'.']:[])
         ],
         nextAction:profile.canImport&&!incomplete
           ? 'Import this dataset and analyze it.'
