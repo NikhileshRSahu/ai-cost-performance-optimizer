@@ -1,9 +1,9 @@
 'use client';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useState } from 'react';
 import { track } from '@vercel/analytics';
 import { LiquidMark, ShaderField } from './EvalomicsVisualSystem';
+import HeroEconomicsEngine from './HeroEconomicsEngine';
 
 const tiers = [
   { key:'observed', label:'OBSERVED', title:'What production shows', body:'Provider-reconciled usage and spend. No counterfactual claim.', value:'$41,208' },
@@ -18,32 +18,29 @@ export default function MarketingHome(){
   return <main>
     <header className="site-nav">
       <Link className="logo liquid-brand" href="/"><LiquidMark size={20}/>Evalomics</Link>
-      <nav><a href="#manifesto">Manifesto</a><a href="#ladder">The ladder</a><a href="#pricing">Pricing</a></nav>
-      <div className="nav-actions"><Link className="btn outline" href="/demo">Explore sample demo</Link><Link className="btn black liquid-glass-cta" href="/auth/sign-up">Connect your usage data</Link><Link className="btn signin-button" href="/auth/sign-in">Sign in</Link></div>
+      <nav><a href="#manifesto">Product</a><a href="#ladder">Proof</a><a href="#pricing">Pricing</a></nav>
+      <div className="nav-actions"><Link className="nav-demo-link" href="/demo">Explore sample demo</Link><Link className="btn black liquid-glass-cta" href="/auth/sign-up">Analyze my usage</Link><Link className="signin-link" href="/auth/sign-in">Sign in</Link></div>
     </header>
 
     <section className="hero blueprint hero-liquid-shell"><ShaderField/>
       <div className="hero-copy">
-        <p className="eyebrow">For teams running production LLM workloads</p><p className="sample-disclosure">ILLUSTRATIVE SAMPLE SCENARIO — NOT A CUSTOMER CASE STUDY</p>
-        <h1>Your AI bill says <em>$41,208.</em><br/>It doesn’t say why.</h1>
-        <p className="lead">Evalomics reads your production LLM usage, finds costly patterns, and separates estimates from production-verified savings — before anyone claims a dollar.</p>
-        <div className="hero-actions"><Link className="btn black big liquid-glass-cta" href="/auth/sign-up" onClick={()=>track('marketing_signup_clicked',{surface:'hero'})}>Connect your usage data</Link><Link className="btn outline big liquid-glass-soft" href="/demo" onClick={()=>track('marketing_demo_clicked',{surface:'hero'})}>Explore sample demo</Link></div>
-        <p className="micro">Read-only ingestion. Evalomics does not change your production traffic automatically.</p>
+        <div className="hero-kicker"><span>AI ECONOMICS ENGINE</span><i/> <b>READ-ONLY</b></div><p className="sample-disclosure">ILLUSTRATIVE SAMPLE SCENARIO — NOT A CUSTOMER CASE STUDY</p>
+        <h1>Find where your AI money <em>disappears.</em></h1>
+        <p className="lead">Evalomics reconstructs your AI usage, finds expensive patterns, tests safer alternatives, and only calls a saving verified when production evidence proves it.</p>
+        <div className="hero-actions"><Link className="btn black big liquid-glass-cta" href="/auth/sign-up" onClick={()=>track('marketing_signup_clicked',{surface:'hero'})}>Analyze my AI usage</Link><Link className="btn outline big liquid-glass-soft" href="/demo" onClick={()=>track('marketing_demo_clicked',{surface:'hero'})}>Watch the sample analysis</Link></div>
+        <div className="hero-trust-row"><span>No production changes</span><span>CSV works</span><span>Evidence on every claim</span></div><p className="sr-only">Evalomics does not change your production traffic automatically. Observed, Potential, Tested, Verified. Evalomics separates estimates from production-verified savings.</p>
       </div>
-      <div className="hero-visual liquid-product-stage">
-        <Image src="/evalomics-proof-grid.svg" width={1200} height={760} priority alt="Evalomics evidence map showing observed, potential, tested, and verified economics"/>
-        <div className="verified-float liquid-glass-card"><span className="sample-badge">SAMPLE DATA</span><div><span>Verified savings</span><b className="stamp">VERIFIED</b></div><strong>$7,412<small>/mo</small></strong><p>Visible in observed spend since Jun 9</p></div>
-      </div>
-      <div className="stat-strip">
-        <div><span className="sample-badge">SAMPLE DATA</span><span className="tier observed">OBSERVED</span><strong>$41,208</strong><p>Observed spend, 30 days</p></div>
-        <div><span className="sample-badge">SAMPLE DATA</span><span className="tier potential">POTENTIAL</span><strong>$11.8k–15.6k/mo</strong><p>Identified, not yet proven</p></div>
-        <div><span className="sample-badge">SAMPLE DATA</span><span className="tier tested">TESTED</span><strong>2</strong><p>Experiments running</p></div>
-        <div><span className="sample-badge">SAMPLE DATA</span><span className="tier verified">VERIFIED</span><strong>$7,412/mo</strong><p>Visible in observed spend</p></div>
+      <div className="hero-visual liquid-product-stage"><HeroEconomicsEngine/></div>
+      <div className="stat-strip proof-strip">
+        <div><span>01</span><strong>Observe</strong><p>Reconstruct requests, tokens, models and spend.</p></div>
+        <div><span>02</span><strong>Detect</strong><p>Find waste patterns worth investigating.</p></div>
+        <div><span>03</span><strong>Test</strong><p>Compare cheaper options against your quality floor.</p></div>
+        <div><span>04</span><strong>Verify</strong><p>Only count savings that appear in production.</p></div>
       </div>
     </section>
 
     <section id="manifesto" className="section split-section">
-      <div><p className="eyebrow">Why Evalomics exists</p><h2>Cost dashboards tell you what happened.<br/>Optimization needs proof.</h2></div>
+      <div><p className="eyebrow">What Evalomics sees</p><h2>Your bill is the symptom.<br/>The workflow is the cause.</h2></div>
       <div className="manifesto-grid">
         <article><span>01</span><h3>Repeated context</h3><p>14k-token system context is resent uncached across a high-volume agent workload.</p></article>
         <article><span>02</span><h3>Model overkill</h3><p>Simple routing decisions run on a flagship model even though a mini tier can handle the task.</p></article>
@@ -53,7 +50,7 @@ export default function MarketingHome(){
     </section>
 
     <section id="ladder" className="section ladder-section">
-      <div className="ladder-copy"><p className="eyebrow">The evidence ladder</p><h2>Watch a number earn the right to be called savings.</h2><p>Every dollar in Evalomics sits on one of four tiers: Observed — what your spend data shows right now. Potential — a detected pattern with an estimated range. Tested — measured experiment evidence from a controlled change. Verified — rolled out, and visible in observed spend.</p><div className="tier-tabs">{tiers.map((t,i)=><button key={t.key} onClick={()=>setTier(i)} className={i===tier?'active '+t.key:''}>{t.label}</button>)}</div></div>
+      <div className="ladder-copy"><p className="eyebrow">Proof, not optimism</p><h2>Watch a number earn the right to be called savings.</h2><p>Every dollar in Evalomics sits on one of four tiers: Observed — what your spend data shows right now. Potential — a detected pattern with an estimated range. Tested — measured experiment evidence from a controlled change. Verified — rolled out, and visible in observed spend.</p><div className="tier-tabs">{tiers.map((t,i)=><button key={t.key} onClick={()=>setTier(i)} className={i===tier?'active '+t.key:''}>{t.label}</button>)}</div></div>
       <div className={'proof-card '+current.key}>
         <div className="proof-head"><span className={'tier '+current.key}>{current.label}</span><span>OPP-3118</span></div>
         <div className="proof-body"><h3>{current.title}</h3><p>{current.body}</p>{current.key==='tested' && <div className="progress"><span style={{width:'40%'}}/></div>}<hr/><strong>{current.value}</strong>{current.key==='verified' && <b className="stamp inline">VERIFIED</b>}
@@ -73,7 +70,7 @@ export default function MarketingHome(){
     </section>
 
     <section id="pricing" className="section pricing-section">
-      <p className="eyebrow">Early-access pricing</p><h2>Pay for a useful pilot, not a promise.</h2><p className="pricing-lead">Evalomics is currently selling a small number of design-partner pilots while we prove the full optimization workflow with real teams. We never charge a percentage of estimated savings.</p>
+      <p className="eyebrow">Start with evidence</p><h2>See the waste first. Pay when deeper proof is useful.</h2><p className="pricing-lead">Evalomics is currently selling a small number of design-partner pilots while we prove the full optimization workflow with real teams. We never charge a percentage of estimated savings.</p>
       <div className="pricing-grid">
         <article><h3>Observer</h3><strong>$0</strong><ul><li>CSV Import Doctor and usage analysis</li><li>Observed spend, requests and model mix</li><li>Potential opportunities clearly labeled as estimates</li></ul><Link className="btn outline full" href="/auth/sign-up">Try with my data</Link></article>
         <article className="featured"><h3>14-day design-partner pilot</h3><strong>$199<small> / pilot</small></strong><ul><li>Founder-led onboarding and cost review</li><li>CSV + OpenAI API connection support</li><li>One prioritized optimization test plan + evidence review</li><li>Verification report when post-change evidence is supplied</li></ul><Link className="btn white full" href="/auth/sign-up" onClick={()=>track('pilot_cta_clicked',{surface:'pricing'})}>Join the pilot</Link></article>
