@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { track } from '@vercel/analytics';
 
@@ -29,14 +30,14 @@ export default function MarketingHome(){
         <p className="micro">Read-only ingestion. Evalomics does not change your production traffic automatically.</p>
       </div>
       <div className="hero-visual">
-        <img src="https://images.unsplash.com/photo-1545987796-200677ee1011?auto=format&fit=crop&w=1200&q=82" alt="Abstract black and white network structure"/>
-        <div className="verified-float"><div><span>Verified savings</span><b className="stamp">VERIFIED</b></div><strong>$7,412<small>/mo</small></strong><p>Visible in observed spend since Jun 9</p></div>
+        <Image src="/evalomics-proof-grid.svg" width={1200} height={760} priority alt="Evalomics evidence map showing observed, potential, tested, and verified economics"/>
+        <div className="verified-float"><span className="sample-badge">SAMPLE DATA</span><div><span>Verified savings</span><b className="stamp">VERIFIED</b></div><strong>$7,412<small>/mo</small></strong><p>Visible in observed spend since Jun 9</p></div>
       </div>
       <div className="stat-strip">
-        <div><span className="tier observed">OBSERVED</span><strong>$41,208</strong><p>Observed spend, 30 days</p></div>
-        <div><span className="tier potential">POTENTIAL</span><strong>$11.8k–15.6k/mo</strong><p>Identified, not yet proven</p></div>
-        <div><span className="tier tested">TESTED</span><strong>2</strong><p>Experiments running</p></div>
-        <div><span className="tier verified">VERIFIED</span><strong>$7,412/mo</strong><p>Visible in observed spend</p></div>
+        <div><span className="sample-badge">SAMPLE DATA</span><span className="tier observed">OBSERVED</span><strong>$41,208</strong><p>Observed spend, 30 days</p></div>
+        <div><span className="sample-badge">SAMPLE DATA</span><span className="tier potential">POTENTIAL</span><strong>$11.8k–15.6k/mo</strong><p>Identified, not yet proven</p></div>
+        <div><span className="sample-badge">SAMPLE DATA</span><span className="tier tested">TESTED</span><strong>2</strong><p>Experiments running</p></div>
+        <div><span className="sample-badge">SAMPLE DATA</span><span className="tier verified">VERIFIED</span><strong>$7,412/mo</strong><p>Visible in observed spend</p></div>
       </div>
     </section>
 

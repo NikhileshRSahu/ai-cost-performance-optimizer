@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { signOutAction } from '@/app/actions';
+import { signOutAction, switchWorkspaceAction } from '@/app/actions';
 import EvalomicsCopilot from '@/components/EvalomicsCopilot';
 import KnowledgeUpload from '@/components/KnowledgeUpload';
 import VerificationWorkbench from '@/components/VerificationWorkbench';
@@ -59,7 +59,7 @@ function SpendChart(){
 }
 function ModelBars(){const rows=[['GPT-5 class',88],['Claude Sonnet 5',52],['GPT-5 mini',31],['Claude Haiku 4.5',15],['Other',7]];return <div className="bars">{rows.map(([n,w])=><div key={String(n)}><span>{n}</span><i><b style={{width:w+'%'}}/></i></div>)}</div>}
 
-export default function DashboardApp({userName,userEmail,publicDemo=false,workspaceName='My workspace',realSummary}:{userName:string,userEmail:string,publicDemo?:boolean,workspaceName?:string,realSummary?:RealSummary}){
+export default function DashboardApp({userName,userEmail,publicDemo=false,workspaceName='My workspace',availableWorkspaces=[],realSummary}:{userName:string,userEmail:string,publicDemo?:boolean,workspaceName?:string,availableWorkspaces?:readonly Readonly<{organizationId:string;organizationName:string;role:'OWNER'|'OPERATOR'|'VIEWER'}>[],realSummary?:RealSummary}){
   const path=usePathname(); const router=useRouter();
   const [role,setRole]=useState('Approver'); const [experiment,setExperiment]=useState<'running'|'complete'|'verification'|'verified'>('running');
   const section=useMemo(()=>path.split('/')[2]||'overview',[path]);
@@ -69,7 +69,7 @@ export default function DashboardApp({userName,userEmail,publicDemo=false,worksp
   const basePath=publicDemo?'/demo':'/dashboard';
 
   if(!publicDemo){
-    return <RealWorkspace userName={userName} userEmail={userEmail} workspaceName={workspaceName} summary={realSummary}/>;
+    return <RealWorkspace userName={userName} userEmail={userEmail} workspaceName={workspaceName} availableWorkspaces={availableWorkspaces} summary={realSummary}/>;
   }
 
   return <main className="app-shell">
@@ -123,7 +123,7 @@ function groupedRecommendations(summary?:RealSummary,filter?:string):GroupedReco
   return [...map.values()];
 }
 
-function RealWorkspace({userName,userEmail,workspaceName,summary}:{userName:string,userEmail:string,workspaceName:string,summary?:RealSummary}){
+function RealWorkspace({userName,userEmail,workspaceName,availableWorkspaces,summary}:{userName:string,userEmail:string,workspaceName:string,availableWorkspaces:readonly Readonly<{organizationId:string;organizationName:string;role:'OWNER'|'OPERATOR'|'VIEWER'}>[],summary?:RealSummary}){
   const path=usePathname();
   const section=useMemo(()=>path.split('/')[2]||'overview',[path]);
   const providerCount=summary?.providers.length ?? 0;
@@ -131,7 +131,17 @@ function RealWorkspace({userName,userEmail,workspaceName,summary}:{userName:stri
   return <main className="app-shell">
     <header className="app-top">
       <Link className="logo app-logo" href="/"><span/>Evalomics</Link>
-      <div className="workspace-title"><strong>{workspaceName}</strong><span className="quiet-chip">YOUR WORKSPACE</span></div>
+      <div className="workspace-title">
+        {availableWorkspaces.length>1 ? (
+          <form action={switchWorkspaceAction}>
+            <label className="sr-only" htmlFor="workspace-switcher">Active workspace</label>
+            <select id="workspace-switcher" name="organizationId" defaultValue={summary?.organizationId} onChange={(event)=>event.currentTarget.form?.requestSubmit()}>
+              {availableWorkspaces.map(item=><option key={item.organizationId} value={item.organizationId}>{item.organizationName}</option>)}
+            </select>
+          </form>
+        ) : <strong>{workspaceName}</strong>}
+        <span className="quiet-chip">YOUR WORKSPACE</span>
+      </div>
       <div className="app-head-actions"><span>{userEmail}</span><EvalomicsCopilot screen={section}/><Link className="btn outline small" href="/">Back to site</Link></div>
     </header>
     <aside className="sidebar">
