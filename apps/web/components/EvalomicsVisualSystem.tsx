@@ -179,7 +179,9 @@ export function ShaderField() {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     let pointer = { x: .68, y: .34 };
     let raf = 0;
-    let running = true;
+    let documentVisible = document.visibilityState === 'visible';
+    let inViewport = true;
+    let running = documentVisible;
     const startedAt = performance.now();
 
     const resize = () => {
@@ -190,11 +192,20 @@ export function ShaderField() {
       if (canvas.width !== width || canvas.height !== height) {
         canvas.width = width;
         canvas.height = height;
+        gl.viewport(0, 0, width, height);
       }
-      gl.viewport(0, 0, width, height);
+    };
+
+    const syncRunning = () => {
+      const nextRunning = documentVisible && inViewport;
+      if (nextRunning === running) return;
+      running = nextRunning;
+      if (running) raf = requestAnimationFrame(draw);
+      else cancelAnimationFrame(raf);
     };
 
     const onPointer = (event: PointerEvent) => {
+      if (!inViewport) return;
       pointer = {
         x: Math.min(1, Math.max(0, event.clientX / window.innerWidth)),
         y: 1 - Math.min(1, Math.max(0, event.clientY / window.innerHeight)),
@@ -202,13 +213,12 @@ export function ShaderField() {
     };
 
     const onVisibility = () => {
-      running = document.visibilityState === 'visible';
-      if (running) raf = requestAnimationFrame(draw);
+      documentVisible = document.visibilityState === 'visible';
+      syncRunning();
     };
 
     const draw = (now: number) => {
       if (!running) return;
-      resize();
       gl.uniform2f(resolution, canvas.width, canvas.height);
       gl.uniform2f(pointerUniform, pointer.x, pointer.y);
       gl.uniform1f(timeUniform, prefersReduced.matches ? 0 : (now - startedAt) / 1000);
@@ -216,7 +226,16 @@ export function ShaderField() {
       if (!prefersReduced.matches) raf = requestAnimationFrame(draw);
     };
 
-    window.addEventListener('resize', resize);
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(canvas);
+
+    const viewportObserver = new IntersectionObserver(([entry]) => {
+      inViewport = entry.isIntersecting;
+      syncRunning();
+    }, { rootMargin: '160px 0px', threshold: 0 });
+
+    viewportObserver.observe(canvas);
+    window.addEventListener('resize', resize, { passive: true });
     window.addEventListener('pointermove', onPointer, { passive: true });
     document.addEventListener('visibilitychange', onVisibility);
     resize();
@@ -225,6 +244,8 @@ export function ShaderField() {
     return () => {
       running = false;
       cancelAnimationFrame(raf);
+      resizeObserver.disconnect();
+      viewportObserver.disconnect();
       window.removeEventListener('resize', resize);
       window.removeEventListener('pointermove', onPointer);
       document.removeEventListener('visibilitychange', onVisibility);
