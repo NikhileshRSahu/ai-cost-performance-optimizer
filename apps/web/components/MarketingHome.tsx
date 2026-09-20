@@ -1,83 +1,135 @@
 'use client';
-import Link from 'next/link';
-import { useState } from 'react';
-import { track } from '@vercel/analytics';
-import { LiquidMark, ShaderField } from './EvalomicsVisualSystem';
-import HeroEconomicsEngine from './HeroEconomicsEngine';
 
-const tiers = [
-  { key:'observed', label:'OBSERVED', title:'What production shows', body:'Provider-reconciled usage and spend. No counterfactual claim.', value:'$41,208' },
-  { key:'potential', label:'POTENTIAL', title:'A pattern is detected', body:'Routing runs on a flagship model, but 61% of requests are trivially simple. Estimate only.', value:'$3,800–4,900/mo' },
-  { key:'tested', label:'TESTED', title:'The test is running', body:'20% of routing traffic moves to a cheaper model. Quality guardrail: no worse than −1% vs control.', value:'−24.8% unit cost' },
-  { key:'verified', label:'VERIFIED', title:'Now it’s savings', body:'The rollout has held in observed spend against the pre-change baseline for the verification window.', value:'$4,214/mo' },
-];
+import Link from 'next/link';
+import { track } from '@vercel/analytics';
+import { LiquidMark } from './EvalomicsVisualSystem';
+import DalaConstellation from './DalaConstellation';
 
 export default function MarketingHome(){
-  const [tier, setTier] = useState(1);
-  const current = tiers[tier];
-  return <main>
-    <header className="site-nav">
-      <Link className="logo liquid-brand" href="/"><LiquidMark size={20}/>Evalomics</Link>
-      <nav><a href="#manifesto">Product</a><a href="#ladder">Proof</a><a href="#pricing">Pricing</a></nav>
-      <div className="nav-actions"><Link className="nav-demo-link" href="/demo">Explore sample demo</Link><Link className="btn black liquid-glass-cta" href="/auth/sign-up">Analyze my usage</Link><Link className="signin-link" href="/auth/sign-in">Sign in</Link></div>
+  return <main className="reference-landing">
+    <header className="ref-nav">
+      <Link className="ref-brand" href="/"><LiquidMark size={18}/>Evalomics</Link>
+      <nav>
+        <a href="#manifesto">Product</a>
+        <a href="#proof">Proof</a>
+        <a href="#pricing">Pricing</a>
+      </nav>
+      <div className="ref-nav-actions">
+        <Link className="ref-ghost-link" href="/demo">Explore sample demo</Link>
+        <Link className="ref-primary" href="/auth/sign-up">Analyze my usage</Link>
+      </div>
     </header>
 
-    <section className="hero blueprint hero-liquid-shell"><ShaderField/>
-      <div className="hero-copy">
-        <div className="hero-kicker"><span>AI ECONOMICS ENGINE</span><i/> <b>READ-ONLY</b></div><p className="sample-disclosure">ILLUSTRATIVE SAMPLE SCENARIO — NOT A CUSTOMER CASE STUDY</p>
+    <section className="ref-hero">
+      <div className="ref-hero-copy">
+        <p className="ref-kicker">AI ECONOMICS ENGINE</p>
         <h1>Find where your AI money <em>disappears.</em></h1>
-        <p className="lead">Evalomics reconstructs your AI usage, finds expensive patterns, tests safer alternatives, and only calls a saving verified when production evidence proves it.</p>
-        <div className="hero-actions"><Link className="btn black big liquid-glass-cta" href="/auth/sign-up" onClick={()=>track('marketing_signup_clicked',{surface:'hero'})}>Analyze my AI usage</Link><Link className="btn outline big liquid-glass-soft" href="/demo" onClick={()=>track('marketing_demo_clicked',{surface:'hero'})}>Watch the sample analysis</Link></div>
-        <div className="hero-trust-row"><span>No production changes</span><span>CSV works</span><span>Evidence on every claim</span></div><p className="sr-only">Evalomics does not change your production traffic automatically. Observed, Potential, Tested, Verified. Evalomics separates estimates from production-verified savings.</p>
+        <p className="ref-lead">Evalomics reconstructs your AI usage, finds expensive patterns, tests safer alternatives, and only calls a saving verified when production evidence proves it.</p>
+        <div className="ref-actions">
+          <Link className="ref-primary ref-primary-lg" href="/auth/sign-up" onClick={()=>track('marketing_signup_clicked',{surface:'hero'})}>Analyze my AI usage</Link>
+          <Link className="ref-ghost-link ref-arrow" href="/demo" onClick={()=>track('marketing_demo_clicked',{surface:'hero'})}>Watch the sample analysis ↗</Link>
+        </div>
+        <div className="ref-trust"><span>No production changes</span><span>CSV works</span><span>Evidence on every claim</span></div>
+        <p className="ref-disclosure">ILLUSTRATIVE SAMPLE SCENARIO — NOT A CUSTOMER CASE STUDY</p>
+        <p className="sr-only">Evalomics does not change your production traffic automatically. Observed, Potential, Tested, Verified. Evalomics separates estimates from production-verified savings.</p>
       </div>
-      <div className="hero-visual liquid-product-stage"><HeroEconomicsEngine/></div>
-      <div className="stat-strip proof-strip">
-        <div><span>01</span><strong>Observe</strong><p>Reconstruct requests, tokens, models and spend.</p></div>
-        <div><span>02</span><strong>Detect</strong><p>Find waste patterns worth investigating.</p></div>
-        <div><span>03</span><strong>Test</strong><p>Compare cheaper options against your quality floor.</p></div>
-        <div><span>04</span><strong>Verify</strong><p>Only count savings that appear in production.</p></div>
+
+      <div className="ref-hero-art">
+        <DalaConstellation/>
+        <div className="ref-metric ref-metric-a"><span>OBSERVED</span><b>$41,208</b><small>30-day baseline</small></div>
+        <div className="ref-metric ref-metric-b"><span>WASTE SIGNAL</span><b>61%</b><small>model overkill</small></div>
+        <div className="ref-metric ref-metric-c"><span>QUALITY FLOOR</span><b>98.6%</b><small>candidate result</small></div>
+        <div className="ref-metric ref-metric-d"><span>VERIFIED</span><b>$4,214/mo</b><small>production evidence</small></div>
+      </div>
+
+      <div className="ref-scroll-cue"><span>FOLLOW THE EVIDENCE</span><i/><small>observe → detect → test → verify</small></div>
+    </section>
+
+    <section id="manifesto" className="ref-section ref-split">
+      <div>
+        <p className="ref-kicker amber">WHAT EVALOMICS SEES</p>
+        <h2>Your bill is the symptom.<br/>The workflow is the cause.</h2>
+      </div>
+      <div className="ref-body">
+        <p>Repeated context, oversized models, retry storms and agent loops are not just technical patterns. They are economic behaviors hiding inside normal-looking usage.</p>
+        <p>Evalomics reconstructs the workload first, then asks which pattern is worth changing.</p>
       </div>
     </section>
 
-    <section id="manifesto" className="section split-section">
-      <div><p className="eyebrow">What Evalomics sees</p><h2>Your bill is the symptom.<br/>The workflow is the cause.</h2></div>
-      <div className="manifesto-grid">
-        <article><span>01</span><h3>Repeated context</h3><p>14k-token system context is resent uncached across a high-volume agent workload.</p></article>
-        <article><span>02</span><h3>Model overkill</h3><p>Simple routing decisions run on a flagship model even though a mini tier can handle the task.</p></article>
-        <article><span>03</span><h3>Retry storms</h3><p>Hundreds of duplicate tool calls turn an operational error into an invisible spend spike.</p></article>
-        <article><span>04</span><h3>Agent loops</h3><p>Long-running tool chains can multiply cost without increasing task completion.</p></article>
+    <section className="ref-section ref-proof-flow" id="proof">
+      <div className="ref-proof-art" aria-hidden="true">
+        <svg viewBox="0 0 700 500" preserveAspectRatio="none">
+          <path d="M30 90 C150 80 170 170 290 170 S500 100 670 120"/>
+          <path d="M30 250 C170 310 250 210 350 250 S520 330 670 285"/>
+          <path d="M60 420 C210 390 300 350 420 390 S570 430 650 410"/>
+        </svg>
+        <span className="spark s1"/><span className="spark s2"/><span className="spark s3"/>
+        <div className="proof-word p1">Observed</div>
+        <div className="proof-word p2">Potential</div>
+        <div className="proof-word p3">Tested</div>
+        <div className="proof-word p4">Verified</div>
+      </div>
+      <div className="ref-proof-copy">
+        <p className="ref-kicker amber">PROOF, NOT OPTIMISM</p>
+        <h2>Watch a number earn the right to be called savings.</h2>
+        <p>Observed is what production shows. Potential is an estimate. Tested means the alternative survived a controlled replay. Verified means the change appeared in production evidence after rollout.</p>
+        <div className="ref-status-line"><span>Observed</span><i>→</i><span>Potential</span><i>→</i><span>Tested</span><i>→</i><strong>Verified</strong></div>
       </div>
     </section>
 
-    <section id="ladder" className="section ladder-section">
-      <div className="ladder-copy"><p className="eyebrow">Proof, not optimism</p><h2>Watch a number earn the right to be called savings.</h2><p>Every dollar in Evalomics sits on one of four tiers: Observed — what your spend data shows right now. Potential — a detected pattern with an estimated range. Tested — measured experiment evidence from a controlled change. Verified — rolled out, and visible in observed spend.</p><div className="tier-tabs">{tiers.map((t,i)=><button key={t.key} onClick={()=>setTier(i)} className={i===tier?'active '+t.key:''}>{t.label}</button>)}</div></div>
-      <div className={'proof-card '+current.key}>
-        <div className="proof-head"><span className={'tier '+current.key}>{current.label}</span><span>OPP-3118</span></div>
-        <div className="proof-body"><h3>{current.title}</h3><p>{current.body}</p>{current.key==='tested' && <div className="progress"><span style={{width:'40%'}}/></div>}<hr/><strong>{current.value}</strong>{current.key==='verified' && <b className="stamp inline">VERIFIED</b>}
-          <button className="btn black full" onClick={()=>setTier(tier===3?0:tier+1)}>{tier===0?'Find an opportunity':tier===1?'See sample test result':tier===2?'Complete the test':'Reset the demo'}</button>
+    <section className="ref-section ref-split ref-reverse">
+      <div>
+        <p className="ref-kicker amber">COUNTERFACTUAL TEST</p>
+        <h2>A cheaper route has to earn its place.</h2>
+      </div>
+      <div className="ref-body">
+        <p>Evalomics replays a controlled slice against a candidate route while cost, latency and quality remain visible together.</p>
+        <div className="ref-inline-metrics">
+          <span><small>Current</small><b>GPT-5</b><em>$0.021 / task</em></span>
+          <i>→</i>
+          <span><small>Candidate</small><b>GPT-5 mini</b><em>$0.015 / task</em></span>
         </div>
       </div>
     </section>
 
-    <section className="section dark-block">
-      <div><p className="eyebrow light">Illustrative sample workload</p><h2>Meridian’s bill moved. Evalomics explains the decision, not just the chart.</h2></div>
-      <div className="story-rows">
-        <div><b>$41,208</b><span>Observed AI spend in the last 30 days</span></div>
-        <div><b>$3.8k–4.9k/mo</b><span>Potential routing saving, explicitly still an estimate</span></div>
-        <div><b>−24.8%</b><span>Measured unit-cost change on a controlled slice</span></div>
-        <div><b>$4,214/mo</b><span>Verified after rollout and reconciliation</span></div>
+    <section className="ref-principle">
+      <p className="ref-kicker amber">ONE RULE</p>
+      <h2>A prediction is not proof.<br/><em>A cheaper model is not a saving.</em></h2>
+      <p>Potential stays potential. Tested stays tested. Verified is reserved for a change that survives the quality floor and appears in production evidence.</p>
+    </section>
+
+    <section id="pricing" className="ref-section ref-pricing">
+      <div>
+        <p className="ref-kicker amber">START WITH YOUR DATA</p>
+        <h2>See the economics first.<br/>Pay for deeper proof when it matters.</h2>
+      </div>
+      <div className="ref-price-rows">
+        <article>
+          <span>01</span>
+          <div><small>OBSERVER</small><h3>Bring the usage. See where the money went.</h3><p>CSV Import Doctor, observed spend, model mix, and clearly labeled potential opportunities.</p></div>
+          <strong>$0</strong>
+          <Link className="ref-ghost-link ref-arrow" href="/auth/sign-up">Try with my data ↗</Link>
+        </article>
+        <article>
+          <span>02</span>
+          <div><small>14-DAY DESIGN-PARTNER PILOT</small><h3>Turn one expensive pattern into a measured decision.</h3><p>Founder-led review, one prioritized test plan, evidence review, and verification when post-change evidence is supplied.</p></div>
+          <strong>$199</strong>
+          <Link className="ref-primary" href="/auth/sign-up" onClick={()=>track('pilot_cta_clicked',{surface:'pricing'})}>Join the pilot</Link>
+        </article>
       </div>
     </section>
 
-    <section id="pricing" className="section pricing-section">
-      <p className="eyebrow">Start with evidence</p><h2>See the waste first. Pay when deeper proof is useful.</h2><p className="pricing-lead">Evalomics is currently selling a small number of design-partner pilots while we prove the full optimization workflow with real teams. We never charge a percentage of estimated savings.</p>
-      <div className="pricing-grid">
-        <article><h3>Observer</h3><strong>$0</strong><ul><li>CSV Import Doctor and usage analysis</li><li>Observed spend, requests and model mix</li><li>Potential opportunities clearly labeled as estimates</li></ul><Link className="btn outline full" href="/auth/sign-up">Try with my data</Link></article>
-        <article className="featured"><h3>14-day design-partner pilot</h3><strong>$199<small> / pilot</small></strong><ul><li>Founder-led onboarding and cost review</li><li>CSV + OpenAI API connection support</li><li>One prioritized optimization test plan + evidence review</li><li>Verification report when post-change evidence is supplied</li></ul><Link className="btn white full" href="/auth/sign-up" onClick={()=>track('pilot_cta_clicked',{surface:'pricing'})}>Join the pilot</Link></article>
-        <article><h3>Anthropic API</h3><strong>Beta</strong><ul><li>Admin usage + cost connector implemented</li><li>Marked beta until a real Admin key completes production verification</li><li>No claim of support before that proof exists</li></ul><Link className="btn outline full" href="/support">See support status</Link></article>
-      </div>
+    <section className="ref-final">
+      <p className="ref-kicker amber">YOUR USAGE ALREADY CONTAINS THE ANSWER</p>
+      <h2>Make your AI<br/><em>economics visible.</em></h2>
+      <p>Connect or upload. Evalomics does the interpretation for you.</p>
+      <div className="ref-actions"><Link className="ref-primary ref-primary-lg" href="/auth/sign-up">Analyze my AI usage</Link><Link className="ref-ghost-link ref-arrow" href="/demo">Explore sample demo ↗</Link></div>
     </section>
 
-    <footer className="site-footer"><h2>Bring a number your VP can defend.</h2><div><Link className="btn white" href="/demo">Explore sample demo</Link><Link className="btn outline-light" href="/auth/sign-up">Try with my usage</Link></div><div className="footer-links"><Link href="/trust">Trust center</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/security">Security</Link><Link href="/support">Support</Link></div><p>© 2026 Evalomics. Early access. Sample figures are labeled as such because that is the whole point.</p></footer>
+    <footer className="ref-footer">
+      <div><Link className="ref-brand" href="/"><LiquidMark size={18}/>Evalomics</Link><div><Link href="/trust">Trust</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/security">Security</Link><Link href="/support">Support</Link></div></div>
+      <strong aria-hidden="true">EVALOMICS</strong>
+      <p>© 2026 Evalomics. Early access. Sample figures are labeled as such because that is the whole point.</p>
+    </footer>
   </main>
 }
