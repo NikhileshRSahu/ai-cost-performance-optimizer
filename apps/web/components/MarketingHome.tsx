@@ -21,7 +21,7 @@ export default function MarketingHome(){
 
     <section className="hero blueprint">
       <div className="hero-copy">
-        <p className="eyebrow">For teams running production LLM workloads</p>
+        <p className="eyebrow">For teams running production LLM workloads</p><p className="sample-disclosure">ILLUSTRATIVE SAMPLE SCENARIO — NOT A CUSTOMER CASE STUDY</p>
         <h1>Your AI bill says <em>$41,208.</em><br/>It doesn’t say why.</h1>
         <p className="lead">Evalomics reads your production LLM usage, finds the waste, and proves each saving in your own spend data — before anyone claims a dollar.</p>
         <div className="hero-actions"><Link className="btn black big" href="/auth/sign-up">Connect your usage data</Link><Link className="btn outline big" href="/demo">See the live demo</Link></div>
@@ -60,7 +60,7 @@ export default function MarketingHome(){
     </section>
 
     <section className="section dark-block">
-      <div><p className="eyebrow light">One believable workload</p><h2>Meridian’s bill moved. Evalomics explains the decision, not just the chart.</h2></div>
+      <div><p className="eyebrow light">Illustrative sample workload</p><h2>Meridian’s bill moved. Evalomics explains the decision, not just the chart.</h2></div>
       <div className="story-rows">
         <div><b>$41,208</b><span>Observed AI spend in the last 30 days</span></div>
         <div><b>$3.8k–4.9k/mo</b><span>Potential routing saving, explicitly still an estimate</span></div>
