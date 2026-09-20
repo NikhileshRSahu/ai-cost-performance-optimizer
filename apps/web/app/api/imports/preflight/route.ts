@@ -31,7 +31,7 @@ export async function POST(request:Request){
     if(file.size>10*1024*1024) return NextResponse.json({ok:false,error:'FILE_TOO_LARGE'},{status:413});
     const bytes=new Uint8Array(await file.arrayBuffer());
 
-    const profile=await withRuntimeWorkspace(async({workspace})=>{
+    const profile=await withRuntimeWorkspace(async({workspace})=>{ if(workspace.role==='VIEWER') throw new Error('OPERATOR_REQUIRED');
       try{
         const parsed=parseUsageCsv(bytes,workspace.organizationId,false);
         const accepted=parsed.records.length;
@@ -78,6 +78,7 @@ export async function POST(request:Request){
     return NextResponse.json({ok:true,profile,doctor});
   }catch(error){
     const message=error instanceof Error?error.message:'PREFLIGHT_FAILED';
-    return NextResponse.json({ok:false,error:message},{status:message==='AUTH_REQUIRED'?401:400});
+    const status=message==='AUTH_REQUIRED'?401:message==='OPERATOR_REQUIRED'?403:400;
+    return NextResponse.json({ok:false,error:message},{status});
   }
 }
