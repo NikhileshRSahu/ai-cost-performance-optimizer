@@ -81,13 +81,15 @@ function normalizeCompatibilityCsv(rows: string[][]): string[][] {
         kind: 'successes';
         successIndex: number | null;
         statusIndex: number | null;
+        requestsIndex: number;
       }
     | {
         kind: 'failures';
         successIndex: number | null;
         statusIndex: number | null;
+        requestsIndex: number;
       }
-    | { kind: 'granularity' }
+    | { kind: 'granularity'; requestsIndex: number }
   > = [];
 
   for (let index = 0; index < rawHeaders.length; index++) {
@@ -132,6 +134,7 @@ function normalizeCompatibilityCsv(rows: string[][]): string[][] {
 
   const successIndex = rawHeaders.indexOf('success');
   const statusIndex = rawHeaders.indexOf('status');
+  const requestsIndex = rawHeaders.indexOf('requests');
   if (
     (successIndex >= 0 || statusIndex >= 0) &&
     !canonicalHeaders.includes('successes')
@@ -141,6 +144,7 @@ function normalizeCompatibilityCsv(rows: string[][]): string[][] {
       kind: 'successes',
       successIndex: successIndex >= 0 ? successIndex : null,
       statusIndex: statusIndex >= 0 ? statusIndex : null,
+      requestsIndex,
     });
   }
   if (
@@ -152,12 +156,13 @@ function normalizeCompatibilityCsv(rows: string[][]): string[][] {
       kind: 'failures',
       successIndex: successIndex >= 0 ? successIndex : null,
       statusIndex: statusIndex >= 0 ? statusIndex : null,
+      requestsIndex,
     });
   }
 
   if (timestampIndex >= 0 && !canonicalHeaders.includes('granularity')) {
     canonicalHeaders.push('granularity');
-    sources.push({ kind: 'granularity' });
+    sources.push({ kind: 'granularity', requestsIndex });
   }
 
   const normalizedRows = rows.slice(1).map((row) =>
@@ -172,7 +177,10 @@ function normalizeCompatibilityCsv(rows: string[][]): string[][] {
         return Number.isFinite(parsed) ? new Date(parsed).toISOString() : raw;
       }
       if (source.kind === 'currency') return 'USD';
-      if (source.kind === 'granularity') return 'REQUEST';
+      if (source.kind === 'granularity') {
+        const rawRequests = (row[source.requestsIndex] ?? '').trim();
+        return rawRequests === '1' ? 'REQUEST' : 'AGGREGATE_BUCKET';
+      }
 
       if (source.kind === 'timestamp_end') {
         const rawStart = (row[source.startIndex] ?? '').trim();
@@ -200,13 +208,15 @@ function normalizeCompatibilityCsv(rows: string[][]): string[][] {
         successValue === '1' ||
         (successValue === null && statusValue === 'success');
 
+      const rowRequests = (row[source.requestsIndex] ?? '').trim();
+      const outcomeCount = integer.test(rowRequests) ? rowRequests : '1';
       return source.kind === 'successes'
         ? succeeded
-          ? '1'
+          ? outcomeCount
           : '0'
         : succeeded
           ? '0'
-          : '1';
+          : outcomeCount;
     }),
   );
 
