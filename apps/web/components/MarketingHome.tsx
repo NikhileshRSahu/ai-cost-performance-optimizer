@@ -70,14 +70,14 @@ export default function MarketingHome(){
     </section>
 
     <section id="pricing" className="section pricing-section">
-      <p className="eyebrow">Pricing</p><h2>Pricing that can’t reward a guess.</h2><p className="pricing-lead">We charge on spend under observation — never a percentage of savings. A tool that profits from its own estimates will always find bigger estimates.</p>
+      <p className="eyebrow">Early-access pricing</p><h2>Pay for a useful pilot, not a promise.</h2><p className="pricing-lead">Evalomics is currently selling a small number of design-partner pilots while we prove the full optimization workflow with real teams. We never charge a percentage of estimated savings.</p>
       <div className="pricing-grid">
-        <article><h3>Observer</h3><strong>$0<small> forever</small></strong><ul><li>1 workspace, 2 provider connections</li><li>Observed spend + anomaly alerts</li><li>7-day data retention</li></ul><Link className="btn outline full" href="/auth/sign-up">Start observing</Link></article>
-        <article className="featured"><h3>Scale</h3><strong>$490<small>/month</small></strong><ul><li>Up to $100k/mo spend under observation</li><li>Opportunity detection + experiments</li><li>Verified savings reports and digests</li><li>Slack and email alerts</li></ul><Link className="btn white full" href="/auth/sign-up">Start a 14-day pilot</Link></article>
-        <article><h3>Enterprise</h3><strong>Custom</strong><ul><li>SSO / SAML, audit log</li><li>Warehouse export</li><li>Dedicated support</li></ul><Link className="btn outline full" href="mailto:hello@evalomics.ai">Talk to us</Link></article>
+        <article><h3>Observer</h3><strong>$0</strong><ul><li>CSV Import Doctor and usage analysis</li><li>Observed spend, requests and model mix</li><li>Potential opportunities clearly labeled as estimates</li></ul><Link className="btn outline full" href="/auth/sign-up">Try with my data</Link></article>
+        <article className="featured"><h3>14-day design-partner pilot</h3><strong>$199<small> / pilot</small></strong><ul><li>Founder-led onboarding and cost review</li><li>CSV + OpenAI API connection support</li><li>One prioritized optimization experiment</li><li>Verification report when post-change evidence is supplied</li></ul><Link className="btn white full" href="/auth/sign-up">Join the pilot</Link></article>
+        <article><h3>Anthropic API</h3><strong>Beta</strong><ul><li>Admin usage + cost connector implemented</li><li>Marked beta until a real Admin key completes production verification</li><li>No claim of support before that proof exists</li></ul><Link className="btn outline full" href="/support">See support status</Link></article>
       </div>
     </section>
 
-    <footer className="site-footer"><h2>Bring a number your VP can defend.</h2><div><Link className="btn white" href="/demo">See the live demo</Link><Link className="btn outline-light" href="/auth/sign-up">Connect your usage data</Link></div><p>© 2026 Evalomics. Sample figures are labeled as such because that is the whole point.</p></footer>
+    <footer className="site-footer"><h2>Bring a number your VP can defend.</h2><div><Link className="btn white" href="/demo">See the live demo</Link><Link className="btn outline-light" href="/auth/sign-up">Try with my usage</Link></div><div className="footer-links"><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/security">Security</Link><Link href="/support">Support</Link></div><p>© 2026 Evalomics. Early access. Sample figures are labeled as such because that is the whole point.</p></footer>
   </main>
 }
