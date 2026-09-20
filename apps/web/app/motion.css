@@ -609,3 +609,28 @@
   [data-cinematic-root] .econ-command-pulse{display:none!important}
   [data-cinematic-root] .econ-engine .econ-bars i b{transform:scaleX(1)!important;animation:none!important}
 }
+
+
+/* restrained active-nav microinteraction */
+[data-cinematic-root] .site-nav nav a{
+  position:relative;
+}
+[data-cinematic-root] .site-nav nav a::after{
+  content:"";
+  position:absolute;
+  left:10px;right:10px;bottom:4px;
+  height:2px;border-radius:999px;
+  background:linear-gradient(90deg,var(--motion-orange),var(--motion-blue));
+  transform:scaleX(0);
+  transform-origin:center;
+  opacity:0;
+  transition:transform .32s var(--ease-settle),opacity .22s ease;
+}
+[data-cinematic-root] .site-nav nav a.active{
+  color:#111;
+  background:rgba(15,18,24,.045);
+}
+[data-cinematic-root] .site-nav nav a.active::after{
+  transform:scaleX(1);
+  opacity:1;
+}
