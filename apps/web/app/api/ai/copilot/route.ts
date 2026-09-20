@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { loadWorkspaceSummary } from '@/lib/workspace-summary';
 import { invokeEvalomicsAI } from '@/lib/intelligence';
+import { retrieveKnowledge } from '@/lib/knowledge';
 
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
@@ -34,7 +35,8 @@ export async function POST(request:Request){
     if(question.length<2||question.length>2000) return NextResponse.json({ok:false,error:'QUESTION_LENGTH'},{status:400});
     const screen=(body.screen||'overview').slice(0,80);
     const summary=await loadWorkspaceSummary();
-    const ai=await invokeEvalomicsAI({kind:'COPILOT',question,context:safeContext(summary,screen)});
+    const knowledge=await retrieveKnowledge(question,5);
+    const ai=await invokeEvalomicsAI({kind:'COPILOT',question,context:{...safeContext(summary,screen),retrievedKnowledge:knowledge}});
     return NextResponse.json({ok:true,...ai});
   }catch(error){
     const message=error instanceof Error?error.message:'AI_UNAVAILABLE';

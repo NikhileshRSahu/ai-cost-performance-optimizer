@@ -35,7 +35,7 @@ export async function POST(request:Request){
       try{
         const parsed=parseUsageCsv(bytes,workspace.organizationId,false);
         const accepted=parsed.records.length;
-        const rejected=parsed.issues.filter(i=>i.line!==null).length;
+        const rejected=new Set(parsed.issues.flatMap(i=>i.line===null?[]:[i.line])).size;
         const totalRows=accepted+rejected;
         const requests=parsed.records.reduce((sum,r)=>sum+Number(r.requests||0),0);
         const spend=sumDecimal(parsed.records.map(r=>r.totalCost));

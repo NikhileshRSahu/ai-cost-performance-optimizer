@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { signOutAction } from '@/app/actions';
 import EvalomicsCopilot from '@/components/EvalomicsCopilot';
+import KnowledgeUpload from '@/components/KnowledgeUpload';
 
 type Tier='observed'|'potential'|'tested'|'verified';
 type RealSummary=Readonly<{
@@ -130,7 +131,7 @@ function RealWorkspace({userName,userEmail,workspaceName,summary}:{userName:stri
       {section==='opportunities' && <RealOpportunities summary={summary}/>}
       {section==='experiments' && <RealExperiments summary={summary}/>}
       {section==='reports' && <RealReports summary={summary}/>}
-      {section==='integrations' && <RealIntegrations summary={summary}/>}
+      {section==='integrations' && <><RealIntegrations summary={summary}/><KnowledgeUpload/></>}
       {section==='team' && <RealTeam summary={summary} userEmail={userEmail}/>}
       {section==='billing' && <RealBilling/>}
       {section==='settings' && <RealSettings userName={userName} userEmail={userEmail} workspaceName={workspaceName}/>}
