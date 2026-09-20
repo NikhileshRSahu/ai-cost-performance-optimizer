@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { NextResponse } from 'next/server';
 import { withRuntimeWorkspace } from '@/lib/runtime-workspace';
+import { enforceRateLimit } from '@/lib/rate-limit';
 export const runtime='nodejs'; export const dynamic='force-dynamic';
 const MAX_BYTES=2*1024*1024; const ALLOWED=new Set(['text/plain','text/markdown','application/json','']);
 function splitChunks(text:string){
@@ -16,9 +17,9 @@ export async function GET(){
 }
 export async function POST(request:Request){
   try{const form=await request.formData();const file=form.get('file');if(!(file instanceof File))return NextResponse.json({ok:false,error:'FILE_REQUIRED'},{status:400});if(file.size>MAX_BYTES)return NextResponse.json({ok:false,error:'FILE_TOO_LARGE'},{status:413});if(!ALLOWED.has(file.type))return NextResponse.json({ok:false,error:'TEXT_FILES_ONLY'},{status:400});const text=(await file.text()).trim();if(text.length<40)return NextResponse.json({ok:false,error:'DOCUMENT_TOO_SHORT'},{status:400});const parts=splitChunks(text);if(!parts.length)return NextResponse.json({ok:false,error:'NO_TEXT_FOUND'},{status:400});
-    const document=await withRuntimeWorkspace(async({workspace,database})=>{if(workspace.role==='VIEWER')throw new Error('OPERATOR_REQUIRED');const id='doc_'+randomUUID().replaceAll('-','');await database.pool.query('BEGIN');try{await database.pool.query('INSERT INTO public.ai_knowledge_documents(id,organization_id,user_id,title,source) VALUES($1,$2,$3,$4,$5)',[id,workspace.organizationId,workspace.userId,file.name,'UPLOAD']);for(let i=0;i<parts.length;i++)await database.pool.query('INSERT INTO public.ai_knowledge_chunks(id,document_id,organization_id,chunk_index,content) VALUES($1,$2,$3,$4,$5)',['chunk_'+randomUUID().replaceAll('-',''),id,workspace.organizationId,i,parts[i]]);await database.pool.query('COMMIT');return {id,title:file.name,chunks:parts.length}}catch(e){await database.pool.query('ROLLBACK');throw e}});
+    const document=await withRuntimeWorkspace(async({workspace,database})=>{if(workspace.role==='VIEWER')throw new Error('OPERATOR_REQUIRED');await enforceRateLimit({pool:database.pool,organizationId:workspace.organizationId,scope:'knowledge-upload',limit:10,windowSeconds:600});const id='doc_'+randomUUID().replaceAll('-','');await database.pool.query('BEGIN');try{await database.pool.query('INSERT INTO public.ai_knowledge_documents(id,organization_id,user_id,title,source) VALUES($1,$2,$3,$4,$5)',[id,workspace.organizationId,workspace.userId,file.name,'UPLOAD']);for(let i=0;i<parts.length;i++)await database.pool.query('INSERT INTO public.ai_knowledge_chunks(id,document_id,organization_id,chunk_index,content) VALUES($1,$2,$3,$4,$5)',['chunk_'+randomUUID().replaceAll('-',''),id,workspace.organizationId,i,parts[i]]);await database.pool.query('COMMIT');return {id,title:file.name,chunks:parts.length}}catch(e){await database.pool.query('ROLLBACK');throw e}});
     return NextResponse.json({ok:true,document});
-  }catch(error){const m=error instanceof Error?error.message:'KNOWLEDGE_UPLOAD_FAILED';return NextResponse.json({ok:false,error:m},{status:m==='AUTH_REQUIRED'?401:m==='OPERATOR_REQUIRED'?403:500})}
+  }catch(error){const m=error instanceof Error?error.message:'KNOWLEDGE_UPLOAD_FAILED';return NextResponse.json({ok:false,error:m},{status:m==='AUTH_REQUIRED'?401:m==='OPERATOR_REQUIRED'?403:m==='RATE_LIMITED'?429:500})}
 }
 export async function DELETE(request:Request){
   try{const body=await request.json() as {id?:string};const id=(body.id||'').trim();if(!id)return NextResponse.json({ok:false,error:'DOCUMENT_ID_REQUIRED'},{status:400});const deleted=await withRuntimeWorkspace(async({workspace,database})=>{if(workspace.role==='VIEWER')throw new Error('OPERATOR_REQUIRED');return (await database.pool.query('DELETE FROM public.ai_knowledge_documents WHERE id=$1 AND organization_id=$2 RETURNING id',[id,workspace.organizationId])).rowCount===1});return NextResponse.json({ok:true,deleted})}
