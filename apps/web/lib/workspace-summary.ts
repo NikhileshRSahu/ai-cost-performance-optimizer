@@ -14,7 +14,7 @@ export type WorkspaceSummary=Readonly<{
     id:string;status:string;accepted:number;rejected:number;skipped:number;warnings:number;
     totalRows:number;acceptanceRate:number;rangeStart:string|null;rangeEnd:string|null;receivedAt:string;
   }>|null;
-  providers:readonly Readonly<{provider:string;status:string;lastSyncAt:string|null}>[];
+  providers:readonly Readonly<{provider:string;status:string;lastSyncAt:string|null;safeError:string|null;evidenceRows:number;dataStatus:'SYNCED_WITH_DATA'|'CONNECTED_NO_DATA'|'SYNC_FAILED'|'SYNC_PENDING'}>[];
   topModels:readonly Readonly<{model:string;provider:string;spend:string;requests:string;share:number}>[];
   evidenceCounts:Readonly<{potential:number;tested:number;verified:number}>;
   verifiedSavings:string|null;
@@ -79,7 +79,17 @@ export async function loadWorkspaceSummary():Promise<WorkspaceSummary>{
     }):null;
 
     const providersResult=await database.pool.query(
-      'SELECT provider,last_sync_status,last_sync_at FROM public.provider_connections WHERE organization_id=$1 AND revoked_at IS NULL ORDER BY provider',[orgId]
+      `SELECT pc.provider,pc.last_sync_status,pc.last_sync_at,pc.safe_error_category,
+              COALESCE((
+                SELECT SUM(jsonb_array_length(s.usage_evidence)+jsonb_array_length(s.cost_evidence))
+                FROM public.provider_evidence_snapshots s
+                WHERE s.organization_id=pc.organization_id
+                  AND s.is_demo=false
+                  AND s.source=CASE WHEN pc.provider='OPENAI' THEN 'OPENAI_ADMIN_API' ELSE 'ANTHROPIC_ADMIN_API' END
+              ),0)::int AS evidence_rows
+       FROM public.provider_connections pc
+       WHERE pc.organization_id=$1 AND pc.revoked_at IS NULL
+       ORDER BY pc.provider`,[orgId]
     );
 
     const topModelsResult=activeImportId
@@ -130,9 +140,15 @@ export async function loadWorkspaceSummary():Promise<WorkspaceSummary>{
       requests:String(totals.requests ?? '0'),completeImports:Number(importsResult.rows[0]?.count ?? 0),
       dataRange:Object.freeze({start:totals.start?String(totals.start):null,end:totals.end?String(totals.end):null}),
       latestImport,
-      providers:Object.freeze(providersResult.rows.map((p:any)=>Object.freeze({
-        provider:String(p.provider),status:String(p.last_sync_status),lastSyncAt:p.last_sync_at?String(p.last_sync_at):null
-      }))),
+      providers:Object.freeze(providersResult.rows.map((p:any)=>{
+        const status=String(p.last_sync_status);
+        const evidenceRows=Number(p.evidence_rows??0);
+        const dataStatus=status==='FAILED'?'SYNC_FAILED':status==='READY'?(evidenceRows>0?'SYNCED_WITH_DATA':'CONNECTED_NO_DATA'):'SYNC_PENDING';
+        return Object.freeze({
+          provider:String(p.provider),status,lastSyncAt:p.last_sync_at?String(p.last_sync_at):null,
+          safeError:p.safe_error_category?String(p.safe_error_category):null,evidenceRows,dataStatus
+        });
+      })),
       topModels,
       evidenceCounts:Object.freeze(counts),
       verifiedSavings:Number(verifiedResult.rows[0]?.total ?? 0)!==0?Number(verifiedResult.rows[0].total).toFixed(2):null,
