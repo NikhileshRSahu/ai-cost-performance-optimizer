@@ -26,3 +26,20 @@ jobs:
           AUTH_SECRET: ci-only-auth-secret-that-is-long-enough-2026
           GOOGLE_CLIENT_ID: 504485830242-1mk5p7h8aho03phd48ma9kisath17rk4.apps.googleusercontent.com
           GOOGLE_CLIENT_SECRET: ci-only-google-secret
+      - name: Smoke-test public product surfaces
+        run: |
+          npm run start -- -p 3100 > /tmp/evalomics-next.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:3100/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:3100/ > /dev/null
+          curl -fsS http://127.0.0.1:3100/demo > /dev/null
+          curl -fsS http://127.0.0.1:3100/auth/sign-in > /dev/null
+          curl -fsS http://127.0.0.1:3100/trust > /dev/null
+        env:
+          AUTH_SECRET: ci-only-auth-secret-that-is-long-enough-2026
+          GOOGLE_CLIENT_ID: 504485830242-1mk5p7h8aho03phd48ma9kisath17rk4.apps.googleusercontent.com
+          GOOGLE_CLIENT_SECRET: ci-only-google-secret
