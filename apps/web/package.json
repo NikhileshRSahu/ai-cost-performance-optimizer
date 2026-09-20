@@ -6,7 +6,9 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "test:csv": "tsx --test tests/csv-contract.test.ts",
-    "start": "next start"
+    "start": "next start",
+    "test:release": "tsx --test tests/release-truth.test.ts",
+    "test": "npm run test:csv && npm run test:release"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",
