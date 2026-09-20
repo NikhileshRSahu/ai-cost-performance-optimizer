@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { signOutAction } from '@/app/actions';
+import EvalomicsCopilot from '@/components/EvalomicsCopilot';
 
 type Tier='observed'|'potential'|'tested'|'verified';
 type RealSummary=Readonly<{
@@ -118,7 +119,7 @@ function RealWorkspace({userName,userEmail,workspaceName,summary}:{userName:stri
     <header className="app-top">
       <Link className="logo app-logo" href="/"><span/>Evalomics</Link>
       <div className="workspace-title"><strong>{workspaceName}</strong><span className="quiet-chip">YOUR WORKSPACE</span></div>
-      <div className="app-head-actions"><span>{userEmail}</span><Link className="btn outline small" href="/">Back to site</Link></div>
+      <div className="app-head-actions"><span>{userEmail}</span><EvalomicsCopilot screen={section}/><Link className="btn outline small" href="/">Back to site</Link></div>
     </header>
     <aside className="sidebar">
       <nav>{realNav.map(([id,label])=><Link key={id} className={section===id || (section==='overview'&&id==='overview')?'active':''} href={id==='overview'?'/dashboard':'/dashboard/'+id}><span className="nav-icon">{id==='overview'?'▦':id==='opportunities'?'◇':id==='experiments'?'♜':id==='reports'?'□':id==='integrations'?'⌘':id==='team'?'♧':id==='billing'?'▭':'⚙'}</span>{label}</Link>)}</nav>
