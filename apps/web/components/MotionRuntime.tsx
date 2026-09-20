@@ -36,6 +36,20 @@ export default function MotionRuntime(){
         const progress=Math.min(1,Math.max(0,(start-rect.top)/(start-end)));
         scene.style.setProperty('--scene-progress',progress.toFixed(4));
       });
+
+      const story=root.querySelector<HTMLElement>('[data-economics-story]');
+      if(story){
+        const rect=story.getBoundingClientRect();
+        const travel=Math.max(1,story.offsetHeight-window.innerHeight);
+        const progress=Math.min(1,Math.max(0,-rect.top/travel));
+        const rawStep=Math.min(3,Math.floor(progress*4));
+        const keys=['observe','detect','test','verify'] as const;
+        const stepStart=rawStep*.25;
+        const stepProgress=Math.min(1,Math.max(0,(progress-stepStart)/.25));
+        story.style.setProperty('--story-progress',progress.toFixed(4));
+        story.style.setProperty('--story-step-progress',stepProgress.toFixed(4));
+        story.setAttribute('data-story-step',keys[rawStep]);
+      }
     };
 
     const requestScroll=()=>{
@@ -81,7 +95,7 @@ export default function MotionRuntime(){
       });
     },{rootMargin:'-30% 0px -55% 0px',threshold:[0,.15,.35,.6]});
 
-    ['manifesto','ladder','pricing'].forEach(id=>{
+    ['manifesto','proof','pricing'].forEach(id=>{
       const section=root.querySelector<HTMLElement>('#'+id);
       if(section) sectionObserver.observe(section);
     });
