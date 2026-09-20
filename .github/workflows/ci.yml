@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: 22
       - run: npm install
-      - run: npm run test:csv
+      - run: npm test
       - run: npm run build
         env:
           AUTH_SECRET: ci-only-auth-secret-that-is-long-enough-2026
