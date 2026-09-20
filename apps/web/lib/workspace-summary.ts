@@ -96,9 +96,15 @@ export async function loadWorkspaceSummary():Promise<WorkspaceSummary>{
       share:observed>0?Number(r.spend)/observed:0
     })));
 
-    const recsResult=await database.pool.query(
-      'SELECT id,saving_state::text AS state,decision,confidence_band,net_saving_numerator,net_saving_denominator,currency,evidence FROM public.recommendations WHERE organization_id=$1 AND is_demo=false ORDER BY created_at DESC LIMIT 100',[orgId]
-    );
+    const recsResult=activeImportId
+      ? await database.pool.query(
+          "SELECT id,saving_state::text AS state,decision,confidence_band,net_saving_numerator,net_saving_denominator,currency,evidence FROM public.recommendations WHERE organization_id=$1 AND is_demo=false AND (saving_state::text <> 'OPPORTUNITY' OR evidence->>'sourceImportId'=$2) ORDER BY created_at DESC LIMIT 100",
+          [orgId,activeImportId]
+        )
+      : await database.pool.query(
+          'SELECT id,saving_state::text AS state,decision,confidence_band,net_saving_numerator,net_saving_denominator,currency,evidence FROM public.recommendations WHERE organization_id=$1 AND is_demo=false ORDER BY created_at DESC LIMIT 100',
+          [orgId]
+        );
     const counts={potential:0,tested:0,verified:0};
     for(const r of recsResult.rows){
       if(r.state==='OPPORTUNITY') counts.potential++;
