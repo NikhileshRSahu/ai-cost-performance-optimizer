@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { parseUsageCsv } from '@/backend/ingestion/csv';
 import { withRuntimeWorkspace } from '@/lib/runtime-workspace';
 import { invokeEvalomicsAI } from '@/lib/intelligence';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
@@ -31,7 +32,7 @@ export async function POST(request:Request){
     if(file.size>10*1024*1024) return NextResponse.json({ok:false,error:'FILE_TOO_LARGE'},{status:413});
     const bytes=new Uint8Array(await file.arrayBuffer());
 
-    const profile=await withRuntimeWorkspace(async({workspace})=>{ if(workspace.role==='VIEWER') throw new Error('OPERATOR_REQUIRED');
+    const profile=await withRuntimeWorkspace(async({workspace,database})=>{ if(workspace.role==='VIEWER') throw new Error('OPERATOR_REQUIRED'); await enforceRateLimit({pool:database.pool,organizationId:workspace.organizationId,scope:'import-preflight',limit:20,windowSeconds:60});
       try{
         const parsed=parseUsageCsv(bytes,workspace.organizationId,false);
         const accepted=parsed.records.length;
@@ -78,7 +79,7 @@ export async function POST(request:Request){
     return NextResponse.json({ok:true,profile,doctor});
   }catch(error){
     const message=error instanceof Error?error.message:'PREFLIGHT_FAILED';
-    const status=message==='AUTH_REQUIRED'?401:message==='OPERATOR_REQUIRED'?403:400;
+    const status=message==='AUTH_REQUIRED'?401:message==='OPERATOR_REQUIRED'?403:message==='RATE_LIMITED'?429:400;
     return NextResponse.json({ok:false,error:message},{status});
   }
 }
