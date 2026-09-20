@@ -16,16 +16,16 @@ export default function MarketingHome(){
     <header className="site-nav">
       <Link className="logo" href="/"><span/>Evalomics</Link>
       <nav><a href="#manifesto">Manifesto</a><a href="#ladder">The ladder</a><a href="#pricing">Pricing</a></nav>
-      <div className="nav-actions"><Link className="btn outline" href="/demo">See the live demo</Link><Link className="btn black" href="/auth/sign-up">Connect your usage data</Link><Link className="btn signin-button" href="/auth/sign-in">Sign in</Link></div>
+      <div className="nav-actions"><Link className="btn outline" href="/demo">Explore sample demo</Link><Link className="btn black" href="/auth/sign-up">Connect your usage data</Link><Link className="btn signin-button" href="/auth/sign-in">Sign in</Link></div>
     </header>
 
     <section className="hero blueprint">
       <div className="hero-copy">
         <p className="eyebrow">For teams running production LLM workloads</p><p className="sample-disclosure">ILLUSTRATIVE SAMPLE SCENARIO — NOT A CUSTOMER CASE STUDY</p>
         <h1>Your AI bill says <em>$41,208.</em><br/>It doesn’t say why.</h1>
-        <p className="lead">Evalomics reads your production LLM usage, finds the waste, and proves each saving in your own spend data — before anyone claims a dollar.</p>
-        <div className="hero-actions"><Link className="btn black big" href="/auth/sign-up">Connect your usage data</Link><Link className="btn outline big" href="/demo">See the live demo</Link></div>
-        <p className="micro">Read-only. No traffic changes until you approve an experiment.</p>
+        <p className="lead">Evalomics reads your production LLM usage, finds costly patterns, and separates estimates from production-verified savings — before anyone claims a dollar.</p>
+        <div className="hero-actions"><Link className="btn black big" href="/auth/sign-up">Connect your usage data</Link><Link className="btn outline big" href="/demo">Explore sample demo</Link></div>
+        <p className="micro">Read-only ingestion. Evalomics does not change your production traffic automatically.</p>
       </div>
       <div className="hero-visual">
         <img src="https://images.unsplash.com/photo-1545987796-200677ee1011?auto=format&fit=crop&w=1200&q=82" alt="Abstract black and white network structure"/>
@@ -50,11 +50,11 @@ export default function MarketingHome(){
     </section>
 
     <section id="ladder" className="section ladder-section">
-      <div className="ladder-copy"><p className="eyebrow">The evidence ladder</p><h2>Watch a number earn the right to be called savings.</h2><p>Every dollar in Evalomics sits on one of four tiers: Observed — what your spend data shows right now. Potential — a detected pattern with an estimated range. Tested — a change run on real traffic with real results. Verified — rolled out, and visible in observed spend.</p><div className="tier-tabs">{tiers.map((t,i)=><button key={t.key} onClick={()=>setTier(i)} className={i===tier?'active '+t.key:''}>{t.label}</button>)}</div></div>
+      <div className="ladder-copy"><p className="eyebrow">The evidence ladder</p><h2>Watch a number earn the right to be called savings.</h2><p>Every dollar in Evalomics sits on one of four tiers: Observed — what your spend data shows right now. Potential — a detected pattern with an estimated range. Tested — measured experiment evidence from a controlled change. Verified — rolled out, and visible in observed spend.</p><div className="tier-tabs">{tiers.map((t,i)=><button key={t.key} onClick={()=>setTier(i)} className={i===tier?'active '+t.key:''}>{t.label}</button>)}</div></div>
       <div className={'proof-card '+current.key}>
         <div className="proof-head"><span className={'tier '+current.key}>{current.label}</span><span>OPP-3118</span></div>
         <div className="proof-body"><h3>{current.title}</h3><p>{current.body}</p>{current.key==='tested' && <div className="progress"><span style={{width:'40%'}}/></div>}<hr/><strong>{current.value}</strong>{current.key==='verified' && <b className="stamp inline">VERIFIED</b>}
-          <button className="btn black full" onClick={()=>setTier(tier===3?0:tier+1)}>{tier===0?'Find an opportunity':tier===1?'Run a 20% traffic test':tier===2?'Complete the test':'Reset the demo'}</button>
+          <button className="btn black full" onClick={()=>setTier(tier===3?0:tier+1)}>{tier===0?'Find an opportunity':tier===1?'See sample test result':tier===2?'Complete the test':'Reset the demo'}</button>
         </div>
       </div>
     </section>
@@ -73,11 +73,11 @@ export default function MarketingHome(){
       <p className="eyebrow">Early-access pricing</p><h2>Pay for a useful pilot, not a promise.</h2><p className="pricing-lead">Evalomics is currently selling a small number of design-partner pilots while we prove the full optimization workflow with real teams. We never charge a percentage of estimated savings.</p>
       <div className="pricing-grid">
         <article><h3>Observer</h3><strong>$0</strong><ul><li>CSV Import Doctor and usage analysis</li><li>Observed spend, requests and model mix</li><li>Potential opportunities clearly labeled as estimates</li></ul><Link className="btn outline full" href="/auth/sign-up">Try with my data</Link></article>
-        <article className="featured"><h3>14-day design-partner pilot</h3><strong>$199<small> / pilot</small></strong><ul><li>Founder-led onboarding and cost review</li><li>CSV + OpenAI API connection support</li><li>One prioritized optimization experiment</li><li>Verification report when post-change evidence is supplied</li></ul><Link className="btn white full" href="/auth/sign-up">Join the pilot</Link></article>
+        <article className="featured"><h3>14-day design-partner pilot</h3><strong>$199<small> / pilot</small></strong><ul><li>Founder-led onboarding and cost review</li><li>CSV + OpenAI API connection support</li><li>One prioritized optimization test plan + evidence review</li><li>Verification report when post-change evidence is supplied</li></ul><Link className="btn white full" href="/auth/sign-up">Join the pilot</Link></article>
         <article><h3>Anthropic API</h3><strong>Beta</strong><ul><li>Admin usage + cost connector implemented</li><li>Marked beta until a real Admin key completes production verification</li><li>No claim of support before that proof exists</li></ul><Link className="btn outline full" href="/support">See support status</Link></article>
       </div>
     </section>
 
-    <footer className="site-footer"><h2>Bring a number your VP can defend.</h2><div><Link className="btn white" href="/demo">See the live demo</Link><Link className="btn outline-light" href="/auth/sign-up">Try with my usage</Link></div><div className="footer-links"><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/security">Security</Link><Link href="/support">Support</Link></div><p>© 2026 Evalomics. Early access. Sample figures are labeled as such because that is the whole point.</p></footer>
+    <footer className="site-footer"><h2>Bring a number your VP can defend.</h2><div><Link className="btn white" href="/demo">Explore sample demo</Link><Link className="btn outline-light" href="/auth/sign-up">Try with my usage</Link></div><div className="footer-links"><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/security">Security</Link><Link href="/support">Support</Link></div><p>© 2026 Evalomics. Early access. Sample figures are labeled as such because that is the whole point.</p></footer>
   </main>
 }
