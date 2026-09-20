@@ -14,6 +14,7 @@ export default async function DashboardPage(){
     userName={workspace.name}
     userEmail={workspace.email}
     workspaceName={workspace.organizationName}
+    availableWorkspaces={workspace.availableWorkspaces}
     realSummary={summary}
   />;
 }
