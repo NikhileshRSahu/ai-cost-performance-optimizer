@@ -118,6 +118,16 @@ export function ShaderField() {
         float blue = softCircle(q, driftB, .30, .30);
         float focus = softCircle(q, pointer, .20, .22);
 
+        // Faint request/cost trajectories: these are deliberately semantic,
+        // not generic particles. Warm traces represent waste signals and
+        // cobalt traces represent tested/efficient routes.
+        float waveA = .34 + .055 * sin(uv.x * 8.0 + t * 2.2);
+        float waveB = .61 + .045 * sin(uv.x * 9.5 - t * 1.8);
+        float traceA = 1.0 - smoothstep(.006, .020, abs(uv.y - waveA));
+        float traceB = 1.0 - smoothstep(.006, .019, abs(uv.y - waveB));
+        float pulseA = pow(max(0.0, sin(uv.x * 23.0 - t * 8.0)), 18.0);
+        float pulseB = pow(max(0.0, sin(uv.x * 19.0 + t * 6.0)), 20.0);
+
         vec3 paper = vec3(.985, .982, .972);
         vec3 warm = vec3(1.0, .48, .12);
         vec3 cobalt = vec3(.09, .28, .72);
@@ -126,6 +136,8 @@ export function ShaderField() {
         vec3 color = paper;
         color = mix(color, warm, amber * .28);
         color = mix(color, cobalt, blue * .16);
+        color = mix(color, warm, traceA * (.055 + pulseA * .16));
+        color = mix(color, cobalt, traceB * (.050 + pulseB * .14));
         color = mix(color, vec3(1.0), focus * .18);
 
         float grain = (noise(gl_FragCoord.xy + uTime) - .5) * .025;
