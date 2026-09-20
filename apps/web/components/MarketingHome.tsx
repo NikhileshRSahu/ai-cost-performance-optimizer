@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { track } from '@vercel/analytics';
+import { LiquidMark, ShaderField } from './EvalomicsVisualSystem';
 
 const tiers = [
   { key:'observed', label:'OBSERVED', title:'What production shows', body:'Provider-reconciled usage and spend. No counterfactual claim.', value:'$41,208' },
@@ -16,22 +17,22 @@ export default function MarketingHome(){
   const current = tiers[tier];
   return <main>
     <header className="site-nav">
-      <Link className="logo" href="/"><span/>Evalomics</Link>
+      <Link className="logo liquid-brand" href="/"><LiquidMark size={20}/>Evalomics</Link>
       <nav><a href="#manifesto">Manifesto</a><a href="#ladder">The ladder</a><a href="#pricing">Pricing</a></nav>
-      <div className="nav-actions"><Link className="btn outline" href="/demo">Explore sample demo</Link><Link className="btn black" href="/auth/sign-up">Connect your usage data</Link><Link className="btn signin-button" href="/auth/sign-in">Sign in</Link></div>
+      <div className="nav-actions"><Link className="btn outline" href="/demo">Explore sample demo</Link><Link className="btn black liquid-glass-cta" href="/auth/sign-up">Connect your usage data</Link><Link className="btn signin-button" href="/auth/sign-in">Sign in</Link></div>
     </header>
 
-    <section className="hero blueprint">
+    <section className="hero blueprint hero-liquid-shell"><ShaderField/>
       <div className="hero-copy">
         <p className="eyebrow">For teams running production LLM workloads</p><p className="sample-disclosure">ILLUSTRATIVE SAMPLE SCENARIO — NOT A CUSTOMER CASE STUDY</p>
         <h1>Your AI bill says <em>$41,208.</em><br/>It doesn’t say why.</h1>
         <p className="lead">Evalomics reads your production LLM usage, finds costly patterns, and separates estimates from production-verified savings — before anyone claims a dollar.</p>
-        <div className="hero-actions"><Link className="btn black big" href="/auth/sign-up" onClick={()=>track('marketing_signup_clicked',{surface:'hero'})}>Connect your usage data</Link><Link className="btn outline big" href="/demo" onClick={()=>track('marketing_demo_clicked',{surface:'hero'})}>Explore sample demo</Link></div>
+        <div className="hero-actions"><Link className="btn black big liquid-glass-cta" href="/auth/sign-up" onClick={()=>track('marketing_signup_clicked',{surface:'hero'})}>Connect your usage data</Link><Link className="btn outline big liquid-glass-soft" href="/demo" onClick={()=>track('marketing_demo_clicked',{surface:'hero'})}>Explore sample demo</Link></div>
         <p className="micro">Read-only ingestion. Evalomics does not change your production traffic automatically.</p>
       </div>
-      <div className="hero-visual">
+      <div className="hero-visual liquid-product-stage">
         <Image src="/evalomics-proof-grid.svg" width={1200} height={760} priority alt="Evalomics evidence map showing observed, potential, tested, and verified economics"/>
-        <div className="verified-float"><span className="sample-badge">SAMPLE DATA</span><div><span>Verified savings</span><b className="stamp">VERIFIED</b></div><strong>$7,412<small>/mo</small></strong><p>Visible in observed spend since Jun 9</p></div>
+        <div className="verified-float liquid-glass-card"><span className="sample-badge">SAMPLE DATA</span><div><span>Verified savings</span><b className="stamp">VERIFIED</b></div><strong>$7,412<small>/mo</small></strong><p>Visible in observed spend since Jun 9</p></div>
       </div>
       <div className="stat-strip">
         <div><span className="sample-badge">SAMPLE DATA</span><span className="tier observed">OBSERVED</span><strong>$41,208</strong><p>Observed spend, 30 days</p></div>
