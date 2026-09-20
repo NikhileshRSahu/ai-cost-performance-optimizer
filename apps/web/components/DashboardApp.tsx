@@ -8,11 +8,21 @@ type Tier='observed'|'potential'|'tested'|'verified';
 type RealSummary=Readonly<{
   organizationId:string;organizationName:string;role:string;onboardingCompleted:boolean;
   observedSpend:string|null;currency:string;requests:string;completeImports:number;
+  dataRange:Readonly<{start:string|null;end:string|null}>;
+  latestImport:Readonly<{
+    id:string;status:string;accepted:number;rejected:number;skipped:number;warnings:number;
+    totalRows:number;acceptanceRate:number;rangeStart:string|null;rangeEnd:string|null;receivedAt:string;
+  }>|null;
   providers:readonly Readonly<{provider:string;status:string;lastSyncAt:string|null}>[];
+  topModels:readonly Readonly<{model:string;provider:string;spend:string;requests:string;share:number}>[];
   evidenceCounts:Readonly<{potential:number;tested:number;verified:number}>;
   verifiedSavings:string|null;
   members:readonly Readonly<{email:string;role:string}>[];
-  recommendations:readonly Readonly<{id:string;state:string;decision:string;confidence:string|null;amount:string|null;currency:string|null;title:string}>[];
+  recommendations:readonly Readonly<{
+    id:string;state:string;decision:string;confidence:string|null;amount:string|null;currency:string|null;
+    title:string;measuredFact:string|null;nextAction:string|null;limitation:string|null;kind:string|null;
+    sourceImportId:string|null;currentConfigurationId:string|null;
+  }>[];
 }>;
 
 
@@ -26,6 +36,7 @@ const opps=[
 ];
 
 const nav=[['overview','Overview'],['opportunities','Opportunities'],['experiments','Experiments'],['reports','Reports'],['alerts','Alerts'],['integrations','Integrations'],['team','Team'],['billing','Billing'],['settings','Settings']];
+const realNav=nav.filter(([id])=>id!=='alerts');
 
 function TierBadge({tier}:{tier:Tier}){return <span className={'tier '+tier}>{tier.toUpperCase()}</span>}
 
@@ -73,11 +84,36 @@ function money(amount:string|null,currency:string){
   catch{return currency+' '+n.toFixed(2)}
 }
 
+function formatPeriod(start:string|null|undefined,end:string|null|undefined){
+  if(!start||!end) return 'No complete date range';
+  const a=new Date(start),b=new Date(end);
+  const days=Math.max(1,Math.round((b.getTime()-a.getTime())/86400000));
+  return days+' day'+(days===1?'':'s')+' analyzed';
+}
+
+function importIsIncomplete(summary?:RealSummary){
+  const latest=summary?.latestImport;
+  return Boolean(latest && (latest.status==='PARTIAL'||latest.rejected>0) && latest.acceptanceRate<0.98);
+}
+
+type GroupedRecommendation=RealSummary['recommendations'][number]&{sourceCount:number};
+function groupedRecommendations(summary?:RealSummary,filter?:string):GroupedRecommendation[]{
+  const map=new Map<string,GroupedRecommendation>();
+  for(const r of summary?.recommendations??[]){
+    if(filter&&r.state!==filter) continue;
+    const key=r.kind||r.title;
+    const existing=map.get(key);
+    if(existing){existing.sourceCount+=1;continue}
+    map.set(key,{...r,sourceCount:1});
+  }
+  return [...map.values()];
+}
+
 function RealWorkspace({userName,userEmail,workspaceName,summary}:{userName:string,userEmail:string,workspaceName:string,summary?:RealSummary}){
   const path=usePathname();
   const section=useMemo(()=>path.split('/')[2]||'overview',[path]);
   const providerCount=summary?.providers.length ?? 0;
-  const evidenceCount=(summary?.evidenceCounts.potential ?? 0)+(summary?.evidenceCounts.tested ?? 0)+(summary?.evidenceCounts.verified ?? 0);
+  const evidenceCount=groupedRecommendations(summary).length;
   return <main className="app-shell">
     <header className="app-top">
       <Link className="logo app-logo" href="/"><span/>Evalomics</Link>
@@ -85,93 +121,139 @@ function RealWorkspace({userName,userEmail,workspaceName,summary}:{userName:stri
       <div className="app-head-actions"><span>{userEmail}</span><Link className="btn outline small" href="/">Back to site</Link></div>
     </header>
     <aside className="sidebar">
-      <nav>{nav.map(([id,label])=><Link key={id} className={section===id || (section==='overview'&&id==='overview')?'active':''} href={id==='overview'?'/dashboard':'/dashboard/'+id}><span className="nav-icon">{id==='overview'?'▦':id==='opportunities'?'◇':id==='experiments'?'♜':id==='reports'?'□':id==='alerts'?'♧':id==='integrations'?'⌘':id==='team'?'♧':id==='billing'?'▭':'⚙'}</span>{label}</Link>)}</nav>
-      <div className="sync-note">{providerCount>0?providerCount+' provider'+(providerCount===1?'':'s')+' connected':summary?.completeImports?summary.completeImports+' usage import'+(summary.completeImports===1?'':'s'):'No usage connected'}<br/>{evidenceCount} evidence item{evidenceCount===1?'':'s'} in this workspace</div>
+      <nav>{realNav.map(([id,label])=><Link key={id} className={section===id || (section==='overview'&&id==='overview')?'active':''} href={id==='overview'?'/dashboard':'/dashboard/'+id}><span className="nav-icon">{id==='overview'?'▦':id==='opportunities'?'◇':id==='experiments'?'♜':id==='reports'?'□':id==='integrations'?'⌘':id==='team'?'♧':id==='billing'?'▭':'⚙'}</span>{label}</Link>)}</nav>
+      <div className="sync-note">{providerCount>0?providerCount+' provider'+(providerCount===1?'':'s')+' connected':summary?.completeImports?summary.completeImports+' usage import'+(summary.completeImports===1?'':'s'):'No usage connected'}<br/>{evidenceCount} decision area{evidenceCount===1?'':'s'} detected</div>
     </aside>
     <section className="app-content">
       {section==='overview' && <RealOverview userName={userName} summary={summary}/>}
       {section==='opportunities' && <RealOpportunities summary={summary}/>}
       {section==='experiments' && <RealExperiments summary={summary}/>}
       {section==='reports' && <RealReports summary={summary}/>}
-      {section==='alerts' && <WaitingSection section="alerts" hasData={Boolean(summary?.observedSpend)}/>}
       {section==='integrations' && <RealIntegrations summary={summary}/>}
       {section==='team' && <RealTeam summary={summary} userEmail={userEmail}/>}
-      {section==='billing' && <RealBilling summary={summary}/>}
-      {section==='settings' && <Settings userName={userName} userEmail={userEmail}/>}
+      {section==='billing' && <RealBilling/>}
+      {section==='settings' && <RealSettings userName={userName} userEmail={userEmail} workspaceName={workspaceName}/>}
     </section>
   </main>
 }
 
 function RealOverview({userName,summary}:{userName:string,summary?:RealSummary}){
   const hasData=Boolean(summary?.observedSpend)||Boolean(summary?.completeImports)||Boolean(summary?.providers.length);
+  const incomplete=importIsIncomplete(summary);
+  const latest=summary?.latestImport;
+  const recs=groupedRecommendations(summary,'OPPORTUNITY');
+  const requestCount=Number(summary?.requests??0);
+  const spend=Number(summary?.observedSpend??0);
+  const unitCost=requestCount>0?spend/requestCount*1000:null;
+
   if(!hasData){
     return <>
-      <div className="page-head"><div><p className="eyebrow">YOUR WORKSPACE</p><h1>No production data yet.</h1><p>{userName ? userName+', ' : ''}Evalomics will not invent spend, opportunities, tests, or savings before your own usage arrives.</p></div></div>
+      <div className="page-head"><div><p className="eyebrow">YOUR WORKSPACE</p><h1>No production data yet.</h1><p>{userName ? userName+', ' : ''}connect usage and Evalomics will tell you what happened before it suggests what to change.</p></div></div>
       <div className="real-empty-grid">
-        <article className="real-empty-main"><TierBadge tier="observed"/><h2>Connect usage to start observing</h2><p>Bring in OpenAI, Anthropic, or a CSV usage export. The first thing Evalomics will show is what actually happened — not an estimated saving.</p><div className="real-empty-actions"><Link className="btn black" href="/onboarding?step=3">Connect usage data</Link><Link className="btn outline" href="/demo">Explore sample data</Link></div></article>
-        <article><span className="tier observed">OBSERVED</span><strong>—</strong><p>No provider-reconciled spend yet.</p></article>
-        <article><span className="tier potential">POTENTIAL</span><strong>—</strong><p>No patterns claimed before enough evidence exists.</p></article>
-        <article><span className="tier tested">TESTED</span><strong>—</strong><p>No experiments have run on your traffic.</p></article>
-        <article><span className="tier verified">VERIFIED</span><strong>—</strong><p>No savings can be verified before rollout and observation.</p></article>
+        <article className="real-empty-main"><TierBadge tier="observed"/><h2>Connect usage to get your first answer</h2><p>Bring in OpenAI, Anthropic, or a CSV usage export. Your first dashboard will show spend, requests, data quality, cost drivers, and the next useful action.</p><div className="real-empty-actions"><Link className="btn black" href="/onboarding?step=3">Connect usage data</Link><Link className="btn outline" href="/demo">Explore sample data</Link></div></article>
       </div>
-      <RealNext/>
     </>
   }
+
   return <>
-    <p className="workspace-note">These figures come from this authenticated workspace only. The public demo is not stored in the production database.</p>
-    <div className="kpi-grid">
-      <article><div><span>Observed spend</span><TierBadge tier="observed"/></div><strong>{money(summary?.observedSpend??null,summary?.currency??'USD')}</strong><p>{summary?.requests && Number(summary.requests)>0?Number(summary.requests).toLocaleString()+' measured requests':'Provider or import evidence loaded'}</p></article>
-      <article><div><span>Identified, not yet proven</span><TierBadge tier="potential"/></div><strong>{summary?.evidenceCounts.potential ?? 0}</strong><p>Potential opportunities. Estimates are not counted as savings.</p></article>
-      <article><div><span>Tested</span><TierBadge tier="tested"/></div><strong>{summary?.evidenceCounts.tested ?? 0}</strong><p>Changes with test evidence.</p></article>
-      <article><div><span>Verified savings</span><TierBadge tier="verified"/></div><strong>{money(summary?.verifiedSavings??null,summary?.currency??'USD')}</strong><p>Only production verification contributes here.</p></article>
+    <div className="answer-first">
+      <p className="eyebrow">{incomplete?'DATA NEEDS ATTENTION':'YOUR AI USAGE'}</p>
+      <h1>{incomplete?'Your latest import is incomplete.':'Here is what your AI usage is doing.'}</h1>
+      <p>{incomplete
+        ? latest?.accepted+' of '+latest?.totalRows+' CSV rows were accepted. Spend and recommendations are partial, so Evalomics is pausing optimization decisions until you repair the import.'
+        : money(summary?.observedSpend??null,summary?.currency??'USD')+' across '+requestCount.toLocaleString()+' requests. '+recs.length+' decision area'+(recs.length===1?' is':'s are')+' worth reviewing. '+(summary?.verifiedSavings?'Verified savings are visible below.':'Nothing is verified as savings yet.')
+      }</p>
+      {incomplete&&<Link className="btn black" href="/onboarding?step=3">Re-upload the CSV</Link>}
     </div>
-    <div className="section-title-row"><h1>Your evidence</h1><p>Only records from {summary?.organizationName}.</p></div>
-    <RealRecommendationList summary={summary}/>
-    <RealNext/>
+
+    {incomplete&&latest&&<div className="data-integrity-banner">
+      <div><strong>Do not optimize from this import yet.</strong><p>The current dashboard contains only {(latest.acceptanceRate*100).toFixed(1)}% of the latest CSV. {latest.rejected.toLocaleString()} rows were rejected.</p></div>
+      <div className="integrity-meter"><span style={{width:(latest.acceptanceRate*100)+'%'}}/></div>
+      <b>{latest.accepted.toLocaleString()} / {latest.totalRows.toLocaleString()} rows accepted</b>
+    </div>}
+
+    <div className="kpi-grid decision-kpis">
+      <article><div><span>{incomplete?'Observed so far':'Observed spend'}</span><TierBadge tier="observed"/></div><strong>{money(summary?.observedSpend??null,summary?.currency??'USD')}</strong><p>{formatPeriod(summary?.dataRange.start,summary?.dataRange.end)}{incomplete?' · partial':''}</p></article>
+      <article><div><span>Requests measured</span></div><strong>{requestCount.toLocaleString()}</strong><p>{incomplete?'Partial request coverage':'Across accepted usage evidence'}</p></article>
+      <article><div><span>Cost per 1k requests</span></div><strong>{unitCost===null?'—':money(unitCost.toFixed(2),summary?.currency??'USD')}</strong><p>Useful for comparing workload efficiency over time</p></article>
+      <article><div><span>{incomplete?'Data coverage':'What to review next'}</span></div><strong>{incomplete&&latest?(latest.acceptanceRate*100).toFixed(0)+'%':recs.length}</strong><p>{incomplete?'Latest CSV acceptance':'Distinct optimization decision areas'}</p></article>
+    </div>
+
+    <div className="decision-layout">
+      <section className="decision-main">
+        <div className="section-title-row"><div><p className="eyebrow">WHAT NEEDS YOUR ATTENTION</p><h1>{incomplete?'Fix the data before changing production.':recs.length?'Review these opportunities.':'No optimization action yet.'}</h1></div></div>
+        {incomplete?<div className="next-action-card"><strong>Why this comes first</strong><p>An optimization recommendation built on 14% of a file can point at the wrong model, workload, or token pattern. Evalomics will keep detected patterns secondary until the import is complete.</p><Link className="btn black" href="/onboarding?step=3">Repair import</Link></div>:<RealRecommendationList summary={summary} filter="OPPORTUNITY" compact/>}
+      </section>
+      <aside className="decision-side">
+        <p className="eyebrow">WHERE YOUR SPEND GOES</p>
+        <h2>Top models</h2>
+        <div className="real-model-bars">{(summary?.topModels??[]).map(m=><div key={m.provider+'-'+m.model}><div><span>{m.model}</span><b>{money(m.spend,summary?.currency??'USD')}</b></div><i><em style={{width:Math.max(2,m.share*100)+'%'}}/></i><small>{m.provider} · {(m.share*100).toFixed(0)}% of observed spend</small></div>)}</div>
+      </aside>
+    </div>
+
+    <div className="evidence-status-row">
+      <div><TierBadge tier="potential"/><strong>{groupedRecommendations(summary,'OPPORTUNITY').length}</strong><span>ideas to test</span></div>
+      <div><TierBadge tier="tested"/><strong>{groupedRecommendations(summary,'TESTED').length}</strong><span>measured changes</span></div>
+      <div><TierBadge tier="verified"/><strong>{money(summary?.verifiedSavings??null,summary?.currency??'USD')}</strong><span>proven savings</span></div>
+      <p>Evidence moves right only when the proof does.</p>
+    </div>
   </>
 }
 
-function RealNext(){return <div className="real-next"><p className="eyebrow">EVIDENCE PATH</p><div className="real-next-steps"><div><b>1</b><strong>Connect</strong><span>Read-only usage or CSV</span></div><div><b>2</b><strong>Observe</strong><span>Build a trustworthy baseline</span></div><div><b>3</b><strong>Detect</strong><span>Label estimates as Potential</span></div><div><b>4</b><strong>Test</strong><span>Measure changes on real traffic</span></div><div><b>5</b><strong>Verify</strong><span>Only then call it savings</span></div></div></div>}
+function RealRecommendationList({summary,filter,compact=false}:{summary?:RealSummary,filter?:string,compact?:boolean}){
+  const items=groupedRecommendations(summary,filter);
+  if(items.length===0) return <div className="workspace-empty-section compact-empty"><h1>{filter==='TESTED'?'No experiments yet.':filter==='VERIFIED'?'Nothing verified yet.':'Nothing needs action yet.'}</h1><p>{filter==='TESTED'?'Start with a Potential opportunity. A change becomes Tested only after measured evidence exists.':filter==='VERIFIED'?'Potential and Tested values never count as savings. Verified will appear only after rollout and production reconciliation.':'Evalomics has not found a defensible action from the current evidence.'}</p>{filter==='TESTED'?<Link className="btn black" href="/dashboard/opportunities">Review opportunities</Link>:filter==='VERIFIED'?<Link className="btn black" href="/dashboard/opportunities">Review what can be tested</Link>:null}</div>;
 
-function RealRecommendationList({summary,filter}:{summary?:RealSummary,filter?:string}){
-  const items=(summary?.recommendations??[]).filter(r=>!filter||r.state===filter);
-  if(items.length===0) return <div className="workspace-empty-section"><h1>No evidence in this tier yet.</h1><p>Evalomics will keep this empty until your own data supports a claim.</p><Link className="btn black" href="/onboarding?step=3">Connect or import usage</Link></div>;
-  return <div className="table-list">{items.map(r=><div className="real-evidence-row" key={r.id}><div><TierBadge tier={r.state==='OPPORTUNITY'?'potential':r.state==='TESTED'?'tested':'verified'}/><strong>{r.title}</strong><span>{r.id}</span></div><p>{r.decision==='OPTIMIZE'?'Evidence supports investigating this change.':r.decision==='DO_NOT_CHANGE'?'Current evidence says keep the existing configuration.':'More evidence is required before a change is recommended.'}</p><footer><span>{r.confidence?r.confidence+' confidence':'Confidence not yet assigned'}</span><b>{r.amount?money(r.amount,r.currency??summary?.currency??'USD'):'No financial claim'}</b></footer></div>)}</div>
+  return <div className={'opportunity-stack'+(compact?' compact':'')}>{items.map(r=><article className="real-opportunity-card" key={r.kind||r.id}>
+    <header><div><TierBadge tier={r.state==='OPPORTUNITY'?'potential':r.state==='TESTED'?'tested':'verified'}/><h3>{r.title}</h3></div><span>{r.sourceCount>1?r.sourceCount+' evidence sources':r.confidence?r.confidence.toLowerCase()+' confidence':'evidence available'}</span></header>
+    {r.measuredFact&&<div className="opportunity-fact"><span>What we measured</span><strong>{r.measuredFact}</strong></div>}
+    <div className="opportunity-explain"><div><span>What this means</span><p>{r.limitation||'This pattern is worth testing, but it is not proof of savings.'}</p></div><div><span>Do this next</span><p>{r.nextAction||'Run a controlled benchmark before changing production.'}</p></div></div>
+    <footer><span>{r.currentConfigurationId?'Current: '+r.currentConfigurationId:'No production change recommended yet'}</span><b>{r.amount?money(r.amount,r.currency??summary?.currency??'USD'):'Not savings yet'}</b></footer>
+  </article>)}</div>
 }
 
-function RealOpportunities({summary}:{summary?:RealSummary}){return <><div className="page-head"><div><p className="eyebrow">YOUR EVIDENCE</p><h1>Opportunities</h1><p>Only tenant-scoped Potential evidence appears here.</p></div></div><RealRecommendationList summary={summary} filter="OPPORTUNITY"/></>}
-function RealExperiments({summary}:{summary?:RealSummary}){return <><div className="page-head"><div><p className="eyebrow">YOUR EVIDENCE</p><h1>Experiments</h1><p>Tested items appear only after measured experiment evidence exists.</p></div></div><RealRecommendationList summary={summary} filter="TESTED"/></>}
-function RealReports({summary}:{summary?:RealSummary}){return <><div className="page-head"><div><p className="eyebrow">FINANCE-READY</p><h1>Verified savings</h1><p>Potential and Tested values are excluded from the verified total.</p></div></div><div className="report-total"><span>Verified in this workspace</span><strong>{money(summary?.verifiedSavings??null,summary?.currency??'USD')}</strong><p>Derived only from verification windows with status VERIFIED.</p></div><RealRecommendationList summary={summary} filter="VERIFIED"/></>}
+function RealOpportunities({summary}:{summary?:RealSummary}){
+  const incomplete=importIsIncomplete(summary);
+  const count=groupedRecommendations(summary,'OPPORTUNITY').length;
+  return <><div className="page-head"><div><p className="eyebrow">WHAT SHOULD I TEST?</p><h1>{count} opportunity{count===1?'':'ies'} worth reviewing</h1><p>Evalomics combines repeated detections into decision areas so you do not have to interpret duplicate technical records.</p></div></div>
+  {incomplete&&<div className="data-integrity-banner"><div><strong>Latest import is incomplete.</strong><p>These patterns are visible for transparency, but do not act on them until the CSV is repaired.</p></div><Link className="btn black" href="/onboarding?step=3">Repair import</Link></div>}
+  <RealRecommendationList summary={summary} filter="OPPORTUNITY"/></>
+}
+
+function RealExperiments({summary}:{summary?:RealSummary}){return <><div className="page-head"><div><p className="eyebrow">WHAT HAVE WE ACTUALLY TESTED?</p><h1>Experiments</h1><p>This page contains measured changes only. Potential ideas do not appear here.</p></div></div><RealRecommendationList summary={summary} filter="TESTED"/></>}
+
+function RealReports({summary}:{summary?:RealSummary}){return <><div className="page-head"><div><p className="eyebrow">WHAT CAN FINANCE DEFEND?</p><h1>Verified savings</h1><p>Only production-reconciled results belong in this report.</p></div></div><div className="report-total"><span>Verified in this workspace</span><strong>{money(summary?.verifiedSavings??null,summary?.currency??'USD')}</strong><p>{summary?.verifiedSavings?'This amount is backed by completed verification windows.':'Nothing is being claimed as saved yet. That is the correct state.'}</p></div><RealRecommendationList summary={summary} filter="VERIFIED"/></>}
 
 function RealIntegrations({summary}:{summary?:RealSummary}){
-  const status=(provider:string)=>{
-    const p=summary?.providers.find(x=>x.provider===provider);
-    return p?p.status:'Not connected';
-  };
+  const status=(provider:string)=>summary?.providers.find(x=>x.provider===provider)?.status||'Not connected';
+  const latest=summary?.latestImport;
   return <>
-    <div className="page-head"><div><p className="eyebrow">DATA SOURCES</p><h1>Integrations</h1><p>Statuses below come from your tenant's backend records.</p></div><Link className="btn black" href="/onboarding?step=3">Connect usage</Link></div>
+    <div className="page-head"><div><p className="eyebrow">WHERE DOES THE DATA COME FROM?</p><h1>Data sources</h1><p>Connection state and import health come from your workspace backend.</p></div><Link className="btn black" href="/onboarding?step=3">Add or repair source</Link></div>
     <div className="integration-grid">
-      {[
-        ['OPENAI','OpenAI','Usage and cost metadata'],
-        ['ANTHROPIC','Anthropic','Usage and cost metadata'],
-        ['CSV','CSV import',(summary?.completeImports??0)+' completed/partial import'+((summary?.completeImports??0)===1?'':'s')]
-      ].map(([key,label,copy])=><article key={key}><div><strong>{label}</strong><span>{key==='CSV'?'Available':status(key)}</span></div><p>{copy}</p><Link className="btn outline small" href="/onboarding?step=3">{key==='CSV'?'Upload':'Manage'}</Link></article>)}
+      <article><div><strong>OpenAI</strong><span>{status('OPENAI')}</span></div><p>Organization usage and cost evidence.</p><Link className="btn outline small" href="/onboarding?step=3">{status('OPENAI')==='Not connected'?'Connect':'Manage'}</Link></article>
+      <article><div><strong>Anthropic</strong><span>{status('ANTHROPIC')}</span></div><p>Organization usage and cost evidence.</p><Link className="btn outline small" href="/onboarding?step=3">{status('ANTHROPIC')==='Not connected'?'Connect':'Manage'}</Link></article>
+      <article className={latest&&latest.rejected>0?'integration-warning':''}><div><strong>Latest CSV import</strong><span>{latest?latest.status:'None yet'}</span></div><p>{latest?latest.accepted.toLocaleString()+' accepted · '+latest.rejected.toLocaleString()+' rejected':'Upload a usage export without provider credentials.'}</p><Link className="btn outline small" href="/onboarding?step=3">{latest&&latest.rejected>0?'Repair import':'Upload CSV'}</Link></article>
     </div>
   </>
 }
 
 function RealTeam({summary,userEmail}:{summary?:RealSummary,userEmail:string}){
   const members=summary?.members??[{email:userEmail,role:'OWNER'}];
-  return <><div className="page-head"><div><p className="eyebrow">TENANT ACCESS</p><h1>Team & roles</h1><p>Only actual memberships in this organization are listed.</p></div></div><div className="report-table"><div className="thead"><span>Member</span><span>Role</span><span>Can roll out</span><span>Status</span></div>{members.map(m=><div key={m.email}><strong>{m.email}</strong><span>{m.role}</span><b>{m.role==='OWNER'||m.role==='OPERATOR'?'Yes':'No'}</b><span>Active</span></div>)}</div></>
+  return <><div className="page-head"><div><p className="eyebrow">WHO CAN ACT?</p><h1>Team & roles</h1><p>Production authority is separate from analysis access.</p></div></div><div className="report-table"><div className="thead"><span>Member</span><span>Role</span><span>Can roll out</span><span>Status</span></div>{members.map(m=><div key={m.email}><strong>{m.email}</strong><span>{m.role}</span><b>{m.role==='OWNER'||m.role==='OPERATOR'?'Yes':'No'}</b><span>Active</span></div>)}</div></>
 }
 
-function RealBilling({summary}:{summary?:RealSummary}){
-  return <><div className="page-head"><div><p className="eyebrow">BILLING</p><h1>Observer</h1><p>Billing state is separate from the public demo.</p></div></div><div className="billing-card"><div><span>Current plan</span><strong>Observer</strong></div><div><span>Spend currently observed</span><strong>{money(summary?.observedSpend??null,summary?.currency??'USD')}</strong></div><Link className="btn outline" href="/#pricing">View pricing</Link></div></>
+function RealBilling(){
+  return <><div className="page-head"><div><p className="eyebrow">PLAN</p><h1>Observer</h1><p>Your plan is separate from your AI spend. We do not repeat usage metrics here because this page is about Evalomics billing.</p></div></div><div className="billing-card"><div><span>Current plan</span><strong>Observer · $0/month</strong></div><div><span>Billing account</span><strong>Not activated</strong></div><Link className="btn outline" href="/#pricing">Compare plans</Link></div></>
 }
 
-function WaitingSection({section,hasData}:{section:string,hasData:boolean}){
-  const label=section.charAt(0).toUpperCase()+section.slice(1);
-  return <div className="workspace-empty-section"><p className="eyebrow">YOUR WORKSPACE</p><h1>{label}</h1><p>{hasData?'No tenant-scoped events are available here yet.':'Connect usage first. This section never borrows events from the public demo.'}</p><Link className="btn black" href="/onboarding?step=3">Connect usage data</Link><Link className="btn outline" href="/demo">Open sample demo</Link></div>
+function RealSettings({userName,userEmail,workspaceName}:{userName:string,userEmail:string,workspaceName:string}){
+  return <><div className="page-head"><div><p className="eyebrow">WORKSPACE ADMINISTRATION</p><h1>Settings</h1><p>Only controls that really persist belong here.</p></div></div>
+  <div className="settings-grid">
+    <article><h2>Account</h2><p><strong>{userName}</strong><br/>{userEmail}</p><p className="settings-note">Name and email come from your Google account.</p></article>
+    <article><h2>Workspace</h2><p><strong>{workspaceName}</strong></p><Link className="btn outline" href="/onboarding?step=2">Rename workspace</Link></article>
+    <article><h2>Evidence policy</h2><p><strong>Verified means production-reconciled.</strong></p><p className="settings-note">Potential and Tested values are never promoted into savings totals without a completed verification window.</p></article>
+    <article><h2>Session</h2><p className="settings-note">Sign out of this browser when you are finished.</p><form action={signOutAction}><button className="btn outline">Sign out</button></form></article>
+  </div></>
 }
 
 function Overview({router,basePath}:{router:any,basePath:string}){return <><p className="workspace-note">Every number on this page carries its evidence tier. Sample workspace — every figure is illustrative, which is exactly how we treat an unverified number.</p><div className="kpi-grid"><article><div><span>Observed spend (30 days)</span><TierBadge tier="observed"/></div><strong>$41,208</strong><p>Prior 30 days: $43,930, down 6.2% after verified rollouts</p></article><article><div><span>Verified savings</span><TierBadge tier="verified"/></div><strong>$7,412/mo</strong><p>2 changes live, both holding in observed spend</p></article><article><div><span>Identified, not yet proven</span><TierBadge tier="potential"/></div><strong>$11.8k–15.6k/mo</strong><p>3 patterns detected. Estimates only — nothing claimed.</p></article><article><div><span>Experiments running</span><TierBadge tier="tested"/></div><strong>2</strong><p>EXP-1042 ends Jul 4, guardrails green</p></article></div><div className="section-title-row"><h1>The ladder</h1><p>A number only moves right when the evidence does.</p></div><div className="ladder-board">{(['observed','potential','tested','verified'] as Tier[]).map(t=><div className={'ladder-col '+t} key={t}><div className="ladder-col-head"><TierBadge tier={t}/><span>{opps.filter(o=>o.tier===t).length}</span></div>{opps.filter(o=>o.tier===t).map(o=><button className="opp-card" key={o.id} onClick={()=>o.id==='OPP-3118'?router.push(basePath+'/opportunities/OPP-3118'):undefined}><div><strong>{o.title}</strong><small>{o.id}</small></div><p>{o.body}</p><footer><span>{o.meta}</span><b>{o.value}</b></footer></button>)}</div>)}</div><div className="charts-grid"><article className="panel"><h2>Observed spend vs. counterfactual baseline</h2><p>The dashed line is what you would have spent with no changes. The gap after Jun 9 is the verified saving.</p><SpendChart/></article><article className="panel"><h2>Spend by model, 30 days</h2><p>Where the $41,208 actually goes.</p><ModelBars/></article></div></>}
