@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 export function SignalRibbon(){
   return (
-    <section className="motion-scene signal-ribbon-scene" aria-label="Common AI waste signals">
+    <section className="motion-scene signal-ribbon-scene" data-scroll-scene aria-label="Common AI waste signals">
       <div className="signal-ribbon-orbit" aria-hidden="true"/>
       <div className="signal-ribbon-track" aria-hidden="true">
         <span>MODEL OVERKILL</span><i>✦</i><span>CONTEXT BLOAT</span><i>✦</i><span>CACHE MISS</span><i>✦</i><span>RETRY STORMS</span><i>✦</i><span>ROUTING WASTE</span><i>✦</i><span>AGENT LOOPS</span>
