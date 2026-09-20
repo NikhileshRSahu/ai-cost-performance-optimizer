@@ -229,6 +229,8 @@ main{position:relative;z-index:1}
 .foot nav a{font-size:14px;letter-spacing:-.02em;text-transform:uppercase;color:var(--off-black);opacity:.7}
 .foot nav a:hover{opacity:1}
 .foot .fine{width:100%;padding-bottom:40px}
+.foot-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding-bottom:32px}
+.foot-actions .arrow-link{margin-left:8px}
 
 /* ---------- tour control ---------- */
 .tour{position:fixed;left:24px;bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:22;display:inline-flex;align-items:center;gap:10px;border:1px solid var(--ash);border-radius:9999px;background:rgba(246,243,241,.92);backdrop-filter:blur(8px);color:var(--off-black);font:400 12px/1 var(--mono);letter-spacing:-.033em;text-transform:uppercase;cursor:pointer;padding:11px 18px 11px 14px;transition:border-color .2s,background .2s}
@@ -581,7 +583,7 @@ main{position:relative;z-index:1}
         <span class="tier ver">Verified</span>
         <h2 class="d2">$4,214/mo, verified.<br>This line can go in the cost report.</h2>
         <p class="body-lg">Rolled out June 30. Three weeks later the delta is still holding in observed spend against the pre-change baseline.</p>
-        <button class="btn btn-blue" id="cta" type="button">Connect your usage data <span aria-hidden="true">▸</span></button>
+        <a class="btn btn-blue" id="cta" href="/auth/sign-up">Connect your usage data <span aria-hidden="true">▸</span></a>
         <p class="fine">Read-only. No traffic changes until you approve an experiment.</p>
       </div>
     </div>
@@ -593,9 +595,15 @@ main{position:relative;z-index:1}
     <a class="logo" href="#hero"><i aria-hidden="true"></i>evalomics</a>
     <nav>
       <a href="#conf">Manifesto</a><a href="#method">The ladder</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+      <a href="/trust">Trust center</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/security">Security</a><a href="/support">Support</a>
       <a href="https://github.com/NikhileshRSahu/ai-cost-performance-optimizer" target="_blank" rel="noopener">Repo</a>
     </nav>
     <span class="fine">© 2026 Evalomics</span>
+  </div>
+  <div class="wrap foot-actions">
+    <a class="btn btn-ghost sm" href="/demo">Explore sample demo</a>
+    <a class="btn btn-blue sm" href="/auth/sign-up">Try with my usage <span aria-hidden="true">▸</span></a>
+    <a class="arrow-link" href="/support">See support status</a>
   </div>
   <div class="wrap"><p class="fine">Sample workspace — every figure is illustrative, which is exactly how we treat an unverified number.</p></div>
 </footer>
