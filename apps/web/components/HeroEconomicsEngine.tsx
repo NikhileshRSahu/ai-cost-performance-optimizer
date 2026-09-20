@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const stages = [
   { key:'observe', label:'OBSERVED', title:'Usage reconstructed', value:'$41,208', meta:'38,421 requests · 30 days' },
@@ -9,20 +9,40 @@ const stages = [
   { key:'verify', label:'VERIFIED', title:'Savings visible in production', value:'$4,214/mo', meta:'post-change window reconciled' },
 ] as const;
 
+const dwell=[1150,1350,1750,2650];
+
 export default function HeroEconomicsEngine(){
+  const shell=useRef<HTMLDivElement|null>(null);
   const [step,setStep]=useState(0);
+  const [inView,setInView]=useState(false);
+  const [documentVisible,setDocumentVisible]=useState(true);
   const reduced=useMemo(()=>typeof window!=='undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,[]);
 
   useEffect(()=>{
-    if(reduced) { setStep(3); return; }
-    const id=window.setInterval(()=>setStep(s=>(s+1)%stages.length),2400);
-    return ()=>window.clearInterval(id);
-  },[reduced]);
+    const node=shell.current;
+    if(!node) return;
+    const observer=new IntersectionObserver(([entry])=>setInView(entry.isIntersecting),{threshold:.34});
+    observer.observe(node);
+    const onVisibility=()=>setDocumentVisible(document.visibilityState==='visible');
+    document.addEventListener('visibilitychange',onVisibility);
+    onVisibility();
+    return ()=>{
+      observer.disconnect();
+      document.removeEventListener('visibilitychange',onVisibility);
+    };
+  },[]);
+
+  useEffect(()=>{
+    if(reduced){setStep(3);return;}
+    if(!inView || !documentVisible) return;
+    const id=window.setTimeout(()=>setStep(s=>(s+1)%stages.length),dwell[step]);
+    return ()=>window.clearTimeout(id);
+  },[step,inView,documentVisible,reduced]);
 
   const active=stages[step];
 
   return (
-    <div className="econ-engine" aria-label="Illustrative Evalomics analysis">
+    <div ref={shell} className={'econ-engine step-'+step} data-engine-step={active.key} aria-label="Illustrative Evalomics analysis">
       <div className="econ-window-bar">
         <div className="econ-dots" aria-hidden="true"><i/><i/><i/></div>
         <span>evalomics / economics-engine</span>
@@ -33,6 +53,7 @@ export default function HeroEconomicsEngine(){
         <div className="econ-command">
           <span className="prompt">$</span>
           <span>analyze usage.csv --quality-floor 98%</span>
+          <i className="econ-command-pulse" aria-hidden="true"/>
         </div>
 
         <div className="econ-run">
@@ -70,7 +91,7 @@ export default function HeroEconomicsEngine(){
           </div>
         </div>
 
-        <div className="econ-stage-card">
+        <div className="econ-stage-card" aria-live="polite">
           <div>
             <span className={'tier '+active.key}>{active.label}</span>
             <small>{active.title}</small>
@@ -81,7 +102,7 @@ export default function HeroEconomicsEngine(){
 
         <div className="econ-stage-rail" aria-label="Evidence progression">
           {stages.map((s,i)=>(
-            <button key={s.key} onClick={()=>setStep(i)} className={i===step?'active '+s.key:''}>
+            <button key={s.key} onClick={()=>setStep(i)} className={i===step?'active '+s.key:''} aria-pressed={i===step}>
               <span>{String(i+1).padStart(2,'0')}</span>
               <b>{s.label}</b>
             </button>
