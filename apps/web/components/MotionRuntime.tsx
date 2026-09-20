@@ -66,6 +66,26 @@ export default function MotionRuntime(){
 
     root.querySelectorAll<HTMLElement>('.motion-scene,[data-reveal]').forEach(node=>observer.observe(node));
 
+    const navLinks=Array.from(root.querySelectorAll<HTMLAnchorElement>('.site-nav nav a[href^="#"]'));
+    const sectionObserver=new IntersectionObserver((entries)=>{
+      const visible=entries
+        .filter(entry=>entry.isIntersecting)
+        .sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+      if(!visible) return;
+      const id=(visible.target as HTMLElement).id;
+      navLinks.forEach(link=>{
+        const active=link.getAttribute('href')==='#'+id;
+        link.classList.toggle('active',active);
+        if(active) link.setAttribute('aria-current','location');
+        else link.removeAttribute('aria-current');
+      });
+    },{rootMargin:'-30% 0px -55% 0px',threshold:[0,.15,.35,.6]});
+
+    ['manifesto','ladder','pricing'].forEach(id=>{
+      const section=root.querySelector<HTMLElement>('#'+id);
+      if(section) sectionObserver.observe(section);
+    });
+
     const onReduce=()=>{
       root.toggleAttribute('data-reduced-motion',reduce.matches);
       updateScroll();
@@ -83,6 +103,7 @@ export default function MotionRuntime(){
 
     return ()=>{
       observer.disconnect();
+      sectionObserver.disconnect();
       cancelAnimationFrame(scrollRaf);
       cancelAnimationFrame(pointerRaf);
       window.removeEventListener('scroll',requestScroll);
