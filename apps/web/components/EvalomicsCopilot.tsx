@@ -48,6 +48,7 @@ export default function EvalomicsCopilot({screen}:{screen:string}){
   const [result,setResult]=useState<AIResult|null>(null);
   const [loading,setLoading]=useState(false);
   const [error,setError]=useState('');
+  const [mode,setMode]=useState<'ai'|'fallback'|null>(null);
   const prompts=useMemo(()=>suggestions[screen]||suggestions.overview,[screen]);
 
   async function ask(value?:string){
@@ -61,7 +62,7 @@ export default function EvalomicsCopilot({screen}:{screen:string}){
       });
       const json=await response.json();
       if(!response.ok||!json.ok) throw new Error(json.error||'AI_UNAVAILABLE');
-      setResult(json.result);
+      setResult(json.result);setMode(json.mode==='ai'?'ai':'fallback');
     }catch{
       setError('Evalomics Intelligence is temporarily unavailable. Your evidence and ledger were not changed.');
     }finally{setLoading(false)}
@@ -80,12 +81,12 @@ export default function EvalomicsCopilot({screen}:{screen:string}){
             <div className="copilot-suggestions">{prompts.map(p=><button key={p} onClick={()=>void ask(p)}>{p}<span>→</span></button>)}</div>
           </section>}
           {result&&<section className="copilot-answer">
-            <p className="eyebrow">ANSWER</p><h2>{result.answer}</h2>
+            <p className="eyebrow">ANSWER · {mode==='ai'?'AI REASONING + MEASURED EVIDENCE':'DETERMINISTIC EVIDENCE'}</p><h2>{result.answer}</h2>
             <div className="copilot-block"><span>Why</span><p>{result.why}</p></div>
             {result.evidence?.length>0&&<div className="copilot-block"><span>Evidence used</span><ul>{result.evidence.map((e,i)=><li key={i}>{e}</li>)}</ul></div>}
             <div className="copilot-next"><span>Do this next</span><strong>{result.nextAction}</strong></div>
             <div className="copilot-meta"><span>AI confidence: {result.confidence}</span>{result.caveats?.length>0&&<span>{result.caveats[0]}</span>}</div>
-            <button className="copilot-new" onClick={()=>{setResult(null);setQuestion('')}}>Ask another question</button>
+            <button className="copilot-new" onClick={()=>{setResult(null);setQuestion('');setMode(null)}}>Ask another question</button>
           </section>}
           {error&&<div className="form-error">{error}</div>}
         </div>
