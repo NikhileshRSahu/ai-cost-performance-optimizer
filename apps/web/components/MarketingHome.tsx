@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
+import { track } from '@vercel/analytics';
 
 const tiers = [
   { key:'observed', label:'OBSERVED', title:'What production shows', body:'Provider-reconciled usage and spend. No counterfactual claim.', value:'$41,208' },
@@ -24,7 +25,7 @@ export default function MarketingHome(){
         <p className="eyebrow">For teams running production LLM workloads</p><p className="sample-disclosure">ILLUSTRATIVE SAMPLE SCENARIO — NOT A CUSTOMER CASE STUDY</p>
         <h1>Your AI bill says <em>$41,208.</em><br/>It doesn’t say why.</h1>
         <p className="lead">Evalomics reads your production LLM usage, finds costly patterns, and separates estimates from production-verified savings — before anyone claims a dollar.</p>
-        <div className="hero-actions"><Link className="btn black big" href="/auth/sign-up">Connect your usage data</Link><Link className="btn outline big" href="/demo">Explore sample demo</Link></div>
+        <div className="hero-actions"><Link className="btn black big" href="/auth/sign-up" onClick={()=>track('marketing_signup_clicked',{surface:'hero'})}>Connect your usage data</Link><Link className="btn outline big" href="/demo" onClick={()=>track('marketing_demo_clicked',{surface:'hero'})}>Explore sample demo</Link></div>
         <p className="micro">Read-only ingestion. Evalomics does not change your production traffic automatically.</p>
       </div>
       <div className="hero-visual">
@@ -73,7 +74,7 @@ export default function MarketingHome(){
       <p className="eyebrow">Early-access pricing</p><h2>Pay for a useful pilot, not a promise.</h2><p className="pricing-lead">Evalomics is currently selling a small number of design-partner pilots while we prove the full optimization workflow with real teams. We never charge a percentage of estimated savings.</p>
       <div className="pricing-grid">
         <article><h3>Observer</h3><strong>$0</strong><ul><li>CSV Import Doctor and usage analysis</li><li>Observed spend, requests and model mix</li><li>Potential opportunities clearly labeled as estimates</li></ul><Link className="btn outline full" href="/auth/sign-up">Try with my data</Link></article>
-        <article className="featured"><h3>14-day design-partner pilot</h3><strong>$199<small> / pilot</small></strong><ul><li>Founder-led onboarding and cost review</li><li>CSV + OpenAI API connection support</li><li>One prioritized optimization test plan + evidence review</li><li>Verification report when post-change evidence is supplied</li></ul><Link className="btn white full" href="/auth/sign-up">Join the pilot</Link></article>
+        <article className="featured"><h3>14-day design-partner pilot</h3><strong>$199<small> / pilot</small></strong><ul><li>Founder-led onboarding and cost review</li><li>CSV + OpenAI API connection support</li><li>One prioritized optimization test plan + evidence review</li><li>Verification report when post-change evidence is supplied</li></ul><Link className="btn white full" href="/auth/sign-up" onClick={()=>track('pilot_cta_clicked',{surface:'pricing'})}>Join the pilot</Link></article>
         <article><h3>Anthropic API</h3><strong>Beta</strong><ul><li>Admin usage + cost connector implemented</li><li>Marked beta until a real Admin key completes production verification</li><li>No claim of support before that proof exists</li></ul><Link className="btn outline full" href="/support">See support status</Link></article>
       </div>
     </section>
