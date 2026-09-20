@@ -9,21 +9,29 @@ export type WorkspaceSummary=Readonly<{
   currency:string;
   requests:string;
   completeImports:number;
+  dataRange:Readonly<{start:string|null;end:string|null}>;
+  latestImport:Readonly<{
+    id:string;status:string;accepted:number;rejected:number;skipped:number;warnings:number;
+    totalRows:number;acceptanceRate:number;rangeStart:string|null;rangeEnd:string|null;receivedAt:string;
+  }>|null;
   providers:readonly Readonly<{provider:string;status:string;lastSyncAt:string|null}>[];
+  topModels:readonly Readonly<{model:string;provider:string;spend:string;requests:string;share:number}>[];
   evidenceCounts:Readonly<{potential:number;tested:number;verified:number}>;
   verifiedSavings:string|null;
   members:readonly Readonly<{email:string;role:string}>[];
   recommendations:readonly Readonly<{
-    id:string;state:string;decision:string;confidence:string|null;amount:string|null;currency:string|null;title:string;
+    id:string;state:string;decision:string;confidence:string|null;amount:string|null;currency:string|null;
+    title:string;measuredFact:string|null;nextAction:string|null;limitation:string|null;kind:string|null;
+    sourceImportId:string|null;currentConfigurationId:string|null;
   }>[];
 }>;
 
-function titleFromEvidence(evidence:unknown,id:string){
+function evidenceValue(evidence:unknown,key:string):string|null{
   if(evidence && typeof evidence==='object' && !Array.isArray(evidence)){
-    const v=(evidence as Record<string,unknown>).title;
-    if(typeof v==='string' && v.trim()) return v;
+    const v=(evidence as Record<string,unknown>)[key];
+    return typeof v==='string' && v.trim()?v:null;
   }
-  return id;
+  return null;
 }
 
 export async function loadWorkspaceSummary():Promise<WorkspaceSummary>{
@@ -35,10 +43,10 @@ export async function loadWorkspaceSummary():Promise<WorkspaceSummary>{
     const currency=String(orgResult.rows[0]?.reporting_currency ?? 'USD');
 
     const totalsResult=await database.pool.query(
-      'SELECT COALESCE(SUM(CASE WHEN currency=$2 THEN total_cost::numeric ELSE 0 END),0)::text AS spend, COALESCE(SUM(requests::numeric),0)::text AS requests FROM public.usage_records WHERE organization_id=$1 AND is_demo=false',
+      'SELECT COALESCE(SUM(CASE WHEN currency=$2 THEN total_cost::numeric ELSE 0 END),0)::text AS spend, COALESCE(SUM(requests::numeric),0)::text AS requests, MIN(interval_start)::text AS start, MAX(interval_end)::text AS "end" FROM public.usage_records WHERE organization_id=$1 AND is_demo=false',
       [orgId,currency]
     );
-    const totals=totalsResult.rows[0] ?? {spend:'0',requests:'0'};
+    const totals=totalsResult.rows[0] ?? {spend:'0',requests:'0',start:null,end:null};
 
     const providerSpendResult=await database.pool.query(
       "SELECT COALESCE(SUM((item->>'amount')::numeric),0)::text AS spend FROM public.provider_evidence_snapshots p, LATERAL jsonb_array_elements(p.cost_evidence) item WHERE p.organization_id=$1 AND p.is_demo=false AND upper(COALESCE(item->>'currency',''))=$2",
@@ -48,11 +56,35 @@ export async function loadWorkspaceSummary():Promise<WorkspaceSummary>{
     const providerSpend=Number(providerSpendResult.rows[0]?.spend ?? 0);
     const observed=csvSpend>0?csvSpend:providerSpend>0?providerSpend:0;
 
+    const latestImportResult=await database.pool.query(
+      "SELECT id,status::text,accepted_rows,rejected_rows,skipped_rows,warning_count,range_start::text,range_end::text,received_at::text FROM public.import_runs WHERE organization_id=$1 AND is_demo=false ORDER BY received_at DESC LIMIT 1",
+      [orgId]
+    );
+    const li=latestImportResult.rows[0] as any;
+    const totalRows=li?Number(li.accepted_rows)+Number(li.rejected_rows)+Number(li.skipped_rows):0;
+    const latestImport=li?Object.freeze({
+      id:String(li.id),status:String(li.status),accepted:Number(li.accepted_rows),rejected:Number(li.rejected_rows),
+      skipped:Number(li.skipped_rows),warnings:Number(li.warning_count),totalRows,
+      acceptanceRate:totalRows>0?Number(li.accepted_rows)/totalRows:0,
+      rangeStart:li.range_start?String(li.range_start):null,rangeEnd:li.range_end?String(li.range_end):null,
+      receivedAt:String(li.received_at)
+    }):null;
+
     const providersResult=await database.pool.query(
       'SELECT provider,last_sync_status,last_sync_at FROM public.provider_connections WHERE organization_id=$1 AND revoked_at IS NULL ORDER BY provider',[orgId]
     );
+
+    const topModelsResult=await database.pool.query(
+      "SELECT COALESCE(model,'Unknown') AS model, provider, COALESCE(SUM(CASE WHEN currency=$2 THEN total_cost::numeric ELSE 0 END),0)::text AS spend, COALESCE(SUM(requests::numeric),0)::text AS requests FROM public.usage_records WHERE organization_id=$1 AND is_demo=false GROUP BY provider,model ORDER BY SUM(CASE WHEN currency=$2 THEN total_cost::numeric ELSE 0 END) DESC LIMIT 5",
+      [orgId,currency]
+    );
+    const topModels=Object.freeze(topModelsResult.rows.map((r:any)=>Object.freeze({
+      model:String(r.model),provider:String(r.provider),spend:String(r.spend),requests:String(r.requests),
+      share:observed>0?Number(r.spend)/observed:0
+    })));
+
     const recsResult=await database.pool.query(
-      'SELECT id,saving_state::text AS state,decision,confidence_band,net_saving_numerator,net_saving_denominator,currency,evidence FROM public.recommendations WHERE organization_id=$1 AND is_demo=false ORDER BY created_at DESC LIMIT 50',[orgId]
+      'SELECT id,saving_state::text AS state,decision,confidence_band,net_saving_numerator,net_saving_denominator,currency,evidence FROM public.recommendations WHERE organization_id=$1 AND is_demo=false ORDER BY created_at DESC LIMIT 100',[orgId]
     );
     const counts={potential:0,tested:0,verified:0};
     for(const r of recsResult.rows){
@@ -77,9 +109,12 @@ export async function loadWorkspaceSummary():Promise<WorkspaceSummary>{
       onboardingCompleted:workspace.onboardingCompleted,
       observedSpend:observed>0?observed.toFixed(2):null,currency,
       requests:String(totals.requests ?? '0'),completeImports:Number(importsResult.rows[0]?.count ?? 0),
+      dataRange:Object.freeze({start:totals.start?String(totals.start):null,end:totals.end?String(totals.end):null}),
+      latestImport,
       providers:Object.freeze(providersResult.rows.map((p:any)=>Object.freeze({
         provider:String(p.provider),status:String(p.last_sync_status),lastSyncAt:p.last_sync_at?String(p.last_sync_at):null
       }))),
+      topModels,
       evidenceCounts:Object.freeze(counts),
       verifiedSavings:Number(verifiedResult.rows[0]?.total ?? 0)!==0?Number(verifiedResult.rows[0].total).toFixed(2):null,
       members:Object.freeze(membersResult.rows.map((m:any)=>Object.freeze({email:String(m.email),role:String(m.role)}))),
@@ -87,7 +122,14 @@ export async function loadWorkspaceSummary():Promise<WorkspaceSummary>{
         id:String(r.id),state:String(r.state),decision:String(r.decision),
         confidence:r.confidence_band?String(r.confidence_band):null,
         amount:r.net_saving_numerator&&r.net_saving_denominator?String(Number(r.net_saving_numerator)/Number(r.net_saving_denominator)):null,
-        currency:r.currency?String(r.currency):null,title:titleFromEvidence(r.evidence,String(r.id))
+        currency:r.currency?String(r.currency):null,
+        title:evidenceValue(r.evidence,'title')??String(r.id),
+        measuredFact:evidenceValue(r.evidence,'measuredFact'),
+        nextAction:evidenceValue(r.evidence,'nextAction'),
+        limitation:evidenceValue(r.evidence,'principalLimitation'),
+        kind:evidenceValue(r.evidence,'opportunityKind'),
+        sourceImportId:evidenceValue(r.evidence,'sourceImportId'),
+        currentConfigurationId:evidenceValue(r.evidence,'currentConfigurationId')
       })))
     });
   });
