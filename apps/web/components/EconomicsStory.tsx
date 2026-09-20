@@ -50,7 +50,7 @@ export default function EconomicsStory(){
             </svg>
 
             <div className="request-cloud" aria-hidden="true">
-              {Array.from({length:18},(_,i)=><i key={i} style={{'--i':i} as CSSProperties}/>)}
+              {Array.from({length:18},(_,i)=><i key={i} style={{'--i':i,'--x':`${(i%4)*30}px`,'--y':`${Math.floor(i/4)*34}px`} as CSSProperties}/>)}
             </div>
 
             <div className="flow-node node-source"><span>WORKLOAD</span><b>38,421</b><small>requests / 30d</small></div>
