@@ -6,6 +6,7 @@ export const runtime='nodejs';
 export const dynamic='force-dynamic';
 
 const FUNCTION_URL='https://br-icy-mountain-b484w1w7-evalomicsai.compute.c-6.us-east-2.aws.neon.tech/';
+const GATEWAY_TEST_URL='https://br-icy-mountain-b484w1w7-aitest.compute.c-6.us-east-2.aws.neon.tech/';
 
 export async function GET(){
   const url=process.env.DATABASE_URL?.trim();
@@ -41,12 +42,15 @@ export async function GET(){
       body:JSON.stringify({token:raw}),cache:'no-store'
     });
     const json=await response.json().catch(()=>null);
+    const gatewayTest=await fetch(GATEWAY_TEST_URL,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question:'ping'}),cache:'no-store'});
+    const gatewayText=await gatewayTest.text();
     return NextResponse.json({
       ok:response.ok&&Boolean(json?.ok),
       workerStatus:response.status,
       model:json?.model??null,
       resultShape:json?.result?Object.keys(json.result):[],
-      error:json?.error??null
+      error:json?.error??null,
+      gatewayProbe:{status:gatewayTest.status,body:gatewayText.slice(0,500)}
     },{status:response.ok&&json?.ok?200:503,headers:{'cache-control':'no-store'}});
   }finally{
     await database.close();
