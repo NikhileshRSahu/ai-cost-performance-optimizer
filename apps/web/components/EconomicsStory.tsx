@@ -1,5 +1,7 @@
 'use client';
 
+import type { CSSProperties } from 'react';
+
 const steps = [
   { key:'observe', index:'01', label:'OBSERVE', title:'See the bill as a system.', text:'Reconstruct requests, tokens, models, latency and spend into one baseline you can defend.' },
   { key:'detect', index:'02', label:'DETECT', title:'Find the few patterns that matter.', text:'Separate expensive behavior from normal usage, then rank what is worth testing.' },
@@ -48,7 +50,7 @@ export default function EconomicsStory(){
             </svg>
 
             <div className="request-cloud" aria-hidden="true">
-              {Array.from({length:18},(_,i)=><i key={i} style={{'--i':i} as React.CSSProperties}/>)}
+              {Array.from({length:18},(_,i)=><i key={i} style={{'--i':i} as CSSProperties}/>)}
             </div>
 
             <div className="flow-node node-source"><span>WORKLOAD</span><b>38,421</b><small>requests / 30d</small></div>
