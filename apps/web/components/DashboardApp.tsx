@@ -6,6 +6,10 @@ import { signOutAction } from '@/app/actions';
 import EvalomicsCopilot from '@/components/EvalomicsCopilot';
 import KnowledgeUpload from '@/components/KnowledgeUpload';
 import VerificationWorkbench from '@/components/VerificationWorkbench';
+import CustomerSuccessPanel from '@/components/CustomerSuccessPanel';
+import AuditTrail from '@/components/AuditTrail';
+import SupportRequestCard from '@/components/SupportRequestCard';
+import PilotBillingCard from '@/components/PilotBillingCard';
 
 type Tier='observed'|'potential'|'tested'|'verified';
 type RealSummary=Readonly<{
@@ -141,7 +145,7 @@ function RealWorkspace({userName,userEmail,workspaceName,summary}:{userName:stri
       {section==='reports' && <RealReports summary={summary}/>}
       {section==='integrations' && <><RealIntegrations summary={summary} role={summary?.role??'VIEWER'}/>{summary?.role!=='VIEWER'&&<KnowledgeUpload/>}</>}
       {section==='team' && <RealTeam summary={summary} userEmail={userEmail}/>}
-      {section==='billing' && <RealBilling/>}
+      {section==='billing' && <RealBilling workspaceName={workspaceName} role={summary?.role??'VIEWER'}/>} 
       {section==='settings' && <RealSettings userName={userName} userEmail={userEmail} workspaceName={workspaceName} organizationId={summary?.organizationId??''} role={summary?.role??'VIEWER'}/>} 
     </section>
   </main>
@@ -200,6 +204,14 @@ function RealOverview({userName,summary}:{userName:string,summary?:RealSummary})
         <div className="real-model-bars">{(summary?.topModels??[]).map(m=><div key={m.provider+'-'+m.model}><div><span>{m.model}</span><b>{money(m.spend,summary?.currency??'USD')}</b></div><i><em style={{width:Math.max(2,m.share*100)+'%'}}/></i><small>{m.provider} · {(m.share*100).toFixed(0)}% of observed spend</small></div>)}</div>
       </aside>
     </div>
+
+    <CustomerSuccessPanel
+      hasData={hasData}
+      opportunities={groupedRecommendations(summary,'OPPORTUNITY').length}
+      tested={groupedRecommendations(summary,'TESTED').length}
+      verified={groupedRecommendations(summary,'VERIFIED').length}
+      incomplete={incomplete}
+    />
 
     <div className="evidence-status-row">
       <div><TierBadge tier="potential"/><strong>{groupedRecommendations(summary,'OPPORTUNITY').length}</strong><span>ideas to test</span></div>
@@ -261,8 +273,8 @@ function RealTeam({summary,userEmail}:{summary?:RealSummary,userEmail:string}){
   return <><div className="page-head"><div><p className="eyebrow">WHO CAN ACT?</p><h1>Team & roles</h1><p>Production authority is separate from analysis access.</p></div></div><div className="report-table"><div className="thead"><span>Member</span><span>Role</span><span>Can roll out</span><span>Status</span></div>{members.map(m=><div key={m.email}><strong>{m.email}</strong><span>{m.role}</span><b>{m.role==='OWNER'||m.role==='OPERATOR'?'Yes':'No'}</b><span>Active</span></div>)}</div></>
 }
 
-function RealBilling(){
-  return <><div className="page-head"><div><p className="eyebrow">PLAN</p><h1>Observer</h1><p>Your plan is separate from your AI spend. We do not repeat usage metrics here because this page is about Evalomics billing.</p></div></div><div className="billing-card"><div><span>Current plan</span><strong>Observer · $0/month</strong></div><div><span>Billing account</span><strong>Not activated</strong></div><Link className="btn outline" href="/#pricing">Compare plans</Link></div></>
+function RealBilling({workspaceName,role}:{workspaceName:string;role:string}){
+  return <><div className="page-head"><div><p className="eyebrow">PLAN</p><h1>Billing</h1><p>Your Evalomics plan is separate from your AI spend. Paid pilot requests are recorded explicitly instead of pretending a checkout happened.</p></div></div><div className="billing-card"><div><span>Current plan</span><strong>Observer · $0/month</strong></div><div><span>Billing account</span><strong>Not activated</strong></div><Link className="btn outline" href="/#pricing">Compare plans</Link></div><PilotBillingCard workspaceName={workspaceName} role={role}/></>
 }
 
 function RealSettings({userName,userEmail,workspaceName,organizationId,role}:{userName:string;userEmail:string;workspaceName:string;organizationId:string;role:string}){
@@ -272,6 +284,8 @@ function RealSettings({userName,userEmail,workspaceName,organizationId,role}:{us
     <article><h2>Workspace</h2><p><strong>{workspaceName}</strong></p>{role==='OWNER'?<Link className="btn outline" href="/onboarding?step=2">Rename workspace</Link>:<p className="settings-note">Only the workspace owner can rename or reconnect providers.</p>}</article>
     <article><h2>Evidence policy</h2><p><strong>Verified means production-reconciled.</strong></p><p className="settings-note">Potential and Tested values are never promoted into savings totals without a completed verification window.</p></article>
     <article><h2>Security & privacy</h2><p className="settings-note">Provider credentials are encrypted before storage. Customer evidence is tenant-scoped.</p><div className="settings-links"><Link href="/security">Security</Link><Link href="/privacy">Privacy</Link><Link href="/support">Support</Link><Link href="/terms">Terms</Link></div></article>
+    <AuditTrail/>
+    <SupportRequestCard/>
     <DataDeletionCard organizationId={organizationId} role={role}/>
     <article><h2>Session</h2><p className="settings-note">Sign out of this browser when you are finished.</p><form action={signOutAction}><button className="btn outline">Sign out</button></form></article>
   </div></>
