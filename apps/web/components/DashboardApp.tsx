@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { signOutAction } from '@/app/actions';
 import EvalomicsCopilot from '@/components/EvalomicsCopilot';
 import KnowledgeUpload from '@/components/KnowledgeUpload';
+import VerificationWorkbench from '@/components/VerificationWorkbench';
 
 type Tier='observed'|'potential'|'tested'|'verified';
 type RealSummary=Readonly<{
@@ -222,7 +223,7 @@ function RealOpportunities({summary}:{summary?:RealSummary}){
   <RealRecommendationList summary={summary} filter="OPPORTUNITY"/></>
 }
 
-function RealExperiments({summary}:{summary?:RealSummary}){return <><div className="page-head"><div><p className="eyebrow">WHAT HAVE WE ACTUALLY TESTED?</p><h1>Experiments</h1><p>This page contains measured changes only. Potential ideas do not appear here.</p></div></div><RealRecommendationList summary={summary} filter="TESTED"/></>}
+function RealExperiments({summary}:{summary?:RealSummary}){return <><div className="page-head"><div><p className="eyebrow">WHAT HAVE WE ACTUALLY TESTED?</p><h1>Experiments</h1><p>This page contains measured changes only. Potential ideas do not count as savings.</p></div></div><VerificationWorkbench opportunities={(summary?.recommendations??[]).map(r=>({id:r.id,title:r.title,state:r.state,sourceImportId:r.sourceImportId}))} currency={summary?.currency??'USD'}/><RealRecommendationList summary={summary} filter="TESTED"/></>}
 
 function RealReports({summary}:{summary?:RealSummary}){return <><div className="page-head"><div><p className="eyebrow">WHAT CAN FINANCE DEFEND?</p><h1>Verified savings</h1><p>Only production-reconciled results belong in this report.</p></div></div><div className="report-total"><span>Verified in this workspace</span><strong>{money(summary?.verifiedSavings??null,summary?.currency??'USD')}</strong><p>{summary?.verifiedSavings?'This amount is backed by completed verification windows.':'Nothing is being claimed as saved yet. That is the correct state.'}</p></div><RealRecommendationList summary={summary} filter="VERIFIED"/></>}
 
