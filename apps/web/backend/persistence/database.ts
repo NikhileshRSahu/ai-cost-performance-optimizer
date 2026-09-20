@@ -32,18 +32,34 @@ function normalizePostgresSslMode(connectionString: string): string {
   return connectionString;
 }
 
-export function createDatabase(connectionString: string): DatabaseHandle {
-  if (connectionString.trim().length === 0) {
-    throw new Error('DATABASE_URL_REQUIRED');
-  }
+type GlobalDatabaseCache = typeof globalThis & { __evalomicsPool?: Pool };
+const globalDatabase = globalThis as GlobalDatabaseCache;
 
+function buildPool(connectionString: string): Pool {
   const pool = new Pool({
     connectionString: normalizePostgresSslMode(connectionString),
+    max: 5,
+    min: 0,
+    idleTimeoutMillis: 30_000,
+    connectionTimeoutMillis: 5_000,
+    allowExitOnIdle: true,
   });
   pool.on('error', (error) => {
     const code = (error as Error & { code?: string }).code ?? 'UNKNOWN';
     console.warn('DATABASE_POOL_IDLE_ERROR', code);
   });
+  return pool;
+}
+
+export function createDatabase(connectionString: string): DatabaseHandle {
+  if (connectionString.trim().length === 0) {
+    throw new Error('DATABASE_URL_REQUIRED');
+  }
+
+  const reusePool = process.env.VERCEL === '1' || process.env.NODE_ENV === 'production';
+  const pool = reusePool
+    ? (globalDatabase.__evalomicsPool ??= buildPool(connectionString))
+    : buildPool(connectionString);
   const db = drizzle(pool, { schema });
 
   return Object.freeze({
@@ -53,7 +69,7 @@ export function createDatabase(connectionString: string): DatabaseHandle {
       await runMigrations(db, { migrationsFolder: 'drizzle' });
     },
     async close(): Promise<void> {
-      await pool.end();
+      if (!reusePool) await pool.end();
     },
   });
 }
