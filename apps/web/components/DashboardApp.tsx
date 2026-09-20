@@ -134,7 +134,7 @@ function RealWorkspace({userName,userEmail,workspaceName,summary}:{userName:stri
       {section==='integrations' && <><RealIntegrations summary={summary}/><KnowledgeUpload/></>}
       {section==='team' && <RealTeam summary={summary} userEmail={userEmail}/>}
       {section==='billing' && <RealBilling/>}
-      {section==='settings' && <RealSettings userName={userName} userEmail={userEmail} workspaceName={workspaceName}/>}
+      {section==='settings' && <RealSettings userName={userName} userEmail={userEmail} workspaceName={workspaceName} organizationId={summary?.organizationId??''} role={summary?.role??'VIEWER'}/>} 
     </section>
   </main>
 }
@@ -251,14 +251,37 @@ function RealBilling(){
   return <><div className="page-head"><div><p className="eyebrow">PLAN</p><h1>Observer</h1><p>Your plan is separate from your AI spend. We do not repeat usage metrics here because this page is about Evalomics billing.</p></div></div><div className="billing-card"><div><span>Current plan</span><strong>Observer · $0/month</strong></div><div><span>Billing account</span><strong>Not activated</strong></div><Link className="btn outline" href="/#pricing">Compare plans</Link></div></>
 }
 
-function RealSettings({userName,userEmail,workspaceName}:{userName:string,userEmail:string,workspaceName:string}){
+function RealSettings({userName,userEmail,workspaceName,organizationId,role}:{userName:string;userEmail:string;workspaceName:string;organizationId:string;role:string}){
   return <><div className="page-head"><div><p className="eyebrow">WORKSPACE ADMINISTRATION</p><h1>Settings</h1><p>Only controls that really persist belong here.</p></div></div>
   <div className="settings-grid">
     <article><h2>Account</h2><p><strong>{userName}</strong><br/>{userEmail}</p><p className="settings-note">Name and email come from your Google account.</p></article>
     <article><h2>Workspace</h2><p><strong>{workspaceName}</strong></p><Link className="btn outline" href="/onboarding?step=2">Rename workspace</Link></article>
     <article><h2>Evidence policy</h2><p><strong>Verified means production-reconciled.</strong></p><p className="settings-note">Potential and Tested values are never promoted into savings totals without a completed verification window.</p></article>
+    <article><h2>Security & privacy</h2><p className="settings-note">Provider credentials are encrypted before storage. Customer evidence is tenant-scoped.</p><div className="settings-links"><Link href="/security">Security</Link><Link href="/privacy">Privacy</Link></div></article>
+    <DataDeletionCard organizationId={organizationId} role={role}/>
     <article><h2>Session</h2><p className="settings-note">Sign out of this browser when you are finished.</p><form action={signOutAction}><button className="btn outline">Sign out</button></form></article>
   </div></>
+}
+
+function DataDeletionCard({organizationId,role}:{organizationId:string;role:string}){
+  const [confirm,setConfirm]=useState('');
+  const [state,setState]=useState<'idle'|'working'|'done'|'error'>('idle');
+  const [message,setMessage]=useState('');
+  async function purge(){
+    if(confirm!==organizationId||role!=='OWNER')return;
+    setState('working');setMessage('');
+    try{
+      const response=await fetch('/api/workspace/evidence',{method:'DELETE',headers:{'content-type':'application/json'},body:JSON.stringify({confirmationOrganizationId:confirm})});
+      const json=await response.json();
+      if(!response.ok||!json.ok)throw new Error(json.error||'DELETE_FAILED');
+      setState('done');setMessage('Usage, provider connections, recommendations, verification evidence, and AI knowledge were deleted. Your account and workspace membership remain.');
+      setConfirm('');
+      window.setTimeout(()=>{window.location.href='/onboarding?step=3'},900);
+    }catch{
+      setState('error');setMessage('Deletion did not complete. No success state is being shown.');
+    }
+  }
+  return <article className="danger-card"><h2>Delete usage & evidence</h2><p className="settings-note">This permanently removes imported usage, provider connections, recommendations, verification evidence, and workspace AI knowledge. Your account and workspace membership remain.</p>{role!=='OWNER'?<p className="settings-note">Only the workspace owner can delete evidence.</p>:<><label>Type workspace ID to confirm<input value={confirm} onChange={e=>setConfirm(e.target.value)} placeholder={organizationId}/></label><button className="btn outline" disabled={confirm!==organizationId||state==='working'} onClick={()=>void purge()}>{state==='working'?'Deleting…':'Delete usage & evidence'}</button></>}{message&&<p className={state==='error'?'form-error':'success-line'}>{message}</p>}</article>
 }
 
 function Overview({router,basePath}:{router:any,basePath:string}){return <><p className="workspace-note">Every number on this page carries its evidence tier. Sample workspace — every figure is illustrative, which is exactly how we treat an unverified number.</p><div className="kpi-grid"><article><div><span>Observed spend (30 days)</span><TierBadge tier="observed"/></div><strong>$41,208</strong><p>Prior 30 days: $43,930, down 6.2% after verified rollouts</p></article><article><div><span>Verified savings</span><TierBadge tier="verified"/></div><strong>$7,412/mo</strong><p>2 changes live, both holding in observed spend</p></article><article><div><span>Identified, not yet proven</span><TierBadge tier="potential"/></div><strong>$11.8k–15.6k/mo</strong><p>3 patterns detected. Estimates only — nothing claimed.</p></article><article><div><span>Experiments running</span><TierBadge tier="tested"/></div><strong>2</strong><p>EXP-1042 ends Jul 4, guardrails green</p></article></div><div className="section-title-row"><h1>The ladder</h1><p>A number only moves right when the evidence does.</p></div><div className="ladder-board">{(['observed','potential','tested','verified'] as Tier[]).map(t=><div className={'ladder-col '+t} key={t}><div className="ladder-col-head"><TierBadge tier={t}/><span>{opps.filter(o=>o.tier===t).length}</span></div>{opps.filter(o=>o.tier===t).map(o=><button className="opp-card" key={o.id} onClick={()=>o.id==='OPP-3118'?router.push(basePath+'/opportunities/OPP-3118'):undefined}><div><strong>{o.title}</strong><small>{o.id}</small></div><p>{o.body}</p><footer><span>{o.meta}</span><b>{o.value}</b></footer></button>)}</div>)}</div><div className="charts-grid"><article className="panel"><h2>Observed spend vs. counterfactual baseline</h2><p>The dashed line is what you would have spent with no changes. The gap after Jun 9 is the verified saving.</p><SpendChart/></article><article className="panel"><h2>Spend by model, 30 days</h2><p>Where the $41,208 actually goes.</p><ModelBars/></article></div></>}
