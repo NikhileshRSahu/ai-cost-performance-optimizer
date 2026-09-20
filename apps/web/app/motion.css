@@ -371,8 +371,6 @@
   transition:opacity .5s ease,transform .7s var(--settle);
 }
 [data-cinematic-root] .request-cloud i{
-  --x:calc((var(--i) % 4) * 30px);
-  --y:calc((var(--i) / 4) * 34px);
   position:absolute;
   left:var(--x);top:var(--y);
   width:7px;height:7px;border-radius:50%;
