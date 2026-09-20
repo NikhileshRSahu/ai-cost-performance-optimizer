@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { auth } from '@/auth';
 import { cookies } from 'next/headers';
 import { createDatabase } from '@/backend/persistence/database';
@@ -59,9 +59,13 @@ async function resolveRuntimeWorkspaceUsing(database:ReturnType<typeof createDat
       }).from(memberships).where(eq(memberships.userId,user.id)).orderBy(memberships.createdAt);
     }
 
-    const orgRows=await tx.select({
+    const memberOrganizationIds=memberRows.map(m=>m.organizationId);
+    const orgRows=memberOrganizationIds.length===0 ? [] : await tx.select({
       id:organizations.id,name:organizations.name
-    }).from(organizations).where(eq(organizations.isDemo,false));
+    }).from(organizations).where(and(
+      eq(organizations.isDemo,false),
+      inArray(organizations.id,memberOrganizationIds)
+    ));
     const orgNames=new Map(orgRows.map(o=>[o.id,o.name]));
     const availableWorkspaces=Object.freeze(memberRows
       .filter(m=>orgNames.has(m.organizationId))
