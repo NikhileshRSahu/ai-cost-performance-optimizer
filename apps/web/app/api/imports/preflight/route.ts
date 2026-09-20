@@ -73,30 +73,7 @@ export async function POST(request:Request){
       });
       doctor=ai.result;
     }catch{
-      const aggregate=profile.granularities.includes('AGGREGATE_BUCKET');
-      const incomplete=profile.rejected>0||Boolean(profile.parserError);
-      const firstIssue=profile.issueGroups[0];
-      doctor={
-        answer:profile.canImport
-          ? (incomplete?'I can understand part of this file, but it needs attention before you trust the totals.':'I can understand this file and the deterministic parser can import it.')
-          : 'This file cannot be safely imported yet.',
-        why:profile.parserError
-          ? 'The deterministic parser stopped on '+profile.parserError+'.'
-          : aggregate
-            ? 'The file contains aggregate buckets, so one row may represent multiple requests. Evalomics will preserve those request counts.'
-            : 'The parser recognized the required usage fields and request semantics.',
-        evidence:[
-          'Rows understood: '+profile.accepted+(profile.totalRows?'/'+profile.totalRows:'')+'.',
-          'Requests represented: '+profile.requests+'.',
-          'Spend represented: '+(profile.currencies.length===1?profile.currencies[0]+' ':'')+profile.spend.toFixed(2)+'.',
-          ...(firstIssue?['Top issue: '+firstIssue.code+' × '+firstIssue.count+'.']:[])
-        ],
-        nextAction:profile.canImport&&!incomplete
-          ? 'Import this dataset and analyze it.'
-          : 'Correct the parser or mapping issue shown above, then inspect the file again before importing.',
-        confidence:'high',
-        caveats:['This explanation uses deterministic import evidence because language-model reasoning is temporarily unavailable.']
-      };
+      doctor=null;
     }
     return NextResponse.json({ok:true,profile,doctor});
   }catch(error){
