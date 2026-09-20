@@ -42,10 +42,22 @@ export async function loadWorkspaceSummary():Promise<WorkspaceSummary>{
     );
     const currency=String(orgResult.rows[0]?.reporting_currency ?? 'USD');
 
-    const totalsResult=await database.pool.query(
-      'SELECT COALESCE(SUM(CASE WHEN currency=$2 THEN total_cost::numeric ELSE 0 END),0)::text AS spend, COALESCE(SUM(requests::numeric),0)::text AS requests, MIN(interval_start)::text AS start, MAX(interval_end)::text AS "end" FROM public.usage_records WHERE organization_id=$1 AND is_demo=false',
-      [orgId,currency]
+    const latestImportResult=await database.pool.query(
+      "SELECT id,status::text,accepted_rows,rejected_rows,skipped_rows,warning_count,range_start::text,range_end::text,received_at::text FROM public.import_runs WHERE organization_id=$1 AND is_demo=false ORDER BY received_at DESC LIMIT 1",
+      [orgId]
     );
+    const li=latestImportResult.rows[0] as any;
+    const activeImportId=li?.id?String(li.id):null;
+
+    const totalsResult=activeImportId
+      ? await database.pool.query(
+          'SELECT COALESCE(SUM(CASE WHEN currency=$2 THEN total_cost::numeric ELSE 0 END),0)::text AS spend, COALESCE(SUM(requests::numeric),0)::text AS requests, MIN(interval_start)::text AS start, MAX(interval_end)::text AS "end" FROM public.usage_records WHERE organization_id=$1 AND import_run_id=$3 AND is_demo=false',
+          [orgId,currency,activeImportId]
+        )
+      : await database.pool.query(
+          'SELECT COALESCE(SUM(CASE WHEN currency=$2 THEN total_cost::numeric ELSE 0 END),0)::text AS spend, COALESCE(SUM(requests::numeric),0)::text AS requests, MIN(interval_start)::text AS start, MAX(interval_end)::text AS "end" FROM public.usage_records WHERE organization_id=$1 AND is_demo=false',
+          [orgId,currency]
+        );
     const totals=totalsResult.rows[0] ?? {spend:'0',requests:'0',start:null,end:null};
 
     const providerSpendResult=await database.pool.query(
@@ -54,13 +66,9 @@ export async function loadWorkspaceSummary():Promise<WorkspaceSummary>{
     );
     const csvSpend=Number(totals.spend ?? 0);
     const providerSpend=Number(providerSpendResult.rows[0]?.spend ?? 0);
-    const observed=csvSpend>0?csvSpend:providerSpend>0?providerSpend:0;
-
-    const latestImportResult=await database.pool.query(
-      "SELECT id,status::text,accepted_rows,rejected_rows,skipped_rows,warning_count,range_start::text,range_end::text,received_at::text FROM public.import_runs WHERE organization_id=$1 AND is_demo=false ORDER BY received_at DESC LIMIT 1",
-      [orgId]
-    );
-    const li=latestImportResult.rows[0] as any;
+    // A CSV import is treated as a coherent active dataset. Older imports are
+    // history and are never silently added to the current answer.
+    const observed=activeImportId?csvSpend:(providerSpend>0?providerSpend:csvSpend);
     const totalRows=li?Number(li.accepted_rows)+Number(li.rejected_rows)+Number(li.skipped_rows):0;
     const latestImport=li?Object.freeze({
       id:String(li.id),status:String(li.status),accepted:Number(li.accepted_rows),rejected:Number(li.rejected_rows),
@@ -74,10 +82,15 @@ export async function loadWorkspaceSummary():Promise<WorkspaceSummary>{
       'SELECT provider,last_sync_status,last_sync_at FROM public.provider_connections WHERE organization_id=$1 AND revoked_at IS NULL ORDER BY provider',[orgId]
     );
 
-    const topModelsResult=await database.pool.query(
-      "SELECT COALESCE(model,'Unknown') AS model, provider, COALESCE(SUM(CASE WHEN currency=$2 THEN total_cost::numeric ELSE 0 END),0)::text AS spend, COALESCE(SUM(requests::numeric),0)::text AS requests FROM public.usage_records WHERE organization_id=$1 AND is_demo=false GROUP BY provider,model ORDER BY SUM(CASE WHEN currency=$2 THEN total_cost::numeric ELSE 0 END) DESC LIMIT 5",
-      [orgId,currency]
-    );
+    const topModelsResult=activeImportId
+      ? await database.pool.query(
+          "SELECT COALESCE(model,'Unknown') AS model, provider, COALESCE(SUM(CASE WHEN currency=$2 THEN total_cost::numeric ELSE 0 END),0)::text AS spend, COALESCE(SUM(requests::numeric),0)::text AS requests FROM public.usage_records WHERE organization_id=$1 AND import_run_id=$3 AND is_demo=false GROUP BY provider,model ORDER BY SUM(CASE WHEN currency=$2 THEN total_cost::numeric ELSE 0 END) DESC LIMIT 5",
+          [orgId,currency,activeImportId]
+        )
+      : await database.pool.query(
+          "SELECT COALESCE(model,'Unknown') AS model, provider, COALESCE(SUM(CASE WHEN currency=$2 THEN total_cost::numeric ELSE 0 END),0)::text AS spend, COALESCE(SUM(requests::numeric),0)::text AS requests FROM public.usage_records WHERE organization_id=$1 AND is_demo=false GROUP BY provider,model ORDER BY SUM(CASE WHEN currency=$2 THEN total_cost::numeric ELSE 0 END) DESC LIMIT 5",
+          [orgId,currency]
+        );
     const topModels=Object.freeze(topModelsResult.rows.map((r:any)=>Object.freeze({
       model:String(r.model),provider:String(r.provider),spend:String(r.spend),requests:String(r.requests),
       share:observed>0?Number(r.spend)/observed:0
