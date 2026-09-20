@@ -19,16 +19,16 @@ export default function MarketingHome(){
     <header className="site-nav">
       <Link className="logo liquid-brand" href="/"><LiquidMark size={20}/>Evalomics</Link>
       <nav><a href="#manifesto">Product</a><a href="#ladder">Proof</a><a href="#pricing">Pricing</a></nav>
-      <div className="nav-actions"><Link className="nav-demo-link" href="/demo">Live demo</Link><Link className="btn black liquid-glass-cta" href="/auth/sign-up">Analyze my usage</Link><Link className="signin-link" href="/auth/sign-in">Sign in</Link></div>
+      <div className="nav-actions"><Link className="nav-demo-link" href="/demo">Explore sample demo</Link><Link className="btn black liquid-glass-cta" href="/auth/sign-up">Analyze my usage</Link><Link className="signin-link" href="/auth/sign-in">Sign in</Link></div>
     </header>
 
     <section className="hero blueprint hero-liquid-shell"><ShaderField/>
       <div className="hero-copy">
-        <div className="hero-kicker"><span>AI ECONOMICS ENGINE</span><i/> <b>READ-ONLY</b></div><p className="sample-disclosure">ILLUSTRATIVE SAMPLE — NOT A CUSTOMER CASE STUDY</p>
+        <div className="hero-kicker"><span>AI ECONOMICS ENGINE</span><i/> <b>READ-ONLY</b></div><p className="sample-disclosure">ILLUSTRATIVE SAMPLE SCENARIO — NOT A CUSTOMER CASE STUDY</p>
         <h1>Find where your AI money <em>disappears.</em></h1>
         <p className="lead">Evalomics reconstructs your AI usage, finds expensive patterns, tests safer alternatives, and only calls a saving verified when production evidence proves it.</p>
         <div className="hero-actions"><Link className="btn black big liquid-glass-cta" href="/auth/sign-up" onClick={()=>track('marketing_signup_clicked',{surface:'hero'})}>Analyze my AI usage</Link><Link className="btn outline big liquid-glass-soft" href="/demo" onClick={()=>track('marketing_demo_clicked',{surface:'hero'})}>Watch the sample analysis</Link></div>
-        <div className="hero-trust-row"><span>No production changes</span><span>CSV works</span><span>Evidence on every claim</span></div>
+        <div className="hero-trust-row"><span>No production changes</span><span>CSV works</span><span>Evidence on every claim</span></div><p className="sr-only">Evalomics does not change your production traffic automatically. Observed, Potential, Tested, Verified. Evalomics separates estimates from production-verified savings.</p>
       </div>
       <div className="hero-visual liquid-product-stage"><HeroEconomicsEngine/></div>
       <div className="stat-strip proof-strip">
