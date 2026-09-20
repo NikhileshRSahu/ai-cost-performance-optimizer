@@ -16,7 +16,7 @@ export default function MarketingHome(){
       <Link className="logo liquid-brand" href="/"><LiquidMark size={19}/>Evalomics</Link>
       <nav><a href="#manifesto">Product</a><a href="#proof">Proof</a><a href="#pricing">Pricing</a></nav>
       <div className="nav-actions">
-        <Link className="nav-demo-link" href="/demo">Sample analysis</Link>
+        <Link className="nav-demo-link" href="/demo">Explore sample demo</Link>
         <Link className="primary-pill" data-magnetic href="/auth/sign-up">Analyze my usage</Link>
         <Link className="signin-link" href="/auth/sign-in">Sign in</Link>
       </div>
@@ -37,7 +37,7 @@ export default function MarketingHome(){
           <Link className="ghost-link" href="/demo" onClick={()=>track('marketing_demo_clicked',{surface:'hero'})}>Watch a sample analysis <span>↗</span></Link>
         </div>
         <div className="hero-trust-row"><span>No production changes</span><span>CSV works</span><span>Evidence on every claim</span></div>
-        <p className="sample-disclosure">Illustrative sample metrics appear in the visual — not a customer case study.</p>
+        <p className="sample-disclosure">ILLUSTRATIVE SAMPLE SCENARIO — NOT A CUSTOMER CASE STUDY</p>\n        <p className="sr-only">Evalomics does not change your production traffic automatically. Observed, Potential, Tested, Verified. Evalomics separates estimates from production-verified savings.</p>
       </div>
 
       <div className="hero-visual">
