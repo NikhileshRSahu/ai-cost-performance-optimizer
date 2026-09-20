@@ -110,6 +110,39 @@ function groupedRecommendations(summary?:RealSummary,filter?:string):GroupedReco
   return [...map.values()];
 }
 
+function EvalomicsCopilot({screen}:{screen:string}){
+  const [open,setOpen]=useState(false);
+  const [question,setQuestion]=useState('');
+  const [loading,setLoading]=useState(false);
+  const [answer,setAnswer]=useState<any>(null);
+  const suggestions=screen.includes('opportunities')
+    ? ['Which opportunity should I investigate first?','Why are these only Potential?','What evidence is missing?']
+    : screen.includes('reports')
+      ? ['What can I report as savings?','Why is Verified empty?','Explain this for finance.']
+      : ['Why did my spend change?','Where is the biggest waste?','What should I do next?'];
+  async function ask(q?:string){
+    const value=(q??question).trim(); if(!value)return;
+    setQuestion(value);setLoading(true);setAnswer(null);
+    try{
+      const response=await fetch('/api/ai/copilot',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question:value,screen,kind:'COPILOT'})});
+      const json=await response.json();
+      setAnswer(json.ok?json.result:{answer:'Evalomics could not complete this analysis.',why:'The intelligence service returned an error.',numbers:[],next_action:'Try again in a moment.',confidence:'LOW',caveat:''});
+    }catch{setAnswer({answer:'Evalomics could not complete this analysis.',why:'The request did not finish.',numbers:[],next_action:'Try again.',confidence:'LOW',caveat:''})}
+    finally{setLoading(false)}
+  }
+  return <div className={'copilot '+(open?'open':'')}>
+    {!open&&<button className="copilot-launch" onClick={()=>setOpen(true)}><span>✦</span> Ask Evalomics</button>}
+    {open&&<section className="copilot-panel">
+      <header><div><span className="eyebrow">EVALOMICS INTELLIGENCE</span><strong>Ask about this workspace</strong></div><button onClick={()=>setOpen(false)}>×</button></header>
+      <div className="copilot-suggestions">{suggestions.map(s=><button key={s} onClick={()=>void ask(s)}>{s}</button>)}</div>
+      {answer&&<div className="copilot-answer"><b>{answer.answer}</b><p>{answer.why}</p>{Array.isArray(answer.numbers)&&answer.numbers.length>0&&<ul>{answer.numbers.map((n:string)=><li key={n}>{n}</li>)}</ul>}<div className="copilot-next"><span>NEXT</span>{answer.next_action}</div><small>{answer.confidence} confidence{answer.caveat?' · '+answer.caveat:''}</small></div>}
+      {loading&&<div className="copilot-loading">Analyzing your workspace evidence…</div>}
+      <div className="copilot-input"><input value={question} onChange={e=>setQuestion(e.target.value)} onKeyDown={e=>{if(e.key==='Enter')void ask()}} placeholder="Ask why, what changed, or what to do next"/><button onClick={()=>void ask()} disabled={loading}>Ask</button></div>
+      <p className="copilot-disclaimer">AI explains evidence. It cannot mark savings Verified.</p>
+    </section>}
+  </div>
+}
+
 function RealWorkspace({userName,userEmail,workspaceName,summary}:{userName:string,userEmail:string,workspaceName:string,summary?:RealSummary}){
   const path=usePathname();
   const section=useMemo(()=>path.split('/')[2]||'overview',[path]);

@@ -43,7 +43,7 @@ export default function OnboardingFlow({name,email,initialWorkspace}:{name:strin
   const [anthropic,setAnthropic]=useState('');
   const [syncState,setSyncState]=useState<'idle'|'running'|'partial'|'done'|'error'>('idle');
   const [messages,setMessages]=useState<string[]>([]);
-  const [summary,setSummary]=useState<Summary|null>(null);
+  const [summary,setSummary]=useState<Summary|null>(null);\n  const [doctor,setDoctor]=useState<{answer:string;why:string;next_action:string;confidence:string}|null>(null);
   const [pendingCsv,setPendingCsv]=useState<File|null>(null);
   const [preflight,setPreflight]=useState<Preflight|null>(null);
   const [doctor,setDoctor]=useState<Doctor|null>(null);
@@ -165,7 +165,9 @@ export default function OnboardingFlow({name,email,initialWorkspace}:{name:strin
           {messages.length>0&&<div className="partial-error">{messages.map((m,i)=><p key={i}>{m}</p>)}</div>}
           <button className="btn black full" onClick={startSync}>Connect and start sync</button><p className="micro">This is your production tenant. Demo records cannot be written to this backend.</p></>}
         {step===4&&<><h1>{syncState==='running'?'Importing your usage history':syncState==='error'?'The sync did not complete':'Your first sync is complete'}</h1><p>{syncState==='running'?'Evalomics is validating the source and building an evidence snapshot. Nothing is marked ready until the backend finishes.':syncState==='partial'?'Some evidence loaded, but one part failed. The successful source remains isolated and usable.':syncState==='done'?'The backend accepted the evidence. You can continue to your workspace.':'No fake success state was created. Fix the source and retry.'}</p>
-          <div className="sync-panel"><div className="sync-top"><strong>{syncState==='running'?'Processing…':syncState==='done'?'Ready':syncState==='partial'?'Partially ready':'Needs attention'}</strong><span>Tenant-scoped</span></div><div className="progress"><span style={{width:syncState==='running'?'55%':syncState==='error'?'0%':'100%'}}/></div>{messages.map((m,i)=><div className={syncState==='error'?'partial-error':'success-line'} key={i}>{m}</div>)}</div>
+          <div className="sync-panel"><div className="sync-top"><strong>{syncState==='running'?'Processing…':syncState==='done'?'Ready':syncState==='partial'?'Partially ready':'Needs attention'}</strong><span>Tenant-scoped</span></div><div className="progress"><span style={{width:syncState==='running'?'55%':syncState==='error'?'0%':'100%'}}/></div>{messages.map((m,i)=><div className={syncState==='error'?'partial-error':'success-line'} key={i}>{m}</div>)}
+            {doctor&&<div className="import-doctor"><div><span>IMPORT DOCTOR</span><b>{doctor.confidence} confidence</b></div><strong>{doctor.answer}</strong><p>{doctor.why}</p><footer>{doctor.next_action}</footer></div>}
+          </div>
           <div className="two-actions">{syncState==='error'?<button className="btn black" onClick={()=>setStep(3)}>Back to connections</button>:<button className="btn black" onClick={()=>setStep(5)}>Continue</button>}<button className="btn outline" onClick={()=>setStep(3)}>Manage sources</button></div></>}
         {step===5&&<>{hasEvidence?<><h1>Your evidence is connected.</h1><p>Evalomics will separate what is observed from what is only potential. Nothing is called savings until production verification supports it.</p></>:<><h1>Nothing to optimize yet —<br/>and we won’t pretend otherwise.</h1><p>Connect a provider or import usage. Until enough evidence exists, Potential, Tested, and Verified stay empty.</p></>}
           <div className="getting-card"><div className="getting-top"><strong>{requestCount>0?requestCount.toLocaleString()+' requests':'No request count yet'}</strong><span>{summary?.observedSpend?summary.currency+' '+summary.observedSpend+' observed':'Waiting for observed spend'}</span></div>
