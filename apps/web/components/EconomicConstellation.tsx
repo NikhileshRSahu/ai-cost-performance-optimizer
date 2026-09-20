@@ -108,7 +108,6 @@ export default function EconomicConstellation(){
         const p=particles[i];
         if(!reduce.matches){
           const drift=Math.sin(now*.00055+p.phase)*1.8;
-          const dx=p.tx+p.ambient?0:0;
           const tx=p.tx + Math.sin(now*.00035+p.phase)*3.2;
           const ty=p.ty + Math.cos(now*.00029+p.phase)*3.2 + drift;
           p.vx+=(tx-p.x)*.0045;
