@@ -8,7 +8,8 @@
     "test:csv": "tsx --test tests/csv-contract.test.ts",
     "start": "next start",
     "test:release": "tsx --test tests/release-truth.test.ts",
-    "test": "npm run test:csv && npm run test:release"
+    "test": "npm run test:csv && npm run test:release && npm run test:security",
+    "test:security": "tsx --test tests/security-contract.test.ts"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",
