@@ -13,6 +13,7 @@ function cleanName(workspaceName:string){
 export async function saveWorkspaceName(workspaceName:string){
   const safe=cleanName(workspaceName);
   await withRuntimeWorkspace(async({workspace,database})=>{
+    if(workspace.role!=='OWNER') throw new Error('OWNER_REQUIRED');
     await database.db.update(organizations).set({name:safe}).where(eq(organizations.id,workspace.organizationId));
   });
   revalidatePath('/onboarding');
@@ -21,6 +22,7 @@ export async function saveWorkspaceName(workspaceName:string){
 export async function completeOnboarding(workspaceName:string){
   const safe=cleanName(workspaceName);
   await withRuntimeWorkspace(async({workspace,database})=>{
+    if(workspace.role!=='OWNER') throw new Error('OWNER_REQUIRED');
     await database.db.update(organizations).set({
       name:safe,onboardingCompletedAt:new Date().toISOString()
     }).where(eq(organizations.id,workspace.organizationId));
