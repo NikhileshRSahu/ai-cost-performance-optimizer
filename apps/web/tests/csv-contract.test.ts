@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parseUsageCsv } from '../backend/ingestion/csv.ts';
+import { parseUsageCsv } from '../backend/ingestion/csv';
 
 const enc=new TextEncoder();
 const parse=(csv:string)=>parseUsageCsv(enc.encode(csv),'org_test',false);
