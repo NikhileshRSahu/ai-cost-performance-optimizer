@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { importCustomerUsage } from '@/backend/workbench/import-service';
 import { analyzeImportedUsage } from '@/backend/workbench/analysis-service';
 import { withRuntimeWorkspace } from '@/lib/runtime-workspace';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
@@ -21,7 +22,7 @@ export async function POST(request:Request){
     if(!(file instanceof File)) return NextResponse.json({ok:false,error:'CSV_REQUIRED'},{status:400});
     if(file.size>10*1024*1024) return NextResponse.json({ok:false,error:'FILE_TOO_LARGE'},{status:413});
     const bytes=new Uint8Array(await file.arrayBuffer());
-    const result=await withRuntimeWorkspace(async({workspace,database})=>{ if(workspace.role==='VIEWER') throw new Error('OPERATOR_REQUIRED');
+    const result=await withRuntimeWorkspace(async({workspace,database})=>{ if(workspace.role==='VIEWER') throw new Error('OPERATOR_REQUIRED'); await enforceRateLimit({pool:database.pool,organizationId:workspace.organizationId,scope:'import-csv',limit:10,windowSeconds:60});
       const imported=await importCustomerUsage({
         db:database.db,session:workspace.session,organizationId:workspace.organizationId,
         fileName:file.name,bytes,isDemo:false,receivedAt:new Date().toISOString()
@@ -37,6 +38,7 @@ export async function POST(request:Request){
   }catch(error){
     if(error instanceof Error && error.message==='AUTH_REQUIRED') return NextResponse.json({ok:false,error:'AUTH_REQUIRED'},{status:401});
     if(error instanceof Error && error.message==='OPERATOR_REQUIRED') return NextResponse.json({ok:false,error:'OPERATOR_REQUIRED'},{status:403});
+    if(error instanceof Error && error.message==='RATE_LIMITED') return NextResponse.json({ok:false,error:'RATE_LIMITED'},{status:429});
     return NextResponse.json({ok:false,error:safeError(error)},{status:400});
   }
 }
