@@ -15,7 +15,7 @@ type RealSummary=Readonly<{
     id:string;status:string;accepted:number;rejected:number;skipped:number;warnings:number;
     totalRows:number;acceptanceRate:number;rangeStart:string|null;rangeEnd:string|null;receivedAt:string;
   }>|null;
-  providers:readonly Readonly<{provider:string;status:string;lastSyncAt:string|null}>[];
+  providers:readonly Readonly<{provider:string;status:string;lastSyncAt:string|null;safeError:string|null;evidenceRows:number;dataStatus:'SYNCED_WITH_DATA'|'CONNECTED_NO_DATA'|'SYNC_FAILED'|'SYNC_PENDING'}>[];
   topModels:readonly Readonly<{model:string;provider:string;spend:string;requests:string;share:number}>[];
   evidenceCounts:Readonly<{potential:number;tested:number;verified:number}>;
   verifiedSavings:string|null;
@@ -227,13 +227,16 @@ function RealExperiments({summary}:{summary?:RealSummary}){return <><div classNa
 function RealReports({summary}:{summary?:RealSummary}){return <><div className="page-head"><div><p className="eyebrow">WHAT CAN FINANCE DEFEND?</p><h1>Verified savings</h1><p>Only production-reconciled results belong in this report.</p></div></div><div className="report-total"><span>Verified in this workspace</span><strong>{money(summary?.verifiedSavings??null,summary?.currency??'USD')}</strong><p>{summary?.verifiedSavings?'This amount is backed by completed verification windows.':'Nothing is being claimed as saved yet. That is the correct state.'}</p></div><RealRecommendationList summary={summary} filter="VERIFIED"/></>}
 
 function RealIntegrations({summary}:{summary?:RealSummary}){
-  const status=(provider:string)=>summary?.providers.find(x=>x.provider===provider)?.status||'Not connected';
+  const provider=(name:string)=>summary?.providers.find(x=>x.provider===name);
+  const label=(p:ReturnType<typeof provider>)=>!p?'Not connected':p.dataStatus==='SYNCED_WITH_DATA'?'Synced with data':p.dataStatus==='CONNECTED_NO_DATA'?'Connected — no data found':p.dataStatus==='SYNC_FAILED'?'Sync failed':'Connected — sync pending';
   const latest=summary?.latestImport;
+  const openai=provider('OPENAI');
+  const anthropic=provider('ANTHROPIC');
   return <>
-    <div className="page-head"><div><p className="eyebrow">WHERE DOES THE DATA COME FROM?</p><h1>Data sources</h1><p>Connection state and import health come from your workspace backend.</p></div><Link className="btn black" href="/onboarding?step=3">Add or repair source</Link></div>
+    <div className="page-head"><div><p className="eyebrow">WHERE DOES THE DATA COME FROM?</p><h1>Data sources</h1><p>Connection state is separate from data availability. Evalomics will not call an empty provider response “synced with data.”</p></div><Link className="btn black" href="/onboarding?step=3">Add or repair source</Link></div>
     <div className="integration-grid">
-      <article><div><strong>OpenAI</strong><span>{status('OPENAI')}</span></div><p>Organization usage and cost evidence.</p><Link className="btn outline small" href="/onboarding?step=3">{status('OPENAI')==='Not connected'?'Connect':'Manage'}</Link></article>
-      <article><div><strong>Anthropic</strong><span>{status('ANTHROPIC')}</span></div><p>Organization usage and cost evidence.</p><Link className="btn outline small" href="/onboarding?step=3">{status('ANTHROPIC')==='Not connected'?'Connect':'Manage'}</Link></article>
+      <article className={openai?.dataStatus==='CONNECTED_NO_DATA'||openai?.dataStatus==='SYNC_FAILED'?'integration-warning':''}><div><strong>OpenAI API</strong><span>{label(openai)}</span></div><p>{openai?.dataStatus==='CONNECTED_NO_DATA'?'The Admin key is valid, but the provider returned zero usage and cost rows for the sync window.':'OpenAI API Platform organization usage and costs. This is not personal ChatGPT usage.'}</p><Link className="btn outline small" href="/onboarding?step=3">{openai?'Manage':'Connect'}</Link></article>
+      <article className={anthropic?.dataStatus==='SYNC_FAILED'?'integration-warning':''}><div><strong>Anthropic API <small className="beta-chip">BETA</small></strong><span>{label(anthropic)}</span></div><p>Anthropic Admin API usage and costs. Production connector code is present, but this integration remains beta until a real Admin key completes an end-to-end sync.</p><Link className="btn outline small" href="/onboarding?step=3">{anthropic?'Manage':'Connect beta'}</Link></article>
       <article className={latest&&latest.rejected>0?'integration-warning':''}><div><strong>Latest CSV import</strong><span>{latest?latest.status:'None yet'}</span></div><p>{latest?latest.accepted.toLocaleString()+' accepted · '+latest.rejected.toLocaleString()+' rejected':'Upload a usage export without provider credentials.'}</p><Link className="btn outline small" href="/onboarding?step=3">{latest&&latest.rejected>0?'Repair import':'Upload CSV'}</Link></article>
     </div>
   </>
