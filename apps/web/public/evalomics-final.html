@@ -1,0 +1,1007 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Evalomics — Your AI bill says $41,208. It doesn't say why.</title>
+<meta name="description" content="Evalomics reads your production LLM usage, finds the waste, and proves each saving in your own spend data — before anyone claims a dollar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* colour */
+  --parchment:#f6f3f1; --lake:#2b59d1; --periwinkle:#cfdaf5; --sky:#a0b5eb;
+  --mint:#a7fccd; --coral:#ff9473; --gold:#ecda98; --crimson:#f37a0a;
+  --off-black:#242424; --ink:#000; --graphite:#4e4d4d; --smoke:#797776; --ash:#cecac8;
+  /* type */
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --serif:'Newsreader',ui-serif,Georgia,Cambria,'Times New Roman',serif;
+  /* layout */
+  --page:1432px; --card-pad:40px; --radius-card:40px; --radius-pill:100px;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--parchment);scroll-padding-top:calc(96px + env(safe-area-inset-top,0px));-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--parchment);color:var(--off-black);font-family:var(--mono);font-weight:400;font-size:16px;line-height:1.35;letter-spacing:-.025em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4,p,figure{margin:0}
+ul{margin:0;padding:0;list-style:none}
+a{color:inherit;text-decoration:none}
+#gl{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;background:var(--parchment)}
+main{position:relative;z-index:1}
+.wrap{width:min(var(--page),calc(100vw - 48px));margin:0 auto}
+
+/* ---------- type roles ---------- */
+.d1,.d2,.d3,.d4{font-family:var(--serif);font-weight:400;letter-spacing:-.02em;line-height:1.2;color:var(--off-black)}
+.d1{font-size:clamp(42px,6.2vw,80px)}
+.d2{font-size:clamp(32px,4vw,48px)}
+.d3{font-size:clamp(26px,2.8vw,40px)}
+.d4{font-size:clamp(21px,1.9vw,24px)}
+.body-lg{font-size:clamp(17px,1.35vw,20px);line-height:1.35;letter-spacing:-.02em;color:var(--graphite)}
+.body{font-size:16px;line-height:1.35;letter-spacing:-.025em;color:var(--graphite)}
+.cap{font-size:12px;line-height:1.2;letter-spacing:-.033em;text-transform:uppercase;color:var(--smoke)}
+.lbl{font-size:14px;line-height:1.2;letter-spacing:-.02em;text-transform:uppercase}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:1px solid transparent;border-radius:var(--radius-pill);padding:16px 32px;font:400 14px/1 var(--mono);letter-spacing:-.02em;text-transform:uppercase;cursor:pointer;transition:background .2s,color .2s,border-color .2s,transform .2s}
+.btn:active{transform:scale(.985)}
+.btn-blue{background:var(--lake);color:#fff}
+.btn-blue:hover{background:#2049ba}
+.btn-black{background:var(--off-black);color:var(--parchment)}
+.btn-black:hover{background:#000}
+.btn-ghost{background:transparent;border-color:var(--off-black);color:var(--off-black)}
+.btn-ghost:hover{background:var(--off-black);color:var(--parchment)}
+.btn.sm{padding:11px 20px;font-size:12px}
+.btn:focus-visible,a:focus-visible,summary:focus-visible,button:focus-visible{outline:2px solid var(--lake);outline-offset:3px}
+.arrow-link{display:inline-flex;align-items:center;gap:8px;font-size:14px;text-transform:uppercase;letter-spacing:-.02em;color:var(--off-black);border-bottom:1px solid var(--ash);padding-bottom:4px;transition:border-color .2s}
+.arrow-link:hover{border-color:var(--off-black)}
+
+/* ---------- tags & tiers ---------- */
+.tag{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--ash);border-radius:9999px;background:var(--parchment);padding:8px 16px;font-size:12px;letter-spacing:-.033em;text-transform:uppercase;color:var(--off-black);white-space:nowrap}
+.tier{display:inline-flex;align-items:center;gap:7px;font-size:12px;letter-spacing:-.033em;text-transform:uppercase}
+.tier::before{content:"";width:8px;height:8px;border-radius:2px}
+.tier.obs{color:var(--graphite)}.tier.obs::before{background:var(--off-black)}
+.tier.pot{color:var(--graphite)}.tier.pot::before{background:var(--coral)}
+.tier.tst{color:var(--graphite)}.tier.tst::before{background:var(--sky)}
+.tier.ver{color:var(--lake)}.tier.ver::before{background:var(--lake)}
+
+/* ---------- announcement + nav ---------- */
+.announce{position:relative;z-index:30;display:flex;align-items:center;justify-content:center;gap:16px;background:var(--ink);color:var(--parchment);padding:11px 24px;font-size:14px;letter-spacing:-.028em;flex-wrap:wrap}
+.announce .pill{border:1px solid rgba(246,243,241,.5);border-radius:9999px;padding:5px 14px;font-size:12px;text-transform:uppercase;letter-spacing:-.033em;transition:background .2s}
+.announce .pill:hover{background:rgba(246,243,241,.12)}
+.nav{position:sticky;top:0;z-index:25;background:rgba(246,243,241,.86);backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .3s}
+.nav.stuck{border-color:var(--ash)}
+.nav-in{height:80px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{display:flex;align-items:center;gap:10px;font-size:18px;letter-spacing:-.03em;text-transform:lowercase}
+.logo i{width:12px;height:12px;border-radius:50%;background:var(--lake);display:block}
+.nav-links{display:flex;gap:28px}
+.nav-links a{font-size:18px;letter-spacing:-.022em;text-transform:uppercase;color:var(--off-black);opacity:.62;transition:opacity .2s}
+.nav-links a:hover,.nav-links a.on{opacity:1}
+.nav-act{display:flex;align-items:center;gap:12px}
+
+/* ---------- surfaces ---------- */
+.card{border:1px solid var(--ash);border-radius:var(--radius-card);padding:var(--card-pad);background:rgba(246,243,241,.9)}
+.card.peri{background:var(--periwinkle);border-color:transparent}
+.veil{background:rgba(246,243,241,.88);border:1px solid var(--ash);border-radius:var(--radius-card);padding:var(--card-pad)}
+.wash{position:absolute;border-radius:50%;filter:blur(64px);pointer-events:none;z-index:0}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:calc(100svh - 80px);display:flex;align-items:center;padding:clamp(48px,9vh,110px) 0 clamp(40px,7vh,80px)}
+.hero-in{width:min(660px,100%);position:relative;z-index:2}
+.hero .d1{margin:22px 0 0}
+.hero .d1 .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+.hero .d1 .ln>span{display:block;transform:translateY(110%);animation:rise 1.05s cubic-bezier(.2,.8,.15,1) forwards}
+.hero .d1 .ln:nth-child(2)>span{animation-delay:.08s}
+.hero .d1 .ln:nth-child(3)>span{animation-delay:.16s}
+.hero .blue{color:var(--lake)}
+.fade{opacity:0;animation:fade 1s ease forwards}
+.hero .tag{animation-delay:.05s}
+.hero .sub{margin-top:24px;max-width:34em;animation-delay:.75s}
+.hero .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;animation-delay:.9s}
+.hero .fine{margin-top:16px;animation-delay:1s}
+.hero-chip{position:absolute;right:0;bottom:clamp(40px,10vh,110px);z-index:2;width:min(300px,78vw);border-radius:32px;padding:24px 28px;background:var(--periwinkle);animation-delay:1.15s}
+.hero-chip .amt{font-family:var(--serif);font-size:40px;letter-spacing:-.02em;line-height:1.1;color:var(--off-black);margin-top:10px}
+.hero-chip .amt i{font-style:normal;font-family:var(--mono);font-size:14px;color:var(--graphite);margin-left:4px}
+.hero-chip p{margin-top:8px;font-size:12px;letter-spacing:-.033em;color:var(--graphite)}
+@keyframes rise{to{transform:none}}
+@keyframes fade{to{opacity:1}}
+
+/* ---------- stat strip ---------- */
+.strip{position:relative;z-index:1;border-top:1px solid var(--ash);border-bottom:1px solid var(--ash);background:rgba(246,243,241,.9)}
+.strip-in{display:grid;grid-template-columns:repeat(4,1fr)}
+.stat{padding:32px 32px 30px;border-left:1px solid var(--ash)}
+.stat:first-child{border-left:0}
+.stat .k{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.stat .v{font-family:var(--serif);font-size:clamp(28px,2.6vw,40px);letter-spacing:-.02em;line-height:1.2;margin:14px 0 8px}
+.stat .n{font-size:12px;letter-spacing:-.033em;color:var(--smoke);line-height:1.35}
+
+/* ---------- generic section ---------- */
+.s{position:relative}
+.sec-pad{padding:clamp(72px,12vh,140px) 0}
+.eyebrow{font-size:12px;letter-spacing:-.033em;text-transform:uppercase;color:var(--smoke);margin-bottom:20px}
+.col{width:min(520px,100%);position:relative;z-index:2}
+.col.right{margin-left:auto}
+.col p+p{margin-top:16px}
+.col .d2{margin-bottom:24px}
+
+/* scroll-stage sections — height drives the particle morph */
+.conf{min-height:175svh;padding-top:34svh}
+.bulb{min-height:170svh;padding-top:30svh}
+.sphere{min-height:180svh;padding-top:30svh}
+.chaos{padding:34svh 0 22svh}
+.grp{min-height:86svh;display:grid;align-content:center;justify-items:center;text-align:center}
+.grp .inner{max-width:24em;position:relative;z-index:2;padding:clamp(24px,4vw,56px);background:radial-gradient(62% 62% at 50% 50%,rgba(246,243,241,.96) 0%,rgba(246,243,241,.86) 52%,rgba(246,243,241,0) 100%)}
+.grp .d3{margin-bottom:18px}
+
+/* tier ladder row */
+.ladder-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+
+/* opportunity + experiment mini cards */
+.opps{display:grid;gap:12px;margin-top:28px}
+.opp{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;border:1px solid var(--ash);border-radius:24px;padding:20px 24px;background:rgba(246,243,241,.92)}
+.opp h4{font-family:var(--serif);font-weight:400;font-size:20px;letter-spacing:-.02em}
+.opp p{font-size:14px;letter-spacing:-.028em;color:var(--graphite);margin-top:6px}
+.opp .num{font-size:14px;white-space:nowrap;color:var(--off-black)}
+.exp{margin-top:28px}
+.exp .bar{height:6px;border-radius:9999px;background:var(--periwinkle);overflow:hidden;margin:20px 0 10px}
+.exp .bar i{display:block;height:100%;width:64%;background:var(--lake);border-radius:9999px}
+.exp .row{display:flex;justify-content:space-between;gap:16px;font-size:12px;letter-spacing:-.033em;color:var(--graphite)}
+
+/* ---------- ladder carousel ---------- */
+.method{min-height:180svh;padding-top:20svh}
+.m-in{display:grid;grid-template-columns:minmax(260px,.85fr) 2fr;gap:clamp(24px,4vw,64px);align-items:start}
+.m-l{position:relative;z-index:2}
+.m-l::before{content:"";position:absolute;inset:-32px -40px;background:radial-gradient(70% 70% at 40% 40%,rgba(246,243,241,.94) 0%,rgba(246,243,241,0) 100%);z-index:-1}
+.m-l .d2{margin-bottom:24px}
+.m-r{overflow:hidden;padding:8px 0;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent)}
+.track{display:flex;gap:24px;transition:transform .85s cubic-bezier(.2,.8,.15,1);will-change:transform}
+.slide{flex:0 0 auto;width:min(340px,76vw);border:1px solid var(--ash);border-radius:var(--radius-card);padding:32px;background:rgba(246,243,241,.94);opacity:.45;transition:opacity .6s,border-color .6s,background .6s}
+.slide.on{opacity:1}
+.slide:nth-child(4).on{background:var(--periwinkle);border-color:transparent}
+.shot{position:relative;width:100%;aspect-ratio:300/230;border-radius:24px;overflow:hidden;background:rgba(255,255,255,.45);border:1px solid var(--ash)}
+.shot canvas{width:100%;height:100%;display:block}
+.meta{padding-top:24px}
+.meta .lab{font-size:12px;letter-spacing:-.033em;text-transform:uppercase;color:var(--smoke)}
+.meta h3{font-family:var(--serif);font-weight:400;font-size:24px;letter-spacing:-.02em;margin:10px 0 12px}
+.meta p{font-size:14px;letter-spacing:-.028em;line-height:1.35;color:var(--graphite)}
+.meta .num{margin-top:16px;font-size:14px;color:var(--off-black)}
+.arrows{display:flex;gap:10px;margin-top:24px}
+.arrow{width:48px;height:48px;border-radius:9999px;border:1px solid var(--off-black);background:transparent;color:var(--off-black);font:400 15px/1 var(--mono);cursor:pointer;display:grid;place-items:center;transition:background .2s,color .2s}
+.arrow:hover{background:var(--off-black);color:var(--parchment)}
+
+/* ---------- findings (parallax pill nodes) ---------- */
+.find{min-height:205svh}
+.f-in{position:sticky;top:0;height:100svh;overflow:hidden}
+.fi{position:absolute;z-index:2;max-width:min(330px,72vw);will-change:transform}
+.fi .node{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--ash);border-radius:9999px;background:var(--parchment);padding:12px 20px;font-size:14px;letter-spacing:-.02em;text-transform:uppercase}
+.fi .node svg{width:14px;height:14px;flex:0 0 auto}
+.fi span{display:block;margin:10px 0 0 20px;background:rgba(246,243,241,.82);border-radius:12px;padding:2px 6px;font-size:14px;letter-spacing:-.028em;color:var(--graphite)}
+.f-t{position:absolute;right:clamp(24px,7vw,120px);top:26svh;width:min(30vw,420px);z-index:3}
+.f-t .d2{margin-bottom:20px}
+
+/* ---------- pipeline ---------- */
+.pipe-box{border:1px solid var(--ash);border-radius:var(--radius-card);padding:clamp(28px,4vw,48px);background:rgba(246,243,241,.94);margin-top:40px;overflow-x:auto}
+.pipe-box svg{display:block;width:100%;min-width:760px;height:auto}
+
+/* ---------- feature grid ---------- */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+.feat .ico{width:24px;height:24px;margin-bottom:28px}
+.feat h3{font-family:var(--serif);font-weight:400;font-size:24px;letter-spacing:-.02em;margin-bottom:12px}
+.feat p{font-size:16px;letter-spacing:-.025em;color:var(--graphite)}
+.feat code{font-family:var(--mono);font-size:14px;color:var(--off-black);background:rgba(43,89,209,.08);padding:1px 6px;border-radius:6px}
+
+/* ---------- pricing ---------- */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px;align-items:stretch}
+.plan{display:flex;flex-direction:column;gap:20px}
+.plan h3{font-family:var(--serif);font-weight:400;font-size:24px;letter-spacing:-.02em}
+.plan .amt{font-family:var(--serif);font-size:48px;letter-spacing:-.02em;line-height:1.2}
+.plan .amt i{font-style:normal;font-family:var(--mono);font-size:14px;color:var(--graphite);margin-left:6px}
+.plan ul{display:grid;gap:12px;flex:1}
+.plan li{position:relative;padding-left:20px;font-size:14px;letter-spacing:-.028em;color:var(--graphite)}
+.plan li::before{content:"";position:absolute;left:0;top:.5em;width:7px;height:7px;border-radius:2px;background:var(--lake)}
+.plan.peri li::before{background:var(--off-black)}
+.plan .btn{width:100%}
+
+/* ---------- faq ---------- */
+.faq{margin-top:40px;border-top:1px solid var(--ash)}
+.faq details{border-bottom:1px solid var(--ash)}
+.faq summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:32px 0;font-family:var(--serif);font-weight:400;font-size:clamp(19px,1.9vw,24px);letter-spacing:-.02em}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary i{font-style:normal;font-family:var(--mono);font-size:18px;color:var(--off-black);transition:transform .25s}
+.faq details[open] summary i{transform:rotate(180deg)}
+.faq .ans{padding:0 0 32px;max-width:64em}
+
+/* ---------- final ---------- */
+.final{height:250svh}
+.final-in{position:sticky;top:0;height:100svh;display:grid;place-items:center;text-align:center;padding:0 24px}
+.final .box{width:min(760px,100%);text-align:center}
+.final .d2{margin:18px 0 12px}
+.final .btn{margin-top:28px}
+.final .fine{margin-top:18px}
+
+/* ---------- footer ---------- */
+.foot{position:relative;z-index:2;border-top:1px solid var(--ash);background:var(--parchment)}
+.foot-in{display:flex;flex-wrap:wrap;gap:24px 48px;justify-content:space-between;padding:56px 0 40px}
+.foot nav{display:flex;flex-wrap:wrap;gap:12px 32px}
+.foot nav a{font-size:14px;letter-spacing:-.02em;text-transform:uppercase;color:var(--off-black);opacity:.7}
+.foot nav a:hover{opacity:1}
+.foot .fine{width:100%;padding-bottom:40px}
+.foot-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding-bottom:32px}
+.foot-actions .arrow-link{margin-left:8px}
+
+/* ---------- tour control ---------- */
+.tour{position:fixed;left:24px;bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:22;display:inline-flex;align-items:center;gap:10px;border:1px solid var(--ash);border-radius:9999px;background:rgba(246,243,241,.92);backdrop-filter:blur(8px);color:var(--off-black);font:400 12px/1 var(--mono);letter-spacing:-.033em;text-transform:uppercase;cursor:pointer;padding:11px 18px 11px 14px;transition:border-color .2s,background .2s}
+.tour:hover{border-color:var(--off-black)}
+.tour svg{width:9px;height:9px;fill:currentColor}
+.tour .pp{display:none}
+.tour.playing .pl{display:none}.tour.playing .pp{display:block}
+.fine{font-size:12px;letter-spacing:-.033em;color:var(--smoke)}
+.solid{background:rgba(246,243,241,.93);border-top:1px solid var(--ash)}
+.nogl #gl{display:none}
+
+@media (max-width:1080px){
+  .nav-links{display:none}
+  .grid3,.plans{grid-template-columns:1fr}
+  .strip-in{grid-template-columns:repeat(2,1fr)}
+  .stat:nth-child(3){border-left:0}
+  .stat:nth-child(n+3){border-top:1px solid var(--ash)}
+  .m-in{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  :root{--card-pad:28px;--radius-card:28px}
+  .wrap{width:calc(100vw - 32px)}
+  .hero{min-height:auto;padding-top:48px}
+  .hero-chip{position:relative;right:auto;bottom:auto;margin-top:36px;width:100%}
+  .strip-in{grid-template-columns:1fr}
+  .stat{border-left:0}
+  .stat+.stat{border-top:1px solid var(--ash)}
+  .conf,.bulb,.sphere{padding-top:46svh;min-height:150svh}
+  .f-in{position:static;height:auto;padding:0 0 40px}
+  .fi{position:relative!important;left:auto!important;top:auto!important;transform:none!important;margin-bottom:28px;max-width:none}
+  .f-t{position:relative;right:auto;top:auto;width:auto;margin-bottom:40px}
+  .announce span.long{display:none}
+  .nav-act .ghost-login{display:none}
+  .tour{left:16px}
+}
+@media (prefers-reduced-motion:reduce){
+  .hero .d1 .ln>span{animation:none;transform:none}
+  .fade{animation:none;opacity:1}
+  .track,.slide{transition:none}
+}
+</style>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+
+<div class="announce">
+  <span>V0 milestone — the exact-arithmetic cost engine is open source.<span class="long"> A calculation is evidence, never a recommendation.</span></span>
+  <a class="pill" href="https://github.com/NikhileshRSahu/ai-cost-performance-optimizer" target="_blank" rel="noopener">Read the repo →</a>
+</div>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#hero" aria-label="Evalomics home"><i aria-hidden="true"></i>evalomics</a>
+    <nav class="nav-links">
+      <a href="#conf" data-nav="why">Manifesto</a>
+      <a href="#method" data-nav="method">The ladder</a>
+      <a href="#findings" data-nav="findings">Evidence</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <div class="nav-act">
+      <a class="btn btn-ghost sm ghost-login" href="/auth/sign-in">Log in</a>
+      <a class="btn btn-blue sm" href="/demo">Get a demo <span aria-hidden="true">▸</span></a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="hero" class="s hero" data-sec>
+    <div class="wrap">
+      <div class="hero-in">
+        <span class="tag fade">For teams running production LLM workloads</span>
+        <h1 class="d1"><span class="ln"><span>Your AI bill says</span></span><span class="ln"><span class="blue">$41,208.</span></span><span class="ln"><span>It doesn’t say why.</span></span></h1>
+        <p class="body-lg sub fade">Evalomics reads your production LLM usage, finds the waste, and proves each saving in your own spend data — before anyone claims a dollar.</p>
+        <div class="cta-row fade">
+          <a class="btn btn-blue" href="/auth/sign-up">Connect your usage data <span aria-hidden="true">▸</span></a>
+          <a class="btn btn-ghost" href="/demo">See the live demo</a>
+        </div>
+        <p class="fine fade">Read-only. No traffic changes until you approve an experiment.</p>
+      </div>
+      <figure class="hero-chip fade">
+        <span class="tier ver">Verified</span>
+        <p class="amt">$7,412<i>/mo</i></p>
+        <p>Visible in observed spend since Jun 9. Held for three weeks against the pre-change baseline.</p>
+      </figure>
+    </div>
+  </section>
+
+  <section class="strip" aria-label="Workspace summary">
+    <div class="wrap strip-in">
+      <div class="stat">
+        <div class="k"><span class="cap">Observed spend, 30 days</span><span class="tier obs">Observed</span></div>
+        <p class="v">$41,208</p>
+        <p class="n">Prior 30 days: $43,930. Down 6.2% after verified rollouts.</p>
+      </div>
+      <div class="stat">
+        <div class="k"><span class="cap">Verified savings</span><span class="tier ver">Verified</span></div>
+        <p class="v">$7,412<span style="font-family:var(--mono);font-size:14px;color:var(--graphite)">/mo</span></p>
+        <p class="n">2 changes live, both holding in observed spend.</p>
+      </div>
+      <div class="stat">
+        <div class="k"><span class="cap">Identified, not yet proven</span><span class="tier pot">Potential</span></div>
+        <p class="v">$11.8k–15.6k</p>
+        <p class="n">3 patterns detected. Estimates only — nothing claimed.</p>
+      </div>
+      <div class="stat">
+        <div class="k"><span class="cap">Experiments running</span><span class="tier tst">Tested</span></div>
+        <p class="v">2</p>
+        <p class="n">EXP-1042 ends Jul 4. Guardrails green.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="conf" class="s conf" data-sec>
+    <div class="wrap">
+      <div class="col right veil">
+        <p class="eyebrow">The evidence ladder</p>
+        <h2 class="d2">Watch a number earn the right to be called savings.</h2>
+        <p class="body">Every dollar in Evalomics sits on one of four tiers. <strong style="font-weight:500;color:var(--off-black)">Observed</strong> is what your spend data shows right now. <strong style="font-weight:500;color:var(--off-black)">Potential</strong> is a detected pattern with an estimated range.</p>
+        <p class="body"><strong style="font-weight:500;color:var(--off-black)">Tested</strong> is a change run on real traffic with real results. <strong style="font-weight:500;color:var(--off-black)">Verified</strong> is rolled out, and visible in observed spend against the pre-change baseline.</p>
+        <p class="body">A number only moves right when the evidence does. Nothing skips a rung.</p>
+        <div class="ladder-row">
+          <span class="tag">Observed</span><span class="tag">Potential</span><span class="tag">Tested</span><span class="tag" style="border-color:var(--lake);color:var(--lake)">Verified</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="chaos" class="s chaos" data-sec>
+    <div class="wrap">
+      <div class="grp"><div class="inner">
+        <h2 class="d3">$41,208 over thirty days, folded into a single invoice line.</h2>
+        <p class="body-lg">1.2M requests, two providers, five model tiers. The invoice knows the total. It does not know which calls deserved it.</p>
+      </div></div>
+      <div class="grp"><div class="inner">
+        <h2 class="d3">Dashboards show totals. Traces show calls. Neither tells you which call was unnecessary.</h2>
+        <p class="body-lg">So teams guess. They swap a model, watch for complaints, and hope quality held.</p>
+      </div></div>
+      <div class="grp"><div class="inner">
+        <h2 class="d3">A saving nobody can prove is a risk with a discount on it.</h2>
+      </div></div>
+    </div>
+  </section>
+
+  <section id="bulb" class="s bulb" data-sec>
+    <div class="wrap">
+      <div class="col right veil">
+        <p class="eyebrow">Detection · Potential</p>
+        <h2 class="d2">Identified, not yet proven: $11.8k–15.6k/mo.</h2>
+        <p class="body">Three patterns detected in the last thirty days, each linked to the exact requests behind it, with the spend attached. Detectors are deterministic — the same window gives the same result.</p>
+        <div class="opps">
+          <div class="opp"><div><h4>Ticket routing uses a flagship model</h4><p>61% of routing requests score below the complexity threshold. Sampled 8,412 requests.</p></div><span class="num">$3,800–4,900<br><span class="cap">est · high</span></span></div>
+          <div class="opp"><div><h4>14k-token system context resent uncached</h4><p>The same prefix billed on every turn of every session.</p></div><span class="num">$1,800–2,600<br><span class="cap">est · low</span></span></div>
+          <div class="opp"><div><h4>Retry storm on inventory-sync</h4><p>412 duplicate tool calls in 6 hours on Jun 28. Observed, not estimated.</p></div><span class="num">$214<br><span class="cap">above baseline</span></span></div>
+        </div>
+        <p class="body" style="margin-top:24px">These stay labelled Potential until a test says otherwise.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="sphere" class="s sphere" data-sec>
+    <div class="wrap">
+      <div class="col veil">
+        <p class="eyebrow">Experiment · Tested</p>
+        <h2 class="d2">The test is running.</h2>
+        <p class="body">20% of routing traffic moves to a mini model for 14 days. Guardrail: abort if answer quality drops more than 1% against control. You approve the split; we never change traffic on our own.</p>
+        <div class="card exp" style="aspect-ratio:auto;padding:28px;border-radius:24px;background:rgba(246,243,241,.94)">
+          <div class="row"><span class="tier tst">EXP-1042 · Summarization routed to Haiku-tier</span><span>Day 9 of 14</span></div>
+          <div class="bar"><i></i></div>
+          <div class="row"><span>Interim delta −$306/wk on the test slice</span><span>Quality flat · guardrails green</span></div>
+        </div>
+        <p class="body" style="margin-top:24px">Interim, not savings yet. The bright patch on the cloud is that 20% — the small share of real requests that decides the outcome.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="method" class="s method" data-sec>
+    <div class="wrap m-in">
+      <div class="m-l">
+        <p class="eyebrow">Four tiers · one ladder</p>
+        <h2 class="d2">Every dollar carries its evidence tier.</h2>
+        <p class="body">The same opportunity stays in view from the first observed anomaly to the verified line in the cost report, so you follow the evidence instead of trusting a number.</p>
+        <div class="arrows"><button class="arrow" id="prev" aria-label="Previous tier">←</button><button class="arrow" id="next" aria-label="Next tier">→</button></div>
+      </div>
+      <div class="m-r" id="mr">
+        <div class="track" id="track">
+          <div class="slide">
+            <div class="shot"><canvas data-kind="observe"></canvas></div>
+            <div class="meta"><p class="lab">Tier 1 · Observed</p><h3>What your spend data shows</h3><p>Every request traced with model, tokens, latency and cost, tied to the prompt that caused it. 412 duplicate tool calls on Jun 28 — observed, not estimated.</p><p class="num">$214 above baseline</p></div>
+          </div>
+          <div class="slide">
+            <div class="shot"><canvas data-kind="detect"></canvas></div>
+            <div class="meta"><p class="lab">Tier 2 · Potential</p><h3>A pattern with a range</h3><p>Ticket routing uses a flagship model on requests that score below the complexity threshold. Every estimate ships with its sample size and confidence.</p><p class="num">$3,800–4,900/mo est.</p></div>
+          </div>
+          <div class="slide">
+            <div class="shot"><canvas data-kind="test"></canvas></div>
+            <div class="meta"><p class="lab">Tier 3 · Tested</p><h3>Real traffic, real results</h3><p>A slice of live traffic runs the candidate route against a control, scored on your quality floor. Guardrails abort the run before your users notice.</p><p class="num">Day 9 of 14 · 20% of traffic</p></div>
+          </div>
+          <div class="slide">
+            <div class="shot"><canvas data-kind="verify"></canvas></div>
+            <div class="meta"><p class="lab">Tier 4 · Verified</p><h3>Visible in observed spend</h3><p>Rolled out Jun 9. The delta has held for three weeks against the pre-change counterfactual baseline. This is the only number we call savings.</p><p class="num" style="color:var(--lake)">$7,412/mo verified</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="findings" class="s find" data-sec>
+    <div class="f-in wrap">
+      <div class="fi" data-p=".10" style="left:2%;top:16%">
+        <span class="node"><svg viewBox="0 0 16 16" fill="none" stroke="#242424" stroke-width="1.4"><path d="M8 1.6 14.4 13H1.6z"/></svg>Model overkill</span>
+        <span>61% of routing requests score below the complexity threshold for the model answering them.</span>
+      </div>
+      <div class="fi" data-p=".18" style="left:15%;top:33%">
+        <span class="node"><svg viewBox="0 0 16 16" fill="none" stroke="#2b59d1" stroke-width="1.4"><path d="M8 1.6 14.4 8 8 14.4 1.6 8z"/></svg>Retry storms</span>
+        <span>412 duplicate tool calls in six hours on inventory-sync — $214 above baseline.</span>
+      </div>
+      <div class="fi" data-p=".07" style="left:3%;top:50%">
+        <span class="node"><svg viewBox="0 0 16 16" fill="none" stroke="#242424" stroke-width="1.4"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M2 6.4h12"/></svg>Uncached context</span>
+        <span>A 14k-token system prefix resent uncached on every turn of every session.</span>
+      </div>
+      <div class="fi" data-p=".22" style="left:26%;top:64%">
+        <span class="node"><svg viewBox="0 0 16 16" fill="none" stroke="#ff9473" stroke-width="1.4"><circle cx="8" cy="8" r="6.2"/><path d="M8 3.4V8l3 2"/></svg>Weekend idle</span>
+        <span>Agent-assist runs 2.3× weekday baseline against near-zero traffic.</span>
+      </div>
+      <div class="fi" data-p=".13" style="left:9%;top:80%">
+        <span class="node"><svg viewBox="0 0 16 16" fill="none" stroke="#242424" stroke-width="1.4"><path d="M2.6 8h10.8M8 2.6v10.8"/><circle cx="8" cy="8" r="6.2"/></svg>Idle reasoning</span>
+        <span>Extended thinking spent on questions a mini model closes on the first pass.</span>
+      </div>
+      <div class="f-t veil">
+        <p class="eyebrow">What it finds</p>
+        <h2 class="d2">Each pattern links back to the requests that caused it.</h2>
+        <p class="body">Ranked by spend, with an evidence tier attached and the sample it was drawn from. Sample workspace — every figure here is illustrative, which is exactly how we treat an unverified number.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="pipeline" class="s sec-pad solid">
+    <div class="wrap">
+      <p class="eyebrow">The path a dollar takes</p>
+      <h2 class="d2" style="max-width:16em">Ingestion, coverage, detection, experiment, verification — one lineage, end to end.</h2>
+      <div class="pipe-box">
+        <svg viewBox="0 0 1100 260" role="img" aria-label="Pipeline from usage ingest through coverage verification, detectors and experiments to a verified line in the cost report">
+          <defs>
+            <radialGradient id="hub" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#cfdaf5" stop-opacity=".95"/>
+              <stop offset="100%" stop-color="#cfdaf5" stop-opacity="0"/>
+            </radialGradient>
+            <style>
+              .pp-n{fill:#f6f3f1;stroke:#cecac8;stroke-width:1}
+              .pp-t{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:-.4px;fill:#242424;text-transform:uppercase}
+              .pp-tm{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:-.4px;fill:#797776}
+              .pp-ln{fill:none;stroke:#cecac8;stroke-width:1}
+              .pp-lnb{fill:none;stroke:#2b59d1;stroke-width:1.2}
+            </style>
+          </defs>
+          <circle cx="550" cy="130" r="150" fill="url(#hub)"/>
+          <path class="pp-ln" d="M215 60 C300 60 320 130 400 130"/>
+          <path class="pp-ln" d="M215 130 H400"/>
+          <path class="pp-ln" d="M215 200 C300 200 320 130 400 130"/>
+          <path class="pp-ln" d="M700 130 H770"/>
+          <path class="pp-lnb" d="M700 130 C790 130 800 60 890 60"/>
+          <path class="pp-lnb" d="M700 130 C790 130 800 200 890 200"/>
+          <g>
+            <rect class="pp-n" x="30" y="40" width="185" height="40" rx="20"/><text class="pp-t" x="52" y="65">Provider usage</text>
+            <rect class="pp-n" x="30" y="110" width="185" height="40" rx="20"/><text class="pp-t" x="52" y="135">Gateway logs</text>
+            <rect class="pp-n" x="30" y="180" width="185" height="40" rx="20"/><text class="pp-t" x="52" y="205">Traces &amp; prompts</text>
+            <rect class="pp-n" x="400" y="110" width="150" height="40" rx="20"/><text class="pp-t" x="422" y="135">Coverage</text>
+            <rect class="pp-n" x="570" y="110" width="130" height="40" rx="20"/><text class="pp-t" x="592" y="135">Detectors</text>
+            <rect class="pp-n" x="770" y="110" width="120" height="40" rx="20"/><text class="pp-t" x="792" y="135">Experiment</text>
+            <rect class="pp-n" x="890" y="40" width="180" height="40" rx="20" stroke="#2b59d1"/><text class="pp-t" x="912" y="65" fill="#2b59d1">Verified report</text>
+            <rect class="pp-n" x="890" y="180" width="180" height="40" rx="20"/><text class="pp-t" x="912" y="205">Dropped, logged</text>
+          </g>
+          <text class="pp-tm" x="400" y="172">≥ 7 complete days required</text>
+          <text class="pp-tm" x="570" y="172">deterministic</text>
+          <text class="pp-tm" x="770" y="172">guardrailed</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section id="exact" class="s sec-pad solid">
+    <div class="wrap">
+      <p class="eyebrow">Why the arithmetic matters</p>
+      <h2 class="d2" style="max-width:14em">A number you can recompute is worth more than a number you can only believe.</h2>
+      <div class="grid3">
+        <article class="card feat">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="#242424" stroke-width="1.3"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+          <h3>Exact rational arithmetic</h3>
+          <p>Derived values stay reduced integer numerator/denominator pairs. No floats, no drift. Rounding happens once, at display, half-to-even, to at most 12 places.</p>
+        </article>
+        <article class="card feat">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="#242424" stroke-width="1.3"><path d="M12 3 21 8v8l-9 5-9-5V8z"/><path d="M12 12v9"/></svg>
+          <h3>Evidence, not opinion</h3>
+          <p>A calculation records its formula and inputs. It never assigns a recommendation and it never promotes itself to Verified — only a held post-rollout delta can do that.</p>
+        </article>
+        <article class="card feat">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="#242424" stroke-width="1.3"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <h3>Coverage you can audit</h3>
+          <p>Money arrives as canonical decimal strings — JSON numbers are rejected. Missing counts stay <code>null</code>, never zero. A 30-day projection needs at least seven covered days.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing" class="s sec-pad solid">
+    <div class="wrap">
+      <p class="eyebrow">Pricing</p>
+      <h2 class="d2">Pricing that can’t reward a guess.</h2>
+      <p class="body-lg" style="max-width:34em;margin-top:20px">We charge on spend under observation — never a percentage of savings. A tool that profits from its own estimates will always find bigger estimates.</p>
+      <div class="plans">
+        <article class="card plan">
+          <h3>Observer</h3>
+          <p class="amt">$0<i>forever</i></p>
+          <ul><li>1 workspace, 2 provider connections</li><li>Observed spend + anomaly alerts</li><li>7-day data retention</li></ul>
+          <a class="btn btn-ghost" href="/auth/sign-up">Start observing</a>
+        </article>
+        <article class="card peri plan">
+          <h3>Scale</h3>
+          <p class="amt">$490<i>/month</i></p>
+          <ul><li>Up to $100k/mo spend under observation</li><li>Opportunity detection + experiments</li><li>Verified savings reports and digests</li><li>Slack and email alerts</li></ul>
+          <a class="btn btn-blue" href="/auth/sign-up">Start a 14-day pilot <span aria-hidden="true">▸</span></a>
+        </article>
+        <article class="card plan">
+          <h3>Enterprise</h3>
+          <p class="amt">Custom</p>
+          <ul><li>SSO / SAML, audit log</li><li>Warehouse export (Snowflake, BigQuery)</li><li>Dedicated support and onboarding</li></ul>
+          <a class="btn btn-ghost" href="/support">Talk to us</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="s sec-pad solid">
+    <div class="wrap">
+      <p class="eyebrow">Questions</p>
+      <h2 class="d2">What teams ask before connecting.</h2>
+      <div class="faq">
+        <details><summary>Do you change our traffic?<i>↓</i></summary><div class="ans"><p class="body">No. The connection is read-only. An experiment only starts after you approve the split, the slice size and the guardrail, and any run aborts itself if quality drops past the floor you set.</p></div></details>
+        <details><summary>What counts as verified?<i>↓</i></summary><div class="ans"><p class="body">A change that has been rolled out and whose delta has held in observed spend against the pre-change counterfactual baseline for a full verification window. Interim test results are labelled Tested, never savings.</p></div></details>
+        <details><summary>Where does the data live?<i>↓</i></summary><div class="ans"><p class="body">Usage records and traces stay in your tenant with per-workspace authorization. Enterprise workspaces can export the same lineage to Snowflake or BigQuery and recompute every figure themselves.</p></div></details>
+        <details><summary>Why not charge a percentage of savings?<i>↓</i></summary><div class="ans"><p class="body">Because it would pay us to inflate estimates, and estimates are the part of this product that should be hardest to inflate. We charge on spend under observation instead.</p></div></details>
+        <details><summary>Which providers are supported?<i>↓</i></summary><div class="ans"><p class="body">Direct provider billing exports plus gateway logs for OpenAI- and Anthropic-compatible endpoints. Adapters are additive: an unsupported provider shows as uncovered spend rather than being silently estimated.</p></div></details>
+      </div>
+    </div>
+  </section>
+
+  <section id="final" class="s final" data-sec>
+    <div class="final-in">
+      <div class="box veil">
+        <span class="tier ver">Verified</span>
+        <h2 class="d2">$4,214/mo, verified.<br>This line can go in the cost report.</h2>
+        <p class="body-lg">Rolled out June 30. Three weeks later the delta is still holding in observed spend against the pre-change baseline.</p>
+        <a class="btn btn-blue" id="cta" href="/auth/sign-up">Connect your usage data <span aria-hidden="true">▸</span></a>
+        <p class="fine">Read-only. No traffic changes until you approve an experiment.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="logo" href="#hero"><i aria-hidden="true"></i>evalomics</a>
+    <nav>
+      <a href="#conf">Manifesto</a><a href="#method">The ladder</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+      <a href="/trust">Trust center</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/security">Security</a><a href="/support">Support</a>
+      <a href="https://github.com/NikhileshRSahu/ai-cost-performance-optimizer" target="_blank" rel="noopener">Repo</a>
+    </nav>
+    <span class="fine">© 2026 Evalomics</span>
+  </div>
+  <div class="wrap foot-actions">
+    <a class="btn btn-ghost sm" href="/demo">Explore sample demo</a>
+    <a class="btn btn-blue sm" href="/auth/sign-up">Try with my usage <span aria-hidden="true">▸</span></a>
+    <a class="arrow-link" href="/support">See support status</a>
+  </div>
+  <div class="wrap"><p class="fine">Sample workspace — every figure is illustrative, which is exactly how we treat an unverified number.</p></div>
+</footer>
+
+<button class="tour" id="tour" type="button" aria-label="Play a guided scroll through the page"><svg class="pl" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1 9 5 2 9z"/></svg><svg class="pp" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1h2v8H2zM6 1h2v8H6z"/></svg><span id="tourlab">Play preview</span></button>
+<script>
+(()=>{const nav=document.getElementById('nav');const f=()=>nav.classList.toggle('stuck',scrollY>8);addEventListener('scroll',f,{passive:true});f();})();
+</script>
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+const sstep = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+
+/* ---------- noise ---------- */
+function hash(x, y, z) { let h = Math.imul(x, 374761393) ^ Math.imul(y, 668265263) ^ Math.imul(z, 1440662683); h = Math.imul(h ^ (h >>> 13), 1274126177); h ^= h >>> 16; return (h >>> 0) / 4294967296; }
+function vnoise(x, y, z) {
+  const xi = Math.floor(x), yi = Math.floor(y), zi = Math.floor(z), xf = x - xi, yf = y - yi, zf = z - zi;
+  const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf), w = zf * zf * (3 - 2 * zf);
+  const c = (a, b, d) => hash(xi + a, yi + b, zi + d);
+  return lerp(lerp(lerp(c(0,0,0), c(1,0,0), u), lerp(c(0,1,0), c(1,1,0), u), v), lerp(lerp(c(0,0,1), c(1,0,1), u), lerp(c(0,1,1), c(1,1,1), u), v), w);
+}
+const fbm = (x, y, z) => .5 * vnoise(x, y, z) + .3 * vnoise(x * 2.1, y * 2.1, z * 2.1) + .2 * vnoise(x * 4.3, y * 4.3, z * 4.3);
+
+/* ---------- palette: white = observed, amber = waste, violet = test, teal = verified ---------- */
+/* light-canvas palette (Monad): 0 coral=waste, 1 ink/graphite=observed,
+   2 lake blue=tested, 3 deep blue=verified, 4 gold, 5 sky blue */
+const PAL = [
+  [[1,.58,.45],[.95,.48,.04],[1,.66,.55],[.92,.55,.36]],
+  [[.14,.14,.14],[.31,.30,.30],[.47,.47,.46],[.22,.22,.24]],
+  [[.17,.35,.82],[.25,.43,.88],[.12,.28,.72],[.30,.48,.90]],
+  [[.09,.22,.56],[.13,.30,.66],[.17,.35,.82],[.08,.18,.44]],
+  [[.93,.79,.44],[.86,.70,.32],[.95,.85,.55]],
+  [[.63,.71,.92],[.53,.63,.88],[.72,.79,.95]]
+];
+function pick(w, r, C, o, mul = 1, alpha = 1) {
+  let s = 0; for (let k = 0; k < 6; k++) s += w[k];
+  let x = r() * s, k = 0; while (k < 5 && x > w[k]) { x -= w[k]; k++; }
+  const g = PAL[k], c = g[(r() * g.length) | 0], j = (.88 + .24 * r()) * mul;
+  C[o] = Math.min(1, c[0] * j); C[o + 1] = Math.min(1, c[1] * j); C[o + 2] = Math.min(1, c[2] * j); C[o + 3] = alpha;
+}
+const band = (x, c, w) => clamp(1 - Math.abs(x - c) / w);
+function gauss(r) { return Math.sqrt(-2 * Math.log(r() + 1e-9)) * Math.cos(6.2832 * r()); }
+function randDir(r) { const th = r() * 6.2832, ph = Math.acos(2 * r() - 1); return [Math.sin(ph) * Math.cos(th), Math.cos(ph), Math.sin(ph) * Math.sin(th), th]; }
+
+/* sort by height so that a particle keeps a similar altitude between shapes: morphs read as flow, not shuffle */
+function finish(P, C, n) {
+  const idx = Array.from({ length: n }, (_, i) => i);
+  idx.sort((a, b) => P[b * 3 + 1] - P[a * 3 + 1]);
+  const P2 = new Float32Array(n * 3), C2 = new Float32Array(n * 4);
+  for (let i = 0; i < n; i++) {
+    const s = idx[i];
+    P2[i*3] = P[s*3]; P2[i*3+1] = P[s*3+1]; P2[i*3+2] = P[s*3+2];
+    C2[i*4] = C[s*4]; C2[i*4+1] = C[s*4+1]; C2[i*4+2] = C[s*4+2]; C2[i*4+3] = C[s*4+3];
+  }
+  return { pos: P2, col: C2 };
+}
+
+/* ---------- shapes (unit space: 1 unit = 0.8 of half viewport height) ---------- */
+function genBrain(n) {
+  const r = mulberry(7), P = new Float32Array(n * 3), C = new Float32Array(n * 4);
+  for (let i = 0; i < n; i++) {
+    const k = r(), [ux, uy, uz, th] = randDir(r); let x, y, z, w, mul = 1, a = 1;
+    if (k < .84) {
+      const f = fbm(ux * 3 + 5, uy * 3 + 5, uz * 3 + 5) - .5, gy = Math.sin(ux * 13 + uy * 7) * Math.sin(uz * 9 + ux * 3) * .03;
+      let m = 1 + .15 * f + gy; if (Math.abs(uz) < .07 && uy > 0) m *= .95;
+      x = 1.28 * ux * m; y = 1.0 * uy * m; z = .84 * uz * m;
+      if (y < 0) y *= .72 - .12 * Math.max(0, -ux);              // flatter underside, fuller frontal lobe
+      if (uy < -.35 && ux < .1) { y -= .12 * (-uy - .35); }       // temporal lobe droops a little
+      y += .32;
+      const rim = 1 - Math.abs(uz), n1 = fbm(ux * 1.6 + 2, uy * 1.6, uz * 1.6), n2 = fbm(ux * 2.2 + 9, uy * 2.2 + 4, uz * 2.2), n3 = fbm(ux * 3 + 7, uy * 3, uz * 3 + 3);
+      w = [.08 + .8 * rim * Math.max(0, .2 + uy), .2 + .5 * (1 - rim) * (.6 + .6 * n1), .06 + .75 * sstep(.5, .68, n1) * (ux < 0 ? 1 : .5), .03 + .5 * sstep(.56, .74, n2), .02 + .3 * sstep(.6, .8, n3), .02 + .16 * sstep(.6, .8, n2)];
+    } else if (k < .89) {
+      const q = Math.cbrt(r()) * .88; x = 1.28 * ux * q; y = 1.0 * uy * q * (uy < 0 ? .72 : 1) + .32; z = .84 * uz * q;
+      w = [.3, .35, .2, .1, .05, .05]; mul = .6; a = .8;
+    } else if (k < .945) {
+      x = .7 + .48 * ux; y = -.3 + .28 * uy; z = .44 * uz; w = [.55, .2, .1, .05, .05, .05];
+    } else {
+      const t = r(), rad = .15 * (1 - .3 * t); y = -.3 - t * 1.0; x = .22 + .16 * t + rad * Math.cos(th); z = rad * Math.sin(th); w = [.06, .14, .34, .34, .04, .08]; a = .85;
+    }
+    P[i*3] = x; P[i*3+1] = y; P[i*3+2] = z; pick(w, r, C, i * 4, mul, a);
+  }
+  return finish(P, C, n);
+}
+function genBulb(n) {
+  const r = mulberry(21), pr = [];
+  for (let a = 0; a <= 2.35; a += .02) pr.push([.45 + Math.cos(a), Math.sin(a)]);
+  for (let t = 0; t <= 1.001; t += .03) pr.push([-.253 + (-.95 + .253) * t, .711 + (.42 - .711) * sstep(0, 1, t)]);
+  for (let y = -.95; y >= -1.5; y -= .02) pr.push([y, .42 + .025 * Math.sin(y * 46)]);
+  for (let q = .4; q >= 0; q -= .04) pr.push([-1.5, q]);
+  const cdf = []; let tot = 0;
+  for (let i = 0; i < pr.length - 1; i++) { const dy = pr[i+1][0] - pr[i][0], dr = pr[i+1][1] - pr[i][1]; tot += Math.hypot(dy, dr) * (pr[i][1] + pr[i+1][1]) * .5 + 1e-5; cdf.push(tot); }
+  const P = new Float32Array(n * 3), C = new Float32Array(n * 4);
+  for (let i = 0; i < n; i++) {
+    let x, y, z, mul = 1, a = 1;
+    if (r() < .05) { const [ux, uy, uz] = randDir(r), q = Math.cbrt(r()) * .88; x = ux * q; y = .45 + uy * q; z = uz * q; mul = .55; a = .75; }
+    else {
+      const u = r() * tot; let lo = 0, hi = cdf.length - 1; while (lo < hi) { const m = (lo + hi) >> 1; if (cdf[m] < u) lo = m + 1; else hi = m; }
+      const t = r(), yy = lerp(pr[lo][0], pr[lo+1][0], t), rr = lerp(pr[lo][1], pr[lo+1][1], t), th = r() * 6.2832;
+      x = rr * Math.cos(th); y = yy; z = rr * Math.sin(th);
+    }
+    const tt = (y + 1.5) / 2.95, adj = tt - .16 * x + (fbm(x * 2, y * 2, z * 2) - .5) * .3;
+    const w = [sstep(.6, .8, adj) + .03, band(adj, .56, .2) + .05, band(adj, .32, .16) + .04, sstep(.26, .06, adj) + .02, band(adj, .45, .1) * .3, .02];
+    P[i*3] = x; P[i*3+1] = y; P[i*3+2] = z; pick(w, r, C, i * 4, mul, a);
+  }
+  return finish(P, C, n);
+}
+function genSphere(n) {
+  const r = mulberry(33), R = 1.3, P = new Float32Array(n * 3), C = new Float32Array(n * 4);
+  const cl = Math.hypot(-.72, .12, .68), cx = -.72 / cl, cy = .12 / cl, cz = .68 / cl;
+  // tangent basis around the test slice centre
+  let t1 = [cy * 0 - cz * 1, cz * 0 - cx * 0, cx * 1 - cy * 0]; // c x (0,1,0)
+  const tl = Math.hypot(...t1); t1 = t1.map(v => v / tl);
+  const t2 = [cy * t1[2] - cz * t1[1], cz * t1[0] - cx * t1[2], cx * t1[1] - cy * t1[0]];
+  for (let i = 0; i < n; i++) {
+    let ux, uy, uz, w;
+    if (r() < .07) {
+      const cs = 1 - r() * (1 - Math.cos(.34)), sn = Math.sqrt(1 - cs * cs), ph = r() * 6.2832;
+      ux = cx * cs + (t1[0] * Math.cos(ph) + t2[0] * Math.sin(ph)) * sn; uy = cy * cs + (t1[1] * Math.cos(ph) + t2[1] * Math.sin(ph)) * sn; uz = cz * cs + (t1[2] * Math.cos(ph) + t2[2] * Math.sin(ph)) * sn;
+      w = [.03, 1, .06, .02, .03, .04];
+    } else {
+      [ux, uy, uz] = randDir(r);
+      const c = fbm(ux * 1.7 + 3, uy * 1.7 + 1, uz * 1.7), t1s = sstep(.4, .5, c), t2s = sstep(.55, .65, c);
+      const lo = [.55,.1,.15,.03,.12,.05], mid = [.15,.05,.4,.1,.2,.1], hi = [.25,.08,.08,.4,.05,.14];
+      w = lo.map((_, k) => lerp(lerp(lo[k], mid[k], t1s), hi[k], t2s));
+    }
+    const m = R * (1 + (r() - .5) * .02); P[i*3] = ux * m; P[i*3+1] = uy * m; P[i*3+2] = uz * m; pick(w, r, C, i * 4);
+  }
+  return finish(P, C, n);
+}
+function genField(n, seed, hw, hh, keep) {
+  const r = mulberry(seed), P = new Float32Array(n * 3), C = new Float32Array(n * 4);
+  for (let i = 0; i < n; i++) {
+    let x, y, z, tries = 0;
+    do { x = (r() * 2 - 1) * hw; y = (r() * 2 - 1) * hh; z = -1.5 + r() * 2.7; tries++; }
+    while (tries < 8 && r() > sstep(.3, .65, fbm(x * .7 + seed, y * .7, z * .7)) + .12);
+    P[i*3] = x; P[i*3+1] = y; P[i*3+2] = z;
+    pick([.42, .14, .16, .14, .08, .06], r, C, i * 4, 1, r() < keep ? 1 : 0);
+  }
+  return finish(P, C, n);
+}
+function genNebula(n) {
+  const r = mulberry(55), P = new Float32Array(n * 3), C = new Float32Array(n * 4);
+  const B = [
+    { c: [0, .05, 0], s: [.5, .78, .4], f: .5, w: [.05, .25, .35, .05, .25, .05] },
+    { c: [.4, -.42, .1], s: [.46, .5, .3], f: .25, w: [.85, .08, 0, 0, .07, 0] },
+    { c: [-.32, .58, -.1], s: [.4, .45, .3], f: .12, w: [0, .1, .1, .6, 0, .2] },
+    { c: [-.5, 0, 0], s: [.35, .55, .3], f: .07, w: [0, .1, .2, .1, .1, .5] }
+  ];
+  for (let i = 0; i < n; i++) {
+    let u = r(), b = null, acc = 0;
+    for (const q of B) { acc += q.f; if (u < acc) { b = q; break; } }
+    if (b) { P[i*3] = b.c[0] + gauss(r) * b.s[0]; P[i*3+1] = b.c[1] + gauss(r) * b.s[1]; P[i*3+2] = b.c[2] + gauss(r) * b.s[2]; pick(b.w, r, C, i * 4); }
+    else { P[i*3] = gauss(r) * 1.3; P[i*3+1] = gauss(r) * 1.3; P[i*3+2] = gauss(r) * .6; pick([.3, .1, .3, .1, .1, .1], r, C, i * 4, .8, .7); }
+  }
+  return finish(P, C, n);
+}
+function genSculpt(n) {
+  const r = mulberry(77), L = 1.6, P = new Float32Array(n * 3), C = new Float32Array(n * 4);
+  for (let i = 0; i < n; i++) {
+    const f = i % 3, a = r() * L, b = r() * L, j = gauss(r) * .025; let x, y, z, w;
+    const nz = fbm(a * 1.3 + f * 5, b * 1.3, f) - .5, ta = a / L, tb = b / L;
+    if (f === 0) { x = a; y = b; z = j; w = [.03, band(ta, .3, .3) * .2 + .03, band(ta, .85, .3) + .1, sstep(.5, 0, ta + nz * .4) + .1, .05, band(ta, .5, .3) * .6]; }
+    else if (f === 1) { x = a; y = j; z = b; w = [sstep(.5, 1, tb + nz * .4) * 1.1 + .05, .12, band(tb, .3, .3) + .1, .02, band(tb, .55, .3) * .6, .05]; }
+    else { x = j; y = a; z = b; w = [sstep(.6, 1, tb + nz * .4) * .4, .05, band(ta, .5, .5) * .7 + .1, .05, .25, band(ta, .3, .4) * .9 + .1]; }
+    P[i*3] = x - L / 2; P[i*3+1] = y - L / 2; P[i*3+2] = z - L / 2; pick(w, r, C, i * 4);
+  }
+  return finish(P, C, n);
+}
+
+/* ---------- matrices ---------- */
+const m4mul = (a, b) => { const o = new Float32Array(16); for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { let s = 0; for (let k = 0; k < 4; k++) s += a[k*4+j] * b[i*4+k]; o[i*4+j] = s; } return o; };
+const m4T = (x, y, z) => Float32Array.of(1,0,0,0, 0,1,0,0, 0,0,1,0, x,y,z,1);
+const m4S = s => Float32Array.of(s,0,0,0, 0,s,0,0, 0,0,s,0, 0,0,0,1);
+const m4RX = a => { const c = Math.cos(a), s = Math.sin(a); return Float32Array.of(1,0,0,0, 0,c,s,0, 0,-s,c,0, 0,0,0,1); };
+const m4RY = a => { const c = Math.cos(a), s = Math.sin(a); return Float32Array.of(c,0,-s,0, 0,1,0,0, s,0,c,0, 0,0,0,1); };
+const m4RZ = a => { const c = Math.cos(a), s = Math.sin(a); return Float32Array.of(c,s,0,0, -s,c,0,0, 0,0,1,0, 0,0,0,1); };
+const persp = (f, a, n, fa) => { const t = 1 / Math.tan(f / 2), nf = 1 / (n - fa); return Float32Array.of(t / a, 0,0,0, 0,t,0,0, 0,0,(fa + n) * nf,-1, 0,0,2 * fa * n * nf,0); };
+
+/* ---------- state ---------- */
+const canvas = $('#gl');
+const gl = canvas.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'high-performance' });
+let W = innerWidth, H = innerHeight, DPR = 1, aspect = W / H, narrow = aspect < .85;
+const FOV = 40 * Math.PI / 180, CAM = 6;
+let halfH = Math.tan(FOV / 2) * CAM, halfW = halfH * aspect;
+let sy = scrollY, syT = scrollY, stops = [], secTops = {};
+const mouse = { x: 0, y: 0, tx: 0, ty: 0, on: 0 };
+
+const secs = {}; $$('[data-sec]').forEach(s => secs[s.id] = s);
+
+/* poses ---------------------------------------------------------- */
+const POSE = {
+  hero:   { x: .48, y: .1, s: .68,  rx: 0, ry: 0, rz: 0, spin: 0, size: 1,   loose: 0 },
+  zoom:   { x: -.72, y: -.32, s: 1.5, rx: .06, ry: .12, rz: 0, spin: 0, size: .85, loose: .1 },
+  field:  { x: 0, y: 0, s: 1, rx: 0, ry: 0, rz: 0, spin: 0, size: 1.1, loose: .35 },
+  bulb:   { x: -.3, y: -.04, s: .92, rx: 0, ry: 0, rz: .3, spin: 0, size: 1, loose: .05 },
+  sph1:   { x: .48, y: -.02, s: 1.08, rx: .1, ry: 0, rz: 0, spin: .05, size: .8, loose: 0 },
+  sph2:   { x: .56, y: 0, s: 1.1, rx: .1, ry: .7, rz: 0, spin: .05, size: .8, loose: 0 },
+  field2: { x: 0, y: 0, s: 1, rx: 0, ry: 0, rz: 0, spin: 0, size: 1.25, loose: .5 },
+  neb:    { x: 0, y: 0, s: .8, rx: 0, ry: 0, rz: 0, spin: 0, size: 1, loose: .1 },
+  scul:   { x: 0, y: -.02, s: .82, rx: .55, ry: .78, rz: 0, spin: .1, size: .9, loose: 0 }
+};
+function pose(name) {
+  const p = Object.assign({}, POSE[name]);
+  if (narrow && !/field|neb|scul/.test(name)) { p.x *= .25; p.y = name === 'zoom' ? .6 : .5; p.s *= .5; }
+  if (narrow && name === 'neb') p.s = .62;
+  if (narrow && name === 'scul') p.s = .8;
+  return p;
+}
+
+function layout() {
+  stops = [];
+  const vh = H;
+  const top = id => secs[id].getBoundingClientRect().top + scrollY, ht = id => secs[id].offsetHeight;
+  const at = (id, f, shape, po) => stops.push({ y: top(id) + f * Math.max(0, ht(id) - vh), shape, pose: pose(po) });
+  at('hero', 0, 'brain', 'hero');
+  at('conf', 0, 'brain', 'zoom');
+  at('conf', 1, 'brain', 'zoom');
+  at('chaos', .1, 'fieldA', 'field');
+  at('chaos', 1, 'fieldA', 'field');
+  at('bulb', 0, 'bulb', 'bulb');
+  at('bulb', 1, 'bulb', 'bulb');
+  at('sphere', 0, 'sphere', 'sph1');
+  at('sphere', 1, 'sphere', 'sph2');
+  at('method', 0, 'fieldB', 'field2');
+  at('findings', 1, 'fieldB', 'field2');
+  at('final', .05, 'nebula', 'neb');
+  at('final', .5, 'nebula', 'neb');
+  at('final', 1, 'sculpt', 'scul');
+  for (let i = 1; i < stops.length; i++) if (stops[i].y <= stops[i-1].y) stops[i].y = stops[i-1].y + 1;
+  Object.keys(secs).forEach(k => secTops[k] = top(k));
+}
+
+/* ---------- GL ---------- */
+let GLOK = !!gl, main, amb, big, progS, progB, N, shapes = {}, dirs, delayA, delayB;
+const SPAN = .6;
+
+const VS = `
+attribute vec3 aPos; attribute vec4 aCol; attribute vec4 aMisc;
+uniform mat4 uMV; uniform mat4 uP; uniform float uTime,uPx,uFocal,uScale,uSizeMul,uLoose,uRad,uAlpha,uMode,uWrap,uScroll,uMouseOn; uniform vec2 uMouse;
+varying vec4 vCol; varying float vRot,vLw,vAA;
+void main(){
+  float s=aMisc.x; vec3 p=aPos;
+  if(uMode>.5){ p.y=mod(p.y+uScroll*(.25+.9*aMisc.w)+uWrap,2.*uWrap)-uWrap; }
+  float amp=.006+uLoose*.07;
+  p+=amp*vec3(sin(uTime*.5+s*40.),cos(uTime*.41+s*23.),sin(uTime*.33+s*57.));
+  vec4 mv=uMV*vec4(p,1.);
+  float depth=-mv.z;
+  vec2 dm=mv.xy-uMouse*depth/6.;
+  float f=exp(-dot(dm,dm)/.16)*uMouseOn;
+  mv.xy+=normalize(dm+vec2(1e-4))*f*.2;
+  gl_Position=uP*mv;
+  float size=aMisc.y*uScale*uSizeMul*uFocal/depth;
+  gl_PointSize=clamp(size*uPx,2.5,150.);
+  vAA=2./gl_PointSize; vLw=(1.05+.5*uPx)*vAA;
+  float rel=(mv.z+6.)/uRad; float dep=mix(.30,1.,clamp(rel*.5+.5,0.,1.));
+  float tw=.80+.20*sin(uTime*1.6+s*80.);
+  vCol=vec4(aCol.rgb,aCol.a*uAlpha*dep*tw);
+  vRot=s*6.2832+uTime*(aMisc.z-.5)*.7;
+}`;
+const FS = `
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+varying vec4 vCol; varying float vRot,vLw,vAA;
+float sdTri(vec2 p){const float k=1.7320508;p.x=abs(p.x)-1.;p.y=p.y+1./k;if(p.x+k*p.y>0.)p=vec2(p.x-k*p.y,-k*p.x-p.y)/2.;p.x-=clamp(p.x,-2.,0.);return -length(p)*sign(p.y);}
+void main(){
+  vec2 q=gl_PointCoord*2.-1.; q.y=-q.y;
+  float c=cos(vRot),s=sin(vRot); q=mat2(c,-s,s,c)*q; q*=1.3;
+  float d=abs(sdTri(q))/1.3;
+  float a=1.-smoothstep(vLw*.5,vLw*.5+vAA,d);
+  float al=vCol.a*a; if(al<.012) discard;
+  gl_FragColor=vec4(vCol.rgb,al);
+}`;
+const VSB = `
+attribute vec3 aPos; attribute vec4 aCol; attribute vec4 aMisc;
+uniform mat4 uP; uniform float uTime,uPx,uViewH,uScroll,uWrap;
+varying vec4 vCol,vA,vB,vZ; varying float vLw,vAA;
+mat3 rY(float a){float c=cos(a),s=sin(a);return mat3(c,0.,-s, 0.,1.,0., s,0.,c);}
+mat3 rX(float a){float c=cos(a),s=sin(a);return mat3(1.,0.,0., 0.,c,s, 0.,-s,c);}
+void main(){
+  vec3 p=aPos; p.y=mod(p.y+uScroll*aMisc.w+uWrap,2.*uWrap)-uWrap;
+  p.x+=sin(uTime*.2+aMisc.x*30.)*.09; p.y+=cos(uTime*.17+aMisc.x*20.)*.09;
+  vec4 mv=vec4(p.x,p.y,p.z-6.,1.); float depth=-mv.z;
+  gl_Position=uP*mv;
+  float size=aMisc.y*(uViewH/1000.)*6./depth;
+  gl_PointSize=clamp(size*uPx,10.,260.);
+  vAA=2./gl_PointSize; vLw=(1.6+.6*uPx)*vAA;
+  float a=uTime*(.15+aMisc.z*.25)+aMisc.x*6.2832, b=uTime*.11*(aMisc.z+.3)+aMisc.x*3.7;
+  mat3 R=rY(a)*rX(b);
+  vec3 v0=R*vec3(1.,1.,1.)*.5, v1=R*vec3(1.,-1.,-1.)*.5, v2=R*vec3(-1.,1.,-1.)*.5, v3=R*vec3(-1.,-1.,1.)*.5;
+  vA=vec4(v0.xy,v1.xy); vB=vec4(v2.xy,v3.xy); vZ=vec4(v0.z,v1.z,v2.z,v3.z);
+  vCol=aCol;
+}`;
+const FSB = `
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+varying vec4 vCol,vA,vB,vZ; varying float vLw,vAA;
+float seg(vec2 p,vec2 a,vec2 b){vec2 pa=p-a,ba=b-a;float h=clamp(dot(pa,ba)/dot(ba,ba),0.,1.);return length(pa-ba*h);}
+float edge(vec2 q,vec2 a,vec2 b,float za,float zb){float d=seg(q,a,b);float z=(za+zb)*.5;return (1.-smoothstep(vLw*.5,vLw*.5+vAA,d))*mix(.3,1.,clamp(z*1.1+.5,0.,1.));}
+void main(){
+  vec2 q=gl_PointCoord*2.-1.; q.y=-q.y;
+  vec2 v0=vA.xy,v1=vA.zw,v2=vB.xy,v3=vB.zw;
+  float a=0.;
+  a=max(a,edge(q,v0,v1,vZ.x,vZ.y)); a=max(a,edge(q,v0,v2,vZ.x,vZ.z)); a=max(a,edge(q,v0,v3,vZ.x,vZ.w));
+  a=max(a,edge(q,v1,v2,vZ.y,vZ.z)); a=max(a,edge(q,v1,v3,vZ.y,vZ.w)); a=max(a,edge(q,v2,v3,vZ.z,vZ.w));
+  float al=a*vCol.a; if(al<.012) discard;
+  gl_FragColor=vec4(vCol.rgb,al);
+}`;
+function prog(vs, fs) {
+  const mk = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(o)); return o; };
+  const p = gl.createProgram(); gl.attachShader(p, mk(gl.VERTEX_SHADER, vs)); gl.attachShader(p, mk(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(p);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) { console.error(gl.getProgramInfoLog(p)); return null; }
+  const u = {}, n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS);
+  for (let i = 0; i < n; i++) { const a = gl.getActiveUniform(p, i); u[a.name] = gl.getUniformLocation(p, a.name); }
+  return { p, u, aPos: gl.getAttribLocation(p, 'aPos'), aCol: gl.getAttribLocation(p, 'aCol'), aMisc: gl.getAttribLocation(p, 'aMisc') };
+}
+function layer(n) {
+  const L = { n, pos: new Float32Array(n * 3), col: new Float32Array(n * 4), misc: new Float32Array(n * 4), pb: gl.createBuffer(), cb: gl.createBuffer(), mb: gl.createBuffer() };
+  return L;
+}
+function up(L, which) {
+  if (which.pos) { gl.bindBuffer(gl.ARRAY_BUFFER, L.pb); gl.bufferData(gl.ARRAY_BUFFER, L.pos, gl.DYNAMIC_DRAW); }
+  if (which.col) { gl.bindBuffer(gl.ARRAY_BUFFER, L.cb); gl.bufferData(gl.ARRAY_BUFFER, L.col, gl.DYNAMIC_DRAW); }
+  if (which.misc) { gl.bindBuffer(gl.ARRAY_BUFFER, L.mb); gl.bufferData(gl.ARRAY_BUFFER, L.misc, gl.STATIC_DRAW); }
+}
+function bind(pg, L) {
+  gl.bindBuffer(gl.ARRAY_BUFFER, L.pb); gl.enableVertexAttribArray(pg.aPos); gl.vertexAttribPointer(pg.aPos, 3, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, L.cb); gl.enableVertexAttribArray(pg.aCol); gl.vertexAttribPointer(pg.aCol, 4, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, L.mb); gl.enableVertexAttribArray(pg.aMisc); gl.vertexAttribPointer(pg.aMisc, 4, gl.FLOAT, false, 0, 0);
+}
+
+function buildStatic() {
+  const nP = narrow ? 5500 : 9500; N = nP;
+  shapes.brain = genBrain(N); shapes.bulb = genBulb(N); shapes.sphere = genSphere(N); shapes.nebula = genNebula(N); shapes.sculpt = genSculpt(N);
+  main = layer(N);
+  const r = mulberry(5); dirs = new Float32Array(N * 3); delayA = new Float32Array(N); delayB = new Float32Array(N);
+  for (let i = 0; i < N; i++) {
+    const d = randDir(r), m = .25 + r() * .9; dirs[i*3] = d[0] * m; dirs[i*3+1] = d[1] * m; dirs[i*3+2] = d[2] * m;
+    delayA[i] = SPAN * (.6 * r() + .4 * (1 - i / N)); delayB[i] = SPAN * (.75 * r() + .25 * (i / N));
+    const big = r() < .05, sz = (big ? .03 + r() * .024 : .016 + r() * r() * .022);
+    main.misc[i*4] = r(); main.misc[i*4+1] = sz; main.misc[i*4+2] = r(); main.misc[i*4+3] = r();
+  }
+  up(main, { misc: true });
+}
+function buildAspect() {
+  const hw = halfW / (.8 * halfH) * 1.12, hh = 1.25 * 1.18;
+  shapes.fieldA = genField(N, 101, hw, hh, narrow ? .24 : .15);
+  shapes.fieldB = genField(N, 202, hw, hh, narrow ? .12 : .07);
+  lastKey = '';
+  // ambient
+  const nA = narrow ? 300 : 650; amb = layer(nA); const r = mulberry(9);
+  for (let i = 0; i < nA; i++) {
+    amb.pos[i*3] = (r() * 2 - 1) * halfW * 1.05; amb.pos[i*3+1] = (r() * 2 - 1) * halfH * 1.25; amb.pos[i*3+2] = -1.5 + r() * 2.4;
+    pick([.06, .58, .14, .06, .06, .10], r, amb.col, i * 4, 1, .16 + .2 * r());
+    amb.misc[i*4] = r(); amb.misc[i*4+1] = .016 + r() * r() * .035; amb.misc[i*4+2] = r(); amb.misc[i*4+3] = r();
+  }
+  up(amb, { pos: true, col: true, misc: true });
+  // foreground wireframes
+  const nB = narrow ? 10 : 22; big = layer(nB); const cols = [[.81,.79,.78],[.81,.79,.78],[.63,.71,.92],[.17,.35,.82],[1,.58,.45],[.93,.79,.44]];
+  for (let i = 0; i < nB; i++) {
+    const z = -.8 + r() * 3.2, vis = Math.tan(FOV / 2) * (CAM - z);
+    big.pos[i*3] = (r() * 2 - 1) * vis * aspect * 1.02; big.pos[i*3+1] = (r() * 2 - 1) * halfH * 1.25; big.pos[i*3+2] = z;
+    const c = cols[(r() * cols.length) | 0]; big.col[i*4] = c[0]; big.col[i*4+1] = c[1]; big.col[i*4+2] = c[2]; big.col[i*4+3] = .26 + .22 * r();
+    big.misc[i*4] = r(); big.misc[i*4+1] = 34 + r() * r() * 90; big.misc[i*4+2] = r(); big.misc[i*4+3] = .35 + r() * 1.05;
+  }
+  up(big, { pos: true, col: true, misc: true });
+}
+
+let lastKey = '', lastPose = null, introT = reduce ? 1 : 0, introStart = 0;
+function morph(A, B, e, intro) {
+  const pa = shapes[A], pb = shapes[B], P = main.pos, C = main.col, same = A === B, fb = shapes.fieldB;
+  for (let i = 0; i < N; i++) {
+    const i3 = i * 3, i4 = i * 4;
+    let t = same ? 0 : clamp(e * (1 + SPAN) - delayA[i], 0, 1); t = t * t * (3 - 2 * t);
+    let x = pa.pos[i3], y = pa.pos[i3+1], z = pa.pos[i3+2], cr = pa.col[i4], cg = pa.col[i4+1], cb = pa.col[i4+2], ca = pa.col[i4+3];
+    if (t > 0) {
+      x += (pb.pos[i3] - x) * t; y += (pb.pos[i3+1] - y) * t; z += (pb.pos[i3+2] - z) * t;
+      const k = Math.sin(Math.PI * t) * .9; x += dirs[i3] * k; y += dirs[i3+1] * k; z += dirs[i3+2] * k;
+      cr += (pb.col[i4] - cr) * t; cg += (pb.col[i4+1] - cg) * t; cb += (pb.col[i4+2] - cb) * t; ca += (pb.col[i4+3] - ca) * t;
+    }
+    if (intro < 1) {
+      let ti = clamp(intro * (1 + SPAN) - delayB[i], 0, 1); ti = ti * ti * (3 - 2 * ti);
+      const k = 1 - ti, arc = Math.sin(Math.PI * ti) * .7;
+      x = fb.pos[i3] * k + x * ti + dirs[i3] * arc; y = fb.pos[i3+1] * k + y * ti + dirs[i3+1] * arc; z = fb.pos[i3+2] * k + z * ti + dirs[i3+2] * arc;
+      ca = ca * ti + fb.col[i4+3] * k;
+    }
+    P[i3] = x; P[i3+1] = y; P[i3+2] = z; C[i4] = cr; C[i4+1] = cg; C[i4+2] = cb; C[i4+3] = ca;
+  }
+  up(main, { pos: true, col: true });
+}

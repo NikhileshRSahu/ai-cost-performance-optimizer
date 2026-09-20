@@ -9,8 +9,8 @@ const contentSecurityPolicy = [
   "frame-ancestors 'none'",
   "form-action 'self'",
   "img-src 'self' data: blob:",
-  "font-src 'self' data:",
-  "style-src 'self' 'unsafe-inline'",
+  "font-src 'self' data: https://fonts.gstatic.com",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
   "connect-src 'self' https://vitals.vercel-insights.com",
   "upgrade-insecure-requests",
@@ -30,6 +30,13 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   async headers() {
     return [{ source: '/(.*)', headers: securityHeaders }];
+  },
+  async rewrites() {
+    return {
+      beforeFiles: [{ source: '/', destination: '/evalomics-final' }],
+      afterFiles: [],
+      fallback: [],
+    };
   },
   webpack(config: WebpackConfig) {
     const resolve=config.resolve ?? {};
