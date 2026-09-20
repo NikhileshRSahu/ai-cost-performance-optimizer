@@ -1,4 +1,4 @@
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 import { importUsageCsv } from '../ingestion/import.js';
 import type { PersistenceDatabase } from '../persistence/database.js';
 import { importRuns, usageRecords } from '../persistence/schema.js';
@@ -69,7 +69,7 @@ export async function importCustomerUsage(
   });
   const id = importId(parsed.run.checksum);
 
-  const existing = (
+  let existing = (
     await input.db
       .select()
       .from(importRuns)
@@ -81,6 +81,61 @@ export async function importCustomerUsage(
       )
       .limit(1)
   ).at(0);
+
+  if (
+    existing?.status === 'PARTIAL' &&
+    parsed.run.accepted > existing.acceptedRows
+  ) {
+    // A parser upgrade can make a previously-partial import more complete.
+    // Replace only evidence derived from this exact checksum/import, then
+    // re-persist the same source atomically instead of trapping the customer
+    // on stale partial data forever.
+    await input.db.transaction(async (tx) => {
+      await tx.execute(sql`
+        DELETE FROM public.ledger_events
+        WHERE organization_id = ${input.organizationId}
+          AND recommendation_id IN (
+            SELECT id FROM public.recommendations
+            WHERE organization_id = ${input.organizationId}
+              AND evidence->>'sourceImportId' = ${existing!.id}
+          )
+      `);
+      await tx.execute(sql`
+        DELETE FROM public.verification_windows
+        WHERE organization_id = ${input.organizationId}
+          AND recommendation_id IN (
+            SELECT id FROM public.recommendations
+            WHERE organization_id = ${input.organizationId}
+              AND evidence->>'sourceImportId' = ${existing!.id}
+          )
+      `);
+      await tx.execute(sql`
+        DELETE FROM public.implementation_records
+        WHERE organization_id = ${input.organizationId}
+          AND recommendation_id IN (
+            SELECT id FROM public.recommendations
+            WHERE organization_id = ${input.organizationId}
+              AND evidence->>'sourceImportId' = ${existing!.id}
+          )
+      `);
+      await tx.execute(sql`
+        DELETE FROM public.recommendations
+        WHERE organization_id = ${input.organizationId}
+          AND evidence->>'sourceImportId' = ${existing!.id}
+      `);
+      await tx.execute(sql`
+        DELETE FROM public.usage_records
+        WHERE organization_id = ${input.organizationId}
+          AND import_run_id = ${existing!.id}
+      `);
+      await tx.execute(sql`
+        DELETE FROM public.import_runs
+        WHERE organization_id = ${input.organizationId}
+          AND id = ${existing!.id}
+      `);
+    });
+    existing = undefined;
+  }
 
   if (existing !== undefined && existing.status !== 'FAILED') {
     return Object.freeze({
