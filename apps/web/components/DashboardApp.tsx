@@ -39,7 +39,14 @@ const opps=[
 ];
 
 const nav=[['overview','Overview'],['opportunities','Opportunities'],['experiments','Experiments'],['reports','Reports'],['alerts','Alerts'],['integrations','Integrations'],['team','Team'],['billing','Billing'],['settings','Settings']];
-const realNav=nav.filter(([id])=>id!=='alerts');
+const realNav=[
+  ['overview','Overview'],
+  ['opportunities','Opportunities'],
+  ['experiments','Test & verify'],
+  ['reports','Verified results'],
+  ['integrations','Sources'],
+  ['settings','Settings']
+];
 
 function TierBadge({tier}:{tier:Tier}){return <span className={'tier '+tier}>{tier.toUpperCase()}</span>}
 
@@ -132,7 +139,7 @@ function RealWorkspace({userName,userEmail,workspaceName,summary}:{userName:stri
       {section==='opportunities' && <RealOpportunities summary={summary}/>}
       {section==='experiments' && <RealExperiments summary={summary}/>}
       {section==='reports' && <RealReports summary={summary}/>}
-      {section==='integrations' && <><RealIntegrations summary={summary}/><KnowledgeUpload/></>}
+      {section==='integrations' && <><RealIntegrations summary={summary} role={summary?.role??'VIEWER'}/>{summary?.role!=='VIEWER'&&<KnowledgeUpload/>}</>}
       {section==='team' && <RealTeam summary={summary} userEmail={userEmail}/>}
       {section==='billing' && <RealBilling/>}
       {section==='settings' && <RealSettings userName={userName} userEmail={userEmail} workspaceName={workspaceName} organizationId={summary?.organizationId??''} role={summary?.role??'VIEWER'}/>} 
@@ -207,11 +214,13 @@ function RealRecommendationList({summary,filter,compact=false}:{summary?:RealSum
   const items=groupedRecommendations(summary,filter);
   if(items.length===0) return <div className="workspace-empty-section compact-empty"><h1>{filter==='TESTED'?'No experiments yet.':filter==='VERIFIED'?'Nothing verified yet.':'Nothing needs action yet.'}</h1><p>{filter==='TESTED'?'Start with a Potential opportunity. A change becomes Tested only after measured evidence exists.':filter==='VERIFIED'?'Potential and Tested values never count as savings. Verified will appear only after rollout and production reconciliation.':'Evalomics has not found a defensible action from the current evidence.'}</p>{filter==='TESTED'?<Link className="btn black" href="/dashboard/opportunities">Review opportunities</Link>:filter==='VERIFIED'?<Link className="btn black" href="/dashboard/opportunities">Review what can be tested</Link>:null}</div>;
 
-  return <div className={'opportunity-stack'+(compact?' compact':'')}>{items.map(r=><article className="real-opportunity-card" key={r.kind||r.id}>
+  const visible=compact?items.slice(0,1):items;
+  return <div className={'opportunity-stack'+(compact?' compact':'')}>{visible.map(r=><article className="real-opportunity-card" key={r.kind||r.id}>
     <header><div><TierBadge tier={r.state==='OPPORTUNITY'?'potential':r.state==='TESTED'?'tested':'verified'}/><h3>{r.title}</h3></div><span>{r.sourceCount>1?r.sourceCount+' evidence sources':r.confidence?r.confidence.toLowerCase()+' confidence':'evidence available'}</span></header>
     {r.measuredFact&&<div className="opportunity-fact"><span>What we measured</span><strong>{r.measuredFact}</strong></div>}
     <div className="opportunity-explain"><div><span>What this means</span><p>{r.limitation||'This pattern is worth testing, but it is not proof of savings.'}</p></div><div><span>Do this next</span><p>{r.nextAction||'Run a controlled benchmark before changing production.'}</p></div></div>
     <footer><span>{r.currentConfigurationId?'Current: '+r.currentConfigurationId:'No production change recommended yet'}</span><b>{r.amount?money(r.amount,r.currency??summary?.currency??'USD'):'Not savings yet'}</b></footer>
+    {r.state==='OPPORTUNITY'&&<div className="real-empty-actions"><Link className="btn black" href="/dashboard/experiments">Test this safely</Link>{!compact&&<EvalomicsCopilot screen="opportunities"/>}</div>}
   </article>)}</div>
 }
 
@@ -223,22 +232,26 @@ function RealOpportunities({summary}:{summary?:RealSummary}){
   <RealRecommendationList summary={summary} filter="OPPORTUNITY"/></>
 }
 
-function RealExperiments({summary}:{summary?:RealSummary}){return <><div className="page-head"><div><p className="eyebrow">WHAT HAVE WE ACTUALLY TESTED?</p><h1>Experiments</h1><p>This page contains measured changes only. Potential ideas do not count as savings.</p></div></div><VerificationWorkbench opportunities={(summary?.recommendations??[]).map(r=>({id:r.id,title:r.title,state:r.state,sourceImportId:r.sourceImportId}))} currency={summary?.currency??'USD'}/><RealRecommendationList summary={summary} filter="TESTED"/></>}
+function RealExperiments({summary}:{summary?:RealSummary}){return <><div className="page-head"><div><p className="eyebrow">TEST ONE CHANGE SAFELY</p><h1>Test & verify</h1><p>Evalomics keeps the decision simple: choose one opportunity, measure quality and cost, record the rollout, then verify the result in production.</p></div></div>
+  <div className="real-empty-grid"><article className="real-empty-main"><TierBadge tier="potential"/><h2>One path from idea to proof</h2><p><strong>1.</strong> Pick the opportunity worth testing. <strong>2.</strong> Compare the current and candidate configuration against your quality floor. <strong>3.</strong> After rollout, reconcile new production evidence before calling anything savings.</p><p className="settings-note">The detailed evidence controls are available below for engineers and auditors. Most users should start with the recommended opportunity and one reversible test.</p></article></div>
+  <details className="advanced-proof"><summary>Open evidence workflow</summary><VerificationWorkbench opportunities={(summary?.recommendations??[]).map(r=>({id:r.id,title:r.title,state:r.state,sourceImportId:r.sourceImportId}))} currency={summary?.currency??'USD'}/></details>
+  <RealRecommendationList summary={summary} filter="TESTED"/></>}
 
 function RealReports({summary}:{summary?:RealSummary}){return <><div className="page-head"><div><p className="eyebrow">WHAT CAN FINANCE DEFEND?</p><h1>Verified savings</h1><p>Only production-reconciled results belong in this report.</p></div></div><div className="report-total"><span>Verified in this workspace</span><strong>{money(summary?.verifiedSavings??null,summary?.currency??'USD')}</strong><p>{summary?.verifiedSavings?'This amount is backed by completed verification windows.':'Nothing is being claimed as saved yet. That is the correct state.'}</p></div><RealRecommendationList summary={summary} filter="VERIFIED"/></>}
 
-function RealIntegrations({summary}:{summary?:RealSummary}){
+function RealIntegrations({summary,role}:{summary?:RealSummary;role:string}){
   const provider=(name:string)=>summary?.providers.find(x=>x.provider===name);
   const label=(p:ReturnType<typeof provider>)=>!p?'Not connected':p.dataStatus==='SYNCED_WITH_DATA'?'Synced with data':p.dataStatus==='CONNECTED_NO_DATA'?'Connected — no data found':p.dataStatus==='SYNC_FAILED'?'Sync failed':'Connected — sync pending';
   const latest=summary?.latestImport;
   const openai=provider('OPENAI');
   const anthropic=provider('ANTHROPIC');
+  const canManage=role==='OWNER';
   return <>
-    <div className="page-head"><div><p className="eyebrow">WHERE DOES THE DATA COME FROM?</p><h1>Data sources</h1><p>Connection state is separate from data availability. Evalomics will not call an empty provider response “synced with data.”</p></div><Link className="btn black" href="/onboarding?step=3">Add or repair source</Link></div>
+    <div className="page-head"><div><p className="eyebrow">WHERE DOES THE DATA COME FROM?</p><h1>Data sources</h1><p>Connection state is separate from data availability. Evalomics will not call an empty provider response “synced with data.”</p></div>{canManage?<Link className="btn black" href="/onboarding?step=3">Add or repair source</Link>:<span className="quiet-chip">OWNER MANAGES SOURCES</span>}</div>
     <div className="integration-grid">
-      <article className={openai?.dataStatus==='CONNECTED_NO_DATA'||openai?.dataStatus==='SYNC_FAILED'?'integration-warning':''}><div><strong>OpenAI API</strong><span>{label(openai)}</span></div><p>{openai?.dataStatus==='CONNECTED_NO_DATA'?'The Admin key is valid, but the provider returned zero usage and cost rows for the sync window.':'OpenAI API Platform organization usage and costs. This is not personal ChatGPT usage.'}</p><Link className="btn outline small" href="/onboarding?step=3">{openai?'Manage':'Connect'}</Link></article>
-      <article className={anthropic?.dataStatus==='SYNC_FAILED'?'integration-warning':''}><div><strong>Anthropic API <small className="beta-chip">BETA</small></strong><span>{label(anthropic)}</span></div><p>Anthropic Admin API usage and costs. Production connector code is present, but this integration remains beta until a real Admin key completes an end-to-end sync.</p><Link className="btn outline small" href="/onboarding?step=3">{anthropic?'Manage':'Connect beta'}</Link></article>
-      <article className={latest&&latest.rejected>0?'integration-warning':''}><div><strong>Latest CSV import</strong><span>{latest?latest.status:'None yet'}</span></div><p>{latest?latest.accepted.toLocaleString()+' accepted · '+latest.rejected.toLocaleString()+' rejected':'Upload a usage export without provider credentials.'}</p><Link className="btn outline small" href="/onboarding?step=3">{latest&&latest.rejected>0?'Repair import':'Upload CSV'}</Link></article>
+      <article className={openai?.dataStatus==='CONNECTED_NO_DATA'||openai?.dataStatus==='SYNC_FAILED'?'integration-warning':''}><div><strong>OpenAI API</strong><span>{label(openai)}</span></div><p>{openai?.dataStatus==='CONNECTED_NO_DATA'?'The Admin key is valid, but the provider returned zero usage and cost rows for the sync window.':'OpenAI API Platform organization usage and costs. This is not personal ChatGPT usage.'}</p>{canManage?<Link className="btn outline small" href="/onboarding?step=3">{openai?'Manage':'Connect'}</Link>:<span className="settings-note">Owner access required</span>}</article>
+      <article className={anthropic?.dataStatus==='SYNC_FAILED'?'integration-warning':''}><div><strong>Anthropic API <small className="beta-chip">BETA</small></strong><span>{label(anthropic)}</span></div><p>Anthropic Admin API usage and costs. Production connector code is present, but this integration remains beta until a real Admin key completes an end-to-end sync.</p>{canManage?<Link className="btn outline small" href="/onboarding?step=3">{anthropic?'Manage':'Connect beta'}</Link>:<span className="settings-note">Owner access required</span>}</article>
+      <article className={latest&&latest.rejected>0?'integration-warning':''}><div><strong>Latest CSV import</strong><span>{latest?latest.status:'None yet'}</span></div><p>{latest?latest.accepted.toLocaleString()+' accepted · '+latest.rejected.toLocaleString()+' rejected':'Upload a usage export without provider credentials.'}</p>{role!=='VIEWER'?<Link className="btn outline small" href="/onboarding?step=3">{latest&&latest.rejected>0?'Repair import':'Upload CSV'}</Link>:<span className="settings-note">Operator access required</span>}</article>
     </div>
   </>
 }
@@ -256,9 +269,9 @@ function RealSettings({userName,userEmail,workspaceName,organizationId,role}:{us
   return <><div className="page-head"><div><p className="eyebrow">WORKSPACE ADMINISTRATION</p><h1>Settings</h1><p>Only controls that really persist belong here.</p></div></div>
   <div className="settings-grid">
     <article><h2>Account</h2><p><strong>{userName}</strong><br/>{userEmail}</p><p className="settings-note">Name and email come from your Google account.</p></article>
-    <article><h2>Workspace</h2><p><strong>{workspaceName}</strong></p><Link className="btn outline" href="/onboarding?step=2">Rename workspace</Link></article>
+    <article><h2>Workspace</h2><p><strong>{workspaceName}</strong></p>{role==='OWNER'?<Link className="btn outline" href="/onboarding?step=2">Rename workspace</Link>:<p className="settings-note">Only the workspace owner can rename or reconnect providers.</p>}</article>
     <article><h2>Evidence policy</h2><p><strong>Verified means production-reconciled.</strong></p><p className="settings-note">Potential and Tested values are never promoted into savings totals without a completed verification window.</p></article>
-    <article><h2>Security & privacy</h2><p className="settings-note">Provider credentials are encrypted before storage. Customer evidence is tenant-scoped.</p><div className="settings-links"><Link href="/security">Security</Link><Link href="/privacy">Privacy</Link></div></article>
+    <article><h2>Security & privacy</h2><p className="settings-note">Provider credentials are encrypted before storage. Customer evidence is tenant-scoped.</p><div className="settings-links"><Link href="/security">Security</Link><Link href="/privacy">Privacy</Link><Link href="/support">Support</Link><Link href="/terms">Terms</Link></div></article>
     <DataDeletionCard organizationId={organizationId} role={role}/>
     <article><h2>Session</h2><p className="settings-note">Sign out of this browser when you are finished.</p><form action={signOutAction}><button className="btn outline">Sign out</button></form></article>
   </div></>
