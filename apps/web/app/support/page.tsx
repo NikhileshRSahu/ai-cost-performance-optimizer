@@ -11,4 +11,4 @@ export default function SupportPage(){return <TrustPage eyebrow="SUPPORT" title=
   <h2>Need to remove data?</h2>
   <p>Open workspace Settings to disconnect providers or delete imported usage/evidence. If account-level removal is needed, request it through the same pilot support channel.</p>
   <p><Link className="btn black" href="/auth/sign-in">Open my workspace</Link></p>
-</TrustPage>
+</TrustPage>}
