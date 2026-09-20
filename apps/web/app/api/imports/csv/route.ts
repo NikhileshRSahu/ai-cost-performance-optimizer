@@ -21,7 +21,7 @@ export async function POST(request:Request){
     if(!(file instanceof File)) return NextResponse.json({ok:false,error:'CSV_REQUIRED'},{status:400});
     if(file.size>10*1024*1024) return NextResponse.json({ok:false,error:'FILE_TOO_LARGE'},{status:413});
     const bytes=new Uint8Array(await file.arrayBuffer());
-    const result=await withRuntimeWorkspace(async({workspace,database})=>{
+    const result=await withRuntimeWorkspace(async({workspace,database})=>{ if(workspace.role==='VIEWER') throw new Error('OPERATOR_REQUIRED');
       const imported=await importCustomerUsage({
         db:database.db,session:workspace.session,organizationId:workspace.organizationId,
         fileName:file.name,bytes,isDemo:false,receivedAt:new Date().toISOString()
@@ -36,6 +36,7 @@ export async function POST(request:Request){
     return NextResponse.json({ok:true,result});
   }catch(error){
     if(error instanceof Error && error.message==='AUTH_REQUIRED') return NextResponse.json({ok:false,error:'AUTH_REQUIRED'},{status:401});
+    if(error instanceof Error && error.message==='OPERATOR_REQUIRED') return NextResponse.json({ok:false,error:'OPERATOR_REQUIRED'},{status:403});
     return NextResponse.json({ok:false,error:safeError(error)},{status:400});
   }
 }
