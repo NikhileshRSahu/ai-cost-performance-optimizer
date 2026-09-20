@@ -27,6 +27,15 @@ export default function MotionRuntime(){
         const progress=Math.min(1,Math.max(0,-rect.top/travel));
         root.style.setProperty('--hero-progress',progress.toFixed(4));
       }
+
+      root.querySelectorAll<HTMLElement>('[data-scroll-scene]').forEach(scene=>{
+        const rect=scene.getBoundingClientRect();
+        const viewport=window.innerHeight;
+        const start=viewport;
+        const end=-rect.height;
+        const progress=Math.min(1,Math.max(0,(start-rect.top)/(start-end)));
+        scene.style.setProperty('--scene-progress',progress.toFixed(4));
+      });
     };
 
     const requestScroll=()=>{
