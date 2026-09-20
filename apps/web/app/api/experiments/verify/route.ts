@@ -23,8 +23,9 @@ export async function POST(request:Request){
       return NextResponse.json({ok:false,error:'VERIFICATION_FIELDS_REQUIRED'},{status:400});
     }
     const bool=(name:string)=>String(form.get(name)||'')==='true';
-    const result=await withRuntimeWorkspace(async({workspace,database})=>{await enforceRateLimit({pool:database.pool,organizationId:workspace.organizationId,scope:'verification',limit:10,windowSeconds:600});return 
-      verifyCustomerChange({
+    const result=await withRuntimeWorkspace(async({workspace,database})=>{
+      await enforceRateLimit({pool:database.pool,organizationId:workspace.organizationId,scope:'verification',limit:10,windowSeconds:600});
+      return verifyCustomerChange({
         db:database.db,session:workspace.session,organizationId:workspace.organizationId,
         recommendationId,postFileName:file.name,postBytes:new Uint8Array(await file.arrayBuffer()),
         receivedAt:new Date().toISOString(),measuredQuality,postP95LatencyMs,postFailureRate,
@@ -34,7 +35,7 @@ export async function POST(request:Request){
           workloadMixComparable:bool('workloadMixComparable'),
           concurrentDeploymentsResolved:bool('concurrentDeploymentsResolved')
         }
-      })
+      });
     });
     return NextResponse.json({ok:true,result});
   }catch(error){
