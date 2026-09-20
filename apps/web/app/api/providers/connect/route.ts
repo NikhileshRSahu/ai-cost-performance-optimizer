@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { connectAndValidateProvider, providerConnectionSafeError } from '@/backend/workbench/provider-connection-service';
 import { withRuntimeWorkspace } from '@/lib/runtime-workspace';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
@@ -16,6 +17,7 @@ export async function POST(request:Request){
 
     const result=await withRuntimeWorkspace(async({workspace,database})=>{
       if(workspace.role!=='OWNER') throw new Error('OWNER_REQUIRED');
+      await enforceRateLimit({pool:database.pool,organizationId:workspace.organizationId,scope:'provider-connect',limit:10,windowSeconds:600});
       return connectAndValidateProvider({
         db:database.db,
         session:workspace.session,
@@ -30,6 +32,7 @@ export async function POST(request:Request){
   }catch(error){
     if(error instanceof Error && error.message==='AUTH_REQUIRED') return NextResponse.json({ok:false,error:'AUTH_REQUIRED'},{status:401});
     if(error instanceof Error && error.message==='OWNER_REQUIRED') return NextResponse.json({ok:false,error:'OWNER_REQUIRED'},{status:403});
+    if(error instanceof Error && error.message==='RATE_LIMITED') return NextResponse.json({ok:false,error:'RATE_LIMITED'},{status:429});
     const safe=providerConnectionSafeError(error);
     const status=safe==='PROVIDER_CREDENTIAL_REJECTED'?401:safe==='PROVIDER_RATE_LIMITED'?429:400;
     return NextResponse.json({ok:false,error:safe},{status});
