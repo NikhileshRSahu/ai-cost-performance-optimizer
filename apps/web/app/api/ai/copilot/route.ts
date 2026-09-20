@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { loadWorkspaceSummary } from '@/lib/workspace-summary';
 import { invokeEvalomicsAI } from '@/lib/intelligence';
 import { retrieveKnowledge } from '@/lib/knowledge';
+import { withRuntimeWorkspace } from '@/lib/runtime-workspace';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
@@ -84,6 +86,7 @@ export async function POST(request:Request){
     const question=(body.question||'').trim();
     if(question.length<2||question.length>2000) return NextResponse.json({ok:false,error:'QUESTION_LENGTH'},{status:400});
     const screen=(body.screen||'overview').slice(0,80);
+    await withRuntimeWorkspace(async({workspace,database})=>enforceRateLimit({pool:database.pool,organizationId:workspace.organizationId,scope:'copilot',limit:30,windowSeconds:60}));
     const summary=await loadWorkspaceSummary();
     const knowledge=await retrieveKnowledge(question,5);
     try{
@@ -94,7 +97,7 @@ export async function POST(request:Request){
     }
   }catch(error){
     const message=error instanceof Error?error.message:'AI_UNAVAILABLE';
-    const status=message==='AUTH_REQUIRED'?401:503;
+    const status=message==='AUTH_REQUIRED'?401:message==='RATE_LIMITED'?429:503;
     return NextResponse.json({ok:false,error:message},{status});
   }
 }
