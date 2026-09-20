@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { track } from '@vercel/analytics';
 import { completeOnboarding, saveWorkspaceName } from '@/app/onboarding/actions';
 
 const steps=['Account','Workspace','Connect','First sync','Getting started'];
@@ -92,18 +93,18 @@ export default function OnboardingFlow({name,email,initialWorkspace}:{name:strin
     setOpenai('');setAnthropic('');
     setMessages(results.map(r=>r.provider+': '+r.message));
     const ok=results.filter(r=>r.ok).length;
-    setSyncState(ok===results.length?'done':ok>0?'partial':'error');
+    setSyncState(ok===results.length?'done':ok>0?'partial':'error');track('provider_sync_completed',{providers:results.length,succeeded:ok});
     await refreshSummary();
   }
 
   async function inspectCsv(file:File){
-    setPendingCsv(file);setPreflight(null);setDoctor(null);setPreflightLoading(true);setMessages([]);
+    setPendingCsv(file);setPreflight(null);setDoctor(null);setPreflightLoading(true);setMessages([]);track('csv_preflight_started',{size:file.size});
     const form=new FormData();form.set('file',file);
     try{
       const response=await fetch('/api/imports/preflight',{method:'POST',body:form});
       const json=await response.json();
       if(!response.ok||!json.ok) throw new Error(json.error||'PREFLIGHT_FAILED');
-      setPreflight(json.profile);setDoctor(json.doctor||null);
+      setPreflight(json.profile);setDoctor(json.doctor||null);track('csv_preflight_completed',{canImport:Boolean(json.profile?.canImport),accepted:Number(json.profile?.accepted||0),rejected:Number(json.profile?.rejected||0)});
     }catch{
       setMessages(['Evalomics could not inspect this file. Nothing was imported.']);
     }finally{setPreflightLoading(false)}
@@ -127,13 +128,13 @@ export default function OnboardingFlow({name,email,initialWorkspace}:{name:strin
     setMessages([
       file.name+': '+String(r.accepted)+' rows accepted, '+String(r.rejected)+' rejected, '+String(r.warnings)+' warnings.'
     ]);
-    setSyncState(r.rejected>0?'partial':'done');
+    setSyncState(r.rejected>0?'partial':'done');track('csv_import_completed',{accepted:Number(r.accepted||0),rejected:Number(r.rejected||0),warnings:Number(r.warnings||0)});
     await refreshSummary();
   }
 
   async function finish(){
     await completeOnboarding(workspace || 'My AI Workspace');
-    router.push('/dashboard');
+    track('onboarding_completed',{hasEvidence});router.push('/dashboard');
     router.refresh();
   }
 
