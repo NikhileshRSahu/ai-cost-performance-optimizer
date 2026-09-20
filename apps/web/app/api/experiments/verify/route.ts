@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { verifyCustomerChange } from '@/backend/workbench/verification-service';
 import { withRuntimeWorkspace } from '@/lib/runtime-workspace';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
@@ -22,7 +23,7 @@ export async function POST(request:Request){
       return NextResponse.json({ok:false,error:'VERIFICATION_FIELDS_REQUIRED'},{status:400});
     }
     const bool=(name:string)=>String(form.get(name)||'')==='true';
-    const result=await withRuntimeWorkspace(async({workspace,database})=>
+    const result=await withRuntimeWorkspace(async({workspace,database})=>{await enforceRateLimit({pool:database.pool,organizationId:workspace.organizationId,scope:'verification',limit:10,windowSeconds:600});return 
       verifyCustomerChange({
         db:database.db,session:workspace.session,organizationId:workspace.organizationId,
         recommendationId,postFileName:file.name,postBytes:new Uint8Array(await file.arrayBuffer()),
@@ -34,11 +35,11 @@ export async function POST(request:Request){
           concurrentDeploymentsResolved:bool('concurrentDeploymentsResolved')
         }
       })
-    );
+    });
     return NextResponse.json({ok:true,result});
   }catch(error){
     const message=error instanceof Error?error.message:'VERIFICATION_FAILED';
-    const status=message==='AUTH_REQUIRED'?401:400;
+    const status=message==='AUTH_REQUIRED'?401:message==='RATE_LIMITED'?429:400;
     return NextResponse.json({ok:false,error:message},{status});
   }
 }
