@@ -182,10 +182,10 @@ function RealOverview({userName,summary}:{userName:string,summary?:RealSummary})
   return <>
     <div className="answer-first">
       <p className="eyebrow">{incomplete?'DATA NEEDS ATTENTION':'YOUR AI USAGE'}</p>
-      <h1>{incomplete?'Your latest import is incomplete.':'Here is what your AI usage is doing.'}</h1>
+      <h1>{incomplete?'Some of your data could not be read.':'Here’s where your AI money is going.'}</h1>
       <p>{incomplete
-        ? latest?.accepted+' of '+latest?.totalRows+' CSV rows were accepted. Spend and recommendations are partial, so Evalomics is pausing optimization decisions until you repair the import.'
-        : money(summary?.observedSpend??null,summary?.currency??'USD')+' across '+requestCount.toLocaleString()+' requests. '+recs.length+' decision area'+(recs.length===1?' is':'s are')+' worth reviewing. '+(summary?.verifiedSavings?'Verified savings are visible below.':'Nothing is verified as savings yet.')
+        ? latest?.accepted+' of '+latest?.totalRows+' CSV rows were accepted. The totals may be incomplete, so Evalomics will not suggest a change until you fix the import.'
+        : money(summary?.observedSpend??null,summary?.currency??'USD')+' across '+requestCount.toLocaleString()+' requests. '+recs.length+' thing'+(recs.length===1?' looks':'s look')+' worth checking first. '+(summary?.verifiedSavings?'Verified savings are visible below.':'Nothing is verified as savings yet.')
       }</p>
       {incomplete&&<Link className="btn black" href="/onboarding?step=3">Re-upload the CSV</Link>}
     </div>
@@ -224,10 +224,10 @@ function RealOverview({userName,summary}:{userName:string,summary?:RealSummary})
     />
 
     <div className="evidence-status-row">
-      <div><TierBadge tier="potential"/><strong>{groupedRecommendations(summary,'OPPORTUNITY').length}</strong><span>ideas to test</span></div>
-      <div><TierBadge tier="tested"/><strong>{groupedRecommendations(summary,'TESTED').length}</strong><span>measured changes</span></div>
-      <div><TierBadge tier="verified"/><strong>{money(summary?.verifiedSavings??null,summary?.currency??'USD')}</strong><span>proven savings</span></div>
-      <p>Evidence moves right only when the proof does.</p>
+      <div><TierBadge tier="potential"/><strong>{groupedRecommendations(summary,'OPPORTUNITY').length}</strong><span>possible improvements</span></div>
+      <div><TierBadge tier="tested"/><strong>{groupedRecommendations(summary,'TESTED').length}</strong><span>changes that passed a test</span></div>
+      <div><TierBadge tier="verified"/><strong>{money(summary?.verifiedSavings??null,summary?.currency??'USD')}</strong><span>savings confirmed after rollout</span></div>
+      <p>Simple version: Possible → Tested → Confirmed. Evalomics keeps guesses separate from proven results.</p>
     </div>
   </>
 }
