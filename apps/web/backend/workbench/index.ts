@@ -14,3 +14,4 @@ export * from './proof-permission.js';
 export * from './analysis-service.js';
 
 export * from './evalomics-ai.js';
+export * from './jev-service.js';
