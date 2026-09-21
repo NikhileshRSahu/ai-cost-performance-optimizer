@@ -12,9 +12,9 @@ export default function SignUpPage() {
     <section className="auth-shell auth-centered">
       <div className="auth-card auth-product-card">
         <div className="auth-card-heading">
-          <p className="eyebrow">CREATE YOUR WORKSPACE</p>
-          <h1>Start with Evalomics</h1>
-          <p>Connect usage read-only, find opportunities, and verify changes before calling them savings.</p>
+          <p className="eyebrow">START WITH YOUR AI USAGE</p>
+          <h1>See what your AI spend is actually doing.</h1>
+          <p>Sign in, add your AI usage, and Evalomics will show where the money is going and what is worth fixing first.</p>
         </div>
         <form action={startGoogleSignUp}>
           <button type="submit" className="google-button" disabled={!googleOAuthReady}>
