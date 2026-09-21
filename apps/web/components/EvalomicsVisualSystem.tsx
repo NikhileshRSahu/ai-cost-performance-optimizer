@@ -118,6 +118,16 @@ export function ShaderField() {
         float blue = softCircle(q, driftB, .30, .30);
         float focus = softCircle(q, pointer, .20, .22);
 
+        // Faint request/cost trajectories: these are deliberately semantic,
+        // not generic particles. Warm traces represent waste signals and
+        // cobalt traces represent tested/efficient routes.
+        float waveA = .34 + .055 * sin(uv.x * 8.0 + t * 2.2);
+        float waveB = .61 + .045 * sin(uv.x * 9.5 - t * 1.8);
+        float traceA = 1.0 - smoothstep(.006, .020, abs(uv.y - waveA));
+        float traceB = 1.0 - smoothstep(.006, .019, abs(uv.y - waveB));
+        float pulseA = pow(max(0.0, sin(uv.x * 23.0 - t * 8.0)), 18.0);
+        float pulseB = pow(max(0.0, sin(uv.x * 19.0 + t * 6.0)), 20.0);
+
         vec3 paper = vec3(.985, .982, .972);
         vec3 warm = vec3(1.0, .48, .12);
         vec3 cobalt = vec3(.09, .28, .72);
@@ -126,6 +136,8 @@ export function ShaderField() {
         vec3 color = paper;
         color = mix(color, warm, amber * .28);
         color = mix(color, cobalt, blue * .16);
+        color = mix(color, warm, traceA * (.055 + pulseA * .16));
+        color = mix(color, cobalt, traceB * (.050 + pulseB * .14));
         color = mix(color, vec3(1.0), focus * .18);
 
         float grain = (noise(gl_FragCoord.xy + uTime) - .5) * .025;
@@ -167,7 +179,9 @@ export function ShaderField() {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     let pointer = { x: .68, y: .34 };
     let raf = 0;
-    let running = true;
+    let documentVisible = document.visibilityState === 'visible';
+    let inViewport = true;
+    let running = documentVisible;
     const startedAt = performance.now();
 
     const resize = () => {
@@ -178,11 +192,20 @@ export function ShaderField() {
       if (canvas.width !== width || canvas.height !== height) {
         canvas.width = width;
         canvas.height = height;
+        gl.viewport(0, 0, width, height);
       }
-      gl.viewport(0, 0, width, height);
+    };
+
+    const syncRunning = () => {
+      const nextRunning = documentVisible && inViewport;
+      if (nextRunning === running) return;
+      running = nextRunning;
+      if (running) raf = requestAnimationFrame(draw);
+      else cancelAnimationFrame(raf);
     };
 
     const onPointer = (event: PointerEvent) => {
+      if (!inViewport) return;
       pointer = {
         x: Math.min(1, Math.max(0, event.clientX / window.innerWidth)),
         y: 1 - Math.min(1, Math.max(0, event.clientY / window.innerHeight)),
@@ -190,13 +213,12 @@ export function ShaderField() {
     };
 
     const onVisibility = () => {
-      running = document.visibilityState === 'visible';
-      if (running) raf = requestAnimationFrame(draw);
+      documentVisible = document.visibilityState === 'visible';
+      syncRunning();
     };
 
     const draw = (now: number) => {
       if (!running) return;
-      resize();
       gl.uniform2f(resolution, canvas.width, canvas.height);
       gl.uniform2f(pointerUniform, pointer.x, pointer.y);
       gl.uniform1f(timeUniform, prefersReduced.matches ? 0 : (now - startedAt) / 1000);
@@ -204,7 +226,16 @@ export function ShaderField() {
       if (!prefersReduced.matches) raf = requestAnimationFrame(draw);
     };
 
-    window.addEventListener('resize', resize);
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(canvas);
+
+    const viewportObserver = new IntersectionObserver(([entry]) => {
+      inViewport = entry.isIntersecting;
+      syncRunning();
+    }, { rootMargin: '160px 0px', threshold: 0 });
+
+    viewportObserver.observe(canvas);
+    window.addEventListener('resize', resize, { passive: true });
     window.addEventListener('pointermove', onPointer, { passive: true });
     document.addEventListener('visibilitychange', onVisibility);
     resize();
@@ -213,6 +244,8 @@ export function ShaderField() {
     return () => {
       running = false;
       cancelAnimationFrame(raf);
+      resizeObserver.disconnect();
+      viewportObserver.disconnect();
       window.removeEventListener('resize', resize);
       window.removeEventListener('pointermove', onPointer);
       document.removeEventListener('visibilitychange', onVisibility);
