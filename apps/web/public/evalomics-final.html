@@ -229,8 +229,6 @@ main{position:relative;z-index:1}
 .foot nav a{font-size:14px;letter-spacing:-.02em;text-transform:uppercase;color:var(--off-black);opacity:.7}
 .foot nav a:hover{opacity:1}
 .foot .fine{width:100%;padding-bottom:40px}
-.foot-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding-bottom:32px}
-.foot-actions .arrow-link{margin-left:8px}
 
 /* ---------- tour control ---------- */
 .tour{position:fixed;left:24px;bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:22;display:inline-flex;align-items:center;gap:10px;border:1px solid var(--ash);border-radius:9999px;background:rgba(246,243,241,.92);backdrop-filter:blur(8px);color:var(--off-black);font:400 12px/1 var(--mono);letter-spacing:-.033em;text-transform:uppercase;cursor:pointer;padding:11px 18px 11px 14px;transition:border-color .2s,background .2s}
@@ -599,11 +597,6 @@ main{position:relative;z-index:1}
       <a href="https://github.com/NikhileshRSahu/ai-cost-performance-optimizer" target="_blank" rel="noopener">Repo</a>
     </nav>
     <span class="fine">© 2026 Evalomics</span>
-  </div>
-  <div class="wrap foot-actions">
-    <a class="btn btn-ghost sm" href="/demo">Explore sample demo</a>
-    <a class="btn btn-blue sm" href="/auth/sign-up">Try with my usage <span aria-hidden="true">▸</span></a>
-    <a class="arrow-link" href="/support">See support status</a>
   </div>
   <div class="wrap"><p class="fine">Sample workspace — every figure is illustrative, which is exactly how we treat an unverified number.</p></div>
 </footer>
@@ -983,7 +976,7 @@ function buildAspect() {
   up(big, { pos: true, col: true, misc: true });
 }
 
-let lastKey = '', lastPose = null, introT = 1, introStart = 0;
+let lastKey = '', lastPose = null, introT = reduce ? 1 : 0, introStart = 0;
 function morph(A, B, e, intro) {
   const pa = shapes[A], pb = shapes[B], P = main.pos, C = main.col, same = A === B, fb = shapes.fieldB;
   for (let i = 0; i < N; i++) {
@@ -1005,3 +998,176 @@ function morph(A, B, e, intro) {
   }
   up(main, { pos: true, col: true });
 }
+
+function sample(y) {
+  let i = 0; while (i < stops.length - 2 && y >= stops[i+1].y) i++;
+  const a = stops[i], b = stops[Math.min(i + 1, stops.length - 1)];
+  const u = clamp((y - a.y) / Math.max(1, b.y - a.y));
+  return { a, b, u, e: a.shape === b.shape ? 0 : sstep(.08, .92, u), ps: sstep(0, 1, u) };
+}
+const PK = ['x', 'y', 's', 'rx', 'ry', 'rz', 'spin', 'size', 'loose'];
+
+let last = performance.now(), T = 0, running = true;
+function frame(now) {
+  requestAnimationFrame(frame);
+  if (!running) return;
+  const dt = Math.min(.05, (now - last) / 1000); last = now; T += dt;
+  const k = reduce ? 1 : 1 - Math.exp(-dt * 5.5);
+  sy += (scrollY - sy) * k;
+  mouse.x += (mouse.tx - mouse.x) * (1 - Math.exp(-dt * 4)); mouse.y += (mouse.ty - mouse.y) * (1 - Math.exp(-dt * 4));
+  if (introT < 1) { if (!introStart) introStart = now; introT = clamp((now - introStart) / 3200); }
+  const S = sample(sy);
+  const key = S.a.shape + S.b.shape + S.e.toFixed(4) + (introT < 1 ? introT.toFixed(3) : 'x');
+  if (key !== lastKey) { morph(S.a.shape, S.b.shape, S.e, introT); lastKey = key; }
+  const po = {}; PK.forEach(p => po[p] = lerp(S.a.pose[p], S.b.pose[p], S.ps));
+  const it = 1 - Math.pow(1 - introT, 3);
+  const unit = .8 * halfH;
+  const idle = reduce ? 0 : 1;
+  const ry = po.ry + T * po.spin * idle + Math.sin(T * .25) * .08 * idle + mouse.x * .2;
+  const rx = po.rx - mouse.y * .1;
+  const sc = po.s * unit * lerp(.86, 1, it);
+  const M = m4mul(m4T(po.x * halfW, po.y * halfH, 0), m4mul(m4RY(ry), m4mul(m4RX(rx), m4mul(m4RZ(po.rz), m4S(sc)))));
+  const MV = m4mul(m4T(0, 0, -CAM), M), MVi = m4T(0, 0, -CAM);
+  const scrollW = (sy / H) * halfH * .9;
+
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.clearColor(.965, .953, .945, 1); gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); gl.disable(gl.DEPTH_TEST);
+  const focal = (H / 2) / Math.tan(FOV / 2);
+  const mv = { x: mouse.tx * halfW, y: mouse.ty * halfH };
+
+  gl.useProgram(progS.p); const u = progS.u;
+  gl.uniformMatrix4fv(u.uP, false, PROJ); gl.uniform1f(u.uTime, T); gl.uniform1f(u.uPx, DPR); gl.uniform1f(u.uFocal, focal);
+  gl.uniform2f(u.uMouse, mv.x, mv.y); gl.uniform1f(u.uWrap, halfH * 1.25); gl.uniform1f(u.uScroll, scrollW);
+  // ambient
+  gl.uniformMatrix4fv(u.uMV, false, MVi); gl.uniform1f(u.uScale, 1); gl.uniform1f(u.uSizeMul, 1); gl.uniform1f(u.uLoose, .2); gl.uniform1f(u.uRad, 2.2); gl.uniform1f(u.uAlpha, 1); gl.uniform1f(u.uMode, 1); gl.uniform1f(u.uMouseOn, mouse.on * .4);
+  bind(progS, amb); gl.drawArrays(gl.POINTS, 0, amb.n);
+  // main
+  gl.uniformMatrix4fv(u.uMV, false, MV); gl.uniform1f(u.uScale, sc); gl.uniform1f(u.uSizeMul, po.size); gl.uniform1f(u.uLoose, po.loose + (1 - it) * .6); gl.uniform1f(u.uRad, Math.max(1.4, sc * 1.5)); gl.uniform1f(u.uAlpha, 1); gl.uniform1f(u.uMode, 0); gl.uniform1f(u.uMouseOn, mouse.on);
+  bind(progS, main); gl.drawArrays(gl.POINTS, 0, N);
+  // foreground wireframes
+  gl.useProgram(progB.p); const b = progB.u;
+  gl.uniformMatrix4fv(b.uP, false, PROJ); gl.uniform1f(b.uTime, T); gl.uniform1f(b.uPx, DPR); gl.uniform1f(b.uViewH, H); gl.uniform1f(b.uScroll, scrollW * 1.15); gl.uniform1f(b.uWrap, halfH * 1.25);
+  bind(progB, big); gl.drawArrays(gl.POINTS, 0, big.n);
+}
+let PROJ;
+function resize() {
+  W = innerWidth; H = innerHeight; DPR = Math.min(2, devicePixelRatio || 1); aspect = W / H; narrow = aspect < .85;
+  halfH = Math.tan(FOV / 2) * CAM; halfW = halfH * aspect;
+  if (GLOK) { canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR); PROJ = persp(FOV, aspect, .1, 40); buildAspect(); }
+  layout(); onScroll();
+}
+
+/* ---------- ui ---------- */
+const navL = $$('.nav a[data-nav]');
+function onScroll() {
+  const y = scrollY + H * .5;
+  let cur = '';
+  if (y >= secTops.conf && y < secTops.method) cur = 'why'; else if (y >= secTops.method && y < secTops.findings) cur = 'method'; else if (y >= secTops.findings) cur = 'findings';
+  navL.forEach(a => a.classList.toggle('on', a.dataset.nav === cur));
+  $$('.fi').forEach(el => { const rel = clamp(scrollY - secTops.findings, -H, H * 1.2); el.style.transform = `translate3d(0,${(-rel * parseFloat(el.dataset.p) * .55).toFixed(1)}px,0)`; });
+}
+addEventListener('scroll', onScroll, { passive: true });
+addEventListener('pointermove', e => { mouse.tx = e.clientX / W * 2 - 1; mouse.ty = -(e.clientY / H * 2 - 1); mouse.on = e.pointerType === 'touch' ? 0 : 1; }, { passive: true });
+document.addEventListener('pointerleave', () => { mouse.on = 0; });
+addEventListener('resize', () => { clearTimeout(resize.t); resize.t = setTimeout(resize, 120); });
+document.addEventListener('visibilitychange', () => { running = !document.hidden; last = performance.now(); });
+
+$$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+  const t = document.getElementById(a.getAttribute('href').slice(1)); if (!t) return; e.preventDefault();
+  stopTour(); t.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+}));
+const cta = $('#cta');
+cta.addEventListener('click', () => { const t = cta.textContent; cta.textContent = 'Preview build \u2014 demo only'; setTimeout(() => cta.textContent = t, 1600); });
+
+/* guided scroll (the "video") */
+let touring = false, tourRaf = 0, tourY = 0, tourLast = 0;
+const tourBtn = $('#tour'), tourLab = $('#tourlab');
+function tourStep(now) {
+  if (!touring) return;
+  const dt = Math.min(.05, (now - tourLast) / 1000); tourLast = now;
+  const max = document.documentElement.scrollHeight - H;
+  tourY += max / 52 * dt;
+  scrollTo(0, tourY);
+  if (tourY >= max) { stopTour(); return; }
+  tourRaf = requestAnimationFrame(tourStep);
+}
+function startTour() {
+  touring = true; tourY = scrollY; if (tourY > document.documentElement.scrollHeight - H - 10) { tourY = 0; scrollTo(0, 0); }
+  tourBtn.classList.add('playing'); tourLab.textContent = 'Pause'; tourLast = performance.now(); tourRaf = requestAnimationFrame(tourStep);
+}
+function stopTour() { if (!touring) return; touring = false; cancelAnimationFrame(tourRaf); tourBtn.classList.remove('playing'); tourLab.textContent = 'Play preview'; }
+tourBtn.addEventListener('click', () => touring ? stopTour() : startTour());
+['wheel', 'touchstart', 'keydown'].forEach(ev => addEventListener(ev, stopTour, { passive: true }));
+if (reduce) tourBtn.style.display = 'none';
+
+/* method carousel */
+const track = $('#track'), slides = $$('.slide', track); let idx = 0, auto = 0, userTouched = false;
+function go(i) {
+  idx = (i + slides.length) % slides.length;
+  const sw = slides[0].offsetWidth + parseFloat(getComputedStyle(track).columnGap || 44);
+  const lead = narrow ? 20 : Math.min(150, $('#mr').clientWidth * .12);
+  track.style.transform = `translateX(${lead - idx * sw}px)`;
+  slides.forEach((s, k) => s.classList.toggle('on', k === idx));
+}
+$('#next').addEventListener('click', () => { userTouched = true; clearInterval(auto); go(idx + 1); });
+$('#prev').addEventListener('click', () => { userTouched = true; clearInterval(auto); go(idx - 1); });
+new IntersectionObserver(es => es.forEach(e => { clearInterval(auto); if (e.isIntersecting && !userTouched && !reduce) auto = setInterval(() => go(idx + 1), 3400); }), { threshold: .5 }).observe($('#mr'));
+
+/* mini particle scenes on the cards: white observed, amber waste, violet test slice, teal verified */
+const minis = [];
+function initMinis() {
+  minis.length = 0;
+  $$('.shot canvas').forEach(cv => {
+    const dpr = Math.min(2, devicePixelRatio || 1), w = cv.clientWidth, h = cv.clientHeight; if (!w) return;
+    cv.width = w * dpr; cv.height = h * dpr; const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const kind = cv.dataset.kind, r = mulberry(kind.length * 131 + kind.charCodeAt(0)), pts = [];
+    const n = kind === 'verify' ? 150 : 190;
+    for (let i = 0; i < n; i++) {
+      let x = r(), y = r(), col = [36, 36, 36], al = .92, grp = 0;
+      if (kind === 'detect') { if (i < 48) { const a = r() * 6.28, q = Math.sqrt(r()) * .19; x = .58 + Math.cos(a) * q * .8; y = .42 + Math.sin(a) * q; col = [255, 148, 115]; al = 1; grp = 1; } else al = .6; }
+      if (kind === 'test') { if (i < 38) { x = .74 + r() * .2; y = .28 + r() * .46; col = i % 3 ? [43, 89, 209] : [255, 148, 115]; al = 1; grp = 2; } else { while (x > .68 && y > .25 && y < .78) { x = r(); y = r(); } al = .7; } }
+      if (kind === 'verify') { if (i < 110) { const a = i / 110 * 6.2832; const rr = .27 + gauss(r) * .012; x = .5 + Math.cos(a) * rr; y = .5 + Math.sin(a) * rr * .85; const m = .5 + .5 * Math.cos(a); col = [Math.round(lerp(23, 60, m)), Math.round(lerp(57, 95, m)), Math.round(lerp(143, 209, m))]; al = 1; grp = 3; } else { const a = r() * 6.28, q = Math.sqrt(r()) * .12; x = .5 + Math.cos(a) * q; y = .5 + Math.sin(a) * q; al = .7; } }
+      pts.push({ x, y, s: 4 + r() * 4.5, a: r() * 6.28, sp: (r() - .5) * .5, ph: r() * 6.28, col, al, grp });
+    }
+    minis.push({ cv, ctx, w, h, kind, pts, vis: false });
+  });
+}
+const io = new IntersectionObserver(es => es.forEach(e => { const m = minis.find(m => m.cv === e.target); if (m) m.vis = e.isIntersecting; }), { threshold: 0 });
+function drawMinis(t) {
+  for (const m of minis) {
+    if (!m.vis) continue; const { ctx, w, h } = m; ctx.clearRect(0, 0, w, h);
+    ctx.lineWidth = 1.15; ctx.lineJoin = 'round';
+    for (const p of m.pts) {
+      let x = p.x, y = p.y;
+      if (m.kind === 'verify' && p.grp === 3) { const a = Math.atan2(y - .5, x - .5) + t * .12, rr = Math.hypot(x - .5, (y - .5) / .85); x = .5 + Math.cos(a) * rr; y = .5 + Math.sin(a) * rr * .85; }
+      else { x += Math.sin(t * .35 + p.ph) * .012; y += Math.cos(t * .3 + p.ph * 1.3) * .012; }
+      if (m.kind === 'test' && p.grp === 2) x += (.5 + .5 * Math.sin(t * .8)) * .05;
+      const a = p.al * (.75 + .25 * Math.sin(t * 1.4 + p.ph)), px = x * w, py = y * h, s = p.s, an = p.a + t * p.sp;
+      ctx.strokeStyle = `rgba(${p.col[0]},${p.col[1]},${p.col[2]},${a.toFixed(3)})`;
+      ctx.beginPath();
+      for (let k = 0; k < 3; k++) { const q = an + k * 2.0944 - 1.5708; ctx[k ? 'lineTo' : 'moveTo'](px + Math.cos(q) * s, py + Math.sin(q) * s); }
+      ctx.closePath(); ctx.stroke();
+    }
+  }
+}
+let mt = 0; function miniLoop(now) { requestAnimationFrame(miniLoop); if (!running) return; mt = now / 1000; drawMinis(reduce ? 0 : mt); }
+
+/* ---------- boot ---------- */
+if (GLOK) {
+  progS = prog(VS, FS); progB = prog(VSB, FSB);
+  if (!progS || !progB) GLOK = false;
+}
+if (!GLOK) document.body.classList.add('nogl');
+else { narrow = innerWidth / innerHeight < .85; buildStatic(); }
+resize();
+initMinis(); minis.forEach(m => io.observe(m.cv)); go(0);
+addEventListener('resize', () => { setTimeout(() => { initMinis(); minis.forEach(m => io.observe(m.cv)); go(idx); }, 200); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { layout(); });
+addEventListener('load', () => { layout(); onScroll(); });
+requestAnimationFrame(miniLoop);
+if (GLOK) requestAnimationFrame(frame);
+window.__dbg = { get sy() { return sy; }, stops: () => stops };
+})();
+</script>
+</body></html>
