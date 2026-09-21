@@ -35,10 +35,18 @@ jobs:
             if curl -fsS http://127.0.0.1:3100/ > /dev/null; then break; fi
             sleep 1
           done
-          curl -fsS http://127.0.0.1:3100/ > /dev/null
-          curl -fsS http://127.0.0.1:3100/demo > /dev/null
-          curl -fsS http://127.0.0.1:3100/auth/sign-in > /dev/null
-          curl -fsS http://127.0.0.1:3100/trust > /dev/null
+          smoke() {
+            if ! curl -fsS "$1" > /dev/null; then
+              echo "Smoke test failed: $1"
+              cat /tmp/evalomics-next.log
+              exit 1
+            fi
+          }
+          smoke http://127.0.0.1:3100/evalomics-final.html
+          smoke http://127.0.0.1:3100/
+          smoke http://127.0.0.1:3100/demo
+          smoke http://127.0.0.1:3100/auth/sign-in
+          smoke http://127.0.0.1:3100/trust
         env:
           AUTH_SECRET: ci-only-auth-secret-that-is-long-enough-2026
           GOOGLE_CLIENT_ID: 504485830242-1mk5p7h8aho03phd48ma9kisath17rk4.apps.googleusercontent.com
