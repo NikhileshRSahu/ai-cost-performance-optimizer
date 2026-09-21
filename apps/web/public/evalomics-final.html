@@ -983,7 +983,7 @@ function buildAspect() {
   up(big, { pos: true, col: true, misc: true });
 }
 
-let lastKey = '', lastPose = null, introT = reduce ? 1 : 0, introStart = 0;
+let lastKey = '', lastPose = null, introT = 1, introStart = 0;
 function morph(A, B, e, intro) {
   const pa = shapes[A], pb = shapes[B], P = main.pos, C = main.col, same = A === B, fb = shapes.fieldB;
   for (let i = 0; i < N; i++) {
