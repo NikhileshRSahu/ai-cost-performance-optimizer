@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs';
 const read=(path:string)=>readFileSync(new URL(path,import.meta.url),'utf8');
 
 const marketing=read('../components/MarketingHome.tsx');
+const landing=read('../public/evalomics-final.html');
 const dashboard=read('../components/DashboardApp.tsx');
 
 test('marketing labels the public demo as sample, not live',()=>{
@@ -36,4 +37,21 @@ test('evidence ladder language remains explicit',()=>{
     assert.equal(marketing.includes(tier),true);
   }
   assert.equal(marketing.includes('estimates from production-verified savings'),true);
+});
+
+
+test('deployed landing clearly frames fictional metrics as an example',()=>{
+  assert.equal(landing.includes('Example analysis'),true);
+  assert.equal(landing.includes('what you should investigate first'),true);
+});
+
+test('deployed landing wires primary product actions',()=>{
+  for(const href of ['/auth/sign-in','/auth/sign-up','/demo']){
+    assert.equal(landing.includes('href="'+href+'"'),true);
+  }
+});
+
+test('deployed landing does not use the removed engineering announcement or long disclaimer',()=>{
+  assert.equal(landing.includes('V0 milestone'),false);
+  assert.equal(landing.includes('Sample workspace — every figure is illustrative'),false);
 });
