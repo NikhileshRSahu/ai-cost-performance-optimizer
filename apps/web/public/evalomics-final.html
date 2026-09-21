@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Evalomics — Your AI bill says $41,208. It doesn't say why.</title>
-<meta name="description" content="Evalomics reads your production LLM usage, finds the waste, and proves each saving in your own spend data — before anyone claims a dollar.">
+<meta name="description" content="Connect your AI usage and get three answers fast: what is wasting money, what to change first, and which savings are actually proven.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400&display=swap" rel="stylesheet">
@@ -68,10 +68,7 @@ main{position:relative;z-index:1}
 .tier.tst{color:var(--graphite)}.tier.tst::before{background:var(--sky)}
 .tier.ver{color:var(--lake)}.tier.ver::before{background:var(--lake)}
 
-/* ---------- announcement + nav ---------- */
-.announce{position:relative;z-index:30;display:flex;align-items:center;justify-content:center;gap:16px;background:var(--ink);color:var(--parchment);padding:11px 24px;font-size:14px;letter-spacing:-.028em;flex-wrap:wrap}
-.announce .pill{border:1px solid rgba(246,243,241,.5);border-radius:9999px;padding:5px 14px;font-size:12px;text-transform:uppercase;letter-spacing:-.033em;transition:background .2s}
-.announce .pill:hover{background:rgba(246,243,241,.12)}
+/* ---------- nav ---------- */
 .nav{position:sticky;top:0;z-index:25;background:rgba(246,243,241,.86);backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .3s}
 .nav.stuck{border-color:var(--ash)}
 .nav-in{height:80px;display:flex;align-items:center;justify-content:space-between;gap:24px}
@@ -274,23 +271,18 @@ main{position:relative;z-index:1}
 <body>
 <canvas id="gl" aria-hidden="true"></canvas>
 
-<div class="announce">
-  <span>V0 milestone — the exact-arithmetic cost engine is open source.<span class="long"> A calculation is evidence, never a recommendation.</span></span>
-  <a class="pill" href="https://github.com/NikhileshRSahu/ai-cost-performance-optimizer" target="_blank" rel="noopener">Read the repo →</a>
-</div>
-
 <header class="nav" id="nav">
   <div class="wrap nav-in">
     <a class="logo" href="#hero" aria-label="Evalomics home"><i aria-hidden="true"></i>evalomics</a>
     <nav class="nav-links">
-      <a href="#conf" data-nav="why">Manifesto</a>
-      <a href="#method" data-nav="method">The ladder</a>
-      <a href="#findings" data-nav="findings">Evidence</a>
+      <a href="#conf" data-nav="why">How it works</a>
+      <a href="#method" data-nav="method">Proof</a>
+      <a href="#findings" data-nav="findings">Findings</a>
       <a href="#pricing">Pricing</a>
     </nav>
     <div class="nav-act">
       <a class="btn btn-ghost sm ghost-login" href="/auth/sign-in">Log in</a>
-      <a class="btn btn-blue sm" href="/demo">Get a demo <span aria-hidden="true">▸</span></a>
+      <a class="btn btn-blue sm" href="/demo">Explore demo <span aria-hidden="true">▸</span></a>
     </div>
   </div>
 </header>
@@ -299,19 +291,19 @@ main{position:relative;z-index:1}
   <section id="hero" class="s hero" data-sec>
     <div class="wrap">
       <div class="hero-in">
-        <span class="tag fade">For teams running production LLM workloads</span>
+        <span class="tag fade">See where your AI money is going</span>
         <h1 class="d1"><span class="ln"><span>Your AI bill says</span></span><span class="ln"><span class="blue">$41,208.</span></span><span class="ln"><span>It doesn’t say why.</span></span></h1>
         <p class="body-lg sub fade">Evalomics reads your production LLM usage, finds the waste, and proves each saving in your own spend data — before anyone claims a dollar.</p>
         <div class="cta-row fade">
-          <a class="btn btn-blue" href="/auth/sign-up">Connect your usage data <span aria-hidden="true">▸</span></a>
-          <a class="btn btn-ghost" href="/demo">See the live demo</a>
+          <a class="btn btn-blue" href="/auth/sign-up">Analyze my AI usage <span aria-hidden="true">▸</span></a>
+          <a class="btn btn-ghost" href="/demo">Explore sample demo</a>
         </div>
-        <p class="fine fade">Read-only. No traffic changes until you approve an experiment.</p>
+        <p class="fine fade">Read-only analysis. Nothing changes in production without your approval.</p>
       </div>
       <figure class="hero-chip fade">
         <span class="tier ver">Verified</span>
         <p class="amt">$7,412<i>/mo</i></p>
-        <p>Visible in observed spend since Jun 9. Held for three weeks against the pre-change baseline.</p>
+        <p>Still visible in production after rollout — not just an estimate on a dashboard.</p>
       </figure>
     </div>
   </section>
@@ -319,24 +311,24 @@ main{position:relative;z-index:1}
   <section class="strip" aria-label="Workspace summary">
     <div class="wrap strip-in">
       <div class="stat">
-        <div class="k"><span class="cap">Observed spend, 30 days</span><span class="tier obs">Observed</span></div>
+        <div class="k"><span class="cap">AI spend, last 30 days</span><span class="tier obs">Observed</span></div>
         <p class="v">$41,208</p>
-        <p class="n">Prior 30 days: $43,930. Down 6.2% after verified rollouts.</p>
+        <p class="n">Your starting point: what production actually billed.</p>
       </div>
       <div class="stat">
         <div class="k"><span class="cap">Verified savings</span><span class="tier ver">Verified</span></div>
         <p class="v">$7,412<span style="font-family:var(--mono);font-size:14px;color:var(--graphite)">/mo</span></p>
-        <p class="n">2 changes live, both holding in observed spend.</p>
+        <p class="n">Savings that are still holding after rollout.</p>
       </div>
       <div class="stat">
-        <div class="k"><span class="cap">Identified, not yet proven</span><span class="tier pot">Potential</span></div>
+        <div class="k"><span class="cap">Next opportunities</span><span class="tier pot">Potential</span></div>
         <p class="v">$11.8k–15.6k</p>
-        <p class="n">3 patterns detected. Estimates only — nothing claimed.</p>
+        <p class="n">Three places worth testing before you change anything.</p>
       </div>
       <div class="stat">
-        <div class="k"><span class="cap">Experiments running</span><span class="tier tst">Tested</span></div>
+        <div class="k"><span class="cap">Tests in progress</span><span class="tier tst">Tested</span></div>
         <p class="v">2</p>
-        <p class="n">EXP-1042 ends Jul 4. Guardrails green.</p>
+        <p class="n">Cheaper routes being checked against your quality floor.</p>
       </div>
     </div>
   </section>
@@ -344,11 +336,11 @@ main{position:relative;z-index:1}
   <section id="conf" class="s conf" data-sec>
     <div class="wrap">
       <div class="col right veil">
-        <p class="eyebrow">The evidence ladder</p>
-        <h2 class="d2">Watch a number earn the right to be called savings.</h2>
-        <p class="body">Every dollar in Evalomics sits on one of four tiers. <strong style="font-weight:500;color:var(--off-black)">Observed</strong> is what your spend data shows right now. <strong style="font-weight:500;color:var(--off-black)">Potential</strong> is a detected pattern with an estimated range.</p>
-        <p class="body"><strong style="font-weight:500;color:var(--off-black)">Tested</strong> is a change run on real traffic with real results. <strong style="font-weight:500;color:var(--off-black)">Verified</strong> is rolled out, and visible in observed spend against the pre-change baseline.</p>
-        <p class="body">A number only moves right when the evidence does. Nothing skips a rung.</p>
+        <p class="eyebrow">From clue to proof</p>
+        <h2 class="d2">Know exactly how confident you should be in every saving.</h2>
+        <p class="body">Evalomics never mixes facts with guesses. <strong style="font-weight:500;color:var(--off-black)">Observed</strong> shows what your data says now. <strong style="font-weight:500;color:var(--off-black)">Potential</strong> shows where a saving may exist.</p>
+        <p class="body"><strong style="font-weight:500;color:var(--off-black)">Tested</strong> means a cheaper option passed your quality bar. <strong style="font-weight:500;color:var(--off-black)">Verified</strong> means the improvement is visible after rollout.</p>
+        <p class="body">So you always know what is known, what is promising, and what is actually proven.</p>
         <div class="ladder-row">
           <span class="tag">Observed</span><span class="tag">Potential</span><span class="tag">Tested</span><span class="tag" style="border-color:var(--lake);color:var(--lake)">Verified</span>
         </div>
@@ -359,15 +351,15 @@ main{position:relative;z-index:1}
   <section id="chaos" class="s chaos" data-sec>
     <div class="wrap">
       <div class="grp"><div class="inner">
-        <h2 class="d3">$41,208 over thirty days, folded into a single invoice line.</h2>
-        <p class="body-lg">1.2M requests, two providers, five model tiers. The invoice knows the total. It does not know which calls deserved it.</p>
+        <h2 class="d3">Your invoice gives you one total. Your team needs to know what caused it.</h2>
+        <p class="body-lg">Millions of requests, different models, retries and long prompts all disappear into the same bill.</p>
       </div></div>
       <div class="grp"><div class="inner">
-        <h2 class="d3">Dashboards show totals. Traces show calls. Neither tells you which call was unnecessary.</h2>
-        <p class="body-lg">So teams guess. They swap a model, watch for complaints, and hope quality held.</p>
+        <h2 class="d3">Evalomics turns that noise into a short list of decisions you can actually act on.</h2>
+        <p class="body-lg">Instead of guessing, you see the costly pattern, the affected requests, and the safer alternative to test.</p>
       </div></div>
       <div class="grp"><div class="inner">
-        <h2 class="d3">A saving nobody can prove is a risk with a discount on it.</h2>
+        <h2 class="d3">Then you prove the change worked before calling it a win.</h2>
       </div></div>
     </div>
   </section>
@@ -375,15 +367,15 @@ main{position:relative;z-index:1}
   <section id="bulb" class="s bulb" data-sec>
     <div class="wrap">
       <div class="col right veil">
-        <p class="eyebrow">Detection · Potential</p>
-        <h2 class="d2">Identified, not yet proven: $11.8k–15.6k/mo.</h2>
-        <p class="body">Three patterns detected in the last thirty days, each linked to the exact requests behind it, with the spend attached. Detectors are deterministic — the same window gives the same result.</p>
+        <p class="eyebrow">Where to start</p>
+        <h2 class="d2">Here are the first places Evalomics would investigate.</h2>
+        <p class="body">The biggest opportunities rise to the top with the spend, affected requests, and reason they matter — so you know what is worth testing first.</p>
         <div class="opps">
-          <div class="opp"><div><h4>Ticket routing uses a flagship model</h4><p>61% of routing requests score below the complexity threshold. Sampled 8,412 requests.</p></div><span class="num">$3,800–4,900<br><span class="cap">est · high</span></span></div>
-          <div class="opp"><div><h4>14k-token system context resent uncached</h4><p>The same prefix billed on every turn of every session.</p></div><span class="num">$1,800–2,600<br><span class="cap">est · low</span></span></div>
-          <div class="opp"><div><h4>Retry storm on inventory-sync</h4><p>412 duplicate tool calls in 6 hours on Jun 28. Observed, not estimated.</p></div><span class="num">$214<br><span class="cap">above baseline</span></span></div>
+          <div class="opp"><div><h4>A flagship model is doing simple routing work</h4><p>Most of these requests look simple enough to test on a cheaper model.</p></div><span class="num">$3,800–4,900<br><span class="cap">est · high</span></span></div>
+          <div class="opp"><div><h4>The same long context is being paid for again and again</h4><p>Repeated context may be a caching opportunity instead of recurring spend.</p></div><span class="num">$1,800–2,600<br><span class="cap">est · low</span></span></div>
+          <div class="opp"><div><h4>A failed workflow is quietly multiplying requests</h4><p>Duplicate retries turned one operational issue into extra cost.</p></div><span class="num">$214<br><span class="cap">above baseline</span></span></div>
         </div>
-        <p class="body" style="margin-top:24px">These stay labelled Potential until a test says otherwise.</p>
+        <p class="body" style="margin-top:24px">Nothing here is treated as savings yet. First, the safer option has to pass a real test.</p>
       </div>
     </div>
   </section>
@@ -391,15 +383,15 @@ main{position:relative;z-index:1}
   <section id="sphere" class="s sphere" data-sec>
     <div class="wrap">
       <div class="col veil">
-        <p class="eyebrow">Experiment · Tested</p>
-        <h2 class="d2">The test is running.</h2>
-        <p class="body">20% of routing traffic moves to a mini model for 14 days. Guardrail: abort if answer quality drops more than 1% against control. You approve the split; we never change traffic on our own.</p>
+        <p class="eyebrow">Test before rollout</p>
+        <h2 class="d2">See whether the cheaper route is actually good enough.</h2>
+        <p class="body">Compare the current route with a cheaper candidate on a controlled slice of work. Evalomics checks cost and quality together, and you decide whether anything moves to production.</p>
         <div class="card exp" style="aspect-ratio:auto;padding:28px;border-radius:24px;background:rgba(246,243,241,.94)">
           <div class="row"><span class="tier tst">EXP-1042 · Summarization routed to Haiku-tier</span><span>Day 9 of 14</span></div>
           <div class="bar"><i></i></div>
           <div class="row"><span>Interim delta −$306/wk on the test slice</span><span>Quality flat · guardrails green</span></div>
         </div>
-        <p class="body" style="margin-top:24px">Interim, not savings yet. The bright patch on the cloud is that 20% — the small share of real requests that decides the outcome.</p>
+        <p class="body" style="margin-top:24px">A cheaper result only matters if quality still clears your floor. Until then, it stays a test result — not a savings claim.</p>
       </div>
     </div>
   </section>
@@ -407,9 +399,9 @@ main{position:relative;z-index:1}
   <section id="method" class="s method" data-sec>
     <div class="wrap m-in">
       <div class="m-l">
-        <p class="eyebrow">Four tiers · one ladder</p>
-        <h2 class="d2">Every dollar carries its evidence tier.</h2>
-        <p class="body">The same opportunity stays in view from the first observed anomaly to the verified line in the cost report, so you follow the evidence instead of trusting a number.</p>
+        <p class="eyebrow">One recommendation, fully traceable</p>
+        <h2 class="d2">Follow every recommendation from first signal to proven result.</h2>
+        <p class="body">Open any opportunity and see where it came from, what was tested, what quality did, and whether the saving survived rollout.</p>
         <div class="arrows"><button class="arrow" id="prev" aria-label="Previous tier">←</button><button class="arrow" id="next" aria-label="Next tier">→</button></div>
       </div>
       <div class="m-r" id="mr">
@@ -458,17 +450,17 @@ main{position:relative;z-index:1}
         <span>Extended thinking spent on questions a mini model closes on the first pass.</span>
       </div>
       <div class="f-t veil">
-        <p class="eyebrow">What it finds</p>
-        <h2 class="d2">Each pattern links back to the requests that caused it.</h2>
-        <p class="body">Ranked by spend, with an evidence tier attached and the sample it was drawn from. Sample workspace — every figure here is illustrative, which is exactly how we treat an unverified number.</p>
+        <p class="eyebrow">What Evalomics surfaces</p>
+        <h2 class="d2">The expensive habits hiding inside normal AI usage.</h2>
+        <p class="body">Each finding is ranked by impact and linked to the requests behind it, so you can move from “why is our bill high?” to a concrete next action.</p>
       </div>
     </div>
   </section>
 
   <section id="pipeline" class="s sec-pad solid">
     <div class="wrap">
-      <p class="eyebrow">The path a dollar takes</p>
-      <h2 class="d2" style="max-width:16em">Ingestion, coverage, detection, experiment, verification — one lineage, end to end.</h2>
+      <p class="eyebrow">How Evalomics gets to an answer</p>
+      <h2 class="d2" style="max-width:16em">From raw usage to a recommendation your team can defend.</h2>
       <div class="pipe-box">
         <svg viewBox="0 0 1100 260" role="img" aria-label="Pipeline from usage ingest through coverage verification, detectors and experiments to a verified line in the cost report">
           <defs>
@@ -511,23 +503,23 @@ main{position:relative;z-index:1}
 
   <section id="exact" class="s sec-pad solid">
     <div class="wrap">
-      <p class="eyebrow">Why the arithmetic matters</p>
-      <h2 class="d2" style="max-width:14em">A number you can recompute is worth more than a number you can only believe.</h2>
+      <p class="eyebrow">Why you can trust the result</p>
+      <h2 class="d2" style="max-width:14em">Every important number should tell you where it came from.</h2>
       <div class="grid3">
         <article class="card feat">
           <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="#242424" stroke-width="1.3"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
-          <h3>Exact rational arithmetic</h3>
-          <p>Derived values stay reduced integer numerator/denominator pairs. No floats, no drift. Rounding happens once, at display, half-to-even, to at most 12 places.</p>
+          <h3>Trace every dollar</h3>
+          <p>See the requests, models, tokens and calculations behind the result instead of accepting a mysterious dashboard total.</p>
         </article>
         <article class="card feat">
           <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="#242424" stroke-width="1.3"><path d="M12 3 21 8v8l-9 5-9-5V8z"/><path d="M12 12v9"/></svg>
-          <h3>Evidence, not opinion</h3>
-          <p>A calculation records its formula and inputs. It never assigns a recommendation and it never promotes itself to Verified — only a held post-rollout delta can do that.</p>
+          <h3>Separate estimates from proof</h3>
+          <p>Potential savings stay clearly labeled. A result only becomes Verified when post-change production data supports it.</p>
         </article>
         <article class="card feat">
           <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="#242424" stroke-width="1.3"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-          <h3>Coverage you can audit</h3>
-          <p>Money arrives as canonical decimal strings — JSON numbers are rejected. Missing counts stay <code>null</code>, never zero. A 30-day projection needs at least seven covered days.</p>
+          <h3>Know what changed</h3>
+          <p>Compare the before and after windows, see the quality floor, and understand why Evalomics considers a change safe — or why it does not.</p>
         </article>
       </div>
     </div>
@@ -536,8 +528,8 @@ main{position:relative;z-index:1}
   <section id="pricing" class="s sec-pad solid">
     <div class="wrap">
       <p class="eyebrow">Pricing</p>
-      <h2 class="d2">Pricing that can’t reward a guess.</h2>
-      <p class="body-lg" style="max-width:34em;margin-top:20px">We charge on spend under observation — never a percentage of savings. A tool that profits from its own estimates will always find bigger estimates.</p>
+      <h2 class="d2">Start by finding the waste. Pay when deeper proof is useful.</h2>
+      <p class="body-lg" style="max-width:34em;margin-top:20px">Explore your usage first. When you want controlled testing, verification and team workflows, move up without giving Evalomics a percentage of the savings it estimates.</p>
       <div class="plans">
         <article class="card plan">
           <h3>Observer</h3>
@@ -564,7 +556,7 @@ main{position:relative;z-index:1}
   <section id="faq" class="s sec-pad solid">
     <div class="wrap">
       <p class="eyebrow">Questions</p>
-      <h2 class="d2">What teams ask before connecting.</h2>
+      <h2 class="d2">The questions you should ask before connecting AI usage data.</h2>
       <div class="faq">
         <details><summary>Do you change our traffic?<i>↓</i></summary><div class="ans"><p class="body">No. The connection is read-only. An experiment only starts after you approve the split, the slice size and the guardrail, and any run aborts itself if quality drops past the floor you set.</p></div></details>
         <details><summary>What counts as verified?<i>↓</i></summary><div class="ans"><p class="body">A change that has been rolled out and whose delta has held in observed spend against the pre-change counterfactual baseline for a full verification window. Interim test results are labelled Tested, never savings.</p></div></details>
@@ -579,8 +571,8 @@ main{position:relative;z-index:1}
     <div class="final-in">
       <div class="box veil">
         <span class="tier ver">Verified</span>
-        <h2 class="d2">$4,214/mo, verified.<br>This line can go in the cost report.</h2>
-        <p class="body-lg">Rolled out June 30. Three weeks later the delta is still holding in observed spend against the pre-change baseline.</p>
+        <h2 class="d2">$4,214/mo, verified.<br>Now you know what actually improved.</h2>
+        <p class="body-lg">The change shipped, quality held, and the lower spend is still visible in production. That is the point where Evalomics calls it a saving.</p>
         <a class="btn btn-blue" id="cta" href="/auth/sign-up">Connect your usage data <span aria-hidden="true">▸</span></a>
         <p class="fine">Read-only. No traffic changes until you approve an experiment.</p>
       </div>
@@ -592,13 +584,12 @@ main{position:relative;z-index:1}
   <div class="wrap foot-in">
     <a class="logo" href="#hero"><i aria-hidden="true"></i>evalomics</a>
     <nav>
-      <a href="#conf">Manifesto</a><a href="#method">The ladder</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+      <a href="#conf">How it works</a><a href="#method">Proof</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
       <a href="/trust">Trust center</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/security">Security</a><a href="/support">Support</a>
       <a href="https://github.com/NikhileshRSahu/ai-cost-performance-optimizer" target="_blank" rel="noopener">Repo</a>
     </nav>
     <span class="fine">© 2026 Evalomics</span>
   </div>
-  <div class="wrap"><p class="fine">Sample workspace — every figure is illustrative, which is exactly how we treat an unverified number.</p></div>
 </footer>
 
 <button class="tour" id="tour" type="button" aria-label="Play a guided scroll through the page"><svg class="pl" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1 9 5 2 9z"/></svg><svg class="pp" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1h2v8H2zM6 1h2v8H6z"/></svg><span id="tourlab">Play preview</span></button>
