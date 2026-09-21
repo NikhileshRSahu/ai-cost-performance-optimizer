@@ -33,7 +33,7 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     return {
-      beforeFiles: [{ source: '/', destination: '/evalomics-final' }],
+      beforeFiles: [{ source: '/', destination: '/evalomics-final.html' }],
       afterFiles: [],
       fallback: [],
     };

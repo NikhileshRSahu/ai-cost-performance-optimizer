@@ -13,7 +13,7 @@ The deployable Next.js application lives in `apps/web` because the preserved Ver
 It includes:
 
 - evidence-led marketing site and pricing
-- real Neon Managed Better Auth sign-up / sign-in / sign-out
+- real Google OAuth sign-up / sign-in / sign-out via Auth.js
 - protected onboarding and dashboard routes
 - read-only provider/CSV onboarding UX
 - partial-sync and honest empty states
@@ -37,11 +37,13 @@ npm run dev
 ## Required environment
 
 ```bash
-NEON_AUTH_BASE_URL=https://ep-green-night-b4iaryax.neonauth.c-6.us-east-2.aws.neon.tech/evalomics/auth
-NEON_AUTH_COOKIE_SECRET=<32+ character random secret>
+GOOGLE_CLIENT_ID=<Google OAuth web client id>
+GOOGLE_CLIENT_SECRET=<Google OAuth client secret>
+AUTH_SECRET=<32+ character random secret>
+DATABASE_URL=<Neon Postgres connection string>
 ```
 
-The preserved Vercel project may also supply the legacy `BETTER_AUTH_SECRET`; the app accepts it as a backwards-compatible secure cookie secret.
+Existing deployments may also supply the legacy `BETTER_AUTH_SECRET`; Auth.js accepts it as a backwards-compatible session secret.
 
 ## Production boundaries
 
